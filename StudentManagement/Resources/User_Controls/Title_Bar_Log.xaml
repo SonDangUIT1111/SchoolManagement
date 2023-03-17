@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="StudentManagement.Resources.User_Controls.Title_Bar_Log"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StudentManagement.Resources.User_Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="50" 
+             d:DesignWidth="800"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             FontFamily="{DynamicResource MaterialDesignFont}"
+             Name="UCLogin"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseLeftButtonDown">
+            <i:InvokeCommandAction Command="{Binding MoveWindowCommand}"
+                                   CommandParameter="{Binding ElementName=UCLogin}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid>
+            <Border CornerRadius="20" 
+                    Grid.RowSpan="2" 
+                    Opacity="1">
+            </Border>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <TextBlock Width="700"/>
+                <Button   Background="Transparent"
+                          Foreground="White"
+                          Height="50"
+                          Width="50"
+                          BorderThickness="0"
+                          ToolTip="Minimized"
+                          ToolBar.OverflowMode="AsNeeded"
+                          Command="{Binding MinimalWindowCommandLG}"
+                          CommandParameter="{Binding ElementName=UCLogin}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="Red">
+
+                                    </Setter>
+
+                                </Trigger>
+                            </Style.Triggers>
+
+                        </Style>
+                    </Button.Style>
+                    <materialDesign:PackIcon Kind="WindowMinimize"
+                                             Height="20"
+                                             Width="20"
+                                             Foreground="#5CA0F2"/>
+                </Button>
+                <Button Style="{StaticResource CloseButton}"
+                        Height="50"
+                        Width="50"
+                        Command="{Binding CloseWindowCommandLG}"
+                        CommandParameter="{Binding ElementName=UCLogin}" >
+                    <materialDesign:PackIcon Kind="WindowClose"
+                                             Height="20"
+                                             Width="20"
+                                             Foreground="#5CA0F2"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,32 @@
+﻿<Application x:Class="StudentManagement.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:StudentManagement"
+             StartupUri="/Views/Login/ForgotPasswordWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--Material Design Resources-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.LightBlue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <!--View Model Resource-->
+                <ResourceDictionary Source="/Resources/ViewModelResources.xaml"/>
+                <!--Button Resources-->
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Button_Visibility.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Interactive_Button.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Close_Button.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Tab_Button.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Normal_Button.xaml"/>
+                <!--Template Resources-->
+                <ResourceDictionary Source="/Resources/Styles/Templates/DataGrid_Template.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Templates/Error_Template.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Templates/ScrollBar_Template.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,282 @@
+﻿<Window x:Class="StudentManagement.Views.Login.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManagement"
+        xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Login" 
+        Height="450" Width="800"
+        AllowsTransparency="True" 
+        Background="Transparent"
+        ResizeMode="NoResize" WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        DataContext="{StaticResource LoginVM}"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        Name="LoginWD">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="400"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <uc:Title_Bar_Log Grid.RowSpan="1"
+                          Grid.ColumnSpan="2"
+                          Panel.ZIndex="2"/>
+        <Border CornerRadius="20 0 0 20" 
+                Panel.ZIndex="1"
+                BorderThickness="0.1"
+                BorderBrush="Transparent"
+                HorizontalAlignment="Center"
+                Width="500"
+                Grid.RowSpan="2">
+            <Border.Background>
+                <ImageBrush ImageSource="/Resources/Images/Edu_Background.jpg"
+                            Stretch="UniformToFill">
+                </ImageBrush>
+            </Border.Background>
+        </Border>
+
+        <Grid Grid.Column="1"
+              Grid.RowSpan="2">
+            <Grid Height="450"
+                  Width="300">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200"/>
+                    <RowDefinition Height="229*"/>
+                    <RowDefinition Height="16*"/>
+                    <RowDefinition Height="5*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.RowSpan="4" CornerRadius="0 20 20 0" 
+                        Panel.ZIndex="0">
+                    <Border.Background>
+                        <LinearGradientBrush>
+                            <GradientStop Color="#F5F7F6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+                <Ellipse Width="200"
+                         Height="200"
+                         Fill="#5CA0F2"
+                         Opacity="0.1"
+                         Stroke="Transparent" 
+                         Margin="219,140,-119,-90" 
+                         Grid.Row="1"
+                         Panel.ZIndex="0" 
+                         Grid.RowSpan="3"/>
+                <Ellipse Width="200"
+                         Height="200"
+                         Fill="#5CA0F2"
+                         Opacity="0.2"
+                         Stroke="Transparent" 
+                         Margin="-50,127,150,-77" 
+                         Grid.Row="1"
+                         Panel.ZIndex="0" 
+                         Grid.RowSpan="3"/>
+                <Ellipse Width="100"
+                         Height="100"
+                         Fill="#5CA0F2"
+                         Opacity="0.2"
+                         Stroke="Transparent" 
+                         Margin="-34,190,234,0" 
+                         Grid.Row="1"
+                         Panel.ZIndex="0" 
+                         VerticalAlignment="Top" 
+                         Grid.RowSpan="3"/>
+                <Ellipse Width="300"
+                         Height="300"
+                         Fill="#5CA0F2"
+                         Opacity="0.2"
+                         Stroke="Transparent" 
+                         Margin="100,54,-100,-104" 
+                         Grid.Row="1"
+                         Panel.ZIndex="0" Grid.RowSpan="3"/>
+
+                <StackPanel>
+                    <Image Height="100"
+                           Width="100"
+                           HorizontalAlignment="Center"
+                           Margin="0,55,0,0"
+                           Source="/Resources/Images/Logo.png">
+                    </Image>
+                    <TextBlock Text="Student Management"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               FontFamily="Arial Rounded MT Bold"
+                               Margin="0,10,0,0">
+                        <TextBlock.Foreground>
+                            <LinearGradientBrush>
+                                <GradientStop Color="#2af598" Offset="1"/>
+                                <GradientStop Color="#009efd" Offset="0.3"/>
+                            </LinearGradientBrush>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.RowSpan="3">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="Account"
+                                     materialDesign:HintAssist.Hint="User Name"
+                                     materialDesign:HintAssist.Foreground="Black"
+                                     FontSize="15"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     Foreground="Black"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Height="auto"
+                                     Width="210"
+                                     HorizontalAlignment="Center"
+                                     Margin="30,0,0,0"
+                                     Text="{Binding Username}" 
+                                     FontWeight="SemiBold"/>
+                            <materialDesign:PackIcon Kind="Account"
+                                                 Height="20"
+                                                 Width="20"
+                                                 Foreground="Black"
+                                                 Margin="0,10,0,0"
+                                                 Opacity="0.5"/>
+                        </StackPanel>
+                        <Border BorderBrush="#009efd"
+                                Height="1"
+                                Width="240"
+                                BorderThickness="10">
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <PasswordBox x:Name="Password"
+                                         materialDesign:HintAssist.Hint="Password"
+                                         materialDesign:HintAssist.Foreground="Black"
+                                         FontSize="15"
+                                         Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                         FontWeight="SemiBold"
+                                         Foreground="Black"
+                                         Background="Transparent"
+                                         BorderThickness="0"
+                                         Height="auto"
+                                         Width="210"
+                                         HorizontalAlignment="Center"
+                                         Margin="30,0,0,0">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PasswordChanged">
+                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}"
+                                                               CommandParameter="{Binding ElementName=Password}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </PasswordBox>
+                            <TextBox x:Name="PasswordEye"
+                                     Margin="-210 0 0 0"
+                                     materialDesign:HintAssist.Hint="Password"
+                                     materialDesign:HintAssist.Foreground="Black"
+                                     FontSize="15"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     Background="Transparent"
+                                     Height="auto"
+                                     Width="230"
+                                     BorderThickness="0"
+                                     HorizontalAlignment="Center"
+                                     FontWeight="SemiBold"
+                                     Foreground="Black"
+                                     Visibility="Hidden">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="TextChanged">
+                                        <i:InvokeCommandAction Command="{Binding PasswordEyeChangedCommand}"
+                                                               CommandParameter="{Binding ElementName=PasswordEye}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <Button x:Name="ShowPass"
+                                    Style="{StaticResource NormalButton}"
+                                    Content="{materialDesign:PackIcon Kind=Eye}"
+                                    Foreground="#333333"
+                                    Margin="-20,0,0,0"
+                                    Command="{Binding ShowPassword}"
+                                    CommandParameter="{Binding ElementName=LoginWD}"/>
+                            <Button x:Name="UnshowPass"
+                                    Style="{StaticResource NormalButton}"
+                                    Content="{materialDesign:PackIcon Kind=EyeOff}"
+                                    Foreground="#333333"
+                                    Margin="-20,0,0,0"
+                                    Visibility="Hidden"
+                                    Command="{Binding UnshowPassword}"
+                                    CommandParameter="{Binding ElementName=LoginWD}"/>
+                        </StackPanel>
+                        <Border BorderBrush="#009efd"
+                                Height="1"
+                                Width="240"
+                                BorderThickness="10">
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Margin="0,5,0,0">
+                        <Button Content="Forgot password?" 
+                                VerticalAlignment="Top" 
+                                Padding="0" 
+                                HorizontalContentAlignment="Right" 
+                                VerticalContentAlignment="Center" 
+                                FontSize="11" 
+                                FontWeight="SemiBold" 
+                                Cursor="Hand" 
+                                FocusVisualStyle="{x:Null}"
+                                Background="{x:Null}" 
+                                Foreground="#444444" 
+                                BorderBrush="{x:Null}" 
+                                Margin="150,0,30,0"
+                                IsTabStop="False"
+                                Height="auto"
+                                Width="100"
+                                Command="{Binding GoToForgotPassword}"
+                                CommandParameter="{Binding ElementName=LoginWD}">
+                        </Button>
+                        <Button Width="80" 
+                                Height="30"  
+                                Content="LOGIN"
+                                IsDefault="True"
+                                HorizontalAlignment="Center"
+                                Style="{StaticResource InteractiveButton}"
+                                Margin="0,20,0,0"                              
+                                Command="{Binding LoginSuccess}"
+                                CommandParameter="{Binding ElementName=LoginWD}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,30,0,0">
+                            <TextBlock Text="Don't have an accout ?"
+                                       Foreground="#0099FF"
+                                       Margin="70,0,0,0"
+                                       FontWeight="SemiBold"
+                                       FontFamily="Roboto"></TextBlock>
+                            <Button Content="Sign up" 
+                                    VerticalAlignment="Top" 
+                                    Padding="0" 
+                                    HorizontalContentAlignment="Right" 
+                                    VerticalContentAlignment="Top" 
+                                    FontSize="12" 
+                                    FontWeight="Medium" 
+                                    Cursor="Hand" 
+                                    FocusVisualStyle="{x:Null}"
+                                    Background="{x:Null}" 
+                                    Foreground="#444444" 
+                                    BorderBrush="{x:Null}" 
+                                    Margin="5,0,30,0"
+                                    IsTabStop="False"
+                                    Command="{Binding GoToRegisterCommand}"
+                                    CommandParameter="{Binding ElementName=LoginWD}">
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
