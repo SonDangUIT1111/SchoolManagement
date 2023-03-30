@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StudentManagement.Views.Menu
+namespace StudentManagement.Views.GiamHieu
 {
     /// <summary>
     /// Interaction logic for ThongTinTruong.xaml

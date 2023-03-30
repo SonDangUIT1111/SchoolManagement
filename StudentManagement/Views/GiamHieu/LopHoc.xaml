@@ -1,14 +1,14 @@
-﻿<Page x:Class="StudentManagement.Views.Menu.ThongTinHocSinh"
+﻿<Page x:Class="StudentManagement.Views.GiamHieu.LopHoc"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:StudentManagement.Views.Menu"
+      xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
       mc:Ignorable="d" 
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
-      Background="#FFECECEC"
-      Title="ThongTinHocSinh">
+      Title="LopHoc"
+      Background="#FFECECEC">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,10 +19,10 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FFBB1726" 
+                Background="#33778C" 
                 Margin="12" >
             <Grid>
-                <TextBlock Text="Thông tin học sinh" 
+                <TextBlock Text="Lớp Học" 
                            FontWeight="Bold" 
                            Foreground="White" 
                            FontSize="60" 
@@ -42,6 +42,21 @@
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+            <Grid>
+                <TextBlock Text="Danh sách lớp" Margin="25" FontSize="30"/>
+                <Button x:Name="ThemGiaoVien" 
+                        Width="179" 
+                        Height="64" 
+                        Background="#FF1F04A5"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="25"
+                        Content="Thêm Lớp" 
+                        FontSize="19" 
+                        FontWeight="Bold"
+                        Foreground="White">
+                </Button>
+            </Grid>
         </Border>
     </Grid>
 </Page>

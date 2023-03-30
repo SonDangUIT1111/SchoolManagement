@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StudentManagement.Views.Menu
+namespace StudentManagement.Views.GiamHieu
 {
     /// <summary>
-    /// Interaction logic for BaoCao.xaml
+    /// Interaction logic for LopHoc.xaml
     /// </summary>
-    public partial class BaoCao : Page
+    public partial class LopHoc : Page
     {
-        public BaoCao()
+        public LopHoc()
         {
             InitializeComponent();
         }

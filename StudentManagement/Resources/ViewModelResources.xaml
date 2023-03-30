@@ -1,15 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewmodel="clr-namespace:StudentManagement.ViewModel.Login"
+                    xmlns:viewmodelGH="clr-namespace:StudentManagement.ViewModel.GiamHieu"
                     xmlns:converter="clr-namespace:StudentManagement.Converter">
     
     <!--Login-->
     <viewmodel:LoginViewModel x:Key="LoginVM"></viewmodel:LoginViewModel>
     <viewmodel:SignUpViewModel x:Key="SignUpVM"></viewmodel:SignUpViewModel>
     
-    <!--Staff-->
+    <!--GiamHieu-->
+    <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
+    <!--GiaoVien-->
     
-    <!--Admin-->
+    <!--HocSinh-->
     
     <!--Converter-->
     <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>

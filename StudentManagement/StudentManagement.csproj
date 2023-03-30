@@ -77,6 +77,28 @@
       <DependentUpon>Title_Bar_Log.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\TrangChuViewModel.cs" />
+    <Compile Include="Views\GiamHieu\BaoCao.xaml.cs">
+      <DependentUpon>BaoCao.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\GiamHieuWindow.xaml.cs">
+      <DependentUpon>GiamHieuWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\LopHoc.xaml.cs">
+      <DependentUpon>LopHoc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\ThayDoiQuyDinh.xaml.cs">
+      <DependentUpon>ThayDoiQuyDinh.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\ThongTinGiaoVien.xaml.cs">
+      <DependentUpon>ThongTinGiaoVien.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\ThongTinHocSinh.xaml.cs">
+      <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\ThongTinTruong.xaml.cs">
+      <DependentUpon>ThongTinTruong.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
     </Compile>
@@ -88,27 +110,6 @@
     </Compile>
     <Compile Include="Views\Login\SignUpWindow.xaml.cs">
       <DependentUpon>SignUpWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\BaoCao.xaml.cs">
-      <DependentUpon>BaoCao.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\LopHoc.xaml.cs">
-      <DependentUpon>LopHoc.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\Menu.xaml.cs">
-      <DependentUpon>Menu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\ThayDoiQuyDinh.xaml.cs">
-      <DependentUpon>ThayDoiQuyDinh.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\ThongTinGiaoVien.xaml.cs">
-      <DependentUpon>ThongTinGiaoVien.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\ThongTinHocSinh.xaml.cs">
-      <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Menu\ThongTinTruong.xaml.cs">
-      <DependentUpon>ThongTinTruong.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -162,6 +163,34 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GiamHieu\BaoCao.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\GiamHieuWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\LopHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\ThayDoiQuyDinh.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\ThongTinGiaoVien.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\ThongTinHocSinh.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\ThongTinTruong.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Login\ForgotPasswordWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -173,34 +202,6 @@
     <Page Include="Views\Login\SignUpWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Menu\BaoCao.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Menu\LopHoc.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Menu\Menu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Menu\ThayDoiQuyDinh.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Menu\ThongTinGiaoVien.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Menu\ThongTinHocSinh.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Menu\ThongTinTruong.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -234,7 +235,10 @@
     <Folder Include="Model\" />
     <Folder Include="Resources\Fonts\" />
     <Folder Include="Resources\Icons\" />
-    <Folder Include="Views\NewFolder1\" />
+    <Folder Include="ViewModel\GiaoVien\" />
+    <Folder Include="ViewModel\HocSinh\" />
+    <Folder Include="Views\GiaoVien\" />
+    <Folder Include="Views\HocSinh\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\Edu_Background.jpg" />
@@ -243,7 +247,7 @@
     <Resource Include="Resources\Images\Logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Views\Menu\logo-uit.png" />
+    <Resource Include="Resources\Images\logo-uit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" />

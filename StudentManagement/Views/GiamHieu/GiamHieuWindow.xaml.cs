@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StudentManagement.Views.Menu
+namespace StudentManagement.Views.GiamHieu
 {
     /// <summary>
-    /// Interaction logic for LopHoc.xaml
+    /// Interaction logic for GiamHieuWindow.xaml
     /// </summary>
-    public partial class LopHoc : Page
+    public partial class GiamHieuWindow : Window
     {
-        public LopHoc()
+        public GiamHieuWindow()
         {
             InitializeComponent();
         }
