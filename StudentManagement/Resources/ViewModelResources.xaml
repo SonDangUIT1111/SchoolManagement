@@ -6,7 +6,7 @@
     
     <!--Login-->
     <viewmodel:LoginViewModel x:Key="LoginVM"></viewmodel:LoginViewModel>
-    <viewmodel:SignUpViewModel x:Key="SignUpVM"></viewmodel:SignUpViewModel>
+    <viewmodel:ForgotPasswordViewModel x:Key="ForgotPasswordVM"></viewmodel:ForgotPasswordViewModel>
     
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>

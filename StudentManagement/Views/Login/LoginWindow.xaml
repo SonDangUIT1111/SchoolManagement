@@ -22,6 +22,12 @@
         DataContext="{StaticResource LoginVM}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Name="LoginWD">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadData}"
+                                   CommandParameter="{Binding ElementName=LoginWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -125,157 +131,230 @@
                         </TextBlock.Foreground>
                     </TextBlock>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.RowSpan="3">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBox x:Name="Account"
-                                     materialDesign:HintAssist.Hint="User Name"
-                                     materialDesign:HintAssist.Foreground="Black"
-                                     FontSize="15"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                     Foreground="Black"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     Height="auto"
-                                     Width="210"
-                                     HorizontalAlignment="Center"
-                                     Margin="30,0,0,0"
-                                     Text="{Binding Username}" 
-                                     FontWeight="SemiBold"/>
-                            <materialDesign:PackIcon Kind="Account"
+                <Grid Grid.Row="1" Grid.RowSpan="3">
+                    <StackPanel x:Name="LoginForm" Visibility="Hidden">
+                        <StackPanel>
+                            <materialDesign:TransitioningContent>
+                                <materialDesign:TransitioningContent.OpeningEffects>
+                                    <materialDesign:TransitionEffect Kind="SlideInFromRight" Duration="0:0:0.8"/>
+                                    <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                                </materialDesign:TransitioningContent.OpeningEffects>
+                                <Button Width="30"
+                                        Height="30"
+                                        Style="{StaticResource InteractiveButton}"
+                                        Background="Transparent"
+                                        HorizontalAlignment="Left"
+                                        Margin="25 0 0 0"
+                                        Command="{Binding TurnBackRoleForm}">
+                                    <materialDesign:PackIcon Kind="ArrowBack"
                                                  Height="20"
                                                  Width="20"
                                                  Foreground="Black"
                                                  Margin="0,10,0,0"
                                                  Opacity="0.5"/>
-                        </StackPanel>
-                        <Border BorderBrush="#009efd"
-                                Height="1"
-                                Width="240"
-                                BorderThickness="10">
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Margin="0,10,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <PasswordBox x:Name="Password"
-                                         materialDesign:HintAssist.Hint="Password"
-                                         materialDesign:HintAssist.Foreground="Black"
-                                         FontSize="15"
-                                         Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                                         FontWeight="SemiBold"
-                                         Foreground="Black"
-                                         Background="Transparent"
-                                         BorderThickness="0"
-                                         Height="auto"
-                                         Width="210"
-                                         HorizontalAlignment="Center"
-                                         Margin="30,0,0,0">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="PasswordChanged">
-                                        <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}"
+                                </Button>
+                            </materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent>
+                                <materialDesign:TransitioningContent.OpeningEffects>
+                                    <materialDesign:TransitionEffect Kind="SlideInFromRight" Duration="0:0:0.8"/>
+                                    <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                                </materialDesign:TransitioningContent.OpeningEffects>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="Account"
+                                             materialDesign:HintAssist.Hint="User Name"
+                                             materialDesign:HintAssist.Foreground="Black"
+                                             FontSize="15"
+                                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                             Foreground="Black"
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             Height="auto"
+                                             Width="210"
+                                             HorizontalAlignment="Center"
+                                             Margin="30,0,0,0"
+                                             Text="{Binding Username}" 
+                                             FontWeight="SemiBold"/>
+                                    <materialDesign:PackIcon Kind="Account"
+                                                 Height="20"
+                                                 Width="20"
+                                                 Foreground="Black"
+                                                 Margin="0,10,0,0"
+                                                 Opacity="0.5"/>
+                                </StackPanel>
+                            </materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent>
+                                <materialDesign:TransitioningContent.OpeningEffects>
+                                    <materialDesign:TransitionEffect Kind="SlideInFromRight" Duration="0:0:0.8"/>
+                                    <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                                </materialDesign:TransitioningContent.OpeningEffects>
+                                <Border BorderBrush="#009efd"
+                                        Height="1"
+                                        Width="240"
+                                        BorderThickness="10">
+                                </Border>
+                            </materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent>
+                                <materialDesign:TransitioningContent.OpeningEffects>
+                                    <materialDesign:TransitionEffect Kind="SlideInFromRight" Duration="0:0:0.8"/>
+                                    <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                                </materialDesign:TransitioningContent.OpeningEffects>
+                                <StackPanel Margin="0,10,0,0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <PasswordBox x:Name="Password"
+                                                    materialDesign:HintAssist.Hint="Password"
+                                                    materialDesign:HintAssist.Foreground="Black"
+                                                    FontSize="15"
+                                                    Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                                    FontWeight="SemiBold"
+                                                    Foreground="Black"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Height="auto"
+                                                    Width="210"
+                                                    HorizontalAlignment="Center"
+                                                    Margin="30,0,0,0">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="PasswordChanged">
+                                                    <i:InvokeCommandAction Command="{Binding PasswordChangedCommand}"
                                                                CommandParameter="{Binding ElementName=Password}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </PasswordBox>
-                            <TextBox x:Name="PasswordEye"
-                                     Margin="-210 0 0 0"
-                                     materialDesign:HintAssist.Hint="Password"
-                                     materialDesign:HintAssist.Foreground="Black"
-                                     FontSize="15"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                     Background="Transparent"
-                                     Height="auto"
-                                     Width="230"
-                                     BorderThickness="0"
-                                     HorizontalAlignment="Center"
-                                     FontWeight="SemiBold"
-                                     Foreground="Black"
-                                     Visibility="Hidden">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="TextChanged">
-                                        <i:InvokeCommandAction Command="{Binding PasswordEyeChangedCommand}"
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </PasswordBox>
+                                        <TextBox x:Name="PasswordEye"
+                                                 Margin="-210 0 0 0"
+                                                 materialDesign:HintAssist.Hint="Password"
+                                                 materialDesign:HintAssist.Foreground="Black"
+                                                 FontSize="15"
+                                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                                 Background="Transparent"
+                                                 Height="auto"
+                                                 Width="230"
+                                                 BorderThickness="0"
+                                                 HorizontalAlignment="Center"
+                                                 FontWeight="SemiBold"
+                                                 Foreground="Black"
+                                                 Visibility="Hidden">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="TextChanged">
+                                                    <i:InvokeCommandAction Command="{Binding PasswordEyeChangedCommand}"
                                                                CommandParameter="{Binding ElementName=PasswordEye}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </TextBox>
-                            <Button x:Name="ShowPass"
-                                    Style="{StaticResource NormalButton}"
-                                    Content="{materialDesign:PackIcon Kind=Eye}"
-                                    Foreground="#333333"
-                                    Margin="-20,0,0,0"
-                                    Command="{Binding ShowPassword}"
-                                    CommandParameter="{Binding ElementName=LoginWD}"/>
-                            <Button x:Name="UnshowPass"
-                                    Style="{StaticResource NormalButton}"
-                                    Content="{materialDesign:PackIcon Kind=EyeOff}"
-                                    Foreground="#333333"
-                                    Margin="-20,0,0,0"
-                                    Visibility="Hidden"
-                                    Command="{Binding UnshowPassword}"
-                                    CommandParameter="{Binding ElementName=LoginWD}"/>
-                        </StackPanel>
-                        <Border BorderBrush="#009efd"
-                                Height="1"
-                                Width="240"
-                                BorderThickness="10">
-                        </Border>
-                    </StackPanel>
-                    <StackPanel Margin="0,5,0,0">
-                        <Button Content="Forgot password?" 
-                                VerticalAlignment="Top" 
-                                Padding="0" 
-                                HorizontalContentAlignment="Right" 
-                                VerticalContentAlignment="Center" 
-                                FontSize="11" 
-                                FontWeight="SemiBold" 
-                                Cursor="Hand" 
-                                FocusVisualStyle="{x:Null}"
-                                Background="{x:Null}" 
-                                Foreground="#444444" 
-                                BorderBrush="{x:Null}" 
-                                Margin="150,0,30,0"
-                                IsTabStop="False"
-                                Height="auto"
-                                Width="100"
-                                Command="{Binding GoToForgotPassword}"
-                                CommandParameter="{Binding ElementName=LoginWD}">
-                        </Button>
-                        <Button Width="80" 
-                                Height="30"  
-                                Content="LOGIN"
-                                IsDefault="True"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource InteractiveButton}"
-                                Margin="0,20,0,0"                              
-                                Command="{Binding LoginSuccess}"
-                                CommandParameter="{Binding ElementName=LoginWD}"/>
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="0,30,0,0">
-                            <TextBlock Text="Don't have an accout ?"
-                                       Foreground="#0099FF"
-                                       Margin="70,0,0,0"
-                                       FontWeight="SemiBold"
-                                       FontFamily="Roboto"></TextBlock>
-                            <Button Content="Sign up" 
-                                    VerticalAlignment="Top" 
-                                    Padding="0" 
-                                    HorizontalContentAlignment="Right" 
-                                    VerticalContentAlignment="Top" 
-                                    FontSize="12" 
-                                    FontWeight="Medium" 
-                                    Cursor="Hand" 
-                                    FocusVisualStyle="{x:Null}"
-                                    Background="{x:Null}" 
-                                    Foreground="#444444" 
-                                    BorderBrush="{x:Null}" 
-                                    Margin="5,0,30,0"
-                                    IsTabStop="False"
-                                    Command="{Binding GoToRegisterCommand}"
-                                    CommandParameter="{Binding ElementName=LoginWD}">
-                            </Button>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </TextBox>
+                                        <Button x:Name="ShowPass"
+                                                Style="{StaticResource NormalButton}"
+                                                Content="{materialDesign:PackIcon Kind=Eye}"
+                                                Foreground="#333333"
+                                                Margin="-20,0,0,0"
+                                                Command="{Binding ShowPassword}"
+                                                CommandParameter="{Binding ElementName=LoginWD}"/>
+                                                <Button x:Name="UnshowPass"
+                                                Style="{StaticResource NormalButton}"
+                                                Content="{materialDesign:PackIcon Kind=EyeOff}"
+                                                Foreground="#333333"
+                                                Margin="-20,0,0,0"
+                                                Visibility="Hidden"
+                                                Command="{Binding UnshowPassword}"
+                                                CommandParameter="{Binding ElementName=LoginWD}"/>
+                                    </StackPanel>
+                                    <Border BorderBrush="#009efd"
+                                            Height="1"
+                                            Width="240"
+                                            BorderThickness="10">
+                                    </Border>
+                                </StackPanel>
+                            </materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent>
+                                <materialDesign:TransitioningContent.OpeningEffects>
+                                    <materialDesign:TransitionEffect Kind="SlideInFromRight" Duration="0:0:0.8"/>
+                                    <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                                </materialDesign:TransitioningContent.OpeningEffects>
+                                <StackPanel Margin="0,5,0,0">
+                                    <Button Content="Forgot password?" 
+                                            VerticalAlignment="Top" 
+                                            Padding="0" 
+                                            HorizontalContentAlignment="Right" 
+                                            VerticalContentAlignment="Center" 
+                                            FontSize="11" 
+                                            FontWeight="SemiBold" 
+                                            Cursor="Hand" 
+                                            FocusVisualStyle="{x:Null}"
+                                            Background="{x:Null}" 
+                                            Foreground="#444444" 
+                                            BorderBrush="{x:Null}" 
+                                            Margin="150,0,30,0"
+                                            IsTabStop="False"
+                                            Height="auto"
+                                            Width="100"
+                                            Command="{Binding GoToForgotPassword}"
+                                            CommandParameter="{Binding ElementName=LoginWD}">
+                                    </Button>
+                                    <Button Width="80" 
+                                            Height="30"  
+                                            Content="LOGIN"
+                                            IsDefault="True"
+                                            HorizontalAlignment="Center"
+                                            Style="{StaticResource InteractiveButton}"
+                                            Margin="0,20,0,0"                              
+                                            Command="{Binding LoginSuccess}"
+                                            CommandParameter="{Binding ElementName=LoginWD}"/>
+                                </StackPanel>
+                            </materialDesign:TransitioningContent>
                         </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                    <StackPanel x:Name="RoleForm" Visibility="Visible">
+                        <materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent.OpeningEffects>
+                                <materialDesign:TransitionEffect Kind="SlideInFromLeft" Duration="0:0:0.8"/>
+                                <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                            </materialDesign:TransitioningContent.OpeningEffects>
+                            <TextBlock Text="Bạn là"
+                                       FontSize="16"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,20,0,0"
+                                       FontWeight="Medium"/>
+                        </materialDesign:TransitioningContent>
+                        <materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent.OpeningEffects>
+                                <materialDesign:TransitionEffect Kind="SlideInFromLeft" Duration="0:0:0.8"/>
+                                <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                            </materialDesign:TransitioningContent.OpeningEffects>
+                            <RadioButton x:Name="GiamHieuRole"
+                                         Style="{StaticResource RadioBtn}"
+                                         Width="200"
+                                         Content="Giám hiệu"
+                                         Margin="0 10 0 0"
+                                         Command="{Binding TurnToLoginForm}"/>
+                        </materialDesign:TransitioningContent>
+                        <materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent.OpeningEffects>
+                                <materialDesign:TransitionEffect Kind="SlideInFromLeft" Duration="0:0:0.8"/>
+                                <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                            </materialDesign:TransitioningContent.OpeningEffects>
+                            <RadioButton x:Name="GiaoVienRole"
+                                         Style="{StaticResource RadioBtn}"
+                                         Width="200"
+                                         Content="Giáo viên"
+                                         BorderBrush="Black"
+                                         Margin="0 10 0 0"
+                                         Command="{Binding TurnToLoginForm}"/>
+                        </materialDesign:TransitioningContent>
+                        <materialDesign:TransitioningContent>
+                            <materialDesign:TransitioningContent.OpeningEffects>
+                                <materialDesign:TransitionEffect Kind="SlideInFromLeft" Duration="0:0:0.8"/>
+                                <materialDesign:TransitionEffect Kind="FadeIn" Duration="0:0:0.8"/>
+                            </materialDesign:TransitioningContent.OpeningEffects>
+                            <RadioButton x:Name="HocSinhRole"
+                                         Style="{StaticResource RadioBtn}"
+                                         Width="200"
+                                         Content="Học sinh"
+                                         BorderBrush="Black"
+                                         Margin="0 10 0 0"
+                                         Command="{Binding TurnToLoginForm}"/>
+                        </materialDesign:TransitioningContent>
+                       
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

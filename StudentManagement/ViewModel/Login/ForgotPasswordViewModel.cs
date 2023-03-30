@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    internal class SignUpViewModel:BaseViewModel, IDataErrorInfo
+    public class ForgotPasswordViewModel:BaseViewModel, IDataErrorInfo
     {
 
         // biến flag
@@ -47,14 +47,7 @@ namespace StudentManagement.ViewModel.Login
 
 
         // khai báo ICommand 
-        public ICommand ToLogin { get; set; }
         public ICommand ToLogin_ForgotPassword { get; set; }
-        public ICommand PasswordChangedCommand { get; set; }
-        public ICommand PasswordEyeChangedCommand { get; set; }
-        public ICommand ConfirmPasswordChangedCommand { get; set; }
-
-        public ICommand ConfirmPasswordEyeChangedCommand { get; set; }
-        public ICommand SignUpCommand { get; set; }
         public ICommand SendCodeCommand { get; set; }
         public ICommand NewPasswordChangedCommand { get; set; }
         public ICommand NewPassEyeChangedCommand { get; set; }
@@ -95,7 +88,7 @@ namespace StudentManagement.ViewModel.Login
             }
         }
 
-        public SignUpViewModel()
+        public ForgotPasswordViewModel()
         {
             //Declare random code
             RandomCode = 0;
@@ -105,11 +98,7 @@ namespace StudentManagement.ViewModel.Login
             IsVerified = false;
             IsSignedUp = false;
 
-            // definate
-            PasswordChangedCommand = new RelayCommand<PasswordBox>((parameter) => { return true; }, (parameter) => { Password = parameter.Password; });
-            PasswordEyeChangedCommand = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) => { Password = parameter.Text; });
-            ConfirmPasswordEyeChangedCommand = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) => { ConfirmPassword = parameter.Text; });
-            ConfirmPasswordChangedCommand = new RelayCommand<PasswordBox>((parameter) => { return true; }, (parameter) => { ConfirmPassword = parameter.Password; });
+            // define
             NewPassEyeChangedCommand = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) => { NewPassword = parameter.Text; });
             ConfirmEyeChangedCommand = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) => { ConfirmNewPassword = parameter.Text; });
             NewPasswordChangedCommand = new RelayCommand<PasswordBox>((parameter) => { return true; }, (parameter) => { NewPassword = parameter.Password; });
@@ -118,17 +107,6 @@ namespace StudentManagement.ViewModel.Login
             SendCodeCommand = new RelayCommand<Window>((parameter) => { return true; }, (parameter) =>
             {
                 Send(parameter);
-            });
-            ToLogin = new RelayCommand<SignUpWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                if (parameter == null)
-                    return;
-                parameter.Account.Text = "";
-                parameter.Email.Text = "";
-                parameter.Close();
-                LoginWindow login = new LoginWindow();
-                login.ShowDialog();
-
             });
 
             ToLogin_ForgotPassword = new RelayCommand<ForgotPasswordWindow>((parameter) => { return true; }, (parameter) =>
@@ -144,10 +122,6 @@ namespace StudentManagement.ViewModel.Login
             });
             
             //
-            SignUpCommand = new RelayCommand<SignUpWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                Sign(parameter);
-            });
             
             CheckCode = new RelayCommand<Window>((parameter) =>
             {
@@ -227,170 +201,9 @@ namespace StudentManagement.ViewModel.Login
                 parameter.ConfirmNewPassword.Password = parameter.ConfirmPassEye.Text;
                 parameter.ConfirmPassEye.Visibility = Visibility.Hidden;
             });
-            ShowPassword_Register = new RelayCommand<SignUpWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.ShowPass.Visibility = Visibility.Hidden;
-                parameter.UnshowPass.Visibility = Visibility.Visible;
-                parameter.PasswordEye.Text = parameter.Password.Password;
-                parameter.PasswordEye.Visibility = Visibility.Visible;
-                parameter.Password.Visibility = Visibility.Hidden;
-            });
-            UnshowPassword_Register = new RelayCommand<SignUpWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.ShowPass.Visibility = Visibility.Visible;
-                parameter.UnshowPass.Visibility = Visibility.Hidden;
-                parameter.Password.Visibility = Visibility.Visible;
-                parameter.Password.Password = parameter.PasswordEye.Text;
-                parameter.PasswordEye.Visibility = Visibility.Hidden;
-            });
-            ShowConfirmPassword_Register = new RelayCommand<SignUpWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.ShowConfirmPass.Visibility = Visibility.Hidden;
-                parameter.UnshowConfirmPass.Visibility = Visibility.Visible;
-                parameter.ConfirmPasswordEye.Text = parameter.ConfirmPassword.Password;
-                parameter.ConfirmPasswordEye.Visibility = Visibility.Visible;
-                parameter.ConfirmPassword.Visibility = Visibility.Hidden;
-            });
-            UnshowConfirmPassword_Register = new RelayCommand<SignUpWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.ShowConfirmPass.Visibility = Visibility.Visible;
-                parameter.UnshowConfirmPass.Visibility = Visibility.Hidden;
-                parameter.ConfirmPassword.Visibility = Visibility.Visible;
-                parameter.ConfirmPassword.Password = parameter.ConfirmPasswordEye.Text;
-                parameter.ConfirmPasswordEye.Visibility = Visibility.Hidden;
-            });
+         
         }
-        void Sign(SignUpWindow parameter)
-        {
-            if (parameter == null)
-                return;
-            //Check fully information
-            if (String.IsNullOrEmpty(Username))
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter the user name";
-                //MB.ShowDialog();
-                //return;
-            }
-            else if (String.IsNullOrEmpty(Password))
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter the password";
-                //MB.ShowDialog();
-                //return;
-            }
-            else if (Password.Length < 4)
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Password length has to be greater or euqal to 4";
-                //MB.ShowDialog();
-                //return;
-            }
-            else if (String.IsNullOrEmpty(ConfirmPassword))
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please confirm the password";
-                //MB.ShowDialog();
-                //return;
-            }
-            else if (String.IsNullOrEmpty(Email))
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter the email to protect the account";
-                //MB.ShowDialog();
-                //return;
-            }
-            //check validation  of password - email
-            int countUpcase = 0, countNum = 0;
-            foreach (char c in Password)
-            {
-                if (c >= 'A' && c <= 'Z')
-                    countUpcase++;
-                if (c >= '0' && c <= '9')
-                    countNum++;
-            }
-            if (countNum == 0 || countUpcase == 0)
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Password must contain at least 1 Upcase and 1 number";
-                //MB.ShowDialog();
-                //return;
-            }
-            else if (Password != ConfirmPassword)
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Password confirmes wrong";
-                //MB.ShowDialog();
-                //return;
-            }
-            else if (!Regex.IsMatch(Email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Email format is invalid";
-                //MB.ShowDialog();
-                //return;
-            }
-            else
-            {
-                //check user - email does exists ?
-                //var UserCountm = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserName == Username).Count();
-                //var EmailCountm = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserEmail == Email).Count();
-                //if (UserCountm > 0)
-                //{
-                    //IsSignedUp = false;
-                    //MessageBoxOK MB = new MessageBoxOK();
-                    //var data = MB.DataContext as MessageBoxOKViewModel;
-                    //data.Content = "Username has been used, please try another username";
-                    //MB.ShowDialog();
-                //}
-                //if (EmailCountm > 0)
-                //{
-                    //IsSignedUp = false;
-                    //MessageBoxOK MB = new MessageBoxOK();
-                    //var data = MB.DataContext as MessageBoxOKViewModel;
-                    //data.Content = "Email has been used, please try another email";
-                    //MB.ShowDialog();
-                //}
-                //else
-                //{
-                //    string passEncode = CreateMD5(Base64Encode(Password));
-                //    //add new user to database
-                //    try
-                //    {
-                        //var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                        //var filePath = Path.Combine(projectPath, "Image", "music_note.jpg");
-                        //Converter.ByteArrayToBitmapImageConverter converter = new MusicMediaPlayer.Converter.ByteArrayToBitmapImageConverter();
-                        //string uriIamge = filePath;
-                        //byte[] newUserAvatar = converter.ImageToBinary(uriIamge);
-                        //var newuser = new UserAccount() { UserName = Username, NickName = Username, UserEmail = Email, UserPassword = passEncode, UserImage = newUserAvatar };
-                        //DataProvider.Ins.DB.UserAccounts.Add(newuser);
-                        //DataProvider.Ins.DB.SaveChanges();
-                        //MessageBoxSuccessful ms = new MessageBoxSuccessful();
-                        //ms.ShowDialog();
-                        //IsSignedUp = true;
-                        //p.Account.Text = null;
-                        //p.Email.Text = null;
-                        //p.Close();
-                        //Login login = new Login();
-                        //login.ShowDialog();
-                //    }
-                //    catch (Exception)
-                //    {
-
-                //    }
-
-                //}
-            }
-
-        }
+     
         void Send(Window parameter)
         {
             if (parameter == null)

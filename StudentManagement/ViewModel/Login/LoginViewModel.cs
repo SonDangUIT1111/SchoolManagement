@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,10 +17,13 @@ namespace StudentManagement.ViewModel.Login
 
         // khai báo biến
         public bool IsLoggedIn { get; set; }
-        private string _Username;
-        public string Username { get => _Username; set { _Username = value; OnPropertyChanged(); } }
-        private string _Password;
-        public string Password { get => _Password; set { _Password = value; OnPropertyChanged(); } }
+        private string _username;
+        public string Username { get => _username; set { _username = value; OnPropertyChanged(); } }
+        private string _password;
+        public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
+
+        // khai báo usercontrol
+        public LoginWindow LoginWindow { get; set; }
 
         // khai báo command
         public ICommand GoToRegisterCommand { get; set; }
@@ -29,6 +33,9 @@ namespace StudentManagement.ViewModel.Login
         public ICommand PasswordEyeChangedCommand { get; set; }
         public ICommand ShowPassword { get; set; }
         public ICommand UnshowPassword { get; set; }
+        public ICommand LoadData { get; set; }
+        public ICommand TurnBackRoleForm { get; set; }
+        public ICommand TurnToLoginForm { get; set; }
 
 
         public LoginViewModel()
@@ -38,14 +45,13 @@ namespace StudentManagement.ViewModel.Login
             Password = "";
             PasswordChangedCommand = new RelayCommand<PasswordBox>((paramater) => { return true; }, (paramater) => { Password = paramater.Password; });
             PasswordEyeChangedCommand = new RelayCommand<TextBox>((paramater) => { return true; }, (paramater) => { Password = paramater.Text; });
-            GoToRegisterCommand = new RelayCommand<LoginWindow>((parameter) => { return true; }, (parameter) =>
-            {
-                Username = "";
-                parameter.Close();
-                //Register register = new Register();
-                //register.ShowDialog();
 
+            LoadData = new RelayCommand<LoginWindow>((parameter) => { return true; }, (parameter) =>
+            {
+                LoginWindow = parameter;
             });
+          
+            // navigate
             LoginSuccess = new RelayCommand<Window>((paramater) => { return true; }, (paramater) =>
             {
                 Log(paramater);
@@ -58,6 +64,8 @@ namespace StudentManagement.ViewModel.Login
                 //forgotPassword.ShowDialog();
 
             });
+
+            // show password
             ShowPassword = new RelayCommand<LoginWindow>((paramater) => { return true; }, (paramater) =>
             {
                 paramater.ShowPass.Visibility = Visibility.Hidden;
@@ -73,6 +81,23 @@ namespace StudentManagement.ViewModel.Login
                 paramater.Password.Visibility = Visibility.Visible;
                 paramater.Password.Password = paramater.PasswordEye.Text;
                 paramater.PasswordEye.Visibility = Visibility.Hidden;
+            });
+
+            // switch role and login
+            TurnBackRoleForm = new RelayCommand<object>((paramater) => { return true; }, (parameter) =>
+            {
+                LoginWindow.GiamHieuRole.IsChecked = false;
+                LoginWindow.GiaoVienRole.IsChecked = false;
+                LoginWindow.HocSinhRole.IsChecked = false;  
+                LoginWindow.LoginForm.Visibility = Visibility.Collapsed;
+                LoginWindow.RoleForm.Visibility = Visibility.Visible;
+              
+            });
+            TurnToLoginForm = new RelayCommand<object>((paramater) => { return true; }, (parameter) =>
+            {
+                LoginWindow.RoleForm.Visibility = Visibility.Collapsed;
+                LoginWindow.LoginForm.Visibility = Visibility.Visible;
+               
             });
         }
         void Log(Window paramater)
