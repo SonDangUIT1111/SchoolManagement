@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StudentManagement.ViewModel.Menu;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,12 @@ namespace StudentManagement.Views.Menu
         public Menu()
         {
             InitializeComponent();
+            DataContext = new MenuViewModel();
         }
 
         private void TrangChu_Click(object sender, RoutedEventArgs e)
         {
-
+           // RPage.Content = new StudentManagement.Views.Menu.BaoCao();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -36,32 +38,32 @@ namespace StudentManagement.Views.Menu
 
         private void ThongTinHocSinh_Click(object sender, RoutedEventArgs e)
         {
-            Page.Content = new ThongTinHocSinh();
+           // RPage.Content = new ThongTinHocSinh();
         }
 
         private void ThongTinGiaoVien_Click(object sender, RoutedEventArgs e)
         {
-            Page.Content = new ThongTinGiaoVien();
+           // RPage.Content = new ThongTinGiaoVien();
         }
 
         private void LopHoc_Click(object sender, RoutedEventArgs e)
         {
-            Page.Content = new LopHoc();
+            //RPage.Content = new LopHoc();
         }
 
         private void ThongTinTruong_Click(object sender, RoutedEventArgs e)
         {
-            Page.Content = new ThongTinTruong();
+            //RPage.Content = new ThongTinTruong();
         }
 
         private void BaoCao_Click(object sender, RoutedEventArgs e)
         {
-            Page.Content = new BaoCao();
+            //RPage.Content = new BaoCao();
         }
 
         private void ThayDoiQuyDinh_Click(object sender, RoutedEventArgs e)
         {
-            Page.Content = new ThayDoiQuyDinh();
+            //RPage.Content = new ThayDoiQuyDinh();
         }
     }
 }

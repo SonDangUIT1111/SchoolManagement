@@ -77,6 +77,9 @@
       <DependentUpon>Title_Bar_Log.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\Menu\MenuViewModel.cs" />
+    <Compile Include="ViewModel\Menu\ObservableObject.cs" />
+    <Compile Include="ViewModel\Menu\TestViewModel.cs" />
     <Compile Include="Views\Login\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
     </Compile>
