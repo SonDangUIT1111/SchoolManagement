@@ -172,7 +172,10 @@
                                              Width="210"
                                              HorizontalAlignment="Center"
                                              Margin="30,0,0,0"
-                                             Text="{Binding Username}" 
+                                             Text="{Binding Username,
+                                             ValidatesOnDataErrors=True,
+                                             UpdateSourceTrigger=PropertyChanged}"
+                                             Validation.ErrorTemplate="{StaticResource ErrorMessage}" 
                                              FontWeight="SemiBold"/>
                                     <materialDesign:PackIcon Kind="Account"
                                                  Height="20"
@@ -286,7 +289,7 @@
                                             IsTabStop="False"
                                             Height="auto"
                                             Width="100"
-                                            Command="{Binding GoToForgotPassword}"
+                                            Command="{Binding GoToForgotPasswordCommand}"
                                             CommandParameter="{Binding ElementName=LoginWD}">
                                     </Button>
                                     <Button Width="80" 

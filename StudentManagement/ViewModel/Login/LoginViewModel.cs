@@ -1,6 +1,7 @@
 ﻿using StudentManagement.Views.Login;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    public class LoginViewModel:BaseViewModel
+    public class LoginViewModel:BaseViewModel, IDataErrorInfo
     {
 
         // khai báo biến
@@ -37,12 +38,47 @@ namespace StudentManagement.ViewModel.Login
         public ICommand TurnBackRoleForm { get; set; }
         public ICommand TurnToLoginForm { get; set; }
 
+        // in lỗi để username trống
+        public string Error { get { return null; } }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (LoginWindow != null)
+                {
+                    string ErrorMess = null;
+                    if (LoginWindow.Account.IsFocused == true)
+                    {
+                        switch (columnName)
+                        {
+                            case "Username":
+                                if (String.IsNullOrEmpty(Username))
+                                    ErrorMess = "Username can not be empty";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        ErrorMess = "";
+                    }
+                    return ErrorMess;
+                }
+                else return null;
+                
+            }
+        }
+
 
         public LoginViewModel()
         {
             IsLoggedIn = false;
             Username = "";
             Password = "";
+
+            // binding text 
             PasswordChangedCommand = new RelayCommand<PasswordBox>((paramater) => { return true; }, (paramater) => { Password = paramater.Password; });
             PasswordEyeChangedCommand = new RelayCommand<TextBox>((paramater) => { return true; }, (paramater) => { Password = paramater.Text; });
 
@@ -60,8 +96,8 @@ namespace StudentManagement.ViewModel.Login
             {
                 Username = "";
                 paramater.Close();
-                //ForgotPassword forgotPassword = new ForgotPassword();
-                //forgotPassword.ShowDialog();
+                ForgotPasswordWindow forgotPassword = new ForgotPasswordWindow();
+                forgotPassword.ShowDialog();
 
             });
 
@@ -91,7 +127,9 @@ namespace StudentManagement.ViewModel.Login
                 LoginWindow.HocSinhRole.IsChecked = false;  
                 LoginWindow.LoginForm.Visibility = Visibility.Collapsed;
                 LoginWindow.RoleForm.Visibility = Visibility.Visible;
-              
+                Username = "";
+                Password = null;
+
             });
             TurnToLoginForm = new RelayCommand<object>((paramater) => { return true; }, (parameter) =>
             {
@@ -104,23 +142,25 @@ namespace StudentManagement.ViewModel.Login
         {
             if (paramater == null)
                 return;
-            if (Username == "")
+            if (Username == "" || Password == "")
             {
-                //MessageBoxOK wd = new MessageBoxOK();
-                //var data = wd.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter username";
-                //wd.ShowDialog();
-            }
-            else if (Password == "")
-            {
-                //MessageBoxOK wd = new MessageBoxOK();
-                //var data = wd.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter password";
-                //wd.ShowDialog();
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin");
             }
             else
             {
-                //string passEncode = CreateMD5(Base64Encode(Password));
+                string passEncode = CreateMD5(Base64Encode(Password));
+                if (LoginWindow.GiaoVienRole.IsChecked == true)
+                {
+                    MessageBox.Show("Teacher");
+                }
+                if (LoginWindow.GiamHieuRole.IsChecked == true)
+                {
+                    MessageBox.Show("President");
+                }
+                if (LoginWindow.HocSinhRole.IsChecked == true)
+                {
+                    MessageBox.Show("Student");
+                }
                 //var AccCount = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserName == Username).Count();
                 //if (AccCount > 0)
                 //{

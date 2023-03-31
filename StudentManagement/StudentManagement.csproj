@@ -81,6 +81,9 @@
     <Compile Include="Views\GiamHieu\BaoCao.xaml.cs">
       <DependentUpon>BaoCao.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GiamHieu\DanhSachLop.xaml.cs">
+      <DependentUpon>DanhSachLop.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiamHieu\GiamHieuWindow.xaml.cs">
       <DependentUpon>GiamHieuWindow.xaml</DependentUpon>
     </Compile>
@@ -165,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\BaoCao.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\DanhSachLop.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    public class ForgotPasswordViewModel:BaseViewModel, IDataErrorInfo
+    public class ForgotPasswordViewModel:BaseViewModel
     {
 
         // biến flag
@@ -26,24 +26,23 @@ namespace StudentManagement.ViewModel.Login
         public int RandomCode { get; set; }
 
         // biến info 
-        private string _Username;
-        public string Username { get => _Username; set { _Username = value; OnPropertyChanged(); } }
-        private string _Password;
-        public string Password { get => _Password; set { _Password = value; OnPropertyChanged(); } }
-        private string _ConfirmPassword;
-        public string ConfirmPassword { get => _ConfirmPassword; set { _ConfirmPassword = value; OnPropertyChanged(); } }
-        private string _Email;
-        public string Email { get => _Email; set { _Email = value; OnPropertyChanged(); } }
-        private string _EmailProtected;
-        public string EmailProtected { get => _EmailProtected; set { _EmailProtected = value; OnPropertyChanged(); } }
-        private string _NewPassword;
-        public string NewPassword { get => _NewPassword; set { _NewPassword = value; OnPropertyChanged(); } }
-        private string _ConfirmNewPassword;
+        private string _username;
+        public string Username { get => _username; set { _username = value; OnPropertyChanged(); } }
+        private string _password;
+        public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
+        private string _confirmPassword;
+        public string ConfirmPassword { get => _confirmPassword; set { _confirmPassword = value; OnPropertyChanged(); } }
+        private string _email;
+        public string Email { get => _email; set { _email = value; OnPropertyChanged(); } }
+        private string _emailProtected;
+        public string EmailProtected { get => _emailProtected; set { _emailProtected = value; OnPropertyChanged(); } }
+        private string _newPassword;
+        public string NewPassword { get => _newPassword; set { _newPassword = value; OnPropertyChanged(); } }
+        private string _confirmNewPassword;
 
-        private string _Code;
-        public string Code { get => _Code; set { _Code = value; OnPropertyChanged(); } }
-        public string ConfirmNewPassword { get => _ConfirmNewPassword; set { _ConfirmNewPassword = value; OnPropertyChanged(); } }
-        public string Error { get { return null; } }
+        private string _code;
+        public string Code { get => _code; set { _code = value; OnPropertyChanged(); } }
+        public string ConfirmNewPassword { get => _confirmNewPassword; set { _confirmNewPassword = value; OnPropertyChanged(); } }
 
 
         // khai báo ICommand 
@@ -64,29 +63,6 @@ namespace StudentManagement.ViewModel.Login
         public ICommand UnshowPassword_Register { get; set; }
         public ICommand ShowConfirmPassword_Register { get; set; }
         public ICommand UnshowConfirmPassword_Register { get; set; }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                string ErrorMess = null;
-                switch (columnName)
-                {
-                    case "Username":
-                        if (String.IsNullOrEmpty(Username))
-                            ErrorMess = "Username can not be empty";
-                        if (Username.Length < 4)
-                            ErrorMess = "Username lenght has to be greater or equal to 4";
-                        break;
-                    case "Email":
-                        if (String.IsNullOrEmpty(Email))
-                            ErrorMess = "Email can not be empty";
-                        break;
-
-                }
-                return ErrorMess;
-            }
-        }
 
         public ForgotPasswordViewModel()
         {
