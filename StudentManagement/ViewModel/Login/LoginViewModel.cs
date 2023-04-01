@@ -1,4 +1,5 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
@@ -181,6 +182,7 @@ namespace StudentManagement.ViewModel.Login
                 else if (IndexRole == 0)
                 {
                     // queries giam hieu
+                    int id = -1;
                     int checkUser = 0;
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -189,6 +191,10 @@ namespace StudentManagement.ViewModel.Login
                         CmdString = "Select count(*) from GiamHieu where Username = '"+username+ "' and UserPassword = '" + passEncode+"'";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        // select id
+                        CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                        cmd = new SqlCommand(CmdString, con);
+                        id = Convert.ToInt32(cmd.ExecuteScalar());
                         con.Close();
                     }
 
@@ -197,6 +203,8 @@ namespace StudentManagement.ViewModel.Login
                         IsLoggedIn = true;
                         paramater.Hide();
                         GiamHieuWindow window = new GiamHieuWindow();
+                        StudentManagement.ViewModel.GiamHieu.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiamHieu.TrangChuViewModel;
+                        vm.IdGiamHieu = id;
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -210,6 +218,7 @@ namespace StudentManagement.ViewModel.Login
                 else if (IndexRole == 1)
                 {
                     // queries giao vien
+                    int id = -1;
                     int checkUser = 0;
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -218,6 +227,10 @@ namespace StudentManagement.ViewModel.Login
                         CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+
+                        CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                        cmd = new SqlCommand(CmdString, con);
+                        id = Convert.ToInt32(cmd.ExecuteScalar());
                         con.Close();
                     }
 
@@ -226,6 +239,8 @@ namespace StudentManagement.ViewModel.Login
                         IsLoggedIn = true;
                         paramater.Hide();
                         GiaoVienWindow window = new GiaoVienWindow();
+                        StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
+                        vm.IdGiaoVien = id;
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -239,7 +254,7 @@ namespace StudentManagement.ViewModel.Login
                 else if (IndexRole == 2)
                 {
                     // queries hoc sinh
-
+                    int id = -1;
                     int checkUser = 0;
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -248,6 +263,11 @@ namespace StudentManagement.ViewModel.Login
                         CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+
+
+                        CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                        cmd = new SqlCommand(CmdString, con);
+                        id = Convert.ToInt32(cmd.ExecuteScalar());
                         con.Close();
                     }
 
@@ -256,6 +276,8 @@ namespace StudentManagement.ViewModel.Login
                         IsLoggedIn = true;
                         paramater.Hide();
                         HocSinhWindow window = new HocSinhWindow();
+                        StudentManagement.ViewModel.HocSinh.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.HocSinh.TrangChuViewModel;
+                        vm.IdHocSinh = id;
                         window.ShowDialog();
                         paramater.Close();
                     }

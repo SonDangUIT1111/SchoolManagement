@@ -11,6 +11,10 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class TrangChuViewModel:BaseViewModel
     {
+        //declare variable
+
+        private int _idGiamHieu;
+        public int IdGiamHieu { get { return _idGiamHieu; } set { _idGiamHieu = value; } }
 
         //declare Pages
         public BaoCao BaoCaoPage { get; set; }

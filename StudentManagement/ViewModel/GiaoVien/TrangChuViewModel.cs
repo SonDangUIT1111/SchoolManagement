@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -11,6 +12,10 @@ namespace StudentManagement.ViewModel.GiaoVien
 {
     internal class TrangChuViewModel:BaseViewModel
     {
+        //declare variable
+        private int _idGiaoVien;
+        public int IdGiaoVien { get { return _idGiaoVien; } set { _idGiaoVien = value; } }
+
         //declare Pages
         public BaoCao BaoCaoPage { get; set; }
         public LopHoc LopHocPage { get; set; }

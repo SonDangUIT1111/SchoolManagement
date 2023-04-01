@@ -11,6 +11,10 @@ namespace StudentManagement.ViewModel.HocSinh
 {
     internal class TrangChuViewModel:BaseViewModel
     {
+        //declare variable
+
+        private int _idHocSinh;
+        public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
 
         //declare Pages
         public LopHoc LopHocPage { get; set; }

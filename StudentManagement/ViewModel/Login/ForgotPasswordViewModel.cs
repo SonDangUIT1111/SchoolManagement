@@ -397,7 +397,7 @@ namespace StudentManagement.ViewModel.Login
             messageBody = "Your verified code is " + codesend;
             from = "studentsp111111@gmail.com";
             subject = "Student management - Changing Password";
-            MailMessage message = new MailMessage(from, "sondanguit@gmail.com", subject, messageBody);
+            MailMessage message = new MailMessage(from, to, subject, messageBody);
             SmtpClient client = new SmtpClient("smtp.gmail.com");
             client.EnableSsl = true;
             client.Port = 587;
