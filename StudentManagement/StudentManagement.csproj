@@ -73,6 +73,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Model\ConnectionString.cs" />
     <Compile Include="Resources\User_Controls\Title_Bar_Log.xaml.cs">
       <DependentUpon>Title_Bar_Log.xaml</DependentUpon>
     </Compile>
@@ -308,7 +309,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="Resources\Fonts\" />
     <Folder Include="Resources\Icons\" />
   </ItemGroup>

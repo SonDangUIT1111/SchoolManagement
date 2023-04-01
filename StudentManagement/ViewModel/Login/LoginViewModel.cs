@@ -1,7 +1,12 @@
-﻿using StudentManagement.Views.Login;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.GiaoVien;
+using StudentManagement.Views.HocSinh;
+using StudentManagement.Views.Login;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -22,6 +27,8 @@ namespace StudentManagement.ViewModel.Login
         public string Username { get => _username; set { _username = value; OnPropertyChanged(); } }
         private string _password;
         public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
+        public int _indexRole = -1;
+        public int IndexRole { get => _indexRole; set { _indexRole = value; OnPropertyChanged(); } }
 
         // khai báo usercontrol
         public LoginWindow LoginWindow { get; set; }
@@ -54,7 +61,7 @@ namespace StudentManagement.ViewModel.Login
                         {
                             case "Username":
                                 if (String.IsNullOrEmpty(Username))
-                                    ErrorMess = "Username can not be empty";
+                                    ErrorMess = "Vui lòng nhập username.";
                                 break;
                             default:
                                 break;
@@ -95,9 +102,12 @@ namespace StudentManagement.ViewModel.Login
             GoToForgotPasswordCommand = new RelayCommand<LoginWindow>((paramater) => { return true; }, (paramater) =>
             {
                 Username = "";
-                paramater.Close();
+                paramater.Hide();
                 ForgotPasswordWindow forgotPassword = new ForgotPasswordWindow();
+                ForgotPasswordViewModel viewmodel = forgotPassword.DataContext as ForgotPasswordViewModel;
+                viewmodel.IndexRole = IndexRole;
                 forgotPassword.ShowDialog();
+                paramater.Close();
 
             });
 
@@ -122,20 +132,33 @@ namespace StudentManagement.ViewModel.Login
             // switch role and login
             TurnBackRoleForm = new RelayCommand<object>((paramater) => { return true; }, (parameter) =>
             {
+                IndexRole = -1;
                 LoginWindow.GiamHieuRole.IsChecked = false;
                 LoginWindow.GiaoVienRole.IsChecked = false;
                 LoginWindow.HocSinhRole.IsChecked = false;  
                 LoginWindow.LoginForm.Visibility = Visibility.Collapsed;
                 LoginWindow.RoleForm.Visibility = Visibility.Visible;
                 Username = "";
-                Password = null;
+                LoginWindow.Password.Password = null;
 
             });
             TurnToLoginForm = new RelayCommand<object>((paramater) => { return true; }, (parameter) =>
             {
                 LoginWindow.RoleForm.Visibility = Visibility.Collapsed;
                 LoginWindow.LoginForm.Visibility = Visibility.Visible;
-               
+                if (LoginWindow.GiaoVienRole.IsChecked == true)
+                {
+                    IndexRole = 1;
+                }
+                if (LoginWindow.GiamHieuRole.IsChecked == true)
+                {
+                    IndexRole = 0;
+                }
+                if (LoginWindow.HocSinhRole.IsChecked == true)
+                {
+                    IndexRole = 2;
+                }
+
             });
         }
         void Log(Window paramater)
@@ -148,46 +171,102 @@ namespace StudentManagement.ViewModel.Login
             }
             else
             {
-                string passEncode = CreateMD5(Base64Encode(Password));
-                if (LoginWindow.GiaoVienRole.IsChecked == true)
+                string passEncode = Password;
+                string username = Username;
+                if (IndexRole == -1)
                 {
-                    MessageBox.Show("Teacher");
+                    MessageBox.Show("Vui lòng chọn chức vụ");
+                    return;
                 }
-                if (LoginWindow.GiamHieuRole.IsChecked == true)
+                else if (IndexRole == 0)
                 {
-                    MessageBox.Show("President");
+                    // queries giam hieu
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        CmdString = "Select count(*) from GiamHieu where Username = '"+username+ "' and UserPassword = '" + passEncode+"'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+
+                    if (checkUser > 0)
+                    {
+                        IsLoggedIn = true;
+                        paramater.Hide();
+                        GiamHieuWindow window = new GiamHieuWindow();
+                        window.ShowDialog();
+                        paramater.Close();
+                    }
+                    else
+                    {
+                        IsLoggedIn = false;
+                        MessageBox.Show("Sai tài khoản hoặc mật khẩu");
+                        return;
+                    }
                 }
-                if (LoginWindow.HocSinhRole.IsChecked == true)
+                else if (IndexRole == 1)
                 {
-                    MessageBox.Show("Student");
+                    // queries giao vien
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+
+                    if (checkUser > 0)
+                    {
+                        IsLoggedIn = true;
+                        paramater.Hide();
+                        GiaoVienWindow window = new GiaoVienWindow();
+                        window.ShowDialog();
+                        paramater.Close();
+                    }
+                    else
+                    {
+                        IsLoggedIn = false;
+                        MessageBox.Show("Sai tài khoản hoặc mật khẩu");
+                        return;
+                    }
                 }
-                //var AccCount = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserName == Username).Count();
-                //if (AccCount > 0)
-                //{
-                //    var CheckPass = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserName == Username && x.UserPassword == passEncode).Count();
-                //    if (CheckPass > 0)
-                //    {
-                //        IsLoggedIn = true;
-                //        p.Close();
-                //    }
-                //    else
-                //    {
-                //        IsLoggedIn = false;
-                //        MessageBoxOK wd = new MessageBoxOK();
-                //        var data = wd.DataContext as MessageBoxOKViewModel;
-                //        data.Content = "Wrong password";
-                //        wd.ShowDialog();
-                //        return;
-                //    }
-                //}
-                //else
-                //{
-                //    IsLoggedIn = false;
-                //    MessageBoxOK wd = new MessageBoxOK();
-                //    var data = wd.DataContext as MessageBoxOKViewModel;
-                //    data.Content = "User Account does not exists";
-                //    wd.ShowDialog();
-                //}
+                else if (IndexRole == 2)
+                {
+                    // queries hoc sinh
+
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+
+                    if (checkUser > 0)
+                    {
+                        IsLoggedIn = true;
+                        paramater.Hide();
+                        HocSinhWindow window = new HocSinhWindow();
+                        window.ShowDialog();
+                        paramater.Close();
+                    }
+                    else
+                    {
+                        IsLoggedIn = false;
+                        MessageBox.Show("Sai tài khoản hoặc mật khẩu");
+                        return;
+                    }
+                }
+
             }
 
         }

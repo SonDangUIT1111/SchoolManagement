@@ -1,7 +1,9 @@
-﻿using StudentManagement.Views.Login;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.Login;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -26,14 +28,9 @@ namespace StudentManagement.ViewModel.Login
         public int RandomCode { get; set; }
 
         // biến info 
-        private string _username;
-        public string Username { get => _username; set { _username = value; OnPropertyChanged(); } }
-        private string _password;
-        public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
-        private string _confirmPassword;
-        public string ConfirmPassword { get => _confirmPassword; set { _confirmPassword = value; OnPropertyChanged(); } }
-        private string _email;
-        public string Email { get => _email; set { _email = value; OnPropertyChanged(); } }
+        private int _indexRole;
+        public int IndexRole { get { return _indexRole; } set { _indexRole = value; } }
+
         private string _emailProtected;
         public string EmailProtected { get => _emailProtected; set { _emailProtected = value; OnPropertyChanged(); } }
         private string _newPassword;
@@ -187,35 +184,100 @@ namespace StudentManagement.ViewModel.Login
             //check fully information
             if (String.IsNullOrEmpty(EmailProtected))
             {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter the email has assigned";
-                //MB.ShowDialog();
-                //return;
+                MessageBox.Show("Vui lòng điền email bảo vệ tài khoản.");
+                return;
             }
             else
             {
-                //check email exists ?
-                //var EmailCountm = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserEmail == EmailProtected).Count();
-                //if exists
-                //if (EmailCountm > 0)
-                //{
-                //    IsSend = true;
-                //    Random rd = new Random();
-                //    RandomCode = rd.Next(100000, 999999);
-                //    string RandomCodeString = RandomCode.ToString();
-                //    SendCodeByEmail(RandomCodeString, EmailProtected);
-                //    return;
-                //}
-                //else
-                //{
-                    //IsSend = false;
-                    //MessageBoxOK MB = new MessageBoxOK();
-                    //var data = MB.DataContext as MessageBoxOKViewModel;
-                    //data.Content = "This email has not been assigned";
-                    //MB.ShowDialog();
-                    //return;
-                //}
+                if (IndexRole == - 1)
+                {
+                    MessageBox.Show("Vui lòng chọn chức vụ");
+                    return;
+                }
+                else if (IndexRole == 0)
+                {
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        CmdString = "Select count(*) from GiamHieu where Email = '" + EmailProtected + "'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+                    if (checkUser > 0)
+                    {
+                        IsSend = true;
+                        Random rd = new Random();
+                        RandomCode = rd.Next(100000, 999999);
+                        string RandomCodeString = RandomCode.ToString();
+                        SendCodeByEmail(RandomCodeString, EmailProtected);
+                        return;
+                    }
+                    else
+                    {
+                        IsSend = false;
+                        MessageBox.Show("Email chưa được đăng ký.");
+                        return;
+                    }
+                }
+                else if (IndexRole == 1)
+                {
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        CmdString = "Select count(*) from GiaoVien where Email = '" + EmailProtected + "'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+                    if (checkUser > 0)
+                    {
+                        IsSend = true;
+                        Random rd = new Random();
+                        RandomCode = rd.Next(100000, 999999);
+                        string RandomCodeString = RandomCode.ToString();
+                        SendCodeByEmail(RandomCodeString, EmailProtected);
+                        return;
+                    }
+                    else
+                    {
+                        IsSend = false;
+                        MessageBox.Show("Email chưa được đăng ký.");
+                        return;
+                    }
+                }
+                else if (IndexRole == 2)
+                {
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        CmdString = "Select count(*) from HocSinh where Email = '" + EmailProtected + "'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+                    if (checkUser > 0)
+                    {
+                        IsSend = true;
+                        Random rd = new Random();
+                        RandomCode = rd.Next(100000, 999999);
+                        string RandomCodeString = RandomCode.ToString();
+                        SendCodeByEmail(RandomCodeString, EmailProtected);
+                        return;
+                    }
+                    else
+                    {
+                        IsSend = false;
+                        MessageBox.Show("Email chưa được đăng ký.");
+                        return;
+                    }
+                }
             }
         }
         void Verified(Window parameter)
@@ -227,29 +289,21 @@ namespace StudentManagement.ViewModel.Login
             {
                 if (Int32.Parse(window.CodeVerified.Text) == RandomCode)
                 {
-                    //IsVerified = true;
-                    //MessageBoxOK MB = new MessageBoxOK();
-                    //var data = MB.DataContext as MessageBoxOKViewModel;
-                    //data.Content = "Successfully verified, please enter your new password";
-                    //MB.ShowDialog();
-                    //return;
+                    IsVerified = true;
+                    MessageBox.Show("Xác thực thành công, vui lòng nhập mật khẩu mới");
+                    return;
                 }
                 else
                 {
-                    //MessageBoxOK MB = new MessageBoxOK();
-                    //var data = MB.DataContext as MessageBoxOKViewModel;
-                    //data.Content = "The code is not right";
-                    //MB.ShowDialog();
-                    //IsVerified = false;
+                    MessageBox.Show("Mã xác thực không chính xác, vui lòng nhập lại");
+                    IsVerified = false;
+                    return;
                 }
             }
             catch (Exception)
             {
-                //IsVerified = false;
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Code format is not correct";
-                //MB.ShowDialog();
+                IsVerified = false;
+                MessageBox.Show("Định dạng mã xác thực không hợp lệ, vui lòng nhập 6 chữ số để xác thực");
             }
         }
         void Change(Window parameter)
@@ -258,19 +312,13 @@ namespace StudentManagement.ViewModel.Login
                 return;
             if (String.IsNullOrEmpty(NewPassword))
             {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please enter new password";
-                //MB.ShowDialog();
-                //return;
+                MessageBox.Show("Vui lòng nhập mật khẩu mới");
+                return;
             }
             if (String.IsNullOrEmpty(ConfirmNewPassword))
             {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Please confirm new password";
-                //MB.ShowDialog();
-                //return;
+                MessageBox.Show("Vui lòng xác nhận lại mật khẩu mới");
+                return;
             }
             //check validation of password
             int countUpcase = 0, countNum = 0;
@@ -283,31 +331,40 @@ namespace StudentManagement.ViewModel.Login
             }
             if (countNum == 0 || countUpcase == 0)
             {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Password must contain at least 1 Upcase and 1 number";
-                //MB.ShowDialog();
-                //return;
+                MessageBox.Show("Mật khẩu phải có ít nhất một kí tự in hoa và một kí tự số");
+                return;
             }
             if (ConfirmNewPassword != NewPassword)
             {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Confirm wrong";
-                //MB.ShowDialog();
-                //return;
+                MessageBox.Show("Mật khẩu xác nhận không chính xác");
+                return;
             }
             else
             {
-                //string encodenewPass = CreateMD5(Base64Encode(NewPassword));
-                //var acc = DataProvider.Ins.DB.UserAccounts.Where(x => x.UserEmail == EmailProtected).SingleOrDefault();
-                //acc.UserPassword = encodenewPass;
-                //DataProvider.Ins.DB.SaveChanges();
-                //MessageBoxSuccessful MB = new MessageBoxSuccessful();
-                //MB.ShowDialog();
-                //p.Close();
-                //Login login = new Login();
-                //login.ShowDialog();
+                string CmdString = string.Empty;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    if (IndexRole == 0)
+                    {
+                        CmdString = "Update GiamHieu Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                    }
+                    else if (IndexRole == 1)
+                    {
+                        CmdString = "Update GiaoVien Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                    }
+                    else if (IndexRole == 2)
+                    {
+                        CmdString = "Update HocSinh Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                    }
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    cmd.ExecuteScalar();
+                    con.Close();
+                }
+                MessageBox.Show("Đổi mật khẩu thành công");
+                parameter.Close();
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
             }
         }
         public static string Base64Encode(string plainText)
@@ -338,26 +395,22 @@ namespace StudentManagement.ViewModel.Login
         {
             string from, subject, messageBody;
             messageBody = "Your verified code is " + codesend;
-            from = "spksk1111@gmail.com";
+            from = "studentsp111111@gmail.com";
             subject = "Student management - Changing Password";
-            MailMessage message = new MailMessage(from, to, subject, messageBody);
+            MailMessage message = new MailMessage(from, "sondanguit@gmail.com", subject, messageBody);
             SmtpClient client = new SmtpClient("smtp.gmail.com");
             client.EnableSsl = true;
             client.Port = 587;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.Credentials = new NetworkCredential(from, "aonfbkjdjndadyso");
+            client.Credentials = new NetworkCredential(from, "dfmsetbdrstlnenr");
             try
             {
                 client.Send(message);
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "The code verified has been sent to your email protect";
-                //MB.ShowDialog();
+                MessageBox.Show("Mã xác thực đã được gửi đến email bảo vệ của bạn");
             }
             catch (Exception)
             {
-                //MessageBoxFail MB = new MessageBoxFail();
-                //MB.ShowDialog();
+                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
             }
         }
 
