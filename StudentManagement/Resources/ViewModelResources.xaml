@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:viewmodel="clr-namespace:StudentManagement.ViewModel.Login"
                     xmlns:viewmodelGH="clr-namespace:StudentManagement.ViewModel.GiamHieu"
+                    xmlns:viewmodelGV="clr-namespace:StudentManagement.ViewModel.GiaoVien"
+                    xmlns:viewmodelHS="clr-namespace:StudentManagement.ViewModel.HocSinh"
                     xmlns:converter="clr-namespace:StudentManagement.Converter">
     
     <!--Login-->
@@ -11,9 +13,9 @@
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
     <!--GiaoVien-->
-    
+    <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <!--HocSinh-->
-    
+    <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <!--Converter-->
     <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
 
