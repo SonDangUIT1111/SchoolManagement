@@ -24,7 +24,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where MaLop = '100'";
+                string CmdString = "select * from HocSinh where TenHocSinh is not null";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -32,8 +32,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     while (reader.Read())
                     {
-                        StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
-                        student.TenHocSinh = reader.GetString(1);
+                        StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh
+                        {
+                            MaHocSinh = reader.GetInt32(0),
+                            TenHocSinh = reader.GetString(1),
+                            NgaySinh = reader.GetDateTime(2),
+                            GioiTinh = reader.GetBoolean(3),
+                            DiaChi = reader.GetString(4),
+                            Email = reader.GetString(5),
+                        };
                         DanhSachLop.Add(student);
                     }
                     reader.NextResult();
