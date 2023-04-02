@@ -13,7 +13,7 @@ namespace StudentManagement.Model
         private string _tenGiaoVien;
         public string TenGiaoVien { get { return _tenGiaoVien; } set { _tenGiaoVien = value; } }
         private DateTime _ngaySinh;
-        public DateTime NaySinh { get { return _ngaySinh; } set { _ngaySinh = value; } }
+        public DateTime NgaySinh { get { return _ngaySinh; } set { _ngaySinh = value; } }
         private bool _gioiTinh;
         public bool GioiTinh { get { return _gioiTinh; } set { _gioiTinh = value; } }
         private string _diaChi;

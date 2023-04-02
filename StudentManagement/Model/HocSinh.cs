@@ -9,11 +9,11 @@ namespace StudentManagement.Model
     public class HocSinh
     {
         private int _maHocSinh;
-        public int MaGiaoVien { get { return _maHocSinh; } set { _maHocSinh = value; } }
+        public int MaHocSinh { get { return _maHocSinh; } set { _maHocSinh = value; } }
         private string _tenHocSinh;
-        public string TenGiaoVien { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
+        public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
         private DateTime _ngaySinh;
-        public DateTime NaySinh { get { return _ngaySinh; } set { _ngaySinh = value; } }
+        public DateTime NgaySinh { get { return _ngaySinh; } set { _ngaySinh = value; } }
         private bool _gioiTinh;
         public bool GioiTinh { get { return _gioiTinh; } set { _gioiTinh = value; } }
         private string _diaChi;
