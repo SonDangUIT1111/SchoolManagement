@@ -73,7 +73,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Model\BaoCaoHocKy.cs" />
+    <Compile Include="Model\BaoCaoMon.cs" />
     <Compile Include="Model\ConnectionString.cs" />
+    <Compile Include="Model\GiamHieu.cs" />
+    <Compile Include="Model\GiaoVien.cs" />
+    <Compile Include="Model\HeThongDiem.cs" />
+    <Compile Include="Model\HocSinh.cs" />
+    <Compile Include="Model\Khoi.cs" />
+    <Compile Include="Model\Lop.cs" />
+    <Compile Include="Model\MonHoc.cs" />
+    <Compile Include="Model\PhanCongGiangDay.cs" />
+    <Compile Include="Model\QuiDinh.cs" />
+    <Compile Include="Model\ThanhTich.cs" />
     <Compile Include="Resources\User_Controls\Title_Bar_Log.xaml.cs">
       <DependentUpon>Title_Bar_Log.xaml</DependentUpon>
     </Compile>
