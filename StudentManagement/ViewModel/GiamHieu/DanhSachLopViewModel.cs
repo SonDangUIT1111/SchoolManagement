@@ -1,4 +1,5 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -14,9 +16,23 @@ namespace StudentManagement.ViewModel.GiamHieu
     {
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachLop;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachLop { get => _danhSachLop; set { _danhSachLop = value;OnPropertyChanged(); } }
+        
+
+        // declare ICommand
+
+        public ICommand ThemHocSinh { get; set; }
         public DanhSachLopViewModel()
         {
             LoadDanhSachHocSinh();
+            ThemHocSinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                XepLopChoHocSinh window = new XepLopChoHocSinh();
+                XepLopViewModel data = window.DataContext as XepLopViewModel;
+                data.LopHocDangChon.MaLop = 100;
+                data.LopHocDangChon.TenLop = "10A1";
+                window.ShowDialog();
+                LoadDanhSachHocSinh();
+            });
         }
         public void LoadDanhSachHocSinh()
         {
@@ -24,7 +40,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null";
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = 100";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 

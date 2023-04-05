@@ -1,4 +1,5 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,9 @@ namespace StudentManagement.ViewModel.GiamHieu
     {
 
         // khai báo biến
+        private Lop _lopHocDangChon;
+        public Lop LopHocDangChon { get { return _lopHocDangChon; } set { _lopHocDangChon = value;OnPropertyChanged(); } }
+        public XepLopChoHocSinh XepLopWD { get; set; }
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachHocSinh;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachHocSinh { get => _danhSachHocSinh; set { _danhSachHocSinh = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _namSinhCmb;
@@ -27,14 +31,20 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand FindTheoNamSinh { get; set; }
         public ICommand Filter { get; set; }
         public ICommand DanhDau { get; set; }
-        public ICommand Cancel { get; set; }
+        public ICommand CancelCommand { get; set; }
         public ICommand XepLop { get; set; }
+        public ICommand LoadWindow { get; set; }
         public XepLopViewModel()
         {
+            LopHocDangChon = new Lop(); 
             LoadNamSinh();
-            LoadDanhSachHocSinh();
-            SelectCheckBox = new bool[DanhSachHocSinh.Count];
             // define command
+            LoadWindow = new RelayCommand<XepLopChoHocSinh>((parameter) => { return true; }, (parameter) =>
+            {
+                XepLopWD = parameter;
+                LoadDanhSachHocSinh();
+                SelectCheckBox = new bool[DanhSachHocSinh.Count];
+            });
             FindTheoNamSinh = new RelayCommand<object>((parameter) => { return true; },(parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
@@ -52,10 +62,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                 int location = parameter.SelectedIndex;
                 SelectCheckBox[location] = !SelectCheckBox[location];
             });
-            Cancel = new RelayCommand<Window>((parameter) => { return true; }, (parameter) => { parameter.Close(); });
+            CancelCommand = new RelayCommand<object>((parameter) => { return true; }, (parameter) => 
+            {
+                XepLopWD.Close();
+            });
             XepLop = new RelayCommand<DataGrid>((parameter) => { return true; }, (parameter) =>
             {
-                
+                ThemHocSinhVaoLop();
             });
         }
         void LoadNamSinh()
@@ -64,7 +77,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select distinct Year(NgaySinh) from HocSinh where TenHocSinh is not null";
+                string CmdString = "select distinct Year(NgaySinh) from HocSinh where TenHocSinh is not null and MaLop <> "+LopHocDangChon.MaLop.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -85,7 +98,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null";
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop <> " + LopHocDangChon.MaLop.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -116,7 +129,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) ="+value+"";
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) ="+value+ " and MaLop <> " + LopHocDangChon.MaLop.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -146,7 +159,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%'";
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and MaLop <>" + LopHocDangChon.MaLop.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -169,6 +182,34 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
             }
+        }
+        void ThemHocSinhVaoLop()
+        {
+            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn thêm những học sinh này vào lớp "
+                                                        +LopHocDangChon.TenLop,"Thông báo",MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "";
+                    SqlCommand cmd;
+                    for (int i = 0; i < SelectCheckBox.Length; i++)
+                    {
+                        if (SelectCheckBox[i] == true)
+                        {
+                            CmdString = "Update HocSinh set MaLop = " + LopHocDangChon.MaLop + " ,TenLop = '" + LopHocDangChon.TenLop + "' " +
+                                        " where MaHocSinh = " + DanhSachHocSinh[i].MaHocSinh;
+                            cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+                        }
+                    }
+                    con.Close();
+                }
+            }
+            MessageBox.Show("Thêm thành công");
+            XepLopWD.Close();
+            
         }
     }
 }

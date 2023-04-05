@@ -73,6 +73,7 @@
                         Margin="25"
                         Content="Thêm Học Sinh" 
                         FontSize="18" 
+                        Command="{Binding ThemHocSinh}"
                         FontWeight="Bold">
                 </Button>
                 <StackPanel Orientation="Horizontal"
