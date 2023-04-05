@@ -123,18 +123,16 @@
                                                  Kind="Magnify" />
                     </Button>
                 </StackPanel>
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Hidden">
-                    <DataGrid Margin="25,0,25,10"
-                              Width="1000"
-                              ScrollViewer.CanContentScroll="True"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                              ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                              ItemsSource="{Binding DanhSachLop}"
-                              Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}">
+                <DataGrid Margin="25,0,25,10"
+                          Width="1000"
+                          Grid.Row="1"
+                          SelectionUnit="FullRow"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ItemsSource="{Binding DanhSachLop}"
+                          Style="{StaticResource DataGridStyle1}"
+                          RowStyle="{StaticResource DataGridRowStyle1}"
+                          CellStyle="{StaticResource DataGridCellStyle1}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
@@ -197,7 +195,6 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                </ScrollViewer>
             </Grid>
         </Border>
     </Grid>

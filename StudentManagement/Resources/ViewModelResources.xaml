@@ -13,6 +13,7 @@
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
+    <viewmodelGH:XepLopViewModel x:Key="XepLopVM"></viewmodelGH:XepLopViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <!--HocSinh-->
