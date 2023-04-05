@@ -15,18 +15,13 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="XepLopChoHocSinh" 
-        Height="650" 
+        Height="700" 
         Width="960"
         WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
         Background="Transparent"
         Name="XepLopWD"
         DataContext="{StaticResource XepLopVM}">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadXepLopList}"
-                                   CommandParameter="{Binding ElementName=XepLopWD}"/>
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -52,7 +47,8 @@
             <StackPanel Orientation="Horizontal"
                         Margin="0 50 0 0"
                         VerticalAlignment="Top">
-                <ComboBox materialDesign:HintAssist.Hint="Năm sinh"
+                <ComboBox x:Name="cmbNamSinh"
+                          materialDesign:HintAssist.Hint="Năm sinh"
                           IsEditable="False"
                           Width="200"
                           Height="40"
@@ -61,43 +57,56 @@
                           HorizontalAlignment="Left"
                           Margin="25 0 0 0"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding FindTheoNamSinh}"
+                                   CommandParameter="{Binding ElementName=cmbNamSinh}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </ComboBox>
-                <TextBox materialDesign:HintAssist.Hint="Search ... "
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             Width="640"
-                             Height="40"
-                             Padding="10"
-                             Margin="25 0 0 0"/>
+                <TextBox x:Name="tbSearch"
+                         materialDesign:HintAssist.Hint="Search ... "
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Width="640"
+                         Height="40"
+                         Padding="10"
+                         Margin="25 0 0 0"/>
                 <Button Margin="10 0 0 0"
-                            Background="Transparent"
-                            BorderBrush="#0099FF"
-                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        Background="Transparent"
+                        BorderBrush="#0099FF"
+                        Command="{Binding Filter}" 
+                        CommandParameter="{Binding ElementName=tbSearch}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                     <materialDesign:PackIcon Width="20"
                                                  Height="20"
                                                  Kind="Magnify" />
                 </Button>
             </StackPanel>
-            <DataGrid Height="480"
+            <DataGrid x:Name="ListHocSinh"
+                      Height="480"
                       Width="920"
                       HorizontalAlignment="Left"
-                      Margin="20 0 0 10"
+                      Margin="20 0 0 80"
                       VerticalAlignment="Bottom"
                       AutoGenerateColumns="False"
+                      CanUserAddRows="False"
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       RowStyle="{StaticResource MaterialDesignDataGridRow}"
                       CellStyle="{StaticResource MaterialDesignDataGridCell}"
                       Style="{StaticResource ResourceKey=MaterialDesignDataGrid}"
-                      SelectionMode="Extended"
+                      SelectionMode="Single"
                       SelectionUnit="FullRow"
                       ItemsSource="{Binding DanhSachHocSinh}">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn CellStyle="{StaticResource MaterialDesignDataGridCell}"/>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal"
                                             Width="920"
                                             HorizontalAlignment="Left">
+                                    <CheckBox Padding="10" 
+                                              Command="{Binding Source={StaticResource XepLopVM}, Path=DanhDau}"
+                                              CommandParameter="{Binding ElementName=ListHocSinh }">                                    </CheckBox>
                                     <Border CornerRadius="10"
                                             Height="40"
                                             Width="40">
@@ -146,6 +155,25 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right">
+                <!--<Button Style="{StaticResource InteractiveButton}"
+                        Background="#2af598"
+                        Foreground="#000000"
+                        Width="150"
+                        Content="Thêm"
+                        Margin="0 0 20 10"
+                        Command="{Binding XepLop}"/>
+                <Button Style="{StaticResource InteractiveButton}"
+                        Background="#CFCDCB"
+                        Foreground="#000000"
+                        Width="150"
+                        Content="Hủy"
+                        Margin="0 0 20 10"
+                        Command="{Binding Cancel}"
+                        CommandParameter="{Binding ElementName=XepLopWD}"/>-->
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
