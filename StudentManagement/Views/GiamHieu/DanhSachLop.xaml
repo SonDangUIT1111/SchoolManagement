@@ -15,10 +15,17 @@
       FontFamily="{DynamicResource MaterialDesignFont}"
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       Title="DanhSachLop"
       x:Name="DanhSachLopWD"
       Background="#FFECECEC"
       DataContext="{StaticResource DanhSachLopVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadWindow}"
+                                   CommandParameter="{Binding ElementName=DanhSachLopWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -134,56 +141,56 @@
                           Style="{StaticResource DataGridStyle1}"
                           RowStyle="{StaticResource DataGridRowStyle1}"
                           CellStyle="{StaticResource DataGridCellStyle1}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn>
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal"
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
                                                     Width="980"
                                                     HorizontalAlignment="Left">
-                                            <Border CornerRadius="10"
+                                        <Border CornerRadius="10"
                                                 Height="40"
                                                 Width="40">
-                                                <Border.Background>
-                                                    <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
-                                                </Border.Background>
-                                            </Border>
-                                            <TextBlock VerticalAlignment="Center"
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="200"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding TenHocSinh}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="100"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding NgaySinh}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="50"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding GioiTinh, Converter={StaticResource BooleanToGenderConverter}}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="200"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding DiaChi}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="200"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding Email}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                        <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
                                                     Background="#FC8484"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
@@ -192,13 +199,19 @@
                                                     Padding="0"
                                                     Command="{Binding Source={StaticResource DanhSachLopVM}, Path=RemoveKhoiLop}"
                                                     CommandParameter="{Binding}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <materialDesign:Snackbar x:Name="Snackbar"
+                                         MessageQueue="{materialDesign:MessageQueue}"
+                                         VerticalAlignment="Bottom"
+                                         Grid.Row="2">
+                    <materialDesign:SnackbarMessage ActionContent="Hoàn tác"
+                                                    Content="Xóa thành công" />
+                </materialDesign:Snackbar>
             </Grid>
         </Border>
     </Grid>

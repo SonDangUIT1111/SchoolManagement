@@ -1,4 +1,5 @@
-﻿using StudentManagement.Model;
+﻿using MaterialDesignThemes.Wpf;
+using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,11 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class DanhSachLopViewModel:BaseViewModel
     {
+        private int _maLop;
+        public int MaLop { get { return _maLop; } set { _maLop = value;} }
+        private string _tenLop;
+        public string TenLop { get { return _tenLop; } set { _tenLop = value;} }
+        public DanhSachLop DanhSachLopWindow { get; set; }
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachLop;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachLop { get => _danhSachLop; set { _danhSachLop = value;OnPropertyChanged(); } }
         
@@ -22,15 +28,22 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public ICommand ThemHocSinh { get; set; }
         public ICommand RemoveKhoiLop { get; set; }
+        public ICommand LoadWindow { get; set; }
         public DanhSachLopViewModel()
         {
+            MaLop = 100;
+            TenLop = "10A1";
             LoadDanhSachHocSinh();
+            LoadWindow = new RelayCommand<DanhSachLop>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachLopWindow = parameter;
+            });
             ThemHocSinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 XepLopChoHocSinh window = new XepLopChoHocSinh();
                 XepLopViewModel data = window.DataContext as XepLopViewModel;
-                data.LopHocDangChon.MaLop = 100;
-                data.LopHocDangChon.TenLop = "10A1";
+                data.LopHocDangChon.MaLop = MaLop;
+                data.LopHocDangChon.TenLop = TenLop;
                 window.ShowDialog();
                 LoadDanhSachHocSinh();
             });
@@ -39,6 +52,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                 Model.HocSinh item = parameter;
                 XoaHocSinh(item);
                 LoadDanhSachHocSinh();
+                // Hiện snackbar thông báo xóa thành công, có thể hoàn tác
+                DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
+                $"Xóa thành công",
+                $"Hoàn tác",
+                param => { HoanTac(item); },
+                TimeSpan.FromSeconds(5));
             });
         }
         public void LoadDanhSachHocSinh()
@@ -47,7 +66,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = 100";
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = "+MaLop.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -90,6 +109,27 @@ namespace StudentManagement.ViewModel.GiamHieu
                 cmd.ExecuteScalar();
                 con.Close();
             }
+        }
+        public void HoanTac(Model.HocSinh value)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                SqlCommand cmd;
+                string CmdString = "Update HocSinh set MaLop = "+MaLop.ToString()+", TenLop = '"+TenLop+"' where MaHocSinh = " + value.MaHocSinh;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+
+                CmdString = "Update HeThongDiem set MaLop = " + MaLop.ToString() + ", TenLop = '" + TenLop + "' where MaHocSinh = " + value.MaHocSinh;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+
+                CmdString = "Update ThanhTich set MaLop = " + MaLop.ToString() + ", TenLop = '" + TenLop + "' where MaHocSinh = " + value.MaHocSinh;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+                con.Close();
+            }
+            LoadDanhSachHocSinh();
         }
 
     }
