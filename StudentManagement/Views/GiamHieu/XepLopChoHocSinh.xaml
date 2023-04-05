@@ -113,7 +113,8 @@
                                             HorizontalAlignment="Left">
                                     <CheckBox Padding="10" 
                                               Command="{Binding Source={StaticResource XepLopVM}, Path=DanhDau}"
-                                              CommandParameter="{Binding ElementName=ListHocSinh }">                                    </CheckBox>
+                                              CommandParameter="{Binding ElementName=ListHocSinh }">
+                                    </CheckBox>
                                     <Border CornerRadius="10"
                                             Height="40"
                                             Width="40">

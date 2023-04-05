@@ -21,6 +21,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         // declare ICommand
 
         public ICommand ThemHocSinh { get; set; }
+        public ICommand RemoveKhoiLop { get; set; }
         public DanhSachLopViewModel()
         {
             LoadDanhSachHocSinh();
@@ -31,6 +32,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                 data.LopHocDangChon.MaLop = 100;
                 data.LopHocDangChon.TenLop = "10A1";
                 window.ShowDialog();
+                LoadDanhSachHocSinh();
+            });
+            RemoveKhoiLop = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
+            {
+                Model.HocSinh item = parameter;
+                XoaHocSinh(item);
                 LoadDanhSachHocSinh();
             });
         }
@@ -61,6 +68,26 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     reader.NextResult();
                 }
+                con.Close();
+            }
+        }
+        public void XoaHocSinh(Model.HocSinh value)
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                SqlCommand cmd;
+                string CmdString = "Update HocSinh set MaLop = null, TenLop = null where MaHocSinh = "+value.MaHocSinh;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+
+                CmdString = "Update HeThongDiem set MaLop = null, TenLop = null where MaHocSinh = " + value.MaHocSinh;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+
+                CmdString = "Update ThanhTich set MaLop = null, TenLop = null where MaHocSinh = " + value.MaHocSinh;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
                 con.Close();
             }
         }

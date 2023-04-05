@@ -189,13 +189,16 @@
                                                     BorderBrush="Transparent"
                                                     Width="30"
                                                     Height="30"
-                                                    Padding="0"/>
+                                                    Padding="0"
+                                                    Command="{Binding Source={StaticResource DanhSachLopVM}, Path=RemoveKhoiLop}"
+                                                    CommandParameter="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
+                
             </Grid>
         </Border>
     </Grid>

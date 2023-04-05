@@ -77,7 +77,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select distinct Year(NgaySinh) from HocSinh where TenHocSinh is not null and MaLop <> "+LopHocDangChon.MaLop.ToString();
+                string CmdString = "select distinct Year(NgaySinh) from HocSinh where TenHocSinh is not null and (MaLop <> "+LopHocDangChon.MaLop.ToString()
+                                    + " or MaLop is null)";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -98,7 +99,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop <> " + LopHocDangChon.MaLop.ToString();
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and (MaLop <> " + LopHocDangChon.MaLop.ToString()
+                                    +" or MaLop is null)";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -129,7 +131,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) ="+value+ " and MaLop <> " + LopHocDangChon.MaLop.ToString();
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) ="+value+ " and (MaLop <> " + LopHocDangChon.MaLop.ToString()
+                                    +" or MaLop is null)";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -159,7 +162,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and MaLop <>" + LopHocDangChon.MaLop.ToString();
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
+                                    + " or MaLop is null)";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -199,6 +203,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                         if (SelectCheckBox[i] == true)
                         {
                             CmdString = "Update HocSinh set MaLop = " + LopHocDangChon.MaLop + " ,TenLop = '" + LopHocDangChon.TenLop + "' " +
+                                        " where MaHocSinh = " + DanhSachHocSinh[i].MaHocSinh;
+                            cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+
+                            CmdString = "Update HeThongDiem set MaLop = " + LopHocDangChon.MaLop + " ,TenLop = '" + LopHocDangChon.TenLop + "' " +
+                                        " where MaHocSinh = " + DanhSachHocSinh[i].MaHocSinh;
+                            cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+
+                            CmdString = "Update ThanhTich set MaLop = " + LopHocDangChon.MaLop + " ,TenLop = '" + LopHocDangChon.TenLop + "' " +
                                         " where MaHocSinh = " + DanhSachHocSinh[i].MaHocSinh;
                             cmd = new SqlCommand(CmdString, con);
                             cmd.ExecuteScalar();
