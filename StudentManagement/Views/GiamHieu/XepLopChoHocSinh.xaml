@@ -17,9 +17,9 @@
         Title="XepLopChoHocSinh" 
         Height="700" 
         Width="960"
-        WindowStyle="None"
-        WindowStartupLocation="CenterScreen"
-        Background="Transparent"
+        AllowsTransparency="True" 
+        Background="Transparent" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" WindowStyle="None"
         Name="XepLopWD"
         DataContext="{StaticResource XepLopVM}">
     <i:Interaction.Triggers>
@@ -35,13 +35,16 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Border Background="#FFFFFF"
+                BorderBrush="#0099FF"
+                BorderThickness="2"
                 CornerRadius="20"
                 Grid.RowSpan="2">
         </Border>
         <Grid Grid.Row="0">
             <uc:Title_Bar_Log/>
             <Separator VerticalAlignment="Bottom"
-                       Background="#0099FF"/>
+                       Background="#CCCCCC"
+                       Margin="0 0 0 -2"/>
         </Grid>
         <Grid Grid.Row="1">
             <TextBlock Text="Danh sách học sinh"
@@ -81,6 +84,7 @@
                 <Button Margin="10 0 0 0"
                         Background="Transparent"
                         BorderBrush="#0099FF"
+                        IsDefault="True"
                         Command="{Binding Filter}" 
                         CommandParameter="{Binding ElementName=tbSearch}"
                         Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
@@ -93,7 +97,7 @@
                       Height="480"
                       Width="920"
                       HorizontalAlignment="Left"
-                      Margin="20 0 0 80"
+                      Margin="20 0 0 60"
                       VerticalAlignment="Bottom"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"

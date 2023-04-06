@@ -132,7 +132,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 con.Open();
                 string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) ="+value+ " and (MaLop <> " + LopHocDangChon.MaLop.ToString()
-                                    +" or MaLop is null)";
+                                    +" or MaLop is null)" + " and TenHocSinh like '%"+XepLopWD.tbSearch.Text+"%'";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -164,6 +164,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                 con.Open();
                 string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
                                     + " or MaLop is null)";
+
+                if (XepLopWD.cmbNamSinh.SelectedItem != null)
+                {
+                    CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
+                                    + " or MaLop is null) and Year(NgaySinh) = "+XepLopWD.cmbNamSinh.SelectedItem.ToString() ;
+                }
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 

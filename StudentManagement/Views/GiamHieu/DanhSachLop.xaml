@@ -116,7 +116,8 @@
                               IsEnabled="False"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     </ComboBox>
-                    <TextBox materialDesign:HintAssist.Hint="Search ..."
+                    <TextBox x:Name="tbSearch"
+                             materialDesign:HintAssist.Hint="Search ..."
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Width="250"
                              Height="40"
@@ -126,6 +127,8 @@
                             Background="Transparent"
                             BorderBrush="#0099FF"
                             IsDefault="True"
+                            Command="{Binding LocHocSinh}"
+                            CommandParameter="{Binding ElementName=tbSearch}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon Width="20"
                                                  Height="20"

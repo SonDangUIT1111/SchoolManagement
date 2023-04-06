@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiamHieu
@@ -29,6 +30,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ThemHocSinh { get; set; }
         public ICommand RemoveKhoiLop { get; set; }
         public ICommand LoadWindow { get; set; }
+        public ICommand LocHocSinh { get; set; }
         public DanhSachLopViewModel()
         {
             MaLop = 100;
@@ -58,6 +60,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                 $"Hoàn tác",
                 param => { HoanTac(item); },
                 TimeSpan.FromSeconds(5));
+            });
+            LocHocSinh = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                TextBox tb = parameter;
+                LocHocSinhTheoTen(tb.Text);
             });
         }
         public void LoadDanhSachHocSinh()
@@ -130,6 +137,42 @@ namespace StudentManagement.ViewModel.GiamHieu
                 con.Close();
             }
             LoadDanhSachHocSinh();
+            DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
+                $"Hoàn tác thành công",
+                null,
+                null,
+                TimeSpan.FromSeconds(5));
+        }
+        public void LocHocSinhTheoTen(string value)
+        {
+            DanhSachLop.Clear();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = " + MaLop.ToString()
+                                    +" and TenHocSinh like '%"+value+"%'";
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh
+                        {
+                            MaHocSinh = reader.GetInt32(0),
+                            TenHocSinh = reader.GetString(1),
+                            NgaySinh = reader.GetDateTime(2),
+                            GioiTinh = reader.GetBoolean(3),
+                            DiaChi = reader.GetString(4),
+                            Email = reader.GetString(5),
+                        };
+                        DanhSachLop.Add(student);
+                    }
+                    reader.NextResult();
+                }
+                con.Close();
+            }
         }
 
     }
