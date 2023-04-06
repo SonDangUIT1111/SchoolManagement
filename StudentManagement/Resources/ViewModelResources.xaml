@@ -16,6 +16,7 @@
     <viewmodelGH:XepLopViewModel x:Key="XepLopVM"></viewmodelGH:XepLopViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
+    <viewmodelGV:HeThongBangDiemViewModel x:Key="HeThongBangDiemGVVM"></viewmodelGV:HeThongBangDiemViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <!--Converter-->
