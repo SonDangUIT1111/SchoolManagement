@@ -39,6 +39,11 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand LoadWindow { get; set; }
         public ICommand MouseEnterComboBox { get; set; }
         public ICommand MouseLeaveComboBox { get; set; }
+        public ICommand FilterNienKhoa { get; set; }
+        public ICommand FilterHocKy { get; set; }
+        public ICommand FilterKhoi { get; set; }
+        public ICommand FilterLop { get; set; }
+        public ICommand FilterMonHoc { get; set; }
         public HeThongBangDiemViewModel()
         {
             DanhSachDiem = new ObservableCollection<HeThongDiem>();
@@ -55,6 +60,60 @@ namespace StudentManagement.ViewModel.GiaoVien
             MouseLeaveComboBox = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 HeThongBangDiemWD.btnTrick.Focus();
+            });
+            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    NienKhoaQueries = cmb.SelectedItem.ToString();
+                    FilterLopFromSelection();
+                }
+            });
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    if (cmb.SelectedItem.ToString().Contains("1"))
+                        HocKyQueries = 1;
+                    else
+                        HocKyQueries = 2;
+                    LoadDanhSachBangDiem();
+                }
+            });
+            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    Khoi item = cmb.SelectedItem as Khoi;
+                    KhoiQueries = item.MaKhoi.ToString();
+                    FilterLopFromSelection();
+                }
+            });
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    Lop item = cmb.SelectedItem as Lop;
+                    if (item != null)
+                    {
+                        LopQueries = item.MaLop.ToString();
+                        LoadDanhSachBangDiem();
+                    }
+                }
+            });
+            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    MonHoc item = cmb.SelectedItem as MonHoc;
+                    MonHocQueries = item.MaMon.ToString();
+                    LoadDanhSachBangDiem();  
+                }
             });
         }
         public void LoadDuLieuComboBox()
@@ -167,20 +226,22 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public void LoadDanhSachBangDiem()
         {
+            DanhSachDiem.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
                 string wherecommand = "";
                 if (!String.IsNullOrEmpty(NienKhoaQueries))
                 {
-                    wherecommand = wherecommand +  " where NienKhoa = " + NienKhoaQueries + 
-                                    " and MaLop = " + LopQueries + " and HocKy = "+HocKyQueries.ToString(); 
+                    wherecommand = wherecommand + " where NienKhoa = '" + NienKhoaQueries +
+                                    "' and MaLop = " + LopQueries + " and HocKy = " + HocKyQueries.ToString();
                 }
-                if (String.IsNullOrEmpty(MonHocQueries))
+                if (!String.IsNullOrEmpty(MonHocQueries))
                 {
-                    wherecommand += " MaMon = " + MonHocQueries;
+                    wherecommand = wherecommand + " and MaMon = " + MonHocQueries;
                 }
-                string CmdString = "select * from HeThongDiem where TenHocSinh is not null";
+                string CmdString = "select * from HeThongDiem " + wherecommand;
+                MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 int sothuthu = 1;
@@ -212,6 +273,34 @@ namespace StudentManagement.ViewModel.GiaoVien
                     reader.NextResult();
                 }
                 con.Close();
+            }
+            HeThongBangDiemWD.cmbLop.Focus();
+            HeThongBangDiemWD.btnTrick.Focus();
+        }
+        public void FilterLopFromSelection()
+        {
+            LopDataCmb.Clear();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '"+NienKhoaQueries+"' and MaKhoi = "+KhoiQueries;
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.Lop item = new StudentManagement.Model.Lop
+                        {
+                            MaLop = reader.GetInt32(0),
+                            TenLop = reader.GetString(1),
+                        };
+                        LopDataCmb.Add(item);
+                    }
+                    reader.NextResult();
+                }
+                con.Close();
+                HeThongBangDiemWD.cmbLop.SelectedIndex = 0;
             }
         }
     }

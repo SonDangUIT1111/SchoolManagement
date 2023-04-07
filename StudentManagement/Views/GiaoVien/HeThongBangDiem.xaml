@@ -94,6 +94,10 @@
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
                             </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox x:Name="cmbHocKy"
@@ -113,6 +117,10 @@
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterHocKy}"
+                                   CommandParameter="{Binding ElementName=cmbHocKy}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
@@ -136,6 +144,10 @@
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
                             </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterKhoi}"
+                                   CommandParameter="{Binding ElementName=cmbKhoi}"/>
+                            </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox x:Name="cmbLop"
@@ -157,6 +169,10 @@
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterLop}"
+                                   CommandParameter="{Binding ElementName=cmbLop}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
@@ -180,6 +196,10 @@
                             <i:EventTrigger EventName="MouseLeave">
                                 <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
                             </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterMonHoc}"
+                                   CommandParameter="{Binding ElementName=cmbMonHoc}"/>
+                            </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
                 </StackPanel>
@@ -189,6 +209,8 @@
                           SelectionUnit="FullRow"
                           Background="White"
                           BorderBrush="Transparent"
+                          CanUserAddRows="False"
+                          AutoGenerateColumns="False"
                           ItemsSource="{Binding DanhSachDiem}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -229,12 +251,21 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Điểm 15'"
                                             Width="100"
+                                            CanUserReorder="False"
+                                            CanUserResize="False"
+                                            CanUserSort="False"
                                             Binding="{Binding Path=Diem15Phut}"/>
                         <DataGridTextColumn Header="Điểm 1 tiết"
                                             Width="100"
+                                            CanUserReorder="False"
+                                            CanUserResize="False"
+                                            CanUserSort="False"
                                             Binding="{Binding Path=Diem1Tiet}"/>
                         <DataGridTextColumn Header="Điểm trung bình"
                                             Width="140"
+                                            CanUserReorder="False"
+                                            CanUserResize="False"
+                                            CanUserSort="False"
                                             Binding="{Binding Path=DiemTB}"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
