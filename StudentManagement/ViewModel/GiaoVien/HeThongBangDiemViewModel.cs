@@ -41,6 +41,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand MouseLeaveComboBox { get; set; }
         public HeThongBangDiemViewModel()
         {
+            DanhSachDiem = new ObservableCollection<HeThongDiem>();
             LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 HeThongBangDiemWD = parameter as HeThongBangDiem;
@@ -166,7 +167,52 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public void LoadDanhSachBangDiem()
         {
-            
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string wherecommand = "";
+                if (!String.IsNullOrEmpty(NienKhoaQueries))
+                {
+                    wherecommand = wherecommand +  " where NienKhoa = " + NienKhoaQueries + 
+                                    " and MaLop = " + LopQueries + " and HocKy = "+HocKyQueries.ToString(); 
+                }
+                if (String.IsNullOrEmpty(MonHocQueries))
+                {
+                    wherecommand += " MaMon = " + MonHocQueries;
+                }
+                string CmdString = "select * from HeThongDiem where TenHocSinh is not null";
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+                int sothuthu = 1;
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem
+                        {
+                            SoThuTu = sothuthu,
+                            MaDiem = reader.GetInt32(0),
+                            NienKhoa = reader.GetString(1),
+                            //HocKy = reader.GetInt16(2),
+                            MaLop = reader.GetInt32(3),
+                            TenLop = reader.GetString(4),
+                            MaMon = reader.GetInt32(5),
+                            TenMon = reader.GetString(6),
+                            MaHocSinh = reader.GetInt32(7),
+                            TenHocSinh = reader.GetString(8),
+                            Diem15Phut = (float)reader.GetFloat(9),
+                            //Diem1Tiet = reader.GetFloat(10),
+                            //DiemTB = reader.GetFloat(11),
+                            XepLoai = reader.GetBoolean(12),
+                            TrangThai = reader.GetBoolean(13),
+                        };
+                        DanhSachDiem.Add(diem);
+                        sothuthu++;
+                    }
+                    reader.NextResult();
+                }
+                con.Close();
+            }
         }
     }
 }

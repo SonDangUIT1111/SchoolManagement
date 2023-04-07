@@ -190,10 +190,50 @@
                           ItemsSource="{Binding DanhSachDiem}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          Style="{StaticResource DataGridStyle1}"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}">
+                          Style="{StaticResource MaterialDesignDataGrid}"
+                          RowStyle="{StaticResource MaterialDesignDataGridRow}"
+                          CellStyle="{StaticResource MaterialDesignDataGridCell}">
                     <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Width="250"
+                                                HorizontalAlignment="Left">
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Margin="20 0 0 0"
+                                                   Width="50"
+                                                   FontSize="14"
+                                                   Foreground="#000000"
+                                                   Text="{Binding SoThuTu}"
+                                                   TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Margin="20 0 0 0"
+                                                   Width="100"
+                                                   FontSize="14"
+                                                   Foreground="#000000"
+                                                   Text="{Binding MaHocSinh}"
+                                                   TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Margin="20 0 0 0"
+                                                   Width="100"
+                                                   FontSize="14"
+                                                   Foreground="#000000"
+                                                   Text="{Binding TenHocSinh}"
+                                                   TextTrimming="WordEllipsis"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="15'"
+                                            Width="100"
+                                            Binding="{Binding Path=Diem15Phut}"/>
+                        <DataGridTextColumn Header="1Tiet"
+                                            Width="100"
+                                            Binding="{Binding Path=Diem1Tiet}"/>
+                        <DataGridTextColumn Header="DTB"
+                                            Width="100"
+                                            Binding="{Binding Path=DiemTB}"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -205,35 +245,14 @@
                                                    Width="50"
                                                    FontSize="14"
                                                    Foreground="#000000"
-                                                   Text="{Binding SoThuTu}"
+                                                   Text="{Binding XepLoai}"
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
                                                    Width="200"
                                                    FontSize="14"
                                                    Foreground="#000000"
-                                                   Text="{Binding TenHocSinh}"
-                                                   TextTrimming="WordEllipsis"/>
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
-                                                   Width="100"
-                                                   FontSize="14"
-                                                   Foreground="#000000"
-                                                   Text="{Binding }"
-                                                   TextTrimming="WordEllipsis"/>
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
-                                                   Width="200"
-                                                   FontSize="14"
-                                                   Foreground="#000000"
-                                                   Text="{Binding DiaChi}"
-                                                   TextTrimming="WordEllipsis"/>
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
-                                                   Width="200"
-                                                   FontSize="14"
-                                                   Foreground="#000000"
-                                                   Text="{Binding Email}"
+                                                   Text="{Binding TrangThai}"
                                                    TextTrimming="WordEllipsis"/>
                                     </StackPanel>
                                 </DataTemplate>
