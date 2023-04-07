@@ -202,6 +202,13 @@
                                                 HorizontalAlignment="Left">
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
+                                                   Width="50"
+                                                   FontSize="14"
+                                                   Foreground="#000000"
+                                                   Text="{Binding SoThuTu}"
+                                                   TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Margin="20 0 0 0"
                                                    Width="200"
                                                    FontSize="14"
                                                    Foreground="#000000"
@@ -212,14 +219,7 @@
                                                    Width="100"
                                                    FontSize="14"
                                                    Foreground="#000000"
-                                                   Text="{Binding NgaySinh}"
-                                                   TextTrimming="WordEllipsis"/>
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
-                                                   Width="50"
-                                                   FontSize="14"
-                                                   Foreground="#000000"
-                                                   Text="{Binding GioiTinh, Converter={StaticResource BooleanToGenderConverter}}"
+                                                   Text="{Binding }"
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
