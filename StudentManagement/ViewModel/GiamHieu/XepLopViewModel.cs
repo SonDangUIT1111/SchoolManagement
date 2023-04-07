@@ -50,12 +50,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ComboBox cmb = parameter as ComboBox;
                 string value = cmb.SelectedItem as string;
                 LoadDanhSachTheoNamSinh(value);
+                ClearSelectArray();
             });
             Filter = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
              {
                  TextBox textBox = parameter as TextBox;
                  string text = textBox.Text;
                  LocDanhSach(text);
+                 ClearSelectArray();
              });
             DanhDau = new RelayCommand<DataGrid>((parameter) => { return true; }, (parameter) =>
             {
@@ -193,7 +195,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 con.Close();
             }
         }
-        void ThemHocSinhVaoLop()
+        public void ThemHocSinhVaoLop()
         {
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn thêm những học sinh này vào lớp "
                                                         +LopHocDangChon.TenLop,"Thông báo",MessageBoxButton.YesNo);
@@ -230,6 +232,13 @@ namespace StudentManagement.ViewModel.GiamHieu
             MessageBox.Show("Thêm thành công");
             XepLopWD.Close();
             
+        }
+        public void ClearSelectArray()
+        {
+            for (int i = 0;i < SelectCheckBox.Length;i++)
+            {
+                SelectCheckBox[i] = false;
+            }    
         }
     }
 }
