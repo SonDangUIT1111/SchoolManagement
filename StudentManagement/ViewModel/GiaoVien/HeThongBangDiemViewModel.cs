@@ -28,12 +28,12 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachDiem { get => _danhSachDiem; set { _danhSachDiem = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
         public ObservableCollection<string> NienKhoaCmb { get => _nienKhoaCmb; set { _nienKhoaCmb = value; OnPropertyChanged(); } }
-        private ObservableCollection<Lop> _lopCmb;
-        public ObservableCollection<Lop> LopCmb { get => _lopCmb; set { _lopCmb = value; OnPropertyChanged(); } }
-        private ObservableCollection<Khoi> _khoiCmb;
-        public ObservableCollection<Khoi> KhoiCmb { get => _khoiCmb; set { _khoiCmb = value; OnPropertyChanged(); } }
-        private ObservableCollection<MonHoc> _monCmb;
-        public ObservableCollection<MonHoc> MonCmb { get => _monCmb; set { _monCmb = value; OnPropertyChanged(); } }
+        private ObservableCollection<Lop> _lopDataCmb;
+        public ObservableCollection<Lop> LopDataCmb { get => _lopDataCmb; set { _lopDataCmb = value; OnPropertyChanged(); } }
+        private ObservableCollection<Khoi> _khoiDataCmb;
+        public ObservableCollection<Khoi> KhoiDataCmb { get => _khoiDataCmb; set { _khoiDataCmb = value; OnPropertyChanged(); } }
+        private ObservableCollection<MonHoc> _monDataCmb;
+        public ObservableCollection<MonHoc> MonDataCmb { get => _monDataCmb; set { _monDataCmb = value; OnPropertyChanged(); } }
 
         // khai báo ICommand
         public ICommand LoadWindow { get; set; }
@@ -45,6 +45,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 HeThongBangDiemWD = parameter as HeThongBangDiem;
                 LoadDuLieuComboBox();
+                LoadDanhSachBangDiem();
             });
             MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
             {
@@ -57,13 +58,15 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void LoadDuLieuComboBox()
         {
+            NienKhoaQueries = KhoiQueries = LopQueries = MonHocQueries = "";
+            HocKyQueries = 1;
             HeThongBangDiemWD.cmbHocKy.Items.Add("Học kỳ 1");
             HeThongBangDiemWD.cmbHocKy.Items.Add("Học kỳ 2");
-            MessageBox.Show(HeThongBangDiemWD.cmbHocKy.Items[0].ToString());
+            HeThongBangDiemWD.cmbHocKy.SelectedIndex = 0;
             NienKhoaCmb = new ObservableCollection<string>();
-            MonCmb = new ObservableCollection<MonHoc>();
-            LopCmb = new ObservableCollection<Lop>();
-            KhoiCmb = new ObservableCollection<Khoi>();
+            MonDataCmb = new ObservableCollection<MonHoc>();
+            LopDataCmb = new ObservableCollection<Lop>();
+            KhoiDataCmb = new ObservableCollection<Khoi>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
@@ -87,7 +90,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 con.Close();
 
                 con.Open();
-                CmdString = "select distinct Khoi from Khoi";
+                CmdString = "select distinct MaKhoi,Khoi from Khoi";
                 cmd = new SqlCommand(CmdString, con);
                 reader = cmd.ExecuteReader();
 
@@ -98,7 +101,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         Khoi item = new Khoi();
                         item.MaKhoi = reader.GetInt32(0);
                         item.TenKhoi = reader.GetString(1);
-                        KhoiCmb.Add(item);
+                        KhoiDataCmb.Add(item);
                         if (String.IsNullOrEmpty(KhoiQueries))
                         {
                             KhoiQueries = reader.GetInt32(0).ToString();
@@ -123,7 +126,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                             Lop item = new Lop();
                             item.MaLop = reader.GetInt32(0);
                             item.TenLop = reader.GetString(1);
-                            LopCmb.Add(item);
+                            LopDataCmb.Add(item);
                             if (String.IsNullOrEmpty(LopQueries))
                             {
                                 LopQueries = reader.GetInt32(0).ToString();
@@ -147,7 +150,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         MonHoc item = new MonHoc();
                         item.MaMon = reader.GetInt32(0);
                         item.TenMon = reader.GetString(1);
-                        MonCmb.Add(item);
+                        MonDataCmb.Add(item);
                         if (String.IsNullOrEmpty(MonHocQueries))
                         {
                             MonHocQueries = reader.GetInt32(0).ToString();
@@ -159,10 +162,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                 con.Close();
             }
 
-
         }
 
-        public void KhoiDong()
+        public void LoadDanhSachBangDiem()
         {
             
         }
