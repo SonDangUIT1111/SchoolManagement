@@ -187,6 +187,8 @@
                           Width="1000"
                           Grid.Row="1"
                           SelectionUnit="FullRow"
+                          Background="White"
+                          BorderBrush="Transparent"
                           ItemsSource="{Binding DanhSachDiem}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -198,7 +200,7 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal"
-                                                Width="250"
+                                                Width="400"
                                                 HorizontalAlignment="Left">
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
@@ -216,7 +218,7 @@
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
-                                                   Width="100"
+                                                   Width="250"
                                                    FontSize="14"
                                                    Foreground="#000000"
                                                    Text="{Binding TenHocSinh}"
@@ -225,14 +227,14 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="15'"
+                        <DataGridTextColumn Header="Điểm 15'"
                                             Width="100"
                                             Binding="{Binding Path=Diem15Phut}"/>
-                        <DataGridTextColumn Header="1Tiet"
+                        <DataGridTextColumn Header="Điểm 1 tiết"
                                             Width="100"
                                             Binding="{Binding Path=Diem1Tiet}"/>
-                        <DataGridTextColumn Header="DTB"
-                                            Width="100"
+                        <DataGridTextColumn Header="Điểm trung bình"
+                                            Width="140"
                                             Binding="{Binding Path=DiemTB}"/>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
@@ -245,14 +247,14 @@
                                                    Width="50"
                                                    FontSize="14"
                                                    Foreground="#000000"
-                                                   Text="{Binding XepLoai}"
+                                                   Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
                                                    Width="200"
                                                    FontSize="14"
                                                    Foreground="#000000"
-                                                   Text="{Binding TrangThai}"
+                                                   Text="{Binding TrangThai, Converter={StaticResource BooleanToStateConverter}}"
                                                    TextTrimming="WordEllipsis"/>
                                     </StackPanel>
                                 </DataTemplate>

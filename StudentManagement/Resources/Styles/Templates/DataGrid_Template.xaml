@@ -92,10 +92,11 @@
     </Style>
     <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="Margin" Value="15 0"/>
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="0 0"/>
+        <Setter Property="Height" Value="30"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -110,7 +111,7 @@
         <Setter Property="Background" Value="#FFFFFF"/>
         <Setter Property="Height" Value="50"/>
         <Setter Property="Padding" Value="10"/>
-        <Setter Property="Margin" Value="0 4 0 0"/>
+        <Setter Property="Margin" Value="0 10 0 0"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
         <Setter Property="ValidationErrorTemplate">

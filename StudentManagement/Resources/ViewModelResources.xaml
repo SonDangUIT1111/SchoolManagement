@@ -22,5 +22,7 @@
     <!--Converter-->
     <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
     <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>
+    <converter:BooleanToScoreStateConverter x:Name="stateConverter" x:Key="BooleanToStateConverter"/>
+    <converter:BooleanToXepLoaiConverter x:Name="xepLoaiConverter" x:Key="BooleanToXepLoaiConverter"/>
 
 </ResourceDictionary>

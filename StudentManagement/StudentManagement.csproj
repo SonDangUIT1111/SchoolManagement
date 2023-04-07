@@ -74,6 +74,8 @@
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
+    <Compile Include="Converter\BooleanToScoreStateConverter.cs" />
+    <Compile Include="Converter\BooleanToXepLoaiConverter.cs" />
     <Compile Include="Model\BaoCaoHocKy.cs" />
     <Compile Include="Model\BaoCaoMon.cs" />
     <Compile Include="Model\ConnectionString.cs" />
