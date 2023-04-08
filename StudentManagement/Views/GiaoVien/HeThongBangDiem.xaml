@@ -203,6 +203,18 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                 </StackPanel>
+                <TextBlock x:Name="tbThongBaoChan"
+                           Grid.Row="0" 
+                           Text="Bạn không có quyền sửa điểm."
+                           Foreground="Red"
+                           FontWeight="Medium"
+                           Margin="25 125 0 0"/>
+                <TextBlock x:Name="tbThongBaoQuyen"
+                           Grid.Row="0" 
+                           Text="Bạn có quyền sửa điểm danh sách này."
+                           Foreground="#1ED760"
+                           FontWeight="Medium"
+                           Margin="25 125 0 0"/>
                 <DataGrid Margin="25,0,25,10"
                           Width="1000"
                           Grid.Row="1"
@@ -251,18 +263,21 @@
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Điểm 15'"
                                             Width="100"
+                                            IsReadOnly="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=JustReadOnly}"
                                             CanUserReorder="False"
                                             CanUserResize="False"
                                             CanUserSort="False"
                                             Binding="{Binding Path=Diem15Phut}"/>
                         <DataGridTextColumn Header="Điểm 1 tiết"
                                             Width="100"
+                                            IsReadOnly="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=JustReadOnly}"
                                             CanUserReorder="False"
                                             CanUserResize="False"
                                             CanUserSort="False"
                                             Binding="{Binding Path=Diem1Tiet}"/>
                         <DataGridTextColumn Header="Điểm trung bình"
                                             Width="140"
+                                            IsReadOnly="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=JustReadOnly}"
                                             CanUserReorder="False"
                                             CanUserResize="False"
                                             CanUserSort="False"

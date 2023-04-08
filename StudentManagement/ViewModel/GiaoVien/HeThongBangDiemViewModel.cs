@@ -18,6 +18,10 @@ namespace StudentManagement.ViewModel.GiaoVien
     {
 
         // khai báo biến
+        private int _idUser;
+        public int IdUser { get { return _idUser; } set { _idUser = value; } }
+        private bool _justReadOnly;
+        public bool JustReadOnly { get { return _justReadOnly; } set { _justReadOnly = value;OnPropertyChanged(); } }
         public string NienKhoaQueries { get; set; }
         public int HocKyQueries { get; set; }
         public string KhoiQueries { get; set; }
@@ -46,11 +50,14 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand FilterMonHoc { get; set; }
         public HeThongBangDiemViewModel()
         {
+            IdUser = 100000;
+            JustReadOnly = true;
             DanhSachDiem = new ObservableCollection<HeThongDiem>();
             LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 HeThongBangDiemWD = parameter as HeThongBangDiem;
                 LoadDuLieuComboBox();
+                XacDinhQuyenHan();
                 LoadDanhSachBangDiem();
             });
             MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
@@ -79,6 +86,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HocKyQueries = 1;
                     else
                         HocKyQueries = 2;
+                    XacDinhQuyenHan();
                     LoadDanhSachBangDiem();
                 }
             });
@@ -101,6 +109,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     if (item != null)
                     {
                         LopQueries = item.MaLop.ToString();
+                        XacDinhQuyenHan();
                         LoadDanhSachBangDiem();
                     }
                 }
@@ -112,6 +121,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     MonHoc item = cmb.SelectedItem as MonHoc;
                     MonHocQueries = item.MaMon.ToString();
+                    XacDinhQuyenHan();
                     LoadDanhSachBangDiem();  
                 }
             });
@@ -302,6 +312,34 @@ namespace StudentManagement.ViewModel.GiaoVien
                 con.Close();
                 HeThongBangDiemWD.cmbLop.SelectedIndex = 0;
             }
+        }
+        public void XacDinhQuyenHan()
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                string CmdString = "";
+                int checkUser = 0;
+                con.Open();
+                CmdString = "Select count(*) from PhanCongGiangDay where MaGiaoVienPhuTrach = " + IdUser.ToString()
+                        + " and MaLop = " + LopQueries + " and MaMon = "+MonHocQueries;
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+
+                if (checkUser > 0)
+                {
+                    HeThongBangDiemWD.tbThongBaoChan.Visibility = Visibility.Hidden;
+                    HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Visible;
+                    JustReadOnly = false;
+                }
+                else
+                {
+                    HeThongBangDiemWD.tbThongBaoChan.Visibility = Visibility.Visible;
+                    HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Hidden;
+                    JustReadOnly = true;
+                }
+               
+            }
+
         }
     }
 }
