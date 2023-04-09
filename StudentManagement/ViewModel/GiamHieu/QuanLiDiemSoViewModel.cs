@@ -61,6 +61,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand FilterHocKy2 { get; set; }
         public ICommand FilterKhoi2 { get; set; }
         public ICommand FilterLop2 { get; set; }
+        public ICommand MoKhoaDiem { get; set; }
         public QuanLiDiemSoViewModel()
         {
             IdUser = 100000;
@@ -175,13 +176,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                 }
             });
+            MoKhoaDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn mở khóa bảng điểm lớp này.","Thông báo",MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    MoKhoaBangDiem();
+                }    
+            });
 
         }
         public void LoadDuLieuComboBox()
         {
             NienKhoaQueries = KhoiQueries = LopQueries = MonHocQueries = "";
             HocKyQueries = 1;
-            HocKyQueries2 = 2;
+            HocKyQueries2 = 1;
             QuanLiDiemSoWD.cmbHocKy.Items.Add("Học kỳ 1");
             QuanLiDiemSoWD.cmbHocKy.Items.Add("Học kỳ 2");
             QuanLiDiemSoWD.cmbHocKy2.Items.Add("Học kỳ 1");
@@ -431,6 +440,26 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
                 QuanLiDiemSoWD.cmbLop2.SelectedIndex = 0;
+            }
+        }
+        public void MoKhoaBangDiem()
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string hocky ="";
+                if (HocKyQueries2 == 1)
+                {
+                    hocky = "1";
+                }
+                else hocky = "2";
+                string CmdString = "Update HeThongDiem "
+                                  +"set TrangThai = 0 "
+                                  +"where MaLop = "+LopQueries2+" and NienKhoa = '"+NienKhoaQueries2+"' and HocKy = "+hocky;
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+                MessageBox.Show(CmdString);
+                con.Close();
             }
         }
     }

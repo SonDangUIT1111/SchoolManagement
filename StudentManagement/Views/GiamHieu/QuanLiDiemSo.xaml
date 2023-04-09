@@ -302,7 +302,7 @@
                     <TextBlock Text="Quản lí điểm số" 
                            Foreground="#000000" 
                            FontSize="26" 
-                           Margin="25 0 0 0"
+                           Margin="25 0 0 10"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"/>
                     <StackPanel Orientation="Horizontal">
@@ -312,7 +312,7 @@
                               Width="200"
                               Height="40"
                               Padding="10"
-                              ItemsSource="{Binding NienKhoaCmb}"
+                              ItemsSource="{Binding NienKhoaCmb2}"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
                               IsEnabled="True"
@@ -413,6 +413,7 @@
                             Margin="50 0 0 0"
                             Height="40"/>
                         <Button Style="{StaticResource InteractiveButton}"
+                            Command="{Binding MoKhoaDiem}"
                             Content="Mở khóa"
                             Width="100"
                             Margin="20 0 0 0"
