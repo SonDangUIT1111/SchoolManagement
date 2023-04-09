@@ -12,7 +12,7 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       FontFamily="{DynamicResource MaterialDesignFont}"
-      d:DesignHeight="1033" 
+      d:DesignHeight="750" 
       d:DesignWidth="1056"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       x:Name="HeThongBangDiemWD"
@@ -66,14 +66,15 @@
                 Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="160"/>
+                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="320"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Bảng điểm" 
-                           Margin="25" 
-                           FontSize="30"/>
+                           Margin="25 10 0 0" 
+                           FontSize="26"/>
                 <StackPanel Orientation="Horizontal"
-                            Margin="0 80 0 0"
+                            Margin="0 50 0 0"
                             VerticalAlignment="Top">
                     <ComboBox x:Name="cmbNienKhoa"
                               materialDesign:HintAssist.Hint="Niên khóa"
@@ -208,13 +209,13 @@
                            Text="Bạn không có quyền sửa điểm."
                            Foreground="Red"
                            FontWeight="Medium"
-                           Margin="25 125 0 0"/>
+                           Margin="25 100 0 0"/>
                 <TextBlock x:Name="tbThongBaoQuyen"
                            Grid.Row="0" 
                            Text="Bạn có quyền sửa điểm danh sách này."
                            Foreground="#1ED760"
                            FontWeight="Medium"
-                           Margin="25 125 0 0"/>
+                           Margin="25 100 0 0"/>
                 <DataGrid Margin="25,0,25,10"
                           Width="1000"
                           Grid.Row="1"
@@ -277,7 +278,7 @@
                                             Binding="{Binding Path=Diem1Tiet}"/>
                         <DataGridTextColumn Header="Điểm trung bình"
                                             Width="140"
-                                            IsReadOnly="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=JustReadOnly}"
+                                            IsReadOnly="True"
                                             CanUserReorder="False"
                                             CanUserResize="False"
                                             CanUserSort="False"
@@ -290,7 +291,7 @@
                                                 HorizontalAlignment="Left">
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
-                                                   Width="50"
+                                                   Width="80"
                                                    FontSize="14"
                                                    Foreground="#000000"
                                                    Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
@@ -308,6 +309,24 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Grid.Row="2"
+                            Margin="0 0 20 0">
+                    <Button Style="{StaticResource InteractiveButton}"
+                            Content="Lưu"
+                            IsEnabled="{Binding CanUserEdit}"
+                            Command="{Binding LuuDiem}"
+                            Width="100"
+                            Margin="0 0 20 0"
+                            Height="40"/>
+                    <Button Style="{StaticResource InteractiveButton}"
+                            Content="Chốt điểm"
+                            IsEnabled="{Binding CanUserEdit}"
+                            Width="100"
+                            Margin="0 0 0 0"
+                            Height="40"/>
+                </StackPanel>
                 <!--<materialDesign:Snackbar x:Name="Snackbar"
                                          MessageQueue="{materialDesign:MessageQueue}"
                                          VerticalAlignment="Bottom"

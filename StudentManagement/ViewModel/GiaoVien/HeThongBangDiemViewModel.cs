@@ -22,6 +22,8 @@ namespace StudentManagement.ViewModel.GiaoVien
         public int IdUser { get { return _idUser; } set { _idUser = value; } }
         private bool _justReadOnly;
         public bool JustReadOnly { get { return _justReadOnly; } set { _justReadOnly = value;OnPropertyChanged(); } }
+        private bool _canUserEdit;
+        public bool CanUserEdit { get { return _canUserEdit; } set { _canUserEdit = value; OnPropertyChanged(); } }
         public string NienKhoaQueries { get; set; }
         public int HocKyQueries { get; set; }
         public string KhoiQueries { get; set; }
@@ -48,10 +50,12 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand FilterKhoi { get; set; }
         public ICommand FilterLop { get; set; }
         public ICommand FilterMonHoc { get; set; }
+        public ICommand LuuDiem { get; set; }
         public HeThongBangDiemViewModel()
         {
             IdUser = 100000;
             JustReadOnly = true;
+            CanUserEdit = false;
             DanhSachDiem = new ObservableCollection<HeThongDiem>();
             LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -124,6 +128,25 @@ namespace StudentManagement.ViewModel.GiaoVien
                     XacDinhQuyenHan();
                     LoadDanhSachBangDiem();  
                 }
+            });
+            LuuDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn lưu. (Lưu ý, những học sinh có điểm ở trạng thái chốt điểm sẽ không được lưu)", "Thông báo", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
+                {
+                    if (DanhSachDiem[0].TrangThai == true)
+                    {
+                        MessageBox.Show("Danh sách điểm này đã được chốt, không thể sửa.");
+                        LoadDanhSachBangDiem();
+                        return;
+                    }
+                    if (KiemTraDiemHopLe() == false)
+                    {
+                        MessageBox.Show("Điểm nhập không hợp lệ, vui lòng kiểm tra lại.");
+                        return;
+                    }
+                    LuuBangDiem();
+                }    
             });
         }
         public void LoadDuLieuComboBox()
@@ -251,7 +274,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                     wherecommand = wherecommand + " and MaMon = " + MonHocQueries;
                 }
                 string CmdString = "select * from HeThongDiem " + wherecommand;
-                MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 int sothuthu = 1;
@@ -330,16 +352,70 @@ namespace StudentManagement.ViewModel.GiaoVien
                     HeThongBangDiemWD.tbThongBaoChan.Visibility = Visibility.Hidden;
                     HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Visible;
                     JustReadOnly = false;
+                    CanUserEdit = true;
                 }
                 else
                 {
                     HeThongBangDiemWD.tbThongBaoChan.Visibility = Visibility.Visible;
                     HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Hidden;
                     JustReadOnly = true;
+                    CanUserEdit = false;
                 }
-               
+               con.Close();
             }
 
+        }
+        public void LuuBangDiem()
+        {
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                string CmdString = "";
+                SqlCommand cmd;
+                int madiem = 0;
+                decimal diem15phut, diem1tiet, dtb = 0;
+                int xeploai = 0;
+                con.Open();
+                for (int i = 0; i < DanhSachDiem.Count; i++)
+                {
+                    madiem = DanhSachDiem[i].MaDiem;
+                    diem15phut = (decimal)DanhSachDiem[i].Diem15Phut;
+                    diem1tiet = (decimal)DanhSachDiem[i].Diem1Tiet;
+                    dtb = (diem15phut + diem1tiet)/ 2;
+                    if (dtb >= 5)
+                    {
+                        xeploai = 1;
+                    }
+                    else xeploai = 0;
+                    CmdString = "update HeThongDiem "
+                               + "set Diem15Phut = " + diem15phut.ToString() + ", Diem1Tiet = " + diem1tiet.ToString() 
+                               + ", DiemTrungBinh = " + dtb.ToString()+" ,XepLoai = "+xeploai.ToString()
+                               + " where MaDiem = " + madiem.ToString();
+                    cmd = new SqlCommand(CmdString, con);
+                    try
+                    { 
+                    cmd.ExecuteScalar();
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                MessageBox.Show("Lưu thành công");
+                LoadDanhSachBangDiem();
+                con.Close();
+
+            }
+
+        }
+        public bool KiemTraDiemHopLe()
+        {
+            for (int i = 0; i < DanhSachDiem.Count;i++)
+            {
+                if (DanhSachDiem[i].Diem15Phut < 0 || DanhSachDiem[i].Diem15Phut > 10)
+                    return false;
+                if (DanhSachDiem[i].Diem1Tiet < 0 || DanhSachDiem[i].Diem1Tiet > 10)
+                    return false;
+            }
+            return true;
         }
     }
 }
