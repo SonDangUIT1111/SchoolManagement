@@ -93,9 +93,9 @@
                     <!--<DataGrid Margin="30 100 30 0"
                               x:Name="ClassListDataGrid">
                         
-                    </DataGrid>-->
+                    </DataGrid >-->
 
-                    <ScrollViewer Grid.Row="1"
+                    <ScrollViewer Grid.Row="1" Margin="30 100 30 0"
                               VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled"
                               Style="{StaticResource FavsScrollViewer}">
