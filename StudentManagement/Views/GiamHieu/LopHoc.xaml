@@ -4,11 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Title="LopHoc"
-      Background="#FFECECEC">
+      Background="#FFECECEC"
+      DataContext="{StaticResource LopHocVM}"
+      >
 
     <Grid>
         <Grid.RowDefinitions>
@@ -22,7 +25,7 @@
                 Background="#33778C" 
                 Margin="12" >
             <Grid>
-                <TextBlock Text="Lớp Học" 
+                <TextBlock Text="Lớp học" 
                            FontWeight="Bold" 
                            Foreground="White" 
                            FontSize="60" 
@@ -43,11 +46,16 @@
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
             <Grid>
-                <TextBlock Text="Danh sách lớp" Margin="25" FontSize="30"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="110" ></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                <TextBlock Text="Danh sách lớp học" Margin="25" FontSize="30" FontWeight="SemiBold"/>
                 <Button x:Name="ThemGiaoVien" 
                         Width="179" 
                         Height="64" 
-                        Background="#FF1F04A5"
+                        Background="#33418C"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Top"
                         Margin="25"
@@ -56,6 +64,65 @@
                         FontWeight="Bold"
                         Foreground="White">
                 </Button>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <StackPanel
+                        Orientation="Horizontal"
+                        Margin="320 0 0 300">
+                        <ComboBox materialDesign:HintAssist.Hint="Academy Year"
+                              IsEditable="False"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                            <ComboBoxItem IsSelected="True">2022-2023</ComboBoxItem>
+                        </ComboBox>
+                        <ComboBox materialDesign:HintAssist.Hint="Grade"
+                              IsEditable="False"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                            <ComboBoxItem IsSelected="True">10</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <!--<DataGrid Margin="30 100 30 0"
+                              x:Name="ClassListDataGrid">
+                        
+                    </DataGrid>-->
+
+                    <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Style="{StaticResource FavsScrollViewer}">
+                        <DataGrid Margin="25,0,25,10"
+                              ItemsSource="{Binding DanhSachLopHoc}"
+                              Style="{StaticResource DataGridStyle1}"
+                              RowStyle="{StaticResource DataGridRowStyle1}"
+                              CellStyle="{StaticResource DataGridCellStyle1}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="1010">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding TenLop}"/>
+                                                <Button Margin="800 0 0 0" Content="Xem lớp" Command="{Binding SwitchDanhSachLop}">
+                                                        
+                                                </Button>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ScrollViewer>
+                </Grid>
             </Grid>
         </Border>
     </Grid>
