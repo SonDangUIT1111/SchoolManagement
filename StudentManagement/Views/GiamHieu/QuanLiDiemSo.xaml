@@ -408,6 +408,7 @@
                             </i:Interaction.Triggers>
                         </ComboBox>
                         <Button Style="{StaticResource InteractiveButton}"
+                            Command="{Binding KhoaDiem}"
                             Content="Khóa điểm"
                             Width="100"
                             Margin="50 0 0 0"
