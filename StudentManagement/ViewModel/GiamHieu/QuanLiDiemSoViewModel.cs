@@ -36,7 +36,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         private ObservableCollection<StudentManagement.Model.HeThongDiem> _danhSachKhoaDiem;
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachKhoaDiem { get => _danhSachKhoaDiem; set { _danhSachKhoaDiem = value; OnPropertyChanged(); } }
         private ObservableCollection<StudentManagement.Model.ThanhTich> _danhSachThanhTich;
-        public ObservableCollection<StudentManagement.Model.ThanhTich> DanhSachThanhTich { get => _danhSachThanhTich; set { _danhSachThanhTich = value; OnPropertyChanged(); } } 
+        public ObservableCollection<StudentManagement.Model.ThanhTich> DanhSachThanhTich { get => _danhSachThanhTich; set { _danhSachThanhTich = value; OnPropertyChanged(); } }
+        private ObservableCollection<StudentManagement.Model.BaoCaoMon> _danhSachBaoCaoMon;
+        public ObservableCollection<StudentManagement.Model.BaoCaoMon> DanhSachBaoCaoMon { get => _danhSachBaoCaoMon; set { _danhSachBaoCaoMon = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
         public ObservableCollection<string> NienKhoaCmb { get => _nienKhoaCmb; set { _nienKhoaCmb = value; OnPropertyChanged(); } }
         private ObservableCollection<Lop> _lopDataCmb;
@@ -73,6 +75,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             DanhSachDiem = new ObservableCollection<HeThongDiem>();
             DanhSachKhoaDiem = new ObservableCollection<HeThongDiem>();
             DanhSachThanhTich = new ObservableCollection<ThanhTich>();
+            DanhSachBaoCaoMon = new ObservableCollection<BaoCaoMon>();
             LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 QuanLiDiemSoWD = parameter as QuanLiDiemSo;
@@ -489,6 +492,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             DanhSachKhoaDiem.Clear();
             DanhSachThanhTich.Clear();
+            DanhSachBaoCaoMon.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
@@ -535,6 +539,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     if (DanhSachThanhTich[i].TBHK >= 5)
                         xeploai = 1;
                     else xeploai = 0;
+                    string hocky = "";
+                    if (DanhSachThanhTich[i].HocKy == 1)
+                        hocky = "TBHK1";
+                    else hocky = "TBHK2";
                     CmdString = "if (exists(select * from ThanhTich " +
                                             "where MaHocSinh = "+ DanhSachThanhTich[i].MaHocSinh.ToString()+" and HocKy = "+DanhSachThanhTich[i].HocKy.ToString()+" and NienKhoa = '"+DanhSachThanhTich[i].NienKhoa+"')) " +
                                 "begin " +
@@ -547,11 +555,65 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 "insert into ThanhTich(NienKhoa,HocKy,MaLop,TenLop,MaHocSinh,TenHocSinh,TrungBinhHocKy,XepLoai) values('" +
                                 DanhSachThanhTich[i].NienKhoa+"',"+DanhSachThanhTich[i].HocKy.ToString()+","+DanhSachThanhTich[i].MaLop.ToString()+",'"+DanhSachThanhTich[i].TenLop+"'," +
                                 DanhSachThanhTich[i].MaHocSinh.ToString()+",N'"+DanhSachThanhTich[i].TenHocSinh+"',"+DanhSachThanhTich[i].TBHK.ToString()+","+xeploai.ToString()+") " +
+                                "end " +
+                                "Update HocSinh " +
+                                "set "+hocky+" = "+DanhSachThanhTich[i].TBHK.ToString()+" " +
+                                "where MaHocSinh ="+DanhSachThanhTich[i].MaHocSinh.ToString();
+                    cmd = new SqlCommand(CmdString, con);
+                    cmd.ExecuteScalar();
+                }
+                con.Close();
+
+
+                // cập nhật database báo cáo môn học
+                con.Open();
+                CmdString = "select MaLop,TenLop,MaMon,TenMon,HocKy,NienKhoa,count(MaDiem) SLD,SiSo = (select SiSo from Lop l where l.MaLop = htd.MaLop) " +
+                            "from HeThongDiem htd " +
+                            "where XepLoai = 1 and MaLop = "+LopQueries2+" and HocKy = "+HocKyQueries2.ToString()+" and NienKhoa = '"+NienKhoaQueries2+"' " +
+                            "group by MaLop,TenLop,MaMon,TenMon,HocKy,NienKhoa";
+                cmd = new SqlCommand(CmdString, con);
+                reader = cmd.ExecuteReader();
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon
+                        {
+                            MaLop = reader.GetInt32(0),
+                            TenLop = reader.GetString(1),
+                            MaMon = reader.GetInt32(2),
+                            TenMon = reader.GetString(3),
+                            HocKy = reader.GetInt32(4),
+                            NienKhoa = reader.GetString(5),
+                            SoLuongDat = reader.GetInt32(6),
+                            TiLe = ((double)reader.GetInt32(6)/reader.GetInt32(7)*100).ToString()+ "%",
+                        };
+                        DanhSachBaoCaoMon.Add(baocaomon);
+                    }
+                    reader.NextResult();
+                }
+                con.Close();
+
+                con.Open();
+                for (int i = 0; i < DanhSachBaoCaoMon.Count; i++)
+                {
+                    // chia 2 trường hợp cập nhật lại hoặc thêm mới
+                    CmdString = "if (exists(select * from BaoCaoMon " +
+                                            "where MaLop = " + DanhSachBaoCaoMon[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoMon[i].HocKy.ToString() + " and NienKhoa = '" + DanhSachBaoCaoMon[i].NienKhoa + "' and MaMon = "+DanhSachBaoCaoMon[i].MaMon.ToString()+")) " +
+                                "begin " +
+                                "update BaoCaoMon " +
+                                "set SoLuongDat = " + DanhSachBaoCaoMon[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoMon[i].TiLe+ "' " +
+                                "where MaLop = " + DanhSachBaoCaoMon[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoMon[i].HocKy.ToString() + " and NienKhoa = '" + DanhSachBaoCaoMon[i].NienKhoa + "' " +
+                                "end " +
+                                "else " +
+                                "begin " +
+                                "insert into BaoCaoMon(MaLop,TenLop,MaMon,TenMon,HocKy,NienKhoa,SoLuongDat,TiLe) values("+DanhSachBaoCaoMon[i].MaLop.ToString()+",N'"+DanhSachBaoCaoMon[i].TenLop+
+                                "',"+DanhSachBaoCaoMon[i].MaMon.ToString()+",N'"+DanhSachBaoCaoMon[i].TenMon+"',"+DanhSachBaoCaoMon[i].HocKy.ToString()+",'"+DanhSachBaoCaoMon[i].NienKhoa+"',"+
+                                DanhSachBaoCaoMon[i].SoLuongDat.ToString()+",'"+DanhSachBaoCaoMon[i].TiLe+"') "+
                                 "end";
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
                 }
-
                 con.Close();
             }
         }
