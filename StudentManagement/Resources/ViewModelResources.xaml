@@ -13,11 +13,13 @@
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
+    <viewmodelGH:DanhSachGiaoVienViewModel x:Key="DanhSachGiaoVienVM"></viewmodelGH:DanhSachGiaoVienViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <!--Converter-->
     <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
+    <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>
 
 </ResourceDictionary>
