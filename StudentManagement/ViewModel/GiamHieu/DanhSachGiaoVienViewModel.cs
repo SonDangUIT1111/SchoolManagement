@@ -20,6 +20,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         //declare ICommand
         public ICommand LocGiaoVien { get; set; }
+        public ICommand ThemGiaoVien{ get; set; }
 
         public DanhSachGiaoVienViewModel()
         {
@@ -28,6 +29,12 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 TextBox tb = parameter;
                 LocGiaoVienTheoTen(tb.Text);
+            });
+            ThemGiaoVien = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ThemGiaoVien window = new ThemGiaoVien();
+                ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
+                window.ShowDialog();
             });
         }
         public void LoadDanhSachGiaoVien()
