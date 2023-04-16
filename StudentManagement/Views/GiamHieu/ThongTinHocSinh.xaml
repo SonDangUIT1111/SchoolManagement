@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
       mc:Ignorable="d"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       TextElement.FontWeight="Regular"
       TextElement.FontSize="13"
@@ -15,8 +16,15 @@
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Background="#FFECECEC"
-      Title="ThongTinHocSinh">
-
+      Title="ThongTinHocSinh"
+      Name="ThongTinHocSinhWD"
+      DataContext="{StaticResource ThongTinHocSinhVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadData}"
+                                   CommandParameter="{Binding ElementName=ThongTinHocSinhWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -70,31 +78,60 @@
                 </Button>
                 <StackPanel Orientation="Horizontal" 
                             Margin="0 80 0 0">
-                    <ComboBox materialDesign:HintAssist.Hint="Niên khóa"
+                    <ComboBox x:Name="cmbNienKhoa"
+                              materialDesign:HintAssist.Hint="Niên khóa"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"/>
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding NienKhoaCmb}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
 
-                    <ComboBox materialDesign:HintAssist.Hint="Khối"
+                    <ComboBox x:Name="cmbKhoi"
+                              materialDesign:HintAssist.Hint="Khối"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"/>
-                    <ComboBox materialDesign:HintAssist.Hint="Lớp"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding KhoiCmb}"
+                              DisplayMemberPath="TenKhoi">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterKhoi}"
+                                   CommandParameter="{Binding ElementName=cmbKhoi}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <ComboBox x:Name="cmbLop"
+                              materialDesign:HintAssist.Hint="Lớp"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"/>
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding LopCmb}"
+                              DisplayMemberPath="TenLop">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterLop}"
+                                   CommandParameter="{Binding ElementName=cmbLop}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
                     <TextBox materialDesign:HintAssist.Hint="Floating Hint"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Width="250"
@@ -110,7 +147,11 @@
                                                  Kind="Magnify" />
                     </Button>
                 </StackPanel>
-                <DataGrid Grid.Row="1">
+                <DataGrid Grid.Row="1"
+                          RowStyle="{StaticResource DataGridRowStyle1}"
+                          CellStyle="{StaticResource DataGridCellStyle1}"
+                          Style="{StaticResource DataGridStyle1}"
+                          ItemsSource="{Binding DanhSachHocSinh}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="1010">
                             <DataGridTemplateColumn.CellTemplate>
@@ -126,13 +167,18 @@
                                         </Border>
                                         <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
-                                                       Text="{Binding TenHocSinh}"/>
+                                                       Text="{Binding TenHocSinh}"
+                                                   VerticalAlignment="Center"
+                                                   Width="200"/>
                                         <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
-                                                       Text="{Binding NgaySinh}"/>
+                                                       Text="{Binding NgaySinh}"
+                                                   VerticalAlignment="Center"
+                                                   Width="100"
+                                                   TextTrimming="WordEllipsis"/>
                                         <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
-                                                       Text="{Binding GioiTinh}"/>
+                                                       Text="{Binding GioiTinh,Converter={StaticResource BooleanToGenderConverter}}"/>
                                         <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
                                                        Text="{Binding DiaChi}"/>
