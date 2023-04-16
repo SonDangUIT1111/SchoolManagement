@@ -68,7 +68,7 @@
                 <Grid Grid.Row="1">
                     <StackPanel
                         Orientation="Horizontal"
-                        Margin="320 0 0 300">
+                        VerticalAlignment="Top">
                         <ComboBox materialDesign:HintAssist.Hint="Academy Year"
                               IsEditable="False"
                               Width="200"
@@ -94,34 +94,28 @@
                               x:Name="ClassListDataGrid">
                         
                     </DataGrid >-->
-
-                    <ScrollViewer Grid.Row="1" Margin="30 100 30 0"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled"
-                              Style="{StaticResource FavsScrollViewer}">
-                        <DataGrid Margin="25,0,25,10"
+                    <DataGrid Margin="0 20 0 0"
                               ItemsSource="{Binding DanhSachLopHoc}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="1010">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="20 0 0 0"
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="1010">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
                                                        Text="{Binding TenLop}"/>
-                                                <Button Margin="800 0 0 0" Content="Xem lớp" Command="{Binding SwitchDanhSachLop}">
-                                                        
-                                                </Button>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </ScrollViewer>
+                                            <Button Margin="800 0 0 0" Content="Xem lớp" Command="{Binding SwitchDanhSachLop}">
+
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </Grid>
         </Border>

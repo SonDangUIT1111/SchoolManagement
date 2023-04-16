@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Collections.ObjectModel;
 using StudentManagement.Model;
+using LiveCharts;
+using LiveCharts.Wpf;
+using LiveCharts.Wpf.Charts.Base;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -34,10 +37,23 @@ namespace StudentManagement.ViewModel.GiamHieu
             set { _monComboBox = value; OnPropertyChanged(); }
         }
 
+        public ObservableCollection<int> _hocKyComboBox;
+        public ObservableCollection<int> HocKyComboBox
+        {
+            get => _hocKyComboBox;
+            set { _hocKyComboBox = value; OnPropertyChanged();}
+        }
+        
+        public SectionsCollection SoLuongDat { get; set; }
+        public String[] DanhSachLop;
+
         public BaoCaoViewModel()
         {
             LoadComboboxData();
+            LoadDanhSachBaoCaoMon();
         }
+
+
 
         public void LoadComboboxData()
         {
@@ -76,6 +92,32 @@ namespace StudentManagement.ViewModel.GiamHieu
                         {
                             MonHocQueries = reader.GetString(0);
                         }
+                    }
+                    reader.NextResult();
+                }
+                con.Close();
+
+            }           
+        }
+        public void LoadDanhSachBaoCaoMon()
+        {
+            DanhSachBaoCaoMon = new ObservableCollection<Model.BaoCaoMon>();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string CmdString = "select * from BaoCaoMon";
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon();
+                        baocaomon.TenLop = reader.GetString(2);
+                        baocaomon.SoLuongDat = reader.GetInt32(7);
+                        baocaomon.TiLe = reader.GetString(8);
+                        DanhSachBaoCaoMon.Add(baocaomon);
                     }
                     reader.NextResult();
                 }
