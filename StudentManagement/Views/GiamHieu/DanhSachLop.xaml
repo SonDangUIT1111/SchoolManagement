@@ -143,6 +143,7 @@
                                                 <Border.Background>
                                                     <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
                                                 </Border.Background>
+                                                
                                             </Border>
                                             <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
