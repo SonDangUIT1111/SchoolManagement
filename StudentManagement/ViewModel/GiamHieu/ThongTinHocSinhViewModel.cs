@@ -32,6 +32,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand FilterNienKhoa { get; set; }
         public ICommand FilterKhoi { get; set; }
         public ICommand FilterLop { get; set; }
+        public ICommand StudentSearch { get; set; }
         public ThongTinHocSinhViewModel()
         {
             NienKhoaQueries = "";
@@ -88,6 +89,33 @@ namespace StudentManagement.ViewModel.GiamHieu
                             LoadThongTinHocSinh();
                         else DanhSachHocSinh.Clear();
                     }
+                }
+            });
+            StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachHocSinh.Clear();
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like '%" + parameter.Text + "%'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
+                            student.MaHocSinh = reader.GetInt32(0);
+                            student.TenHocSinh = reader.GetString(1);
+                            student.NgaySinh = reader.GetDateTime(2);
+                            student.GioiTinh = reader.GetBoolean(3);
+                            student.DiaChi = reader.GetString(4);
+                            DanhSachHocSinh.Add(student);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
             });
         }
