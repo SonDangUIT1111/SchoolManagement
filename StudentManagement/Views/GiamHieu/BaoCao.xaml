@@ -4,12 +4,15 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Background="#FFECECEC"
-      Title="BaoCao">
-
+      Title="BaoCao"
+      DataContext="{StaticResource BaoCaoVM}"
+      >
+        
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -42,6 +45,25 @@
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+            <StackPanel
+                Orientation="Horizontal"
+                VerticalAlignment="Top"
+                Margin="20 10 0 0"
+                >
+                <ComboBox x:Name="cmbNienKhoa"
+                    Width="256"
+                    materialDesign:HintAssist.Hint="Niên khoá"
+                    IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
+                    ItemsSource="{Binding NienKhoaComboBox}"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                <ComboBox x:Name="cmbMonHoc"
+                    Width="256" 
+                    Margin="20 0 0 0"
+                    materialDesign:HintAssist.Hint="Môn học"
+                    IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
+                    ItemsSource="{Binding MonComboBox}"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+            </StackPanel>
         </Border>
 
     </Grid>
