@@ -21,6 +21,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         //declare ICommand
         public ICommand LocGiaoVien { get; set; }
         public ICommand ThemGiaoVien{ get; set; }
+        public ICommand UpdateGiaoVien { get; set; }
+        public ICommand RemoveGiaoVien { get; set; }
 
         public DanhSachGiaoVienViewModel()
         {
@@ -35,6 +37,30 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ThemGiaoVien window = new ThemGiaoVien();
                 ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
                 window.ShowDialog();
+            });
+            UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
+            {
+                Model.GiaoVien item = parameter;
+                CapNhatGiaoVien(item);
+                LoadDanhSachGiaoVien();
+                // Hiện snackbar thông báo xóa thành công, có thể hoàn tác
+                //DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
+                //$"Xóa thành công",
+                //$"Hoàn tác",
+                //param => { HoanTac(item); },
+                //TimeSpan.FromSeconds(5));
+            });
+            RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
+            {
+                Model.GiaoVien item = parameter;
+                XoaGiaoVien(item);
+                LoadDanhSachGiaoVien();
+                // Hiện snackbar thông báo xóa thành công, có thể hoàn tác
+                //DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
+                //$"Xóa thành công",
+                //$"Hoàn tác",
+                //param => { HoanTac(item); },
+                //TimeSpan.FromSeconds(5));
             });
         }
         public void LoadDanhSachGiaoVien()
@@ -94,6 +120,34 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
             }
+        }
+        public void XoaGiaoVien(Model.GiaoVien value)
+        {
+            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa giáo viên?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            if (ConfirmDelete == MessageBoxResult.Yes)
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                SqlCommand cmd;
+                string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
+                cmd = new SqlCommand(CmdString, con);
+                //cmd.ExecuteScalar();
+                con.Close();
+                MessageBox.Show("Đã xóa " + value.TenGiaoVien);
+                }
+        }
+        public void CapNhatGiaoVien(Model.GiaoVien value)
+        {
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd;
+                    string CmdString = "Update HocSinh set MaLop = null, TenLop = null where MaHocSinh = " + value.MaGiaoVien;
+                    cmd = new SqlCommand(CmdString, con);
+                    MessageBox.Show("Cập nhật " + value.TenGiaoVien);
+                    //cmd.ExecuteScalar();
+                    con.Close();
+                }
         }
 
     }

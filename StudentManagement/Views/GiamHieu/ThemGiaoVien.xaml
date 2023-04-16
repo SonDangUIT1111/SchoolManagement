@@ -63,41 +63,68 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
             </StackPanel>
-           
-            <StackPanel Orientation="Vertical"
+            <Grid Height="518">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="600"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="Ảnh đại diện"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           Margin="0,50,0,0"
+                           Height="50"/>
+                <Image Grid.Column="0" 
+                       Source="{Binding Avatar}"
+                       Width="200"
+                       Height="200"
+                       Margin="0 70 0 0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       Stretch="Fill">
+                </Image>
+                <Button Grid.Column="0"
+                        Width="100"
+                        Height="30"
+                        Margin="0 100 0 0"
+                        Content="Browse"
+                        Command="{Binding ChonAnh}"/>
+
+                <StackPanel Orientation="Vertical"
                         Margin="0,50,0,0"
                         VerticalAlignment="Top" 
-                        Height="618">
+                        Height="518"
+                        Grid.Column="1">
 
-                <TextBlock Text="Tên Giáo Viên"
+                    <TextBlock Text="Tên Giáo Viên"
                        FontSize="17"
                        Margin="25 10 0 0"
                        Width="250"
                        Height="29"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
-                <TextBox x:Name="TenGV"
+                    <TextBox x:Name="TenGV"
                          materialDesign:HintAssist.Hint="Tên Giáo Viên"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="640"
+                         Width="540"
                          Height="40"
                          Padding="10"
                          Margin="25 0 0 0"
                          HorizontalAlignment="Left"/>
-                <TextBlock Text="Ngày sinh"
+                    <TextBlock Text="Ngày sinh"
                        FontSize="17"
                        Margin="25 10 0 0"
                        Width="250"
                        Height="29"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
-                <DatePicker
+                    <DatePicker
                     x:Name="NgaySinh"
                     Width="250"
                     HorizontalAlignment="Left"
                     Margin="25 10 0 0"/>
-                
-                <!--<TextBox x:Name="NgaySinh"
+
+                    <!--<TextBox x:Name="NgaySinh"
                          materialDesign:HintAssist.Hint="Search ... "
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="640"
@@ -105,14 +132,14 @@
                          Padding="10"
                          Margin="25 0 0 0"
                          HorizontalAlignment="Left"/>-->
-                <TextBlock Text="Giới Tính"
+                    <TextBlock Text="Giới Tính"
                        FontSize="17"
                        Margin="25 10 0 0"
                        Width="250"
                        Height="29"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
-                <ComboBox x:Name="GioiTinh"
+                    <ComboBox x:Name="GioiTinh"
                           materialDesign:HintAssist.Hint="Giới tính"
                           IsEditable="False"
                           Width="200"
@@ -121,75 +148,45 @@
                           HorizontalAlignment="Left"
                           Margin="25 0 0 0"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                    <ComboBoxItem>Nữ</ComboBoxItem>
-                    <ComboBoxItem IsSelected="True">Nam</ComboBoxItem>
-                </ComboBox>
-                <TextBlock Text="Địa chỉ"
+                        <ComboBoxItem>Nữ</ComboBoxItem>
+                        <ComboBoxItem IsSelected="True">Nam</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Text="Địa chỉ"
                        FontSize="17"
                        Margin="25 10 0 0"
                        Width="250"
                        Height="29"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
-                <TextBox x:Name="DiaChi"
+                    <TextBox x:Name="DiaChi"
                          materialDesign:HintAssist.Hint="Địa chỉ"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="640"
+                         Width="540"
                          Height="40"
                          Padding="10"
                          Margin="25 0 0 0"
                          HorizontalAlignment="Left"/>
-                <TextBlock Text="Email"
+                    <TextBlock Text="Email"
                        FontSize="17"
                        Margin="25 10 0 0"
                        Width="250"
                        Height="29"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
-                <TextBox x:Name="Email"
+                    <TextBox x:Name="Email"
                          materialDesign:HintAssist.Hint="Email"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="640"
+                         Width="540"
                          Height="40"
                          Padding="10"
                          Margin="25 0 0 0"
                          HorizontalAlignment="Left"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Tài khoản"
-                       FontSize="17"
-                       Margin="25 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
-                    <TextBlock Text="Mật khẩu"
-                       FontSize="17"
-                       Margin="160 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
+                    <StackPanel Orientation="Horizontal"/>
+                    <StackPanel Orientation="Horizontal"/>
+
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="TaiKhoan"
-                         materialDesign:HintAssist.Hint="Tài khoản"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="340"
-                         Height="40"
-                         Padding="10"
-                         Margin="25 0 0 0"
-                         HorizontalAlignment="Left"/>
-                    <TextBox x:Name="MatKhau"
-                         materialDesign:HintAssist.Hint="Mật khẩu"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="340"
-                         Height="40"
-                         Padding="10"
-                         Margin="65 0 0 0"
-                         HorizontalAlignment="Left"/>
-                </StackPanel>
-                
-            </StackPanel>
+            </Grid>
+            
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right">
