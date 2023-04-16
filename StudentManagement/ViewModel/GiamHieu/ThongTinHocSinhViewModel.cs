@@ -1,4 +1,5 @@
-﻿using StudentManagement.Model;
+﻿using Microsoft.Win32;
+using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -33,6 +36,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand FilterKhoi { get; set; }
         public ICommand FilterLop { get; set; }
         public ICommand StudentSearch { get; set; }
+        public ICommand AddStudent { get; set; }
         public ThongTinHocSinhViewModel()
         {
             NienKhoaQueries = "";

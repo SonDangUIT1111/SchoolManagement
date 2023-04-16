@@ -74,7 +74,8 @@
                         Margin="25"
                         Content="Thêm Học Sinh" 
                         FontSize="18" 
-                        FontWeight="Bold">
+                        FontWeight="Bold"
+                        Command="{Binding AddStudent}">
                 </Button>
                 <StackPanel Orientation="Horizontal" 
                             Margin="0 80 0 0">
