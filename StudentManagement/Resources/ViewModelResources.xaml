@@ -20,7 +20,7 @@
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <!--Converter-->
-    <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
+    <converter:ByteArrayToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
     <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>
 
 </ResourceDictionary>

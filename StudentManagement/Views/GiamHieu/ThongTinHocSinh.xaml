@@ -166,7 +166,7 @@
                                                 Height="40"
                                                 Width="40">
                                             <Border.Background>
-                                                <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
+                                                <ImageBrush ImageSource="{Binding Avatar, Converter={StaticResource ByteToImageConverter}}"/>
                                             </Border.Background>
 
                                         </Border>

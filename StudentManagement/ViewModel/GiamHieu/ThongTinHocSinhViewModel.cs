@@ -129,7 +129,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi from HocSinh where MaLop = " + LopQueries;
+                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe from HocSinh where MaHocSinh = 100031";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -143,6 +143,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         student.NgaySinh = reader.GetDateTime(2);
                         student.GioiTinh = reader.GetBoolean(3);
                         student.DiaChi = reader.GetString(4);
+                        student.Avatar = (byte[])reader[5];
                         DanhSachHocSinh.Add(student);
                     }
                     reader.NextResult();

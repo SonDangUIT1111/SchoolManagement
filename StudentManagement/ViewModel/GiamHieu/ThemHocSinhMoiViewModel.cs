@@ -1,9 +1,5 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Input;
@@ -14,6 +10,7 @@ using System.Text.RegularExpressions;
 using StudentManagement.Model;
 using System.Data.SqlClient;
 using StudentManagement.Converter;
+using System.Data;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -29,6 +26,10 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ThemHocSinhWD = parameter as ThemHocSinhMoi;
+                // set default day
+                int defaultYear = DateTime.Now.Year - 15;
+                DateTime defaultTime = new DateTime(defaultYear, 1, 1);
+                ThemHocSinhWD.NgaySinh.SelectedDate = defaultTime;
                 
             });
             ChangeImage = new RelayCommand<Grid>((parameter) => { return true; }, (parameter) =>
@@ -75,7 +76,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
                         con.Open();
-                        string CmdString = "insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES ('" + ThemHocSinhWD.Hoten.Text + "', '" + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', ";
+                        string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES ('" + ThemHocSinhWD.Hoten.Text + "', '" + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', ";
                         if (ThemHocSinhWD.Male.IsChecked == true)
                         {
                             CmdString += "1, ";
@@ -85,15 +86,18 @@ namespace StudentManagement.ViewModel.GiamHieu
                             CmdString += "0, ";
                         }
                         CmdString = CmdString + "'" + ThemHocSinhWD.DiaChi.Text + "', '" + ThemHocSinhWD.Email.Text + "', ";
-                        BinaryToBitmapImageConverter converter = new BinaryToBitmapImageConverter();
+
+                        // tạo đệm lưu ảnh avatar
+                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                         byte[] buffer = converter.ImageToBinary(ImagePath);
-                        CmdString = CmdString + "@imagebinary)";
+
+
+                        CmdString += "@imagebinary)";
+                        // Định nghĩa @imagebinary
                         SqlCommand cmd = new SqlCommand(CmdString, con);
-                        cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                        MessageBox.Show(CmdString);
-                        cmd.ExecuteReader();
-
-
+                        SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                        sqlParam.DbType = DbType.Binary;
+                        cmd.ExecuteNonQuery();
                         con.Close();
                     }
                 }
