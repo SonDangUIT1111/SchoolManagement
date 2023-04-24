@@ -71,7 +71,10 @@
                         x:Name="ChangegrdSelectImg"
                         VerticalAlignment="Center"
                         Width="150"
-                        Height="150" >
+                        Height="150">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{Binding GiaoVienHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"/>
+                    </Grid.Background>
                     <Rectangle 
                                 x:Name="ChangerecImage"
                                 StrokeDashArray="4 2" 
@@ -89,7 +92,7 @@
                             CommandParameter="{Binding ElementName=ChangegrdSelectImg}"
                             Height="35" 
                             Width="100" 
-                            Content="Thêm hình ảnh" 
+                            Content="Thay đổi ảnh" 
                             FontSize="14"
                             Foreground="#FFFFFF"
                             Background="#0099FF"
@@ -101,14 +104,7 @@
                             VerticalAlignment="Bottom"
                             FocusVisualStyle="{x:Null}"
                             Padding="0"/>
-                    <materialDesign:PackIcon 
-                            x:Name="iconImage" 
-                            Kind="FileImageOutline" 
-                            Foreground="#333333"
-                            Width="64" Height="54"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"  
-                            Margin="0,25,0,0"/>
+
                 </Grid>
 
                 <StackPanel Orientation="Vertical"

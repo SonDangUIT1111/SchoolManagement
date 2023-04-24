@@ -13,6 +13,8 @@ using System.Windows.Media;
 using StudentManagement.Model;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using StudentManagement.Converter;
+using System.Runtime.Remoting.Messaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -36,11 +38,9 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             LoadWindow = new RelayCommand<SuaGiaoVien>((parameter) => { return true; }, (parameter) =>
             {
-                SuaGiaoVienWD = parameter;
-                //MessageBox.Show(GiaoVienHienTai.GioiTinh);
-                //MessageBox.Show(GiaoVienHienTai.TenGiaoVien);
+                SuaGiaoVienWD = parameter;              
             });
-
+            
             CancelCommand = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 SuaGiaoVienWD.Close();
@@ -130,6 +130,18 @@ namespace StudentManagement.ViewModel.GiamHieu
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
                     con.Close();
+                    if (ImagePath != null)
+                    {
+                        //MessageBox.Show(ImagePath);
+                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                        byte[] buffer = converter.ImageToBinary(ImagePath);
+                        con.Open();
+                        string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+                        cmd = new SqlCommand(cmdstring, con);
+                        cmd.Parameters.AddWithValue("@image", buffer);
+                        cmd.ExecuteScalar();
+                        con.Close();
+                    }
                     MessageBox.Show("Cập nhật thành công!");
                 }
             }

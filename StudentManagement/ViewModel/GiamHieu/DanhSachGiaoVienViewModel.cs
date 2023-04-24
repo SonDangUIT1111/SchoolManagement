@@ -43,9 +43,28 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 SuaGiaoVien window = new SuaGiaoVien();
                 SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
-                data.GiaoVienHienTai = parameter;
 
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select AnhThe from GiaoVien where MaGiaoVien = " + parameter.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            //StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien();
+                            parameter.Avatar = (byte[])reader.GetValue(0);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                }
+
+                data.GiaoVienHienTai = parameter;
                 window.ShowDialog();
+                LoadDanhSachGiaoVien();
             });
             RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
             {
@@ -66,7 +85,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from GiaoVien";
+                string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email from GiaoVien";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -75,15 +94,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                     while (reader.Read())
                     {
                         StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien();
-                        teacher.TenGiaoVien = reader.GetString(1);
                         teacher.MaGiaoVien = reader.GetInt32(0);
+                        teacher.TenGiaoVien = reader.GetString(1);
                         teacher.NgaySinh = reader.GetDateTime(2);
                         teacher.GioiTinh = reader.GetBoolean(3);
                         teacher.DiaChi = reader.GetString(4);
                         teacher.Email = reader.GetString(5);
-                        reader.GetString(6);
-                        reader.GetString(7);
-                        teacher.Avatar = (byte[])reader.GetValue(8);
+                        //reader.GetString(6);
+                        //reader.GetString(7);
+                        //teacher.Avatar = (byte[])reader.GetValue(8);
                         DanhSachGiaoVien.Add(teacher);
                     }
                     reader.NextResult();
@@ -131,24 +150,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                 SqlCommand cmd;
                 string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
                 cmd = new SqlCommand(CmdString, con);
-                //cmd.ExecuteScalar();
+                cmd.ExecuteScalar();
                 con.Close();
                 MessageBox.Show("Đã xóa " + value.TenGiaoVien);
                 }
         }
-        public void CapNhatGiaoVien(Model.GiaoVien value)
-        {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    con.Open();
-                    SqlCommand cmd;
-                    string CmdString = "Update HocSinh set MaLop = null, TenLop = null where MaHocSinh = " + value.MaGiaoVien;
-                    cmd = new SqlCommand(CmdString, con);
-                    MessageBox.Show("Cập nhật " + value.TenGiaoVien);
-                    //cmd.ExecuteScalar();
-                    con.Close();
-                }
-        }
-
     }
 }
