@@ -36,19 +36,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThemGiaoVien window = new ThemGiaoVien();
                 ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
+                
                 window.ShowDialog();
             });
             UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
             {
-                Model.GiaoVien item = parameter;
-                CapNhatGiaoVien(item);
-                LoadDanhSachGiaoVien();
-                // Hiện snackbar thông báo xóa thành công, có thể hoàn tác
-                //DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
-                //$"Xóa thành công",
-                //$"Hoàn tác",
-                //param => { HoanTac(item); },
-                //TimeSpan.FromSeconds(5));
+                SuaGiaoVien window = new SuaGiaoVien();
+                SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
+                data.GiaoVienHienTai = parameter;
+
+                window.ShowDialog();
             });
             RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
             {
@@ -84,6 +81,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         teacher.GioiTinh = reader.GetBoolean(3);
                         teacher.DiaChi = reader.GetString(4);
                         teacher.Email = reader.GetString(5);
+                        reader.GetString(6);
+                        reader.GetString(7);
+                        teacher.Avatar = (byte[])reader.GetValue(8);
                         DanhSachGiaoVien.Add(teacher);
                     }
                     reader.NextResult();

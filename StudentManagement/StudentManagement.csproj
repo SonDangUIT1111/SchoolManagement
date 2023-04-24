@@ -93,6 +93,7 @@
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachGiaoVienViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaGiaoVienViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemGiaoVienViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
@@ -108,6 +109,9 @@
     </Compile>
     <Compile Include="Views\GiamHieu\LopHoc.xaml.cs">
       <DependentUpon>LopHoc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\SuaGiaoVien.xaml.cs">
+      <DependentUpon>SuaGiaoVien.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiamHieu\ThayDoiQuyDinh.xaml.cs">
       <DependentUpon>ThayDoiQuyDinh.xaml</DependentUpon>
@@ -232,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\LopHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\SuaGiaoVien.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

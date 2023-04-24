@@ -17,6 +17,8 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using StudentManagement.Converter;
+using System.Windows.Media;
 //using System.Drawing.Image;
 
 namespace StudentManagement.ViewModel.GiamHieu
@@ -25,21 +27,44 @@ namespace StudentManagement.ViewModel.GiamHieu
     {
         // khai báo biến
         //public int MatKhau;
-        private string _avatar;
-        public string Avatar { get => _avatar; set { _avatar = value; OnPropertyChanged(); } }
-        string DefaultPic;
+        public string ImagePath { get; set; }
         public ThemGiaoVien ThemGiaoVienWD { get; set; }
         public ICommand CancelCommand { get; set; }
         public ICommand LoadWindow { get; set; }
         public ICommand AddGiaoVien { get; set; }
-        public ICommand ChonAnh{ get; set; }
-        public ThemGiaoVienViewModel()//IOService ioService)
+        public ICommand ChangeImage { get; set; }
+        public ThemGiaoVienViewModel()
         {
-            DefaultPic = "/Resources/Images/logo-uit.png";
-            Avatar = DefaultPic;
-
-            //Random rnd = new Random(1000000);
-            //MatKhau = rnd.Next();
+            ChangeImage = new RelayCommand<Grid>((parameter) => { return true; }, (parameter) =>
+            {
+                OpenFileDialog op = new OpenFileDialog();
+                op.Title = "Insert Image";
+                op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" + "JPEG (.jpg;.jpeg)|*.jpg;*.jpeg|" + "Portable Network Graphic (.png)|.png";
+                if (op.ShowDialog() == true)
+                {
+                    ImagePath = op.FileName;
+                    try
+                    {
+                        ImageBrush imageBrush = new ImageBrush();
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.UriSource = new Uri(ImagePath);
+                        bitmap.EndInit();
+                        imageBrush.ImageSource = bitmap;
+                        parameter.Background = imageBrush;
+                        if (parameter.Children.Count > 1)
+                        {
+                            parameter.Children.Remove(parameter.Children[0]);
+                            parameter.Children.Remove(parameter.Children[1]);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                    }
+                }
+            });
             LoadWindow = new RelayCommand<ThemGiaoVien>((parameter) => { return true; }, (parameter) =>
             {
                 ThemGiaoVienWD = parameter;
@@ -53,25 +78,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThemGiaoVienMoi();
             });
-            ChonAnh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                ChonAvatar();
-            });
-        }
 
-        public void ChonAvatar()
-        {
-            //MessageBox.Show("chonanh");
-
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-            bool? result = dialog.ShowDialog();
-            if (result == true)
-            {
-                Avatar = dialog.FileName;
-            }
-            //OpenFileDialog openFileDialog = new OpenFileDialog();
-            //if (openFileDialog.ShowDialog() == true)
-            //    txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
         }
 
         public string ToShortDateTime(string st) {
@@ -123,24 +130,35 @@ namespace StudentManagement.ViewModel.GiamHieu
         void ThemGiaoVienMoi()
         {
             //MessageBox.Show(Avatar);
-               // MessageBox.Show("testin end");
-            if (!IsValidEmail(ThemGiaoVienWD.Email.Text))
-            {
-                MessageBox.Show("Email không đúng cú pháp!");
-                ThemGiaoVienWD.Email.Focus();
-            } else
+            // MessageBox.Show("testin end");
             if (ThemGiaoVienWD.TenGV.Text == "" |
                 ThemGiaoVienWD.NgaySinh.Text == "" |
                 ThemGiaoVienWD.DiaChi.Text == "" |
-                ThemGiaoVienWD.Email.Text == "" |
-                Avatar == DefaultPic
-                )
+                ThemGiaoVienWD.Email.Text == "")
+            {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin");
+            }
+            else
+            if (!IsValidEmail(ThemGiaoVienWD.Email.Text)
+                )
+            {
+                MessageBox.Show("Email không đúng cú pháp!");
+                ThemGiaoVienWD.Email.Focus();
+            }
             else
             {
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
+                    try
+                    {
+                        con.Open();
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
+                        return;
+                    }
                     string CmdString = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (\'" +
                         ThemGiaoVienWD.TenGV.Text + "\' , \'" +
                         ToShortDateTime(ThemGiaoVienWD.NgaySinh.DisplayDate.ToString()) + "\' ," + ThemGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
@@ -150,9 +168,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     cmd.ExecuteScalar();
                     con.Close();
 
+
                     //Tao tai khoan va mat khau
                     Random rnd = new Random();
-                    string MatKhau = rnd.Next(100000,999999).ToString();
+                    string MatKhau = rnd.Next(100000, 999999).ToString();
                     string TaiKhoan = "gv";
 
                     con.Open();
@@ -176,14 +195,15 @@ namespace StudentManagement.ViewModel.GiamHieu
 
                     //Update tai khoan va mat khau
                     con.Open();
-                    CmdString = "Update GiaoVien set Username = \'"+ TaiKhoan + "\', UserPassword = \'" + MatKhau + "\' where MaGiaoVien =" + MaSo.ToString();
+                    CmdString = "Update GiaoVien set Username = \'" + TaiKhoan + "\', UserPassword = \'" + MatKhau + "\' where MaGiaoVien =" + MaSo.ToString();
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
-                    SendAccountByEmail(TaiKhoan,MatKhau,teacher.Email);
+                    SendAccountByEmail(TaiKhoan, MatKhau, teacher.Email);
                     con.Close();
 
                     //Update anh dai dien
-                    byte[] buffer = System.IO.File.ReadAllBytes(Avatar);
+                    ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                    byte[] buffer = converter.ImageToBinary(ImagePath);
                     con.Open();
                     string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + MaSo.ToString();
                     cmd = new SqlCommand(cmdstring, con);
@@ -191,7 +211,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     cmd.ExecuteScalar();
                     con.Close();
 
-                    MessageBox.Show("Thêm giáo viên thành công!");
+                    MessageBox.Show("Thêm giáo viên thành công! (" + MaSo.ToString()+")");
                 }
             }
         }
