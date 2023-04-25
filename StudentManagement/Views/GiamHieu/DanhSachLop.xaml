@@ -85,8 +85,9 @@
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              ItemsSource="{Binding DanhSachKhoi}"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                        <ComboBoxItem IsSelected="True">Apple</ComboBoxItem>
+                        
                     </ComboBox>
                     <ComboBox materialDesign:HintAssist.Hint="Search"
                               IsEditable="False"

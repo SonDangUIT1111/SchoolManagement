@@ -38,7 +38,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             LoadWindow = new RelayCommand<SuaGiaoVien>((parameter) => { return true; }, (parameter) =>
             {
-                SuaGiaoVienWD = parameter;              
+                SuaGiaoVienWD = parameter;
             });
             
             CancelCommand = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
