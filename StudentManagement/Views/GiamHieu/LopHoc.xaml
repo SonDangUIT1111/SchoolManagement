@@ -10,9 +10,7 @@
       d:DesignWidth="1056"
       Title="LopHoc"
       Background="#FFECECEC"
-      DataContext="{StaticResource LopHocVM}"
-      >
-
+      DataContext="{StaticResource LopHocVM}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -44,15 +42,40 @@
                 </Border>
             </Grid>
         </Border>
-        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+        <Border 
+            BorderBrush="#FF000000"  
+            BorderThickness="0" 
+            CornerRadius="10" 
+            Grid.Row="1" 
+            Background="White" 
+            Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="110" ></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                <TextBlock Text="Danh sách lớp học" Margin="25" FontSize="30" FontWeight="SemiBold"/>
-                <Button x:Name="ThemGiaoVien" 
+                    <DockPanel>
+                    <TextBlock 
+                        Text="Danh sách lớp học" 
+                        Margin="25" 
+                        FontSize="30" 
+                        FontWeight="SemiBold"/>
+                    <TextBox
+                        HorizontalAlignment="Center"
+                        Height="50"
+                        Width="350"
+                        materialDesign:HintAssist.Hint="Nhập tên lớp"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                    </TextBox>
+                    <Button
+                        Width="90"
+                        Content="Tìm kiếm"
+                        Foreground="White"
+                        Command="{Binding ThemLop}">
+                        
+                    </Button>
+                    <Button x:Name="ThemGiaoVien" 
                         Width="179" 
                         Height="64" 
                         Background="#33418C"
@@ -63,13 +86,20 @@
                         FontSize="19" 
                         FontWeight="Bold"
                         Foreground="White">
-                </Button>
+                       </Button>
+                    </DockPanel>
                 </Grid>
                 <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" ></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
                     <StackPanel
                         Orientation="Horizontal"
-                        VerticalAlignment="Top">
-                        <ComboBox materialDesign:HintAssist.Hint="Academy Year"
+                        VerticalAlignment="Top"
+                        Grid.Row="0"
+                        HorizontalAlignment="Center">
+                        <ComboBox materialDesign:HintAssist.Hint="Niên khoá"
                               IsEditable="False"
                               Width="200"
                               Height="40"
@@ -77,40 +107,43 @@
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                            <ComboBoxItem IsSelected="True">2022-2023</ComboBoxItem>
                         </ComboBox>
-                        <ComboBox materialDesign:HintAssist.Hint="Grade"
+                        <ComboBox materialDesign:HintAssist.Hint="Khối"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                            <ComboBoxItem IsSelected="True">10</ComboBoxItem>
-                        </ComboBox>
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"></ComboBox>
                     </StackPanel>
-                    <!--<DataGrid Margin="30 100 30 0"
-                              x:Name="ClassListDataGrid">
-                        
-                    </DataGrid >-->
-                    <DataGrid Margin="0 20 0 0"
+                    <DataGrid Margin="20 20 20 0"
                               ItemsSource="{Binding DanhSachLopHoc}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}">
+                              CellStyle="{StaticResource DataGridCellStyle1}"
+                              Grid.Row="1">
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="1010">
+                            <DataGridTemplateColumn Width="940">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
+                                        <DockPanel>
                                             <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
                                                        Text="{Binding TenLop}"/>
-                                            <Button Margin="800 0 0 0" Content="Xem lớp" Command="{Binding SwitchDanhSachLop}">
-
-                                            </Button>
-                                        </StackPanel>
+                                            <StackPanel HorizontalAlignment="Right"
+                                                        Orientation="Horizontal">
+                                                <Button 
+                                                Content="Xem lớp"     
+                                                />
+                                            <Button 
+                                                Content="Sửa thông tin lớp"        
+                                                />
+                                                <Button 
+                                                Content="Xoá lớp"                               
+                                                />
+                                            </StackPanel>
+                                        </DockPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

@@ -23,7 +23,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FFA03697" 
+                Background="#FF4FCA88" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Báo cáo" 
@@ -54,7 +54,8 @@
                 <StackPanel
                 Orientation="Horizontal"
                 VerticalAlignment="Top"
-                Margin="20 10 0 0"
+                Margin="0 10 0 0"
+                HorizontalAlignment="Center"
                 Grid.Row="0"
                 >
                 <ComboBox x:Name="cmbNienKhoa"
@@ -63,27 +64,28 @@
                     IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                     ItemsSource="{Binding NienKhoaComboBox}"
                     Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                <ComboBox x:Name="cmbMonHoc"
-                    Width="256" 
-                    Margin="20 0 0 0"
-                    materialDesign:HintAssist.Hint="Môn học"
-                    IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                    ItemsSource="{Binding MonComboBox}"
-                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                <ComboBox x:Name="cmbHocKy"
+                    <ComboBox x:Name="cmbHocKy"
                     Width="256" 
                     Margin="20 0 0 0"
                     materialDesign:HintAssist.Hint="Học kỳ"
                     IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                     ItemsSource="{Binding HocKyComboBox}"
                     Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+                    <ComboBox x:Name="cmbMonHoc"
+                    Width="256" 
+                    Margin="20 0 0 0"
+                    materialDesign:HintAssist.Hint="Môn học"
+                    IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
+                    ItemsSource="{Binding MonComboBox}"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+
                 </StackPanel>
-                <DataGrid Margin="0 20 0 0"
+                <DataGrid Margin="30 20 30 0"
                               ItemsSource="{Binding DanhSachBaoCaoMon}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}"
-                              Grid.Row="1">
+                              Grid.Row="1" SelectionChanged="DataGrid_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="1010">
                             <DataGridTemplateColumn.CellTemplate>

@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -15,7 +16,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class LopHocViewModel: BaseViewModel
     {
-        private Frame _frame;
 
         private ObservableCollection<StudentManagement.Model.Lop> _danhSachLopHoc;
         public ObservableCollection<StudentManagement.Model.Lop> DanhSachLopHoc { get => _danhSachLopHoc; set { _danhSachLopHoc = value; OnPropertyChanged(); } }
@@ -24,9 +24,17 @@ namespace StudentManagement.ViewModel.GiamHieu
         public DanhSachLop DanhSachLopPage;
         public ICommand SwitchDanhSachLop { get; set; }
 
+        public ICommand ThemLop { get; set; }
+
         public LopHocViewModel()
         {
             LoadDanhSachHocSinh();
+            ThemLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                Window window = null;
+                window = new ThemLopHoc();
+                window.Show();
+            });
         }
         public void LoadDanhSachHocSinh()
         {
