@@ -81,7 +81,14 @@
                               ItemsSource="{Binding DanhSachQuyDinh}"
                               DisplayMemberPath="TenQuiDinh"
                               VerticalContentAlignment="Center"
-                              FontSize="20"/>
+                              FontSize="20">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterQuyDinh}"
+                                   CommandParameter="{Binding ElementName=cmbQuyDinh}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="Giá trị" 
@@ -91,21 +98,37 @@
                        VerticalAlignment="Top"/>
                     <TextBox Margin="25 0 0 0"
                              materialDesign:HintAssist.Hint="Giá Trị"
-                             x:Name="GiaTri"
+                             x:Name="tbGiaTri"
                              Width="450"
                              Height="72"
                              Padding="10"
                              HorizontalAlignment="Left"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             >
+                             VerticalContentAlignment="Center"
+                             FontSize="20" IsEnabled="False">
                     </TextBox>
-                    <Button Style="{StaticResource InteractiveButton}"
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="25">
+                        <Button Style="{StaticResource InteractiveButton}"
                             Content="Thay đổi"
                             Width="150"
                             Height="40"
-                            Margin="25"
-                            HorizontalAlignment="Right">
-                    </Button>
+                            Margin="15"
+                            HorizontalAlignment="Right"
+                            Command="{Binding EnableChange}">
+                        </Button>
+                        <Button x:Name="btnXacNhan"
+                            Style="{StaticResource InteractiveButton}"
+                            Content="Xác nhận"
+                            Width="150"
+                            Height="40"
+                            Margin="15"
+                            HorizontalAlignment="Right"
+                            Command="{Binding ChangeRule}"
+                            CommandParameter="{Binding ElementName=cmbQuyDinh}"
+                            IsEnabled="False"/>
+                    </StackPanel>
 
                 </StackPanel>
             </Grid>
