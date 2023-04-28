@@ -21,6 +21,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int Khoi { get; set; }
         public ICommand AddClass { get; set; }
         public ICommand LoadData { get; set; }
+        public ICommand CloseWindow { get; set; }
 
         private ObservableCollection<string> _giaoVienComboBox;
         public ObservableCollection<string> GiaoVienComboBox
@@ -79,7 +80,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             AddClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.NumberOfStudent.Text) || String.IsNullOrEmpty(ThemLopHocWD.AcademyYear.Text) || String.IsNullOrEmpty(selectedGiaoVien){
+                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.NumberOfStudent.Text) || String.IsNullOrEmpty(ThemLopHocWD.AcademyYear.Text) || String.IsNullOrEmpty(selectedGiaoVien)){
                     MessageBox.Show("Nhập đầy đủ thông tin");
                 }
                 else using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -112,6 +113,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
+            });
+
+            CloseWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                  
             });
         }
 

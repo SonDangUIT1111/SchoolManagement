@@ -5,12 +5,20 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Title="LopHoc"
       Background="#FFECECEC"
+      x:Name="LopHocWD"
       DataContext="{StaticResource LopHocVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadLopHoc}"
+                                   CommandParameter="{Binding ElementName=LopHocWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -61,21 +69,21 @@
                         Margin="25" 
                         FontSize="30" 
                         FontWeight="SemiBold"/>
-                    <TextBox
+                        <TextBox
+                        x:Name="ClassName"
                         HorizontalAlignment="Center"
                         Height="50"
                         Width="350"
                         materialDesign:HintAssist.Hint="Nhập tên lớp"
                         Style="{StaticResource MaterialDesignOutlinedTextBox}">
-                    </TextBox>
-                    <Button
-                        Width="90"
-                        Content="Tìm kiếm"
-                        Foreground="White"
-                        Command="{Binding ThemLop}">
-                        
-                    </Button>
-                    <Button x:Name="ThemGiaoVien" 
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="TextChanged">
+                                    <i:InvokeCommandAction Command="{Binding FilterTenLop}"
+                                   CommandParameter="{Binding ElementName=ClassName}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <Button x:Name="ThemGiaoVien" 
                         Width="179" 
                         Height="64" 
                         Background="#33418C"
@@ -85,7 +93,8 @@
                         Content="Thêm Lớp" 
                         FontSize="19" 
                         FontWeight="Bold"
-                        Foreground="White">
+                        Foreground="White"
+                        Command="{Binding ThemLop}">
                        </Button>
                     </DockPanel>
                 </Grid>
@@ -99,30 +108,57 @@
                         VerticalAlignment="Top"
                         Grid.Row="0"
                         HorizontalAlignment="Center">
-                        <ComboBox materialDesign:HintAssist.Hint="Niên khoá"
+                        <ComboBox 
+                            materialDesign:HintAssist.Hint="Niên khoá"
+                              x:Name="cmbNienKhoa"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              ItemsSource="{Binding NienKhoaCmb}"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </ComboBox>
-                        <ComboBox materialDesign:HintAssist.Hint="Khối"
+                        <ComboBox 
+                              materialDesign:HintAssist.Hint="Khối"
+                              x:Name="cmbKhoi"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}"></ComboBox>
+                              ItemsSource="{Binding KhoiCmb}"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding FilterKhoi}"
+                                   CommandParameter="{Binding ElementName=cmbKhoi}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ComboBox>
+                        <Button 
+                                                    Content="Xoá lớp học"
+                                                    Command="{Binding XoaLop}"
+                                                    CommandParameter="{Binding}">
+
+                        </Button>
                     </StackPanel>
                     <DataGrid Margin="20 20 20 0"
                               ItemsSource="{Binding DanhSachLopHoc}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}"
-                              Grid.Row="1">
+                              SelectedItem="{Binding GridSelectedItem}"
+                              Grid.Row="1"
+                              >
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="940">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -134,14 +170,14 @@
                                             <StackPanel HorizontalAlignment="Right"
                                                         Orientation="Horizontal">
                                                 <Button 
-                                                Content="Xem lớp"     
-                                                />
-                                            <Button 
-                                                Content="Sửa thông tin lớp"        
-                                                />
+                                                    Content="Xem danh sách lớp">
+                                                    
+                                                </Button>
                                                 <Button 
-                                                Content="Xoá lớp"                               
-                                                />
+                                                    Content="Sửa thông tin lớp">
+                                                    
+                                                </Button>
+
                                             </StackPanel>
                                         </DockPanel>
                                     </DataTemplate>
