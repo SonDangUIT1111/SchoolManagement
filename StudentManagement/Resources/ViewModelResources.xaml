@@ -16,6 +16,7 @@
     <viewmodelGH:LopHocViewModel x:Key="LopHocVM"></viewmodelGH:LopHocViewModel>
     <viewmodelGH:BaoCaoViewModel x:Key="BaoCaoVM"></viewmodelGH:BaoCaoViewModel>
     <viewmodelGH:ThemLopHocViewModel x:Key="ThemLopVM"></viewmodelGH:ThemLopHocViewModel>
+    <viewmodelGH:SuaThongTinLopHocViewModel x:Key="SuaLopVM"></viewmodelGH:SuaThongTinLopHocViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <!--HocSinh-->

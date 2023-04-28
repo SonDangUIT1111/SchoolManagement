@@ -72,6 +72,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand FilterKhoi { get; set; }
         public ICommand FilterTenLop { get; set; }
         public ICommand XoaLop { get; set; }
+        public ICommand SuaLop { get; set; }
         public LopHocViewModel()
         {
 
@@ -90,6 +91,17 @@ namespace StudentManagement.ViewModel.GiamHieu
                 Window window = null;
                 window = new ThemLopHoc();
                 window.Show();
+            });
+
+            SuaLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                SuaThongTinLopHocViewModel suaThongTinLopHocViewModel = new SuaThongTinLopHocViewModel();
+                MessageBox.Show(GridSelectedItem.TenLop);
+                suaThongTinLopHocViewModel.TenLop = GridSelectedItem.TenLop;
+                Window window1 = null;
+                window1 = new SuaThongTinLopHoc();
+                window1.DataContext = suaThongTinLopHocViewModel;
+                window1.Show();
             });
 
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -124,17 +136,21 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             XoaLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    con.Open();
-                    string cmdString = "DELETE FROM Lop WHERE TenLop = '"+GridSelectedItem.TenLop+"'";
-                    SqlCommand cmd = new SqlCommand(cmdString, con);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    LoadDanhSachLopHoc();
+                if (MessageBox.Show("Bạn có muốn xoá lớp không?", "Xoá lớp", MessageBoxButton.YesNo) == MessageBoxResult.Yes){
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        con.Open();
+                        string cmdString = "DELETE FROM Lop WHERE TenLop = '" + GridSelectedItem.TenLop + "'";
+                        SqlCommand cmd = new SqlCommand(cmdString, con);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                        LoadDanhSachLopHoc();
 
+                    }
                 }
             });
+
+
         }
 
         public void LoadComboBox()
