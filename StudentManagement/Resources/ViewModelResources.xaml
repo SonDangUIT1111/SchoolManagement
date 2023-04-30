@@ -19,6 +19,7 @@
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <viewmodelGV:LopHocViewModel x:Key="LopHocVM"></viewmodelGV:LopHocViewModel>
+    <viewmodelGV:SuaHocSinhViewModel x:Key="SuaHocSinhVM"></viewmodelGV:SuaHocSinhViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <!--Converter-->

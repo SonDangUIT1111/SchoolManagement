@@ -33,6 +33,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand LoadKhoa { get; set; }
         public ICommand LoadLop { get; set; }
         public ICommand LoadHocSinh { get; set; }
+        public ICommand UpdateHocSinh { get; set; }
         public LopHocViewModel()
         {
             LoadWindow = new RelayCommand<LopHoc>((parameter) => { return true; }, (parameter) =>
@@ -57,10 +58,49 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 LoadDanhSachHocSinh();
             });
+            UpdateHocSinh= new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
+            {
+                if (!IsGiaoVienChuNhiem()) return;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + parameter.MaHocSinh.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh()
+                            {
+                            MaHocSinh = parameter.MaHocSinh,
+                            TenHocSinh = parameter.TenHocSinh,
+                            NgaySinh = reader.GetDateTime(0),
+                            GioiTinh = reader.GetBoolean(1),
+                            DiaChi = reader.GetString(2),
+                            Email = reader.GetString(3),
+                            Avatar = (byte[])reader.GetValue(4)
+                            };
+                            SuaHocSinh window = new SuaHocSinh();
+                            SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
+                            data.HocSinhHienTai = student;
+                            window.ShowDialog();
+                            LoadDanhSachHocSinh();
+                        }
+                        reader.NextResult();
+                    }
+   
+                    con.Close();
+                }
+            });
             //LoadDanhSachHocSinh();
             LoadDanhSachKhoi();
-            //
             //LoadDanhSachLop();
+        }
+        public bool IsGiaoVienChuNhiem()
+        {
+            return true;
         }
         public void LoadDanhSachHocSinh()
         {
@@ -79,6 +119,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     while (reader.Read())
                     {
                         StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
+                        student.MaHocSinh = reader.GetInt32(0);
                         student.TenHocSinh = reader.GetString(1);
                         DanhSachhs.Add(student);
                     }

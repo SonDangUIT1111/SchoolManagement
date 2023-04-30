@@ -162,7 +162,17 @@
                                             </Border>
                                             <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
+                                                       Width="200"
                                                        Text="{Binding TenHocSinh}"/>
+                                            <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                    Background="#FF68BB08"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Command="{Binding Source={StaticResource LopHocVM}, Path=UpdateHocSinh}"
+                                                    CommandParameter="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
