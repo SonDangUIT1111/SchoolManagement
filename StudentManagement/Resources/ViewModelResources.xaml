@@ -16,6 +16,7 @@
     <viewmodelGH:ThongTinHocSinhViewModel x:Key="ThongTinHocSinhVM"></viewmodelGH:ThongTinHocSinhViewModel>
     <viewmodelGH:ThemHocSinhMoiViewModel x:Key="ThemHocSinhMoiVM"></viewmodelGH:ThemHocSinhMoiViewModel>
     <viewmodelGH:ThayDoiQuyDinhViewModel x:Key="ThayDoiQuyDinhVM"></viewmodelGH:ThayDoiQuyDinhViewModel>
+    <viewmodelGH:MonHocViewModel x:Key="MonHocVM"></viewmodelGH:MonHocViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <!--HocSinh-->
