@@ -74,6 +74,7 @@
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
+    <Compile Include="Converter\BooleanToXepLoaiConverter.cs" />
     <Compile Include="Model\BaoCaoHocKy.cs" />
     <Compile Include="Model\BaoCaoMon.cs" />
     <Compile Include="Model\ConnectionString.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="ViewModel\GiaoVien\LopHocViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\SuaHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
     <Compile Include="Views\GiamHieu\BaoCao.xaml.cs">
       <DependentUpon>BaoCao.xaml</DependentUpon>
@@ -150,6 +152,9 @@
     </Compile>
     <Compile Include="Views\GiaoVien\ThongTinTruong.xaml.cs">
       <DependentUpon>ThongTinTruong.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HocSinh\DiemSo.xaml.cs">
+      <DependentUpon>DiemSo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HocSinh\HocSinhWindow.xaml.cs">
       <DependentUpon>HocSinhWindow.xaml</DependentUpon>
@@ -293,6 +298,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiaoVien\ThongTinTruong.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HocSinh\DiemSo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

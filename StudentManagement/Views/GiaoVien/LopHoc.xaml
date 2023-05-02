@@ -7,8 +7,7 @@
       xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Title="LopHoc"

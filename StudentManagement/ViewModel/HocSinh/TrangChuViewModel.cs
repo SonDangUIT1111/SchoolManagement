@@ -20,18 +20,21 @@ namespace StudentManagement.ViewModel.HocSinh
         public LopHoc LopHocPage { get; set; }
         public ThongTinHocSinh ThongTinHocSinhPage { get; set; }
         public ThongTinTruong ThongTinTruongPage { get; set; }
+        public DiemSo XemDiemPage { get; set; }
 
 
         //declare ICommand
         public ICommand SwitchThongTinHocSinh { get; set; }
         public ICommand SwitchLopHoc { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
+        public ICommand SwitchXemDiem { get; set; }
 
         public TrangChuViewModel()
         {
             LopHocPage = new LopHoc();
             ThongTinHocSinhPage = new ThongTinHocSinh();
             ThongTinTruongPage = new ThongTinTruong();
+            XemDiemPage = new DiemSo();
 
             //define ICommand
             SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
@@ -46,7 +49,10 @@ namespace StudentManagement.ViewModel.HocSinh
             {
                 parameter.Content = ThongTinTruongPage;
             });
-
+            SwitchXemDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = XemDiemPage;
+            });
         }
     }
 }

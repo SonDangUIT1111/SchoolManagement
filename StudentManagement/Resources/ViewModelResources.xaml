@@ -22,8 +22,10 @@
     <viewmodelGV:SuaHocSinhViewModel x:Key="SuaHocSinhVM"></viewmodelGV:SuaHocSinhViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
+    <viewmodelHS:DiemSoViewModel x:Key="DiemSoVM"></viewmodelHS:DiemSoViewModel>
     <!--Converter-->
     <converter:ByteArrayToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
     <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>
+    <converter:BooleanToXepLoaiConverter x:Name="xeploaiConverter" x:Key="BooleanToXepLoaiConverter"/>
 
 </ResourceDictionary>

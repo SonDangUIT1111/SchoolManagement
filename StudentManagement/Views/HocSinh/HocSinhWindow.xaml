@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudentManagement.Views.HocSinh"  
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="HocSinhWindow" 
         Height="800" Width="1440"
@@ -230,7 +231,36 @@
                     </Path>
                 </Grid>
             </Button>
-
+            <Button 
+                Width="220"
+                Height="47" 
+                Style="{StaticResource SideButton}" 
+                Margin="30,5,0,5" 
+                Grid.ColumnSpan="2" 
+                HorizontalAlignment="Left"
+                Command="{Binding SwitchXemDiem}"
+                CommandParameter="{Binding ElementName=RPage}">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="20"></Setter>
+                    </Style>
+                </Button.Resources>
+                <Grid>
+                    <TextBlock Text="Điểm số" 
+                               HorizontalAlignment="Left" 
+                               Margin="25,0,0,0" 
+                               FontSize="20"
+                               Width="170"/>
+                    <materialDesign:PackIcon
+                            x:Name="iconImage" 
+                            Kind="GraduationCap" 
+                            Foreground="#333333"
+                            Width="30" Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"  
+                            Margin="-13,0,0,0"/>
+                </Grid>
+            </Button>
 
         </ListBox>
         <Frame x:Name="RPage"  NavigationUIVisibility="Hidden" Grid.Column="1" Grid.Row="1" Content="{Binding PageContent}" />
