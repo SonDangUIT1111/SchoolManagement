@@ -6,14 +6,21 @@
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Background="#FFECECEC"
       Title="BaoCao"
       DataContext="{StaticResource BaoCaoVM}"
+      x:Name="BaoCaoWD"  
       >
-        
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadBaoCao}"
+                                   CommandParameter="{Binding ElementName=BaoCaoWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -45,10 +52,11 @@
                 </Border>
             </Grid>
         </Border>
-        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="2" Background="White" Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"></RowDefinition>
+                    <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel
@@ -71,21 +79,34 @@
                     IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                     ItemsSource="{Binding HocKyComboBox}"
                     Style="{StaticResource MaterialDesignOutlinedComboBox}" />
-                    <ComboBox x:Name="cmbMonHoc"
+                    <ComboBox x:Name="cmbLop"
                     Width="256" 
                     Margin="20 0 0 0"
-                    materialDesign:HintAssist.Hint="Môn học"
+                    materialDesign:HintAssist.Hint="Lớp"
                     IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                    ItemsSource="{Binding MonComboBox}"
+                    ItemsSource="{Binding LopComboBox}"
                     Style="{StaticResource MaterialDesignOutlinedComboBox}" />
 
                 </StackPanel>
+                <lvc:CartesianChart
+                    x:Name="ReportChart"
+                    Grid.Row="1"
+                    Margin="30 20 30 0"
+                    Series="{Binding SoLuongDat}">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Tên môn" Labels="{Binding TenMon}"></lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Số lượng đạt"></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
                 <DataGrid Margin="30 20 30 0"
                               ItemsSource="{Binding DanhSachBaoCaoMon}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}"
-                              Grid.Row="1" SelectionChanged="DataGrid_SelectionChanged">
+                              Grid.Row="2" 
+                            >
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="1010">
                             <DataGridTemplateColumn.CellTemplate>
@@ -94,6 +115,9 @@
                                         <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
                                                        Text="{Binding TenLop}"/>
+                                        <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding TenMon}"/>
                                         <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
                                                        Text="{Binding SoLuongDat}"/>

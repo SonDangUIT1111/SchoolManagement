@@ -161,6 +161,12 @@
                                             <TextBlock Margin="20 0 0 0"
                                                        FontSize="14"
                                                        Text="{Binding TenLop}"/>
+                                            <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding NienKhoa}"/>
+                                            <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding SiSo}"/>
                                             <StackPanel HorizontalAlignment="Right"
                                                         Orientation="Horizontal">
                                                 <Button 

@@ -96,7 +96,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             SuaLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 SuaThongTinLopHocViewModel suaThongTinLopHocViewModel = new SuaThongTinLopHocViewModel();
-                MessageBox.Show(GridSelectedItem.TenLop);
                 suaThongTinLopHocViewModel.TenLop = GridSelectedItem.TenLop;
                 Window window1 = null;
                 window1 = new SuaThongTinLopHoc();
@@ -231,7 +230,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
 
                 string CmdString = "SELECT * FROM Lop" + WhereCmdString;
-                MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -241,6 +239,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         StudentManagement.Model.Lop lophoc = new StudentManagement.Model.Lop();
                         lophoc.TenLop = reader.GetString(1);
+                        lophoc.SiSo = reader.GetInt32(2);
+                        lophoc.NienKhoa = reader.GetString(3);  
                         DanhSachLopHoc.Add(lophoc);
                     }
                     reader.NextResult();

@@ -109,7 +109,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 
                     cmdString = cmdString + ", '" + MaKhoi + "', '" + Khoi + "','" + MaGiaoVien + "', '" + selectedGiaoVien + "')";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
-                    MessageBox.Show(cmdString);
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
