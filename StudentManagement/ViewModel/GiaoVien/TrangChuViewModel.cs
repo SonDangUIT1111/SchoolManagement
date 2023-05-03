@@ -32,23 +32,23 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public TrangChuViewModel()
         {
+            IdGiaoVien = 100000;
             BaoCaoPage = new BaoCao();
             LopHocPage = new LopHoc();
             ThongTinGiaoVienPage = new ThongTinGiaoVien();
-            ThongTinHocSinhPage = new ThongTinHocSinh();
+
             ThongTinTruongPage = new ThongTinTruong();
 
             //define ICommand
-            SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Content = ThongTinHocSinhPage;
-            });
+
             SwitchThongTinGiaoVien = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = ThongTinGiaoVienPage;
             });
             SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
+                StudentManagement.ViewModel.GiaoVien.LopHocViewModel vm = LopHocPage.DataContext as StudentManagement.ViewModel.GiaoVien.LopHocViewModel;
+                vm.IdGiaoVien = IdGiaoVien;
                 parameter.Content = LopHocPage;
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>

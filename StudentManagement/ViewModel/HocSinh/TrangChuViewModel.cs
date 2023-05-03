@@ -1,4 +1,5 @@
-﻿using StudentManagement.Views.HocSinh;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.HocSinh;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,7 @@ namespace StudentManagement.ViewModel.HocSinh
 
         public TrangChuViewModel()
         {
+            IdHocSinh = 100000;
             LopHocPage = new LopHoc();
             ThongTinHocSinhPage = new ThongTinHocSinh();
             ThongTinTruongPage = new ThongTinTruong();
@@ -51,6 +53,8 @@ namespace StudentManagement.ViewModel.HocSinh
             });
             SwitchXemDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
+                StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
+                vm.IdHocSinh= IdHocSinh;
                 parameter.Content = XemDiemPage;
             });
         }

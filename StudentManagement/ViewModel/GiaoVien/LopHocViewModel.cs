@@ -15,6 +15,9 @@ namespace StudentManagement.ViewModel.GiaoVien
 {
     internal class LopHocViewModel : BaseViewModel
     {
+
+        private int _idGiaoVien;
+        public int IdGiaoVien { get { return _idGiaoVien; } set { _idGiaoVien = value; } }
         public StudentManagement.Model.Lop LopDaChon { get; set; }
         public LopHoc LopHocWD { get; set; }
 
@@ -60,7 +63,11 @@ namespace StudentManagement.ViewModel.GiaoVien
             });
             UpdateHocSinh= new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
             {
-                if (!IsGiaoVienChuNhiem()) return;
+                if (!IsGiaoVienChuNhiem(parameter.MaHocSinh.ToString()))
+                {
+                    MessageBox.Show("Bạn không thể chỉnh sửa đối tượng này");
+                    return;
+                }
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     con.Open();
@@ -98,8 +105,20 @@ namespace StudentManagement.ViewModel.GiaoVien
             LoadDanhSachKhoi();
             //LoadDanhSachLop();
         }
-        public bool IsGiaoVienChuNhiem()
+        public bool IsGiaoVienChuNhiem(string ID)
         {
+            int IdGVCN;
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string CmdString = "select MaGVCN from HocSinh,Lop where HocSinh.MaLop = Lop.MaLop and MaHocSinh = " + ID;
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows) reader.Read();
+                IdGVCN = reader.GetInt32(0);
+                con.Close();
+            }
+            if (IdGVCN != IdGiaoVien) return false;
             return true;
         }
         public void LoadDanhSachHocSinh()

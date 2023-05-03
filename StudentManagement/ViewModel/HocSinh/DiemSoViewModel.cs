@@ -7,12 +7,15 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
     internal class DiemSoViewModel : BaseViewModel
     {
+        private int _idHocSinh;
+        public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
         public DiemSo DiemSoWD { get; set; }   
         private ObservableCollection<String> _danhsachnienkhoa;
         public ObservableCollection<String> DanhSachNienKhoa { get => _danhsachnienkhoa; set { _danhsachnienkhoa = value; OnPropertyChanged(); } }
@@ -63,13 +66,27 @@ namespace StudentManagement.ViewModel.HocSinh
         }
         public void LoadDanhSachDiem()
         {
+            //load ten
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                string TenHs;
+                con.Open();
+                string CmdString = "select TenHocSinh from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows) reader.Read();
+                TenHs = reader.GetString(0);
+                DiemSoWD.Ten.Text = TenHs;
+                con.Close();
+            }
+            // load diem
             DiemSoWD.BangDiem.Visibility = System.Windows.Visibility.Visible;
             DanhSachDiemHK1 = new ObservableCollection<Model.HeThongDiem>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
                 //string CmdString = "select MaHocSinh,TenHocSinh from HocSinh where MaLop = '100'";
-                string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem where HocKy = 1 and MaHocSinh = 100001";
+                string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem where HocKy = 1 and MaHocSinh = " + IdHocSinh.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 i = 0;
@@ -99,7 +116,7 @@ namespace StudentManagement.ViewModel.HocSinh
             {
                 con.Open();
                 //string CmdString = "select MaHocSinh,TenHocSinh from HocSinh where MaLop = '100'";
-                string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem where HocKy = 2 and MaHocSinh = 100001";
+                string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem where HocKy = 2 and MaHocSinh = " + IdHocSinh.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 i = 0;
@@ -123,6 +140,19 @@ namespace StudentManagement.ViewModel.HocSinh
                 con.Close();
                 TbHk2 /= i;
                 DiemSoWD.DiemTbHK2.Text = TbHk2.ToString();
+            }
+            //load xep loai
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                bool XepLoai;
+                con.Open();
+                string CmdString = "select XepLoai from ThanhTich where MaHocSinh = " + IdHocSinh.ToString();
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows) reader.Read();
+                XepLoai = reader.GetBoolean(0);
+                if (XepLoai) DiemSoWD.XepLoai.Text = "Đạt"; else DiemSoWD.XepLoai.Text = "Không đạt";
+                con.Close();
             }
         }
     }
