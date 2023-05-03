@@ -171,25 +171,28 @@
 
                                         </Border>
                                         <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding TenHocSinh}"
+                                                   FontSize="14"
+                                                   Text="{Binding TenHocSinh}"
                                                    VerticalAlignment="Center"
                                                    Width="200"/>
                                         <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding NgaySinh}"
+                                                   FontSize="14"
+                                                   Text="{Binding NgaySinh}"
                                                    VerticalAlignment="Center"
                                                    Width="100"
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding GioiTinh,Converter={StaticResource BooleanToGenderConverter}}"/>
+                                                   FontSize="14"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding GioiTinh,Converter={StaticResource BooleanToGenderConverter}}"/>
                                         <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding DiaChi}"/>
+                                                   FontSize="14"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding DiaChi}"/>
                                         <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding Email}"/>
+                                                   FontSize="14"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Email}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

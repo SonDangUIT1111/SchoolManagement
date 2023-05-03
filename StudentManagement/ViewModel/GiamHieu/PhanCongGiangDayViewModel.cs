@@ -39,6 +39,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand UpdatePhanCong { get; set; }
         public ICommand RemovePhanCong { get; set; }
         public ICommand AddPhanCong { get; set; }
+        public ICommand SearchPhanCong { get; set; }
 
         public PhanCongGiangDayViewModel() 
         {
@@ -105,11 +106,47 @@ namespace StudentManagement.ViewModel.GiamHieu
                 window.ShowDialog();
                 LoadThongTinPhanCong();
             });
+            UpdatePhanCong = new RelayCommand<Model.PhanCongGiangDay>((parameter) => { return true; }, (parameter) =>
+            {
+                SuaPhanCong window = new SuaPhanCong();
+                SuaPhanCongViewModel data = window.DataContext as SuaPhanCongViewModel;
+                data.PhanCongHienTai = parameter;
+                window.ShowDialog();
+                LoadThongTinPhanCong(); 
+            });
             RemovePhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 Model.PhanCongGiangDay item = parameter as Model.PhanCongGiangDay;
                 XoaPhanCong(item);
                 LoadThongTinPhanCong();
+            });
+            SearchPhanCong = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachPhanCong.Clear();
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'" + LopQueries + "' and TenMon like N'%" + parameter.Text + "%'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
+                            phancong.MaPhanCong = reader.GetInt32(0);
+                            phancong.NienKhoa = reader.GetString(1);
+                            phancong.TenLop = reader.GetString(2);
+                            phancong.SiSo = reader.GetInt32(3);
+                            phancong.TenMon = reader.GetString(4);
+                            phancong.TenGiaoVien = reader.GetString(5);
+                            DanhSachPhanCong.Add(phancong);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                }
             });
         }
         public void LoadThongTinCmb()

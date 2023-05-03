@@ -21,6 +21,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand LoadData { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand CreateStudent { get; set; }
+        public ICommand CancelAdd { get; set; }
         public ThemHocSinhMoiViewModel()
         {
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -31,6 +32,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                 DateTime defaultTime = new DateTime(defaultYear, 1, 1);
                 ThemHocSinhWD.NgaySinh.SelectedDate = defaultTime;
                 
+            });
+            CancelAdd = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ThemHocSinhWD.Close();
+
             });
             ChangeImage = new RelayCommand<Grid>((parameter) => { return true; }, (parameter) =>
             {
@@ -73,33 +79,40 @@ namespace StudentManagement.ViewModel.GiamHieu
                     MessageBox.Show("Email không hợp lệ, vui lòng nhập lại!");
                 } else
                 {
-                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn thêm học sinh này không?", "Add Confirmation", System.Windows.MessageBoxButton.YesNo);
+                    if (ConfirmAdd == MessageBoxResult.Yes)
                     {
-                        con.Open();
-                        string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES ('" + ThemHocSinhWD.Hoten.Text + "', '" + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', ";
-                        if (ThemHocSinhWD.Male.IsChecked == true)
+                        using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            CmdString += "1, ";
+                            con.Open();
+                            string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'" + ThemHocSinhWD.Hoten.Text + "', '" + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', ";
+                            if (ThemHocSinhWD.Male.IsChecked == true)
+                            {
+                                CmdString += "1, ";
+                            }
+                            else
+                            {
+                                CmdString += "0, ";
+                            }
+                            CmdString = CmdString + "N'" + ThemHocSinhWD.DiaChi.Text + "', '" + ThemHocSinhWD.Email.Text + "', ";
+
+                            // tạo đệm lưu ảnh avatar
+                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                            byte[] buffer = converter.ImageToBinary(ImagePath);
+
+
+                            CmdString += "@imagebinary)";
+                            // Định nghĩa @imagebinary
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                            sqlParam.DbType = DbType.Binary;
+                            cmd.ExecuteNonQuery();
+                            con.Close();
                         }
-                        else
-                        {
-                            CmdString += "0, ";
-                        }
-                        CmdString = CmdString + "'" + ThemHocSinhWD.DiaChi.Text + "', '" + ThemHocSinhWD.Email.Text + "', ";
-
-                        // tạo đệm lưu ảnh avatar
-                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                        byte[] buffer = converter.ImageToBinary(ImagePath);
-
-
-                        CmdString += "@imagebinary)";
-                        // Định nghĩa @imagebinary
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                        sqlParam.DbType = DbType.Binary;
-                        cmd.ExecuteNonQuery();
-                        con.Close();
+                        MessageBox.Show("Thêm học sinh thành công!");
+                        ThemHocSinhWD.Close();
                     }
+                    
                 }
 
             });

@@ -134,7 +134,7 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <TextBox x:Name="txtSearch"
-                             materialDesign:HintAssist.Hint="Search"
+                             materialDesign:HintAssist.Hint="Tìm môn học"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Width="250"
                              Height="40"
@@ -144,7 +144,7 @@
                             Background="Transparent"
                             BorderBrush="#0099FF"
                             IsDefault="True"
-                            Command="{Binding StudentSearch}"
+                            Command="{Binding SearchPhanCong}"
                             CommandParameter="{Binding ElementName=txtSearch}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon Width="20"

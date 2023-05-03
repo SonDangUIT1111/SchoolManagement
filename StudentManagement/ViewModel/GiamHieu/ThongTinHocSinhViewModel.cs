@@ -101,7 +101,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     con.Open();
-                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like '%" + parameter.Text + "%'";
+                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -115,12 +115,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                             student.NgaySinh = reader.GetDateTime(2);
                             student.GioiTinh = reader.GetBoolean(3);
                             student.DiaChi = reader.GetString(4);
+                            student.Avatar = (byte[])reader[5];
+                            student.Email = reader.GetString(6);
                             DanhSachHocSinh.Add(student);
                         }
                         reader.NextResult();
                     }
                     con.Close();
                 }
+            });
+            AddStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ThemHocSinhMoi window = new ThemHocSinhMoi();
+                ThemHocSinhMoiViewModel data = window.DataContext as ThemHocSinhMoiViewModel;
+                window.ShowDialog();
+                LoadThongTinHocSinh();
             });
         }
         public void LoadThongTinHocSinh()
@@ -129,7 +138,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe from HocSinh where MaHocSinh = 100031";
+                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = "+LopQueries;
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -144,6 +153,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         student.GioiTinh = reader.GetBoolean(3);
                         student.DiaChi = reader.GetString(4);
                         student.Avatar = (byte[])reader[5];
+                        student.Email = reader.GetString(6);
                         DanhSachHocSinh.Add(student);
                     }
                     reader.NextResult();

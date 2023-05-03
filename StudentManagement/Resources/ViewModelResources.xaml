@@ -19,6 +19,7 @@
     <viewmodelGH:MonHocViewModel x:Key="MonHocVM"></viewmodelGH:MonHocViewModel>
     <viewmodelGH:PhanCongGiangDayViewModel x:Key="PhanCongGiangDayVM"></viewmodelGH:PhanCongGiangDayViewModel>
     <viewmodelGH:ThemPhanCongViewModel x:Key="ThemPhanCongVM"></viewmodelGH:ThemPhanCongViewModel>
+    <viewmodelGH:SuaPhanCongViewModel x:Key="SuaPhanCongVM"></viewmodelGH:SuaPhanCongViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <!--HocSinh-->
