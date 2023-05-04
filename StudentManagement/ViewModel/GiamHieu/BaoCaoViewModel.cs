@@ -12,15 +12,19 @@ using LiveCharts.Wpf.Charts.Base;
 using System.Windows;
 using StudentManagement.Views.GiamHieu;
 using System.Windows.Input;
+using System.Windows.Controls;
+using System.Runtime.Remoting.Messaging;
+using MaterialDesignThemes.Wpf;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
     internal class BaoCaoViewModel:BaseViewModel
     {
         public string NienKhoaQueries { get; set; }
-        public int HocKyQueries { get; set; }
+        public string HocKyQueries { get; set; }
         public string MonHocQueries { get; set; }
         public string LopQueries { get; set; }
+        public int TongSiSoLop { get; set; }
 
         public BaoCao BaoCaoWD;
 
@@ -36,12 +40,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             get => _nienKhoaComboBox;
             set { _nienKhoaComboBox = value; OnPropertyChanged(); }
         }
-        private ObservableCollection<string> _lopComboBox;
-        public ObservableCollection<string> LopComboBox
-        {
-            get => _lopComboBox;
-            set { _lopComboBox = value; OnPropertyChanged(); }
-        }
 
         public ObservableCollection<int> _hocKyComboBox;
         public ObservableCollection<int> HocKyComboBox
@@ -50,14 +48,35 @@ namespace StudentManagement.ViewModel.GiamHieu
             set { _hocKyComboBox = value; OnPropertyChanged();}
         }
 
-        public List<string> _tenMon { get; set; }
+        public ObservableCollection<string> _monHocComboBox;
+
+        public ObservableCollection<string> MonHocComboBox
+        {
+            get => _monHocComboBox;
+            set { _monHocComboBox = value; OnPropertyChanged(); }
+        }
+
+        public int _dat;
+        public int Dat
+        {
+            get => _dat;
+            set { _dat = value; OnPropertyChanged(); }
+        }
+        public int _khongDat;
+        public int KhongDat
+        {
+            get => _khongDat;
+            set { _khongDat = value; OnPropertyChanged(); }
+        }
+
+        public List<string> _tenLop { get; set; }
 
         public List<int> _soLuongDatChartVal { get; set; }
 
-        public List<string> TenMon
+        public List<string> TenLop
         {
-            get => _tenMon;
-            set { _tenMon = value; OnPropertyChanged(); }
+            get => _tenLop;
+            set { _tenLop = value; OnPropertyChanged(); }
         }
 
         public List<int> SoLuongDatChartVal
@@ -66,21 +85,90 @@ namespace StudentManagement.ViewModel.GiamHieu
             set { _soLuongDatChartVal = value; OnPropertyChanged(); }
         }
 
-        public SeriesCollection SoLuongDat { get; set; }
+        //public SeriesCollection SoLuongDat { get; set; }
+
+        public LiveCharts.SeriesCollection _soLuongDat { get; set; }
+        public LiveCharts.SeriesCollection SoLuongDat
+        {
+            get => _soLuongDat;
+            set { _soLuongDat = value; OnPropertyChanged(); }
+        }
+
+
+        public LiveCharts.SeriesCollection _tiLeDat { get; set; }
+        public LiveCharts.SeriesCollection TiLeDat
+        {
+            get => _tiLeDat;
+            set { _tiLeDat = value; OnPropertyChanged(); }
+        }
+
+        public CartesianChart ReportChart { get; set; }
+
+        public BaoCaoMon _gridSeletecdItem;
+
+        public BaoCaoMon GridSelectedItem
+        {
+            get { return _gridSeletecdItem; }
+            set
+            {
+                _gridSeletecdItem = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand LoadBaoCao { get; set; }
-
+        public ICommand FilterNienKhoa { get; set; }
+        public ICommand FilterHocKy { get; set; }
+        public ICommand FilterMonHoc { get; set; }
+        public ICommand BaoCaoMonSelectionChanged { get; set; }
 
         public BaoCaoViewModel()
         {
+            LoadCartesianChart();
             LoadBaoCao = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 BaoCaoWD = parameter as BaoCao;
                 LoadComboboxData();
             });
 
-            LoadDanhSachBaoCaoMon();
-            LoadChart();
+
+            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    NienKhoaQueries = cmb.SelectedItem.ToString();
+                    FilterHocKyFromNienKhoa();
+                }
+            });
+
+
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    HocKyQueries = cmb.SelectedItem.ToString();
+                    FilterMonHocFromHocKy();
+                }
+            });
+
+
+            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    MonHocQueries = cmb.SelectedItem.ToString();
+                }
+                LoadDanhSachBaoCaoMon();
+                LoadCartesianChart();
+            });
+
+            BaoCaoMonSelectionChanged = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                LoadPieChart();
+            });
         }
 
 
@@ -88,7 +176,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public void LoadComboboxData()
         {
             NienKhoaComboBox = new ObservableCollection<string>();
-            LopComboBox = new ObservableCollection<string>();
+            MonHocComboBox = new ObservableCollection<string>();
             HocKyComboBox = new ObservableCollection<int>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
@@ -104,7 +192,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         if(string.IsNullOrEmpty(NienKhoaQueries))
                         {
                             NienKhoaQueries = reader.GetString(0);        
-                            BaoCaoWD.cmbNienKhoa.SelectedIndex = 0;
+                            //BaoCaoWD.cmbNienKhoa.SelectedIndex = 0;
                         }
                     }
                     reader.NextResult();
@@ -113,10 +201,22 @@ namespace StudentManagement.ViewModel.GiamHieu
 
 
 
+            }
+        }
+
+
+        public void FilterHocKyFromNienKhoa()
+        {
+            HocKyComboBox.Clear();
+            MonHocComboBox.Clear();
+            HocKyQueries = null;
+            MonHocQueries = "";
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
                 con.Open();
-                cmdString = "select distinct HocKy from BaoCaoMon";
-                cmd = new SqlCommand(cmdString, con);
-                reader = cmd.ExecuteReader();
+                string cmdString = "select distinct HocKy from BaoCaoMon where NienKhoa = '"+NienKhoaQueries+"'";
+                SqlCommand cmd = new SqlCommand(cmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)
                 {
                     while (reader.Read())
@@ -124,110 +224,183 @@ namespace StudentManagement.ViewModel.GiamHieu
                         HocKyComboBox.Add(reader.GetInt32(0));
                         if (HocKyQueries != null)
                         {
-                            HocKyQueries = reader.GetInt32(0);
-                            BaoCaoWD.cmbHocKy.SelectedIndex = 0;
+                            HocKyQueries = reader.GetString(0);
+                            //BaoCaoWD.cmbHocKy.SelectedIndex = 0;
                         }
                     }
                     reader.NextResult();
                 }
                 con.Close();
+            }
+        }
 
+        public void FilterMonHocFromHocKy()
+        {
+            MonHocComboBox.Clear();
+            MonHocQueries = "";
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
                 con.Open();
-                cmdString = "select distinct TenLop from BaoCaoMon";
-                cmd = new SqlCommand(cmdString, con);
-                reader = cmd.ExecuteReader();
+                string cmdString = "select distinct TenMon from BaoCaoMon where NienKhoa = '"+NienKhoaQueries+"' and HocKy = '"+HocKyQueries+"'";
+                SqlCommand cmd = new SqlCommand(cmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        LopComboBox.Add(reader.GetString(0));
+                        MonHocComboBox.Add(reader.GetString(0));
                         if (string.IsNullOrEmpty(LopQueries))
                         {
-                            LopQueries = reader.GetString(0);
-                            BaoCaoWD.cmbLop.SelectedIndex = 0;
+                            MonHocQueries = reader.GetString(0);
+                            //BaoCaoWD.cmbMonHoc.SelectedIndex = 0;
                         }
                     }
                     reader.NextResult();
                 }
                 con.Close();
-
-
             }
         }
+
         public void LoadDanhSachBaoCaoMon()
         {
             DanhSachBaoCaoMon = new ObservableCollection<Model.BaoCaoMon>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            DanhSachBaoCaoMon.Clear();
+            if (!String.IsNullOrEmpty(NienKhoaQueries) && HocKyQueries != null && !String.IsNullOrEmpty(MonHocQueries))
             {
-                con.Open();
-                string CmdString = "select * from BaoCaoMon";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    while (reader.Read())
+                    con.Open();
+                    string CmdString = "select * from BaoCaoMon where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
                     {
-                        StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon();
-                        baocaomon.TenLop = reader.GetString(2);
-                        baocaomon.TenMon = reader.GetString(4);
-                        baocaomon.SoLuongDat = reader.GetInt32(7);
-                        baocaomon.TiLe = reader.GetString(8);
-                        DanhSachBaoCaoMon.Add(baocaomon);
+                        while (reader.Read())
+                        {
+                            StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon();
+                            baocaomon.TenLop = reader.GetString(2);
+                            baocaomon.TenMon = reader.GetString(4);
+                            baocaomon.SoLuongDat = reader.GetInt32(7);
+                            baocaomon.TiLe = reader.GetString(8);
+                            DanhSachBaoCaoMon.Add(baocaomon);
+                        }
+                        reader.NextResult();
                     }
-                    reader.NextResult();
+                    con.Close();
                 }
-                con.Close();
             }
         }
-
-        public void LoadChart()
+        public void LoadCartesianChart()
         {
-            TenMon = new List<string>();
+            TenLop = new List<string>();
             SoLuongDatChartVal = new List<int>();
             SoLuongDat = new SeriesCollection();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            TenLop.Clear();
+            SoLuongDatChartVal.Clear();
+            SoLuongDat.Clear();
+            if (!String.IsNullOrEmpty(NienKhoaQueries) && HocKyQueries != null && !String.IsNullOrEmpty(MonHocQueries))
             {
-                con.Open();
-                string CmdString = "SELECT DISTINCT TenMon from BaoCaoMon";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    while (reader.Read())
+                    con.Open();
+                    string CmdString = "SELECT DISTINCT TenLop from BaoCaoMon where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
                     {
-                        TenMon.Add(reader.GetString(0));
+                        while (reader.Read())
+                        {
+                            TenLop.Add(reader.GetString(0));
+                        }
+                        reader.NextResult();
                     }
-                    reader.NextResult();
-                }
-                con.Close();
+                    con.Close();
 
 
 
 
-                con.Open();
-                CmdString = "SELECT SoLuongDat from BaoCaoMon";
-                cmd = new SqlCommand(CmdString, con);
-                reader = cmd.ExecuteReader();
+                    con.Open();
+                    CmdString = "SELECT SoLuongDat from BaoCaoMon where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "'";
+                    cmd = new SqlCommand(CmdString, con);
+                    reader = cmd.ExecuteReader();
 
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
+                    while (reader.HasRows)
                     {
-                        SoLuongDatChartVal.Add(reader.GetInt32(0));
+                        while (reader.Read())
+                        {
+                            SoLuongDatChartVal.Add(reader.GetInt32(0));
+                        }
+
+                        reader.NextResult();
                     }
 
-                    reader.NextResult();
+                    SoLuongDat.Add(new ColumnSeries
+                    {
+                        Title = "Số lượng đạt",
+                        Values = new ChartValues<int>(SoLuongDatChartVal)
+                    });
+
+                    con.Close();
                 }
-
-                SoLuongDat.Add(new ColumnSeries
+            }
+        }
+        public void LoadPieChart()
+        {
+            Dat = new int();
+            KhongDat = new int();
+            TiLeDat = new SeriesCollection();
+            TiLeDat.Clear();
+            if (!String.IsNullOrEmpty(NienKhoaQueries) && HocKyQueries != null && !String.IsNullOrEmpty(MonHocQueries) && GridSelectedItem != null)
+            {
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    Title = "Số lượng đạt",
-                    Values = new ChartValues<int> (SoLuongDatChartVal)
-                });
+                    con.Open();
+                    string CmdString = "SELECT SoLuongDat from BaoCaoMon where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "' and TenLop = '" + GridSelectedItem.TenLop + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
 
-                con.Close();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Dat = reader.GetInt32(0);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+
+
+                    con.Open();
+                    CmdString = "SELECT SiSo from Lop where NienKhoa = '" + NienKhoaQueries + "' and TenLop = '" + GridSelectedItem.TenLop + "'";
+                    cmd = new SqlCommand(CmdString, con);
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            TongSiSoLop = reader.GetInt32(0);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                    KhongDat = TongSiSoLop - Dat;
+                    TiLeDat = new SeriesCollection
+                {
+                    new PieSeries
+                    {
+                        Title = "Tỉ lệ đạt",
+                        Values = new ChartValues<int> {Dat}
+                    },
+                    new PieSeries
+                    {
+                        Title = "Tỉ lệ không đạt",
+                        Values = new ChartValues<int> {KhongDat}
+                    }
+                };
+                }
             }
         }
     }
