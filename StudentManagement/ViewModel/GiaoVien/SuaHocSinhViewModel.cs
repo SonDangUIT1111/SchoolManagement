@@ -115,7 +115,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
                         return;
                     }
-                    string CmdString = "Update HocSinh set TenHocSinh = \'" + SuaHocSinhWD.TenHS.Text +
+                    string CmdString = "Update HocSinh set TenHocSinh = N\'" + SuaHocSinhWD.TenHS.Text +
                         "\', NgaySinh = \'" + SuaHocSinhWD.NgaySinh.DisplayDate.ToString() +
                         "\', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
                         ", DiaChi = N\'" + SuaHocSinhWD.DiaChi.Text +

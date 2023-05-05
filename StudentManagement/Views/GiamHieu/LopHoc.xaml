@@ -21,6 +21,9 @@
                 Grid.Row="0" 
                 Background="#33778C" 
                 Margin="12" >
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="7"/>
+            </Border.Effect>
             <Grid>
                 <TextBlock Text="Lớp Học" 
                            FontWeight="Bold" 

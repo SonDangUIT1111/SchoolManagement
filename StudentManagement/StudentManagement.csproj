@@ -144,6 +144,9 @@
     <Compile Include="Views\GiaoVien\SuaHocSinh.xaml.cs">
       <DependentUpon>SuaHocSinh.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GiaoVien\SuaThongTinCaNhan.xaml.cs">
+      <DependentUpon>SuaThongTinCaNhan.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiaoVien\ThongTinGiaoVien.xaml.cs">
       <DependentUpon>ThongTinGiaoVien.xaml</DependentUpon>
     </Compile>
@@ -286,6 +289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiaoVien\SuaHocSinh.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiaoVien\SuaThongTinCaNhan.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

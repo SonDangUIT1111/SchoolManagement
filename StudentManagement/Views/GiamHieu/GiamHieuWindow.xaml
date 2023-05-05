@@ -337,25 +337,6 @@
             </Button>
         </ListBox>
         <Frame x:Name="RPage"  NavigationUIVisibility="Hidden" Grid.Column="1" Grid.Row="1" Content="{Binding PageContent}" />
-        <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="33"
-                        Background="White"
-                        Grid.Column="1"
-                        Grid.Row="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="81"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                
-            </Grid>  
-        </Border>
         <!--<TextBox Grid.Row="1" Grid.Column="0" FontSize="30" VerticalAlignment="Bottom" Margin="90" Text="{Binding Tex, UpdateSourceTrigger=PropertyChanged}"/>-->
         <!--<Button Command="{Binding BUTTON}"/>-->
     </Grid>

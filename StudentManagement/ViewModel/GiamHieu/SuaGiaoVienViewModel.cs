@@ -120,7 +120,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
                         return;
                     }
-                    string CmdString = "Update GiaoVien set TenGiaoVien = \'" + SuaGiaoVienWD.TenGV.Text +
+                    string CmdString = "Update GiaoVien set TenGiaoVien = N\'" + SuaGiaoVienWD.TenGV.Text +
                         "\', NgaySinh = \'" + SuaGiaoVienWD.NgaySinh.DisplayDate.ToString() +
                         "\', GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
                         ", DiaChi = N\'" + SuaGiaoVienWD.DiaChi.Text +

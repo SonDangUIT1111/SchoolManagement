@@ -1,0 +1,239 @@
+﻿<Window x:Class="StudentManagement.Views.GiaoVien.SuaThongTinCaNhan"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManagement.Views.GiaoVien"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        
+        Height="750" 
+        Width="960"
+        AllowsTransparency="True" 
+        Background="Transparent" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" WindowStyle="None"
+        Title="SuaThongTinCaNhan"
+        Name="SuaThongTinCaNhanGVWD"
+        DataContext="{StaticResource SuaHocSinhVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadWindow}"
+                               CommandParameter="{Binding ElementName=SuaGiaoVienWD}">
+            </i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border Background="#FFFFFF"
+                BorderBrush="#0099FF"
+                BorderThickness="2"
+                CornerRadius="20"
+                Grid.RowSpan="2">
+        </Border>
+        <Grid Grid.Row="0">
+            <uc:Title_Bar_Log/>
+            <Separator VerticalAlignment="Bottom"
+                       Background="#CCCCCC"
+                       Margin="0 0 0 -2"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal" 
+                        Width="512" 
+                        Height="50"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                <materialDesign:PackIcon
+                            x:Name="iconImage" 
+                            Kind="Pencil" 
+                            Foreground="#333333"
+                            Width="64" Height="54"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"  
+                            Margin="0,0,0,0"/>
+                <TextBlock Text="Sửa Thông Tin Giáo Viên"
+                       FontSize="24"
+                       Margin="15 15 0 0"
+                       Width="280"
+                       Height="50"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+            </StackPanel>
+            <Grid Height="518">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="600"/>
+                </Grid.ColumnDefinitions>
+                <Grid
+                        x:Name="ChangegrdSelectImg"
+                        VerticalAlignment="Center"
+                        Width="150"
+                        Height="150">
+                    <!--<Grid.Background>
+                        <ImageBrush ImageSource="{Binding GiaoVienHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"/>
+                    </Grid.Background>-->
+                    <Rectangle 
+                                x:Name="ChangerecImage"
+                                StrokeDashArray="4 2" 
+                                Stroke="#333333" 
+                                StrokeThickness="4" 
+                                RadiusX="4" 
+                                RadiusY="4"
+                                Width="150"
+                                Height="150" 
+                                HorizontalAlignment="Left" 
+                                VerticalAlignment="Top" />
+                    <Button 
+                            x:Name="btnSelectImage"
+                            Command="{Binding ChangeImage}"
+                            CommandParameter="{Binding ElementName=ChangegrdSelectImg}"
+                            Height="35" 
+                            Width="100" 
+                            Content="Thay đổi ảnh" 
+                            FontSize="14"
+                            Foreground="#FFFFFF"
+                            Background="#0099FF"
+                            BorderBrush="Transparent"
+                            FontWeight="SemiBold" 
+                            ToolTip="Chọn ảnh"
+                            Margin="0,0,0,12" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Bottom"
+                            FocusVisualStyle="{x:Null}"
+                            Padding="0"/>
+
+                </Grid>
+
+                <StackPanel Orientation="Vertical"
+                        Margin="0,50,0,0"
+                        VerticalAlignment="Top" 
+                        Height="518"
+                        Grid.Column="1">
+
+                    <TextBlock Text="Tên Giáo Viên"
+                       FontSize="17"
+                       Margin="25 10 0 0"
+                       Width="250"
+                       Height="29"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+                    <TextBox x:Name="TenGV"
+                         materialDesign:HintAssist.Hint="Tên Giáo Viên"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Width="540"
+                         Height="40"
+                         Padding="10"
+                         Margin="25 0 0 0"
+                         HorizontalAlignment="Left"
+                         Text="{Binding GiaoVienHienTai.TenGiaoVien}"/>
+                    <TextBlock Text="Ngày sinh"
+                       FontSize="17"
+                       Margin="25 10 0 0"
+                       Width="250"
+                       Height="29"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+                    <DatePicker
+                    x:Name="NgaySinh"
+                    Width="250"
+                    HorizontalAlignment="Left"
+                    Margin="25 10 0 0"
+                    SelectedDate ="{Binding GiaoVienHienTai.NgaySinh}"/>
+
+                    <!--<TextBox x:Name="NgaySinh"
+                         materialDesign:HintAssist.Hint="Search ... "
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Width="640"
+                         Height="40"
+                         Padding="10"
+                         Margin="25 0 0 0"
+                         HorizontalAlignment="Left"/>-->
+                    <TextBlock Text="Giới Tính"
+                       FontSize="17"
+                       Margin="25 10 0 0"
+                       Width="250"
+                       Height="29"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+                    <ComboBox x:Name="GioiTinh"
+                          materialDesign:HintAssist.Hint="Giới tính"
+                          IsEditable="False"
+                          Width="200"
+                          Height="40"
+                          Padding="10"
+                          HorizontalAlignment="Left"
+                          Margin="25 0 0 0"
+                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <ComboBoxItem IsSelected="True">Nữ</ComboBoxItem>
+                        <ComboBoxItem IsSelected="{Binding GiaoVienHienTai.GioiTinh}">Nam</ComboBoxItem>
+                    </ComboBox>
+                    <TextBlock Text="Địa chỉ"
+                       FontSize="17"
+                       Margin="25 10 0 0"
+                       Width="250"
+                       Height="29"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+                    <TextBox x:Name="DiaChi"
+                         materialDesign:HintAssist.Hint="Địa chỉ"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Width="540"
+                         Height="40"
+                         Padding="10"
+                         Margin="25 0 0 0"
+                         Text="{Binding GiaoVienHienTai.DiaChi}"
+                         HorizontalAlignment="Left"/>
+                    <TextBlock Text="Email"
+                       FontSize="17"
+                       Margin="25 10 0 0"
+                       Width="250"
+                       Height="29"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+                    <TextBox x:Name="Email"
+                         materialDesign:HintAssist.Hint="Email"
+                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                         Width="540"
+                         Height="40"
+                         Padding="10"
+                         Margin="25 0 0 0"
+                         Text="{Binding GiaoVienHienTai.Email}"
+                         HorizontalAlignment="Left"/>
+                    <StackPanel Orientation="Horizontal"/>
+                    <StackPanel Orientation="Horizontal"/>
+
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right">
+                <Button Style="{StaticResource InteractiveButton}"
+                        Background="#2af598"
+                        Foreground="#000000"
+                        Width="150"
+                        Content="Cập nhật"
+                        Margin="0 0 20 10"
+                        Command="{Binding ChangeGiaoVien}"/>
+                <Button Style="{StaticResource InteractiveButton}"
+                        Background="#CFCDCB"
+                        Foreground="#000000"
+                        Width="150"
+                        Content="Hủy"
+                        Margin="0 0 20 10"
+                        Command="{Binding CancelCommand}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
+

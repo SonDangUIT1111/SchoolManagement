@@ -5,15 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudentManagement.Views.GiaoVien"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
-       
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="GiaoVienWindow" Height="800" Width="1440"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" 
         WindowStyle="None"
         Background="Transparent"
+        Name="GiaoVienWD"
         DataContext="{StaticResource TrangChuGVVM}">
-
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadWindow}"
+                               CommandParameter="{Binding ElementName=GiaoVienWD}">
+            </i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
         <Window.Resources>
             <!--DataContext="{StaticResource }"-->
             <Style x:Key = "SideButton" TargetType = "Button">
@@ -267,25 +274,53 @@
                
             </ListBox>
             <Frame x:Name="RPage"  NavigationUIVisibility="Hidden" Grid.Column="1" Grid.Row="1" Content="{Binding PageContent}" />
-        <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="33"
-                        Background="White"
-                        Grid.Column="1"
-                        Grid.Row="1">
-            <Grid>
+        <Button VerticalAlignment="Top" 
+                HorizontalAlignment="Right"
+                Style="{StaticResource SideButton}"
+                BorderThickness="0"
+                Grid.Column="1"
+                Grid.Row="1"
+                Width="325"
+                Height="78"
+                Margin="33"
+                Command="{Binding SuaThongTinCaNhan}">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="30"></Setter>
+                </Style>
+            </Button.Resources>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="1" BlurRadius="7"/>
+            </Button.Effect>
+            <Grid Width="325"
+                  Height="78">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="81"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+                <Border Width="54"
+                        Height="54"
+                        CornerRadius="10"
+                        BorderThickness="0"
+                        HorizontalAlignment="Right">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding Avatar,Converter={StaticResource ByteToImageConverter}}"/>
+                    </Border.Background>
+                </Border>
+                <TextBlock Grid.Column="1"
+                           Text="Teacher"
+                           FontSize="20"
+                           VerticalAlignment="Bottom"
+                           Margin="10 0 0 17"/>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding TenGiaoVien}"
+                           FontSize="20"
+                           VerticalAlignment="Top"
+                           Margin="10 17 0 0"
+                           FontWeight="Bold"/>
 
             </Grid>
-        </Border>
+        </Button>
         <!--<TextBox Grid.Row="1" Grid.Column="0" FontSize="30" VerticalAlignment="Bottom" Margin="90" Text="{Binding Tex, UpdateSourceTrigger=PropertyChanged}"/>-->
         </Grid>
     </Window>
