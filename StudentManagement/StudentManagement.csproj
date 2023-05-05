@@ -95,6 +95,7 @@
     <Compile Include="ViewModel\GiamHieu\MonHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\PhanCongGiangDayViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\SuaPhanCongViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaThongTinHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThayDoiQuyDinhViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemHocSinhMoiViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemPhanCongViewModel.cs" />
@@ -122,6 +123,9 @@
     </Compile>
     <Compile Include="Views\GiamHieu\SuaPhanCong.xaml.cs">
       <DependentUpon>SuaPhanCong.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\SuaThongTinHocSinh.xaml.cs">
+      <DependentUpon>SuaThongTinHocSinh.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiamHieu\ThayDoiQuyDinh.xaml.cs">
       <DependentUpon>ThayDoiQuyDinh.xaml</DependentUpon>
@@ -261,6 +265,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\SuaPhanCong.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\SuaThongTinHocSinh.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

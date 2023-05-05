@@ -193,6 +193,26 @@
                                                    FontSize="14"
                                                    VerticalAlignment="Center"
                                                    Text="{Binding Email}"/>
+                                        <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                    Background="#FF68BB08"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Margin="20 0 0 0"
+                                                    Command="{Binding Source={StaticResource ThongTinHocSinhVM}, Path=UpdateStudent}"
+                                                    CommandParameter="{Binding}"/>
+                                        <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                                    Background="#FC8484"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Margin="10,0,0,0"
+                                                    Command="{Binding Source={StaticResource ThongTinHocSinhVM}, Path=DeleteStudent}"
+                                                    CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

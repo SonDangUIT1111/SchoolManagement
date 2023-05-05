@@ -37,6 +37,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand FilterLop { get; set; }
         public ICommand StudentSearch { get; set; }
         public ICommand AddStudent { get; set; }
+        public ICommand UpdateStudent { get; set; }
+        public ICommand DeleteStudent { get; set; }
         public ThongTinHocSinhViewModel()
         {
             NienKhoaQueries = "";
@@ -101,7 +103,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     con.Open();
-                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
+                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -129,6 +131,36 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ThemHocSinhMoi window = new ThemHocSinhMoi();
                 ThemHocSinhMoiViewModel data = window.DataContext as ThemHocSinhMoiViewModel;
                 window.ShowDialog();
+                LoadThongTinHocSinh();
+            });
+            UpdateStudent = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
+            {
+                SuaThongTinHocSinh window = new SuaThongTinHocSinh();
+                SuaThongTinHocSinhViewModel data = window.DataContext as SuaThongTinHocSinhViewModel;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select AnhThe from HocSinh where MaHocSinh = " + parameter.MaHocSinh.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            parameter.Avatar = (byte[])reader.GetValue(0);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                }
+                data.HocSinhHienTai = parameter;
+                window.ShowDialog();
+                LoadThongTinHocSinh();
+            });
+            DeleteStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                Model.HocSinh item = parameter as Model.HocSinh;
+                XoaHocSinh(item);
                 LoadThongTinHocSinh();
             });
         }
@@ -266,6 +298,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                     ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
                 }
             }
+        }
+        public void XoaHocSinh(Model.HocSinh item)
+        {
+            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa học sinh này không?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            if (ConfirmDelete == MessageBoxResult.Yes)
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    SqlCommand cmd;
+                    string CmdString = "Delete from HocSinh where MaPhanCong = " + item.MaHocSinh;
+                    //MessageBox.Show(CmdString);
+                    cmd = new SqlCommand(CmdString, con);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+                    MessageBox.Show("Đã xóa thành công!");
+                }
         }
     }
 }
