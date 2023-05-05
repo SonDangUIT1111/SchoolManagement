@@ -21,7 +21,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int Khoi { get; set; }
         public ICommand AddClass { get; set; }
         public ICommand LoadData { get; set; }
-        public ICommand CloseWindow { get; set; }
+        public ICommand CancelAddClass { get; set; }
 
         private ObservableCollection<string> _giaoVienComboBox;
         public ObservableCollection<string> GiaoVienComboBox
@@ -111,12 +111,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     SqlCommand cmd = new SqlCommand(cmdString, con);
                     cmd.ExecuteNonQuery();
                     con.Close();
-                }
+                    MessageBox.Show("Thêm lớp học thành công");
+                    ThemLopHocWD.Close();
+                    }
             });
 
-            CloseWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            CancelAddClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                  
+                ThemLopHocWD.Close();
             });
         }
 

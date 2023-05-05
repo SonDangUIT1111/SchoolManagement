@@ -88,19 +88,18 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             ThemLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                Window window = null;
-                window = new ThemLopHoc();
-                window.Show();
+                ThemLopHoc window = new ThemLopHoc();
+                ThemLopHocViewModel data = window.DataContext as ThemLopHocViewModel;
+                window.ShowDialog();
+                LoadDanhSachLopHoc();
             });
 
-            SuaLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            SuaLop = new RelayCommand<Model.Lop>((parameter) => { return true; }, (parameter) =>
             {
-                SuaThongTinLopHocViewModel suaThongTinLopHocViewModel = new SuaThongTinLopHocViewModel();
-                suaThongTinLopHocViewModel.TenLop = GridSelectedItem.TenLop;
-                Window window1 = null;
-                window1 = new SuaThongTinLopHoc();
-                window1.DataContext = suaThongTinLopHocViewModel;
-                window1.Show();
+                SuaThongTinLopHoc window = new SuaThongTinLopHoc();
+                SuaLopHocViewModel data = window.DataContext as SuaLopHocViewModel;
+                data.LopHocHienTai = parameter;
+                window.ShowDialog();
             });
 
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -135,16 +134,16 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             XoaLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
+                Model.Lop item = parameter as Model.Lop;
                 if (MessageBox.Show("Bạn có muốn xoá lớp không?", "Xoá lớp", MessageBoxButton.YesNo) == MessageBoxResult.Yes){
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
                         con.Open();
-                        string cmdString = "DELETE FROM Lop WHERE TenLop = '" + GridSelectedItem.TenLop + "'";
+                        string cmdString = "DELETE FROM Lop WHERE TenLop = '" + item.TenLop + "'";
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();
                         LoadDanhSachLopHoc();
-
                     }
                 }
             });
@@ -240,7 +239,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         StudentManagement.Model.Lop lophoc = new StudentManagement.Model.Lop();
                         lophoc.TenLop = reader.GetString(1);
                         lophoc.SiSo = reader.GetInt32(2);
-                        lophoc.NienKhoa = reader.GetString(3);  
+                        lophoc.NienKhoa = reader.GetString(3);
+                        lophoc.TenGVCN = reader.GetString(7);
                         DanhSachLopHoc.Add(lophoc);
                     }
                     reader.NextResult();

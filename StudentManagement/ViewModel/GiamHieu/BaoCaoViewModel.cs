@@ -116,6 +116,28 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
 
+        public bool _cartesianChartVisibility;
+        public bool CartersianChartVisibility
+        {
+            get { return _cartesianChartVisibility; }
+            set
+            {
+                _cartesianChartVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool _pieChartVisibility;
+        public bool PieChartVisibility
+        {
+            get { return _pieChartVisibility; }
+            set
+            {
+                _pieChartVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand LoadBaoCao { get; set; }
         public ICommand FilterNienKhoa { get; set; }
         public ICommand FilterHocKy { get; set; }
@@ -129,6 +151,10 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 BaoCaoWD = parameter as BaoCao;
                 LoadComboboxData();
+                LoadDanhSachBaoCaoMon();
+                LoadCartesianChart();
+                CartersianChartVisibility = true;
+                PieChartVisibility = false;
             });
 
 
@@ -163,11 +189,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 LoadDanhSachBaoCaoMon();
                 LoadCartesianChart();
+                CartersianChartVisibility = true;
+                PieChartVisibility = false;
             });
 
             BaoCaoMonSelectionChanged = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 LoadPieChart();
+                CartersianChartVisibility = false;
+                PieChartVisibility = true;
             });
         }
 
@@ -191,15 +221,18 @@ namespace StudentManagement.ViewModel.GiamHieu
                         NienKhoaComboBox.Add(reader.GetString(0)); 
                         if(string.IsNullOrEmpty(NienKhoaQueries))
                         {
-                            NienKhoaQueries = reader.GetString(0);        
-                            //BaoCaoWD.cmbNienKhoa.SelectedIndex = 0;
+                            NienKhoaQueries = reader.GetString(0);
+                            BaoCaoWD.cmbNienKhoa.SelectedIndex = 0;
+                            FilterHocKyFromNienKhoa();
+                            BaoCaoWD.cmbHocKy.SelectedIndex = 0;
+                            HocKyQueries = BaoCaoWD.cmbHocKy.Text;
+                            FilterMonHocFromHocKy();
+                            BaoCaoWD.cmbMonHoc.SelectedIndex = 0;
                         }
                     }
                     reader.NextResult();
                 }
                 con.Close();
-
-
 
             }
         }
@@ -224,8 +257,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         HocKyComboBox.Add(reader.GetInt32(0));
                         if (HocKyQueries != null)
                         {
-                            HocKyQueries = reader.GetString(0);
-                            //BaoCaoWD.cmbHocKy.SelectedIndex = 0;
+                            HocKyQueries = reader.GetInt32(0).ToString();
                         }
                     }
                     reader.NextResult();
@@ -252,7 +284,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                         if (string.IsNullOrEmpty(LopQueries))
                         {
                             MonHocQueries = reader.GetString(0);
-                            //BaoCaoWD.cmbMonHoc.SelectedIndex = 0;
                         }
                     }
                     reader.NextResult();

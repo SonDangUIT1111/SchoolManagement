@@ -91,7 +91,8 @@
             </Button>
             <Button 
                 Content="Huỷ"
-                Margin="10 0 0 0">
+                Margin="10 0 0 0"
+				Command="{Binding CancelAddClass}">
                 
             </Button>
         </StackPanel>

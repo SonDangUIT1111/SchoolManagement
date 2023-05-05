@@ -79,6 +79,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Converter\BooleanToIsEnabledConverter.cs" />
+    <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converter\BooleanToXepLoaiConverter.cs" />
     <Compile Include="Model\BaoCaoHocKy.cs" />
     <Compile Include="Model\BaoCaoMon.cs" />
     <Compile Include="Model\ConnectionString.cs" />
@@ -99,9 +102,10 @@
     <Compile Include="ViewModel\GiamHieu\BaoCaoViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\LopHocViewModel.cs" />
-    <Compile Include="ViewModel\GiamHieu\SuaThongTinLopHocViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaLopHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
     <Compile Include="Views\GiamHieu\BaoCao.xaml.cs">
@@ -142,6 +146,9 @@
     </Compile>
     <Compile Include="Views\GiaoVien\LopHoc.xaml.cs">
       <DependentUpon>LopHoc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiaoVien\ThanhTichHocSinh.xaml.cs">
+      <DependentUpon>ThanhTichHocSinh.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiaoVien\ThongTinGiaoVien.xaml.cs">
       <DependentUpon>ThongTinGiaoVien.xaml</DependentUpon>
@@ -278,6 +285,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiaoVien\LopHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiaoVien\ThanhTichHocSinh.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

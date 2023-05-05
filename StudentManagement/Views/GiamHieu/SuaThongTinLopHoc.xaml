@@ -21,6 +21,13 @@
         Title="Sửa thông tin lớp học" Height="500" Width="800"
         DataContext="{StaticResource SuaLopVM}"
         Name="SuaLopWD">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadWindow}"
+                               CommandParameter="{Binding ElementName=SuaLopWD}">
+            </i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"></RowDefinition>
@@ -43,7 +50,8 @@
                 HorizontalAlignment="Center"
                 Margin="10 10 10 0"    
                 Width="350"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                Text="{Binding LopHocHienTai.TenLop}">
             </TextBox>
             <TextBox
                 materialDesign:HintAssist.Hint="Nhập năm học"
@@ -51,7 +59,8 @@
                 HorizontalAlignment="Center"
                 Margin="10 20 10 0"    
                 Width="350"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                Text="{Binding LopHocHienTai.NienKhoa}">
             </TextBox>
             <TextBox
                 materialDesign:HintAssist.Hint="Số lượng học sinh"
@@ -59,7 +68,8 @@
                 HorizontalAlignment="Center"
                 Margin="10 20 10 0"    
                 Width="350"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                Text="{Binding LopHocHienTai.SiSo}">
             </TextBox>
             <ComboBox 
                 materialDesign:HintAssist.Hint="Giáo viên chủ nhiệm"
@@ -67,8 +77,8 @@
                 IsEditable="False"
                 Margin="10 20 10 0"    
                 Width="350"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}"
                 ItemsSource="{Binding GiaoVienComboBox}"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
                 SelectedItem="{Binding SelectedGiaoVien, Mode=TwoWay}">
             </ComboBox>
         </StackPanel>
@@ -79,12 +89,15 @@
             VerticalAlignment="Top"
             >
             <Button 
-                Content="Xác nhận">
+                Content="Xác nhận"
+                Command="{Binding EditClass}">
 
             </Button>
             <Button 
                 Content="Huỷ"
-                Margin="10 0 0 0">
+                Margin="10 0 0 0"
+                Command="{Binding CancelEditClass}"
+                >
 
             </Button>
         </StackPanel>

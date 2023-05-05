@@ -62,7 +62,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="100"></RowDefinition>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Top"
@@ -114,13 +113,56 @@
                 <StackPanel
                     Grid.Row="1"
                     Orientation="Horizontal"
+                    HorizontalAlignment="Center"
                     >
-                
+
+                    <DataGrid Margin="30 20 80 0"
+                              x:Name="BaoCaMonDataGrid"
+                              ItemsSource="{Binding DanhSachBaoCaoMon}"
+                              Style="{StaticResource DataGridStyle1}"
+                              RowStyle="{StaticResource DataGridRowStyle1}"
+                              CellStyle="{StaticResource DataGridCellStyle1}"
+                              SelectedItem="{Binding GridSelectedItem}"
+                              Grid.Row="2">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="600">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Width="200"
+                                                       FontSize="14"
+                                                       Text="{Binding TenLop}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Width="200"
+                                                       FontSize="14"
+                                                       Text="{Binding TenMon}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Width="200"
+                                                       FontSize="14"
+                                                       Text="{Binding SoLuongDat}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Width="200"
+                                                       FontSize="14"
+                                                       Text="{Binding TiLe}"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding BaoCaoMonSelectionChanged}"
+                                   CommandParameter="{Binding ElementName=BaoCaMonDataGrid}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
                     <lvc:CartesianChart
                     Grid.Row="0"
                     Margin="30 20 30 0"
-                    Width="600"
-                    Series="{Binding SoLuongDat}">
+                    Width="300"
+                    Series="{Binding SoLuongDat}"
+                    Visibility="{Binding CartersianChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <lvc:CartesianChart.AxisX>
                             <lvc:Axis Title="Lớp" Labels="{Binding TenLop}"></lvc:Axis>
                         </lvc:CartesianChart.AxisX>
@@ -132,47 +174,11 @@
                         Width="300"
                         LegendLocation="Bottom" 
                         Hoverable="True" 
-                        Series="{Binding TiLeDat}">
+                        Series="{Binding TiLeDat}"
+                        Visibility="{Binding PieChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                     </lvc:PieChart>
-                </StackPanel>
 
-                <DataGrid Margin="30 20 30 0"
-                              x:Name="BaoCaMonDataGrid"
-                              ItemsSource="{Binding DanhSachBaoCaoMon}"
-                              Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}"
-                              SelectedItem="{Binding GridSelectedItem}"
-                              Grid.Row="2">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="1010">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding TenLop}"/>
-                                        <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding TenMon}"/>
-                                        <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding SoLuongDat}"/>
-                                        <TextBlock Margin="20 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding TiLe}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding BaoCaoMonSelectionChanged}"
-                                   CommandParameter="{Binding ElementName=BaoCaMonDataGrid}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </DataGrid>
+                </StackPanel>
             </Grid>
         </Border>
 

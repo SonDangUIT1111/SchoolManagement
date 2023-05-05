@@ -13,16 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace StudentManagement.Views.GiamHieu
+namespace StudentManagement.Views.GiaoVien
 {
     /// <summary>
-    /// Interaction logic for BaoCao.xaml
+    /// Interaction logic for ThanhTichHocSinh.xaml
     /// </summary>
-    public partial class BaoCao : Page
+    public partial class ThanhTichHocSinh : Page
     {
-        public BaoCao()
+        public ThanhTichHocSinh()
         {
             InitializeComponent();
-        }   
+        }
     }
 }

@@ -16,12 +16,15 @@
     <viewmodelGH:LopHocViewModel x:Key="LopHocVM"></viewmodelGH:LopHocViewModel>
     <viewmodelGH:BaoCaoViewModel x:Key="BaoCaoVM"></viewmodelGH:BaoCaoViewModel>
     <viewmodelGH:ThemLopHocViewModel x:Key="ThemLopVM"></viewmodelGH:ThemLopHocViewModel>
-    <viewmodelGH:SuaThongTinLopHocViewModel x:Key="SuaLopVM"></viewmodelGH:SuaThongTinLopHocViewModel>
+    <viewmodelGH:SuaLopHocViewModel x:Key="SuaLopVM"></viewmodelGH:SuaLopHocViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
+    <viewmodelGV:ThanhTichHocSinhViewModel x:Key="ThanhTichVM"></viewmodelGV:ThanhTichHocSinhViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <!--Converter-->
     <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
-
+    <converter:BooleanToVisibilityConverter x:Name="visibilityConverter" x:Key="BooleanToVisibilityConverter"/>
+    <converter:BooleanToXepLoaiConverter x:Name="xepLoaiConverter" x:Key="BooleanToXepLoaiConverter"/>
+    <converter:BooleanToIsEnabledConverter x:Name="isEnabledConverter" x:Key="BooleanToIsEnabledConverter"/>
 </ResourceDictionary>

@@ -75,6 +75,7 @@
                         Height="50"
                         Width="350"
                         materialDesign:HintAssist.Hint="Nhập tên lớp"
+                        Margin="50 0 0 0 "
                         Style="{StaticResource MaterialDesignOutlinedTextBox}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="TextChanged">
@@ -83,7 +84,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
-                        <Button x:Name="ThemGiaoVien" 
+                        <Button
                         Width="179" 
                         Height="64" 
                         Background="#33418C"
@@ -158,15 +159,22 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <DockPanel>
-                                            <TextBlock Margin="20 0 0 0"
+                                            <TextBlock Width="100"
                                                        FontSize="14"
-                                                       Text="{Binding TenLop}"/>
-                                            <TextBlock Margin="20 0 0 0"
+                                                       Text="{Binding TenLop}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Width="100"
                                                        FontSize="14"
-                                                       Text="{Binding NienKhoa}"/>
-                                            <TextBlock Margin="20 0 0 0"
+                                                       Text="{Binding NienKhoa}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Width="50"
                                                        FontSize="14"
-                                                       Text="{Binding SiSo}"/>
+                                                       Text="{Binding SiSo}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Width="200"
+                                                       FontSize="14"
+                                                       Text="{Binding TenGVCN}"
+                                                       VerticalAlignment="Center"/>
                                             <StackPanel HorizontalAlignment="Right"
                                                         Orientation="Horizontal">
                                                 <Button 
@@ -175,11 +183,15 @@
                                                 </Button>
                                                 <Button 
                                                     Content="Sửa thông tin lớp"
-                                                     Command="{Binding DataContext.SuaLop, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}">
+                                                    Command="{Binding Source={StaticResource LopHocVM}, Path=SuaLop}"
+                                                    CommandParameter="{Binding}">
                                                     
                                                 </Button>
-                                                <Button Content="Xoá lớp học"
-                                                    Command="{Binding DataContext.XoaLop, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                                                <Button
+                                                    Content="Xoá lớp học"
+                                                    Command="{Binding Source={StaticResource LopHocVM}, Path=XoaLop}"
+                                                    CommandParameter="{Binding}"
+                                                    />
                                             </StackPanel>
                                         </DockPanel>
                                     </DataTemplate>
