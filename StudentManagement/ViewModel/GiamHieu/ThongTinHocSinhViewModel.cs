@@ -307,7 +307,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     con.Open();
                     SqlCommand cmd;
-                    string CmdString = "Delete from HocSinh where MaPhanCong = " + item.MaHocSinh;
+                    string CmdString = "Delete from HeThongDiem where MaHocSinh = " + item.MaHocSinh;
+                    //MessageBox.Show(CmdString);
+                    cmd = new SqlCommand(CmdString, con);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+
+                    con.Open();
+                    CmdString = "Delete from ThanhTich where MaHocSinh = " + item.MaHocSinh;
+                    //MessageBox.Show(CmdString);
+                    cmd = new SqlCommand(CmdString, con);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+
+                    con.Open();
+                    CmdString = "Delete from HocSinh where MaHocSinh = " + item.MaHocSinh;
                     //MessageBox.Show(CmdString);
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteNonQuery();

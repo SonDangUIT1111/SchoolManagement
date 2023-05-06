@@ -16,8 +16,12 @@ namespace StudentManagement.Model
         public int HocKy { get { return _hocKy; } set { _hocKy = value; } }
         private string _tenLop;
         public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
+        private int _maMon;
+        public int MaMon { get { return _maMon; } set { _maMon = value; } }
         private string _tenMon;
         public string TenMon { get { return _tenMon; } set { _tenMon = value; } }
+        private int _maHocSinh;
+        public int MaHocSinh { get { return _maHocSinh; } set { _maHocSinh = value; } }
         private string _tenHocSinh;
         public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
         private float _diem15Phut;
