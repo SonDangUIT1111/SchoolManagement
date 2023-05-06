@@ -21,6 +21,6 @@ namespace StudentManagement.Model
         private int _soLuongDat;
         public int SoLuongDat { get { return _soLuongDat; } set { _soLuongDat = value; } }
         private string _tiLe;
-        public string TILe { get { return _tiLe; } set { _tiLe = value; } }
+        public string TiLe { get { return _tiLe; } set { _tiLe = value; } }
     }
 }

@@ -18,9 +18,9 @@ namespace StudentManagement.Views.GiamHieu
     /// <summary>
     /// Interaction logic for BaoCao.xaml
     /// </summary>
-    public partial class BaoCao : Page
+    public partial class BaoCaoMonHoc : Page
     {
-        public BaoCao()
+        public BaoCaoMonHoc()
         {
             InitializeComponent();
         }   

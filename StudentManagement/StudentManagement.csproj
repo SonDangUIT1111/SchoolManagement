@@ -99,7 +99,8 @@
       <DependentUpon>Title_Bar_Log.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
-    <Compile Include="ViewModel\GiamHieu\BaoCaoViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\BaoCaoHocKyViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\BaoCaoMonHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\LopHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\SuaLopHocViewModel.cs" />
@@ -108,8 +109,11 @@
     <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
-    <Compile Include="Views\GiamHieu\BaoCao.xaml.cs">
-      <DependentUpon>BaoCao.xaml</DependentUpon>
+    <Compile Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml.cs">
+      <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\BaoCaoMonHoc.xaml.cs">
+      <DependentUpon>BaoCaoMonHoc.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiamHieu\DanhSachLop.xaml.cs">
       <DependentUpon>DanhSachLop.xaml</DependentUpon>
@@ -236,7 +240,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiamHieu\BaoCao.xaml">
+    <Page Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\BaoCaoMonHoc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
