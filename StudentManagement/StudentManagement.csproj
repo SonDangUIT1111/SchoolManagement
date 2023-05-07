@@ -145,10 +145,12 @@
     <Compile Include="Views\GiamHieu\LopHoc.xaml.cs">
       <DependentUpon>LopHoc.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiamHieu\SuaThongTinLopHoc.xaml.cs">
-      <DependentUpon>SuaThongTinLopHoc.xaml</DependentUpon>
-    <Compile Include="Views\GiamHieu\QuanLiDiemSo.xaml.cs">
-      <DependentUpon>QuanLiDiemSo.xaml</DependentUpon>
+	  <Compile Include="Views\GiamHieu\SuaThongTinLopHoc.xaml.cs">
+		  <DependentUpon>SuaThongTinLopHoc.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Include="Views\GiamHieu\QuanLiDiemSo.xaml.cs">
+		  <DependentUpon>QuanLiDiemSo.xaml</DependentUpon>
+	  </Compile>
     <Compile Include="Views\GiamHieu\MonHoc.xaml.cs">
       <DependentUpon>MonHoc.xaml</DependentUpon>
     </Compile>
@@ -158,21 +160,24 @@
     <Compile Include="Views\GiamHieu\SuaPhanCong.xaml.cs">
       <DependentUpon>SuaPhanCong.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiamHieu\SuaThongTinHocSinh.xaml.cs">
-      <DependentUpon>SuaThongTinHocSinh.xaml</DependentUpon>
+	  <Compile Include="Views\GiamHieu\SuaThongTinHocSinh.xaml.cs">
+		  <DependentUpon>SuaThongTinHocSinh.xaml</DependentUpon>
+	  </Compile>
     <Compile Include="Views\GiamHieu\SuaGiaoVien.xaml.cs">
       <DependentUpon>SuaGiaoVien.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiamHieu\ThayDoiQuyDinh.xaml.cs">
       <DependentUpon>ThayDoiQuyDinh.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiamHieu\ThemLopHoc.xaml.cs">
-      <DependentUpon>ThemLopHoc.xaml</DependentUpon>
+	  <Compile Include="Views\GiamHieu\ThemLopHoc.xaml.cs">
+		  <DependentUpon>ThemLopHoc.xaml</DependentUpon>
+	  </Compile>
     <Compile Include="Views\GiamHieu\ThemHocSinhMoi.xaml.cs">
       <DependentUpon>ThemHocSinhMoi.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiamHieu\ThemPhanCong.xaml.cs">
-      <DependentUpon>ThemPhanCong.xaml</DependentUpon>
+	  <Compile Include="Views\GiamHieu\ThemPhanCong.xaml.cs">
+		  <DependentUpon>ThemPhanCong.xaml</DependentUpon>
+	  </Compile>
     <Compile Include="Views\GiamHieu\ThemGiaoVien.xaml.cs">
       <DependentUpon>ThemGiaoVien.xaml</DependentUpon>
     </Compile>
@@ -200,8 +205,9 @@
     <Compile Include="Views\GiaoVien\LopHoc.xaml.cs">
       <DependentUpon>LopHoc.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiaoVien\ThanhTichHocSinh.xaml.cs">
-      <DependentUpon>ThanhTichHocSinh.xaml</DependentUpon>
+	  <Compile Include="Views\GiaoVien\ThanhTichHocSinh.xaml.cs">
+		  <DependentUpon>ThanhTichHocSinh.xaml</DependentUpon>
+	  </Compile>
     <Compile Include="Views\GiaoVien\SuaHocSinh.xaml.cs">
       <DependentUpon>SuaHocSinh.xaml</DependentUpon>
     </Compile>
@@ -317,8 +323,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiamHieu\SuaThongTinLopHoc.xaml">
-    <Page Include="Views\GiamHieu\QuanLiDiemSo.xaml">
+	   <Page Include="Views\GiamHieu\SuaThongTinLopHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+	   <Page Include="Views\GiamHieu\QuanLiDiemSo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiamHieu\MonHoc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -331,7 +343,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiamHieu\SuaThongTinHocSinh.xaml">
+	  <Page Include="Views\GiamHieu\SuaThongTinHocSinh.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+	  </Page>
     <Page Include="Views\GiamHieu\SuaGiaoVien.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -340,12 +355,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiamHieu\ThemLopHoc.xaml">
+	  <Page Include="Views\GiamHieu\ThemLopHoc.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+	  </Page>
     <Page Include="Views\GiamHieu\ThemHocSinhMoi.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiamHieu\ThemPhanCong.xaml">
+	  <Page Include="Views\GiamHieu\ThemPhanCong.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+	  </Page>
     <Page Include="Views\GiamHieu\ThemGiaoVien.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -382,7 +403,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiaoVien\ThanhTichHocSinh.xaml">
+	  <Page Include="Views\GiaoVien\ThanhTichHocSinh.xaml">
+		  <SubType>Designer</SubType>
+		  <Generator>MSBuild:Compile</Generator>
+	  </Page>
     <Page Include="Views\GiaoVien\SuaHocSinh.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

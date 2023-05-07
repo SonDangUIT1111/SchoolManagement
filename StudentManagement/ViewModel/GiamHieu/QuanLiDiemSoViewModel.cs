@@ -46,8 +46,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ObservableCollection<Lop> LopDataCmb { get => _lopDataCmb; set { _lopDataCmb = value; OnPropertyChanged(); } }
         private ObservableCollection<Khoi> _khoiDataCmb;
         public ObservableCollection<Khoi> KhoiDataCmb { get => _khoiDataCmb; set { _khoiDataCmb = value; OnPropertyChanged(); } }
-        private ObservableCollection<MonHoc> _monDataCmb;
-        public ObservableCollection<MonHoc> MonDataCmb { get => _monDataCmb; set { _monDataCmb = value; OnPropertyChanged(); } }
+        private ObservableCollection<Model.MonHoc> _monDataCmb;
+        public ObservableCollection<Model.MonHoc> MonDataCmb { get => _monDataCmb; set { _monDataCmb = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb2;
         public ObservableCollection<string> NienKhoaCmb2 { get => _nienKhoaCmb2; set { _nienKhoaCmb2 = value; OnPropertyChanged(); } }
         private ObservableCollection<Lop> _lopDataCmb2;
@@ -139,7 +139,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
-                    MonHoc item = cmb.SelectedItem as MonHoc;
+                    Model.MonHoc item = cmb.SelectedItem as Model.MonHoc;
                     MonHocQueries = item.MaMon.ToString();
                     LoadDanhSachBangDiem();
                 }
@@ -224,7 +224,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             QuanLiDiemSoWD.cmbHocKy.SelectedIndex = 0;
             QuanLiDiemSoWD.cmbHocKy2.SelectedIndex = 0;
             NienKhoaCmb = new ObservableCollection<string>();
-            MonDataCmb = new ObservableCollection<MonHoc>();
+            MonDataCmb = new ObservableCollection<Model.MonHoc>();
             LopDataCmb = new ObservableCollection<Lop>();
             KhoiDataCmb = new ObservableCollection<Khoi>();
             NienKhoaCmb2 = new ObservableCollection<string>();
@@ -347,7 +347,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     while (reader.Read())
                     {
-                        MonHoc item = new MonHoc();
+                        Model.MonHoc item = new Model.MonHoc();
                         item.MaMon = reader.GetInt32(0);
                         item.TenMon = reader.GetString(1);
                         MonDataCmb.Add(item);
@@ -400,9 +400,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                             TenMon = reader.GetString(6),
                             MaHocSinh = reader.GetInt32(7),
                             TenHocSinh = reader.GetString(8),
-                            Diem15Phut = (float)reader.GetDecimal(9),
-                            Diem1Tiet = (float)reader.GetDecimal(10),
-                            DiemTB = (float)reader.GetDecimal(11),
+                            Diem15Phut = (decimal)reader.GetDecimal(9),
+                            Diem1Tiet = (decimal)reader.GetDecimal(10),
+                            DiemTB = (decimal)reader.GetDecimal(11),
                             XepLoai = reader.GetBoolean(12),
                             TrangThai = reader.GetBoolean(13),
                         };
@@ -637,7 +637,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             HocKy = reader.GetInt32(3),
                             NienKhoa = reader.GetString(4),
                             SoLuongDat = reader.GetInt32(5),
-                            TILe = ((double)reader.GetInt32(5) / reader.GetInt32(2) * 100).ToString() + "%",
+                            TiLe = ((double)reader.GetInt32(5) / reader.GetInt32(2) * 100).ToString() + "%",
                         };
                         DanhSachBaoCaoHocKy.Add(baocaohocky);
                     }
@@ -653,14 +653,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                                             "where MaLop = " + DanhSachBaoCaoHocKy[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoHocKy[i].HocKy.ToString() + " and NienKhoa = '" + DanhSachBaoCaoHocKy[i].NienKhoa + "')) " +
                                 "begin " +
                                 "update BaoCaoHocKy " +
-                                "set SoLuongDat = " + DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoHocKy[i].TILe + "' " +
+                                "set SoLuongDat = " + DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoHocKy[i].TiLe + "' " +
                                 "where MaLop = " + DanhSachBaoCaoHocKy[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoHocKy[i].HocKy.ToString() + " and NienKhoa = '" + DanhSachBaoCaoHocKy[i].NienKhoa + "' " +
                                 "end " +
                                 "else " +
                                 "begin " +
                                 "insert into BaoCaoHocKy(MaLop,TenLop,SiSo,HocKy,NienKhoa,SoLuongDat,TiLe) values(" + DanhSachBaoCaoHocKy[i].MaLop.ToString() + ",N'" + DanhSachBaoCaoHocKy[i].TenLop +
                                 "'," + DanhSachBaoCaoHocKy[i].SiSo.ToString() + "," + DanhSachBaoCaoHocKy[i].HocKy.ToString() + ",'" + DanhSachBaoCaoHocKy[i].NienKhoa + "'," +
-                                DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ",'" + DanhSachBaoCaoHocKy[i].TILe + "') " +
+                                DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ",'" + DanhSachBaoCaoHocKy[i].TiLe + "') " +
                                 "end";
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();

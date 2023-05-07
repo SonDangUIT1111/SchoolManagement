@@ -293,9 +293,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                             TenMon = reader.GetString(6),
                             MaHocSinh = reader.GetInt32(7),
                             TenHocSinh = reader.GetString(8),
-                            Diem15Phut = (float)reader.GetDecimal(9),
-                            Diem1Tiet = (float)reader.GetDecimal(10),
-                            DiemTB = (float)reader.GetDecimal(11),
+                            Diem15Phut = (decimal)reader.GetDecimal(9),
+                            Diem1Tiet = (decimal)reader.GetDecimal(10),
+                            DiemTB = (decimal)reader.GetDecimal(11),
                             XepLoai = reader.GetBoolean(12),
                             TrangThai = reader.GetBoolean(13),
                         };
