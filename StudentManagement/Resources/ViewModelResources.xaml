@@ -15,13 +15,19 @@
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
     <viewmodelGH:XepLopViewModel x:Key="XepLopVM"></viewmodelGH:XepLopViewModel>
     <viewmodelGH:QuanLiDiemSoViewModel x:Key="QuanLiDiemSoVM"></viewmodelGH:QuanLiDiemSoViewModel>
+    <viewmodelGH:DanhSachGiaoVienViewModel x:Key="DanhSachGiaoVienVM"></viewmodelGH:DanhSachGiaoVienViewModel>
+    <viewmodelGH:ThemGiaoVienViewModel x:Key="ThemGiaoVienVM"></viewmodelGH:ThemGiaoVienViewModel>
+    <viewmodelGH:SuaGiaoVienViewModel x:Key="SuaGiaoVienVM"></viewmodelGH:SuaGiaoVienViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
+    <viewmodelGV:LopHocViewModel x:Key="LopHocVM"></viewmodelGV:LopHocViewModel>
+    <viewmodelGV:SuaHocSinhViewModel x:Key="SuaHocSinhVM"></viewmodelGV:SuaHocSinhViewModel>
     <viewmodelGV:HeThongBangDiemViewModel x:Key="HeThongBangDiemGVVM"></viewmodelGV:HeThongBangDiemViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
+    <viewmodelHS:DiemSoViewModel x:Key="DiemSoVM"></viewmodelHS:DiemSoViewModel>
     <!--Converter-->
-    <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
+    <converter:ByteArrayToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
     <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>
     <converter:BooleanToScoreStateConverter x:Name="stateConverter" x:Key="BooleanToStateConverter"/>
     <converter:BooleanToXepLoaiConverter x:Name="xepLoaiConverter" x:Key="BooleanToXepLoaiConverter"/>

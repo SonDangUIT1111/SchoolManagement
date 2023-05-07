@@ -40,13 +40,8 @@
         <uc:Title_Bar_Log Grid.RowSpan="1"
                           Grid.ColumnSpan="2"
                           Panel.ZIndex="2"/>
-        <Border Grid.RowSpan="2" 
-                CornerRadius="0,0,280,0">
-            <Border.Background>
-                <LinearGradientBrush>
-                    <GradientStop Color="#FF29EC92" Offset="0.81"/>
-                    <GradientStop Color="#FF0093EC" Offset="0.45"/>
-                </LinearGradientBrush>
+        <Border Grid.RowSpan="2" >
+            <Border.Background>White
             </Border.Background>
         </Border>
         <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Background="#FFECECEC" Panel.ZIndex="-1"/>
@@ -59,7 +54,7 @@
             VerticalAlignment="Top"
             Margin="9,30,0,0"
             />
-        <TextBlock Foreground="White" Grid.Row="1" Margin="60,10,0,0" FontSize="20" FontWeight="Bold">
+        <TextBlock Foreground="Black" Grid.Row="1" Margin="60,10,0,0" FontSize="20" FontWeight="Bold">
             Trường đại học <LineBreak/>
             Công Nghệ Thông Tin
         </TextBlock>
@@ -343,6 +338,6 @@
         </ListBox>
         <Frame x:Name="RPage"  NavigationUIVisibility="Hidden" Grid.Column="1" Grid.Row="1" Content="{Binding PageContent}" />
         <!--<TextBox Grid.Row="1" Grid.Column="0" FontSize="30" VerticalAlignment="Bottom" Margin="90" Text="{Binding Tex, UpdateSourceTrigger=PropertyChanged}"/>-->
-        <Button Command="{Binding BUTTON}"/>
+        <!--<Button Command="{Binding BUTTON}"/>-->
     </Grid>
 </Window>
