@@ -10,8 +10,12 @@ namespace StudentManagement.Model
     {
         private int _maBaoCaoMon;
         public int MaBaoCaoMon { get { return _maBaoCaoMon; } set { _maBaoCaoMon = value; } }
+        private int _maLop;
+        public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
         public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
+        private int _maMon;
+        public int MaMon { get { return _maMon; } set { _maMon = value; } }
         private string _tenMon;
         public string TenMon { get { return _tenMon; } set { _tenMon = value; } }
         private int _hocKy;

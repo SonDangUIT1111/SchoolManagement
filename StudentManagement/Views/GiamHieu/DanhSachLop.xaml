@@ -15,10 +15,17 @@
       FontFamily="{DynamicResource MaterialDesignFont}"
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       Title="DanhSachLop"
       x:Name="DanhSachLopWD"
       Background="#FFECECEC"
       DataContext="{StaticResource DanhSachLopVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadWindow}"
+                                   CommandParameter="{Binding ElementName=DanhSachLopWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -73,42 +80,45 @@
                         Margin="25"
                         Content="Thêm Học Sinh" 
                         FontSize="18" 
+                        Command="{Binding ThemHocSinh}"
                         FontWeight="Bold">
                 </Button>
                 <StackPanel Orientation="Horizontal"
                             Margin="0 100 0 0"
                             VerticalAlignment="Top">
-                    <ComboBox materialDesign:HintAssist.Hint="Search"
+                    <ComboBox materialDesign:HintAssist.Hint="Niên khóa"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              ItemsSource="{Binding DanhSachKhoi}"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                        <ComboBoxItem IsSelected="True">Apple</ComboBoxItem>
+                        
                     </ComboBox>
-                    <ComboBox materialDesign:HintAssist.Hint="Search"
+                    <ComboBox materialDesign:HintAssist.Hint="Khối"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              IsEnabled="False"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                        <ComboBoxItem IsSelected="True">Apple</ComboBoxItem>
                     </ComboBox>
-                    <ComboBox materialDesign:HintAssist.Hint="Search"
+                    <ComboBox materialDesign:HintAssist.Hint="Lớp"
                               IsEditable="False"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              IsEnabled="False"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                        <ComboBoxItem IsSelected="True">Apple</ComboBoxItem>
                     </ComboBox>
-                    <TextBox materialDesign:HintAssist.Hint="Floating Hint"
+                    <TextBox x:Name="tbSearch"
+                             materialDesign:HintAssist.Hint="Search ..."
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Width="250"
                              Height="40"
@@ -117,43 +127,96 @@
                     <Button Margin="10 0 0 0"
                             Background="Transparent"
                             BorderBrush="#0099FF"
+                            IsDefault="True"
+                            Command="{Binding LocHocSinh}"
+                            CommandParameter="{Binding ElementName=tbSearch}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon Width="20"
                                                  Height="20"
                                                  Kind="Magnify" />
                     </Button>
                 </StackPanel>
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled"
-                              Style="{StaticResource FavsScrollViewer}">
-                    <DataGrid Margin="25,0,25,10"
-                              ItemsSource="{Binding DanhSachLop}"
-                              Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="1010">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border CornerRadius="10"
+                <DataGrid Margin="25,0,25,10"
+                          Width="1000"
+                          Grid.Row="1"
+                          SelectionUnit="FullRow"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ItemsSource="{Binding DanhSachLop}"
+                          Style="{StaticResource DataGridStyle1}"
+                          RowStyle="{StaticResource DataGridRowStyle1}"
+                          CellStyle="{StaticResource DataGridCellStyle1}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                    Width="980"
+                                                    HorizontalAlignment="Left">
+                                        <Border CornerRadius="10"
                                                 Height="40"
                                                 Width="40">
-                                                <Border.Background>
-                                                    <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
-                                                </Border.Background>
-                                            </Border>
-                                            <TextBlock Margin="20 0 0 0"
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <TextBlock VerticalAlignment="Center"
+                                                       Margin="20 0 0 0"
+                                                       Width="200"
                                                        FontSize="14"
-                                                       Text="{Binding TenHocSinh}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+                                                       Foreground="#000000"
+                                                       Text="{Binding TenHocSinh}"
+                                                       TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                       Margin="20 0 0 0"
+                                                       Width="100"
+                                                       FontSize="14"
+                                                       Foreground="#000000"
+                                                       Text="{Binding NgaySinh}"
+                                                       TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                       Margin="20 0 0 0"
+                                                       Width="50"
+                                                       FontSize="14"
+                                                       Foreground="#000000"
+                                                       Text="{Binding GioiTinh, Converter={StaticResource BooleanToGenderConverter}}"
+                                                       TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                       Margin="20 0 0 0"
+                                                       Width="200"
+                                                       FontSize="14"
+                                                       Foreground="#000000"
+                                                       Text="{Binding DiaChi}"
+                                                       TextTrimming="WordEllipsis"/>
+                                        <TextBlock VerticalAlignment="Center"
+                                                       Margin="20 0 0 0"
+                                                       Width="200"
+                                                       FontSize="14"
+                                                       Foreground="#000000"
+                                                       Text="{Binding Email}"
+                                                       TextTrimming="WordEllipsis"/>
+                                        <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                                    Background="#FC8484"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Command="{Binding Source={StaticResource DanhSachLopVM}, Path=RemoveKhoiLop}"
+                                                    CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <materialDesign:Snackbar x:Name="Snackbar"
+                                         MessageQueue="{materialDesign:MessageQueue}"
+                                         VerticalAlignment="Bottom"
+                                         Grid.Row="2">
+                    <materialDesign:SnackbarMessage ActionContent="Hoàn tác"
+                                                    Content="Xóa thành công" />
+                </materialDesign:Snackbar>
             </Grid>
         </Border>
     </Grid>

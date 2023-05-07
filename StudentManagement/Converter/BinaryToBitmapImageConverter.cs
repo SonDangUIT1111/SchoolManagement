@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace StudentManagement.Converter
 {
-    public class BinaryToBitmapImageConverter
+    public class ByteArrayToBitmapImageConverter : IValueConverter
     {
         public BitmapImage ConvertByteArrayToBitMapImage(byte[] imageByteArray)
         {
@@ -28,7 +28,7 @@ namespace StudentManagement.Converter
 
 
 
-        public object Convert(object value)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             BitmapImage img = new BitmapImage();
             if (value != null)
@@ -36,6 +36,11 @@ namespace StudentManagement.Converter
                 img = this.ConvertByteArrayToBitMapImage(value as byte[]);
             }
             return img;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
         }
         public byte[] ImageToBinary(string imagePath)
         {
