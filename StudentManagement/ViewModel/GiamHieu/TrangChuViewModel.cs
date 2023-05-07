@@ -1,4 +1,5 @@
-﻿using StudentManagement.Views.GiamHieu;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int IdGiamHieu { get { return _idGiamHieu; } set { _idGiamHieu = value; } }
 
         //declare Pages
-        public BaoCao BaoCaoPage { get; set; }
+        public BaoCaoMonHoc BaoCaoPage { get; set; }
         public LopHoc LopHocPage { get; set; }
         public ThayDoiQuyDinh ThayDoiQuyDinhPage { get; set; }
         public ThongTinGiaoVien ThongTinGiaoVienPage { get; set; }
@@ -36,7 +37,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public TrangChuViewModel()
         {
-            BaoCaoPage = new BaoCao();
+            BaoCaoPage = new BaoCaoMonHoc();
             LopHocPage = new LopHoc();
             ThayDoiQuyDinhPage = new ThayDoiQuyDinh();
             ThongTinGiaoVienPage = new ThongTinGiaoVien();

@@ -10,6 +10,8 @@ namespace StudentManagement.Model
     {
         private int _maBaoCaoHocKy;
         public int MaBaoCaoHocKy { get { return _maBaoCaoHocKy; } set { _maBaoCaoHocKy = value; } }
+        private int _maLop;
+        public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
         public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
         private int _siSo;
@@ -21,6 +23,6 @@ namespace StudentManagement.Model
         private int _soLuongDat;
         public int SoLuongDat { get { return _soLuongDat; } set { _soLuongDat = value; } }
         private string _tiLe;
-        public string TILe { get { return _tiLe; } set { _tiLe = value; } }
+        public string TiLe { get { return _tiLe; } set { _tiLe = value; } }
     }
 }

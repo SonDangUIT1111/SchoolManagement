@@ -1,0 +1,211 @@
+﻿<Page x:Class="StudentManagement.Views.GiamHieu.PhanCongGiangDay"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
+      mc:Ignorable="d" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      d:DesignHeight="1033" 
+      d:DesignWidth="1056"
+      Background="#FFECECEC"
+      Title="PhanCongGiangDay"
+      Name="PhanCongGiangDayWD"
+      DataContext="{StaticResource PhanCongGiangDayVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadData}"
+                                   CommandParameter="{Binding ElementName=PhanCongGiangDayWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="228" ></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border BorderBrush="#110357" 
+                BorderThickness="0" 
+                CornerRadius="30" 
+                Grid.Row="0" 
+                Background="MediumPurple" 
+                Margin="12" >
+            <Grid>
+                <TextBlock Text="Phân công giảng dạy" 
+                           FontWeight="Bold" 
+                           Foreground="White" 
+                           FontSize="60" 
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Bottom"
+                           Margin="20"/>
+                <Border BorderBrush="#FF000000" 
+                        BorderThickness="0" 
+                        CornerRadius="30" 
+                        VerticalAlignment="Top" 
+                        HorizontalAlignment="Right"
+                        Width="325"
+                        Height="78"
+                        Margin="21"
+                        Background="White">
+                </Border>
+            </Grid>
+        </Border>
+        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="160"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Danh sách phân công" 
+                           Margin="25" 
+                           FontSize="30"/>
+                <Button x:Name="btnThemPhanCong" 
+                        Style="{StaticResource InteractiveButton}"
+                        Width="160" 
+                        Height="50" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="25"
+                        Content="Thêm Phân Công" 
+                        FontSize="18" 
+                        FontWeight="Bold"
+                        Command="{Binding AddPhanCong}">
+                </Button>
+                <StackPanel Orientation="Horizontal" 
+                            Margin="0 80 0 0">
+                    <ComboBox x:Name="cmbNienKhoa"
+                              materialDesign:HintAssist.Hint="Niên khóa"
+                              IsEditable="False"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding NienKhoaCmb}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+
+                    <ComboBox x:Name="cmbKhoi"
+                              materialDesign:HintAssist.Hint="Khối"
+                              IsEditable="False"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding KhoiCmb}"
+                              DisplayMemberPath="TenKhoi">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterKhoi}"
+                                   CommandParameter="{Binding ElementName=cmbKhoi}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <ComboBox x:Name="cmbLop"
+                              materialDesign:HintAssist.Hint="Lớp"
+                              IsEditable="False"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding LopCmb}"
+                              DisplayMemberPath="TenLop">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterLop}"
+                                   CommandParameter="{Binding ElementName=cmbLop}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <TextBox x:Name="txtSearch"
+                             materialDesign:HintAssist.Hint="Tìm môn học"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Width="250"
+                             Height="40"
+                             Padding="10"
+                             Margin="25 0 0 0"/>
+                    <Button Margin="10 0 0 0"
+                            Background="Transparent"
+                            BorderBrush="#0099FF"
+                            IsDefault="True"
+                            Command="{Binding SearchPhanCong}"
+                            CommandParameter="{Binding ElementName=txtSearch}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="Magnify" />
+                    </Button>
+                </StackPanel>
+                <DataGrid Grid.Row="1"
+                          RowStyle="{StaticResource DataGridRowStyle1}"
+                          CellStyle="{StaticResource DataGridCellStyle1}"
+                          Style="{StaticResource DataGridStyle1}"
+                          ItemsSource="{Binding DanhSachPhanCong}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="1010">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding TenLop}"
+                                                   VerticalAlignment="Center"
+                                                   Width="200"/>
+                                        <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding TenMon}"
+                                                   VerticalAlignment="Center"
+                                                   Width="200"
+                                                   TextTrimming="WordEllipsis"/>
+                                        <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding TenGiaoVien}"
+                                                   VerticalAlignment="Center"
+                                                   Width="200"/>
+                                        <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                    Background="#FF68BB08"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0" 
+                                                    Command="{Binding Source={StaticResource PhanCongGiangDayVM}, Path=UpdatePhanCong}"
+                                                    CommandParameter="{Binding}"/>
+                                        <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                                    Background="#FC8484"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Margin="10,0,0,0"
+                                                    Command="{Binding Source={StaticResource PhanCongGiangDayVM}, Path=RemovePhanCong}"
+                                                    CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+
+    </Grid>
+</Page>

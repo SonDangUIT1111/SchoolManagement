@@ -13,11 +13,37 @@
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
+    <viewmodelGH:LopHocViewModel x:Key="LopHocVM"></viewmodelGH:LopHocViewModel>
+    <viewmodelGH:BaoCaoMonHocViewModel x:Key="BaoCaoMonHocVM"></viewmodelGH:BaoCaoMonHocViewModel>
+    <viewmodelGH:BaoCaoHocKyViewModel x:Key="BaoCaoHocKyVM"></viewmodelGH:BaoCaoHocKyViewModel>
+    <viewmodelGH:ThemLopHocViewModel x:Key="ThemLopVM"></viewmodelGH:ThemLopHocViewModel>
+    <viewmodelGH:SuaLopHocViewModel x:Key="SuaLopVM"></viewmodelGH:SuaLopHocViewModel>
+    <viewmodelGH:XepLopViewModel x:Key="XepLopVM"></viewmodelGH:XepLopViewModel>
+    <viewmodelGH:QuanLiDiemSoViewModel x:Key="QuanLiDiemSoVM"></viewmodelGH:QuanLiDiemSoViewModel>
+    <viewmodelGH:ThongTinHocSinhViewModel x:Key="ThongTinHocSinhVM"></viewmodelGH:ThongTinHocSinhViewModel>
+    <viewmodelGH:ThemHocSinhMoiViewModel x:Key="ThemHocSinhMoiVM"></viewmodelGH:ThemHocSinhMoiViewModel>
+    <viewmodelGH:SuaThongTinHocSinhViewModel x:Key="SuaThongTinHocSinhVM"></viewmodelGH:SuaThongTinHocSinhViewModel>
+    <viewmodelGH:ThayDoiQuyDinhViewModel x:Key="ThayDoiQuyDinhVM"></viewmodelGH:ThayDoiQuyDinhViewModel>
+    <viewmodelGH:MonHocViewModel x:Key="MonHocVM"></viewmodelGH:MonHocViewModel>
+    <viewmodelGH:PhanCongGiangDayViewModel x:Key="PhanCongGiangDayVM"></viewmodelGH:PhanCongGiangDayViewModel>
+    <viewmodelGH:ThemPhanCongViewModel x:Key="ThemPhanCongVM"></viewmodelGH:ThemPhanCongViewModel>
+    <viewmodelGH:SuaPhanCongViewModel x:Key="SuaPhanCongVM"></viewmodelGH:SuaPhanCongViewModel>
+    <viewmodelGH:DanhSachGiaoVienViewModel x:Key="DanhSachGiaoVienVM"></viewmodelGH:DanhSachGiaoVienViewModel>
+    <viewmodelGH:ThemGiaoVienViewModel x:Key="ThemGiaoVienVM"></viewmodelGH:ThemGiaoVienViewModel>
+    <viewmodelGH:SuaGiaoVienViewModel x:Key="SuaGiaoVienVM"></viewmodelGH:SuaGiaoVienViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
+    <viewmodelGV:LopHocViewModel x:Key="LopHocVM"></viewmodelGV:LopHocViewModel>
+    <viewmodelGV:SuaHocSinhViewModel x:Key="SuaHocSinhVM"></viewmodelGV:SuaHocSinhViewModel>
+    <viewmodelGV:HeThongBangDiemViewModel x:Key="HeThongBangDiemGVVM"></viewmodelGV:HeThongBangDiemViewModel>
+    <viewmodelGV:ThanhTichHocSinhViewModel x:Key="ThanhTichVM"></viewmodelGV:ThanhTichHocSinhViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
+    <viewmodelHS:DiemSoViewModel x:Key="DiemSoVM"></viewmodelHS:DiemSoViewModel>
     <!--Converter-->
-    <converter:BinaryToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
+    <converter:ByteArrayToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
+    <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>
+    <converter:BooleanToScoreStateConverter x:Name="stateConverter" x:Key="BooleanToStateConverter"/>
+    <converter:BooleanToXepLoaiConverter x:Name="xepLoaiConverter" x:Key="BooleanToXepLoaiConverter"/>
 
 </ResourceDictionary>
