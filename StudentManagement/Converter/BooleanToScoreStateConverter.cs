@@ -8,27 +8,19 @@ using System.Windows.Data;
 
 namespace StudentManagement.Converter
 {
-    public class BooleanToGenderConverter:IValueConverter
+    public class BooleanToScoreStateConverter:IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool gender = System.Convert.ToBoolean(value);
-            if (gender == true)
-                return "Nam";
+            bool state = System.Convert.ToBoolean(value);
+            if (state == true)
+                return "Đã chốt";
             else
-                return "Nữ";
+                return "Chưa chốt";
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value.ToString().ToUpper() == "Nam")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
     }
 }
