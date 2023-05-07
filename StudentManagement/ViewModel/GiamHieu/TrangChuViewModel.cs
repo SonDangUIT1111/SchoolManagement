@@ -18,7 +18,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         //declare Pages
         public BaoCao BaoCaoPage { get; set; }
-        public LopHoc LopHocPage { get; set; }
+        public DanhSachLop LopHocPage { get; set; }
         public ThayDoiQuyDinh ThayDoiQuyDinhPage { get; set; }
         public ThongTinGiaoVien ThongTinGiaoVienPage { get; set; }
         public ThongTinHocSinh ThongTinHocSinhPage { get; set; }
@@ -37,7 +37,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public TrangChuViewModel()
         {
             BaoCaoPage = new BaoCao();
-            LopHocPage = new LopHoc();
+            LopHocPage = new DanhSachLop();
             ThayDoiQuyDinhPage = new ThayDoiQuyDinh();
             ThongTinGiaoVienPage = new ThongTinGiaoVien();
             ThongTinHocSinhPage = new ThongTinHocSinh();
