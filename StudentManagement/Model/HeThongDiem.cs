@@ -8,16 +8,24 @@ namespace StudentManagement.Model
 {
     public class HeThongDiem
     {
+        private int _soThuTu;
+        public int SoThuTu { get { return _soThuTu; } set { _soThuTu = value; } }
         private int _maDiem;
         public int MaDiem { get { return _maDiem; } set { _maDiem = value; } }
         private string _nienKhoa;
         public string NienKhoa { get { return _nienKhoa; } set { _nienKhoa = value; } }
         private int _hocKy;
         public int HocKy { get { return _hocKy; } set { _hocKy = value; } }
+        private int _maLop;
+        public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
         public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
+        private int _maMon;
+        public int MaMon { get { return _maMon; } set { _maMon = value; } }
         private string _tenMon;
         public string TenMon { get { return _tenMon; } set { _tenMon = value; } }
+        private int _maHocSinh;
+        public int MaHocSinh { get { return _maHocSinh; } set { _maHocSinh = value;} }
         private string _tenHocSinh;
         public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
         private float _diem15Phut;
