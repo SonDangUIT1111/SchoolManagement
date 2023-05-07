@@ -21,6 +21,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         //declare ICommand
         public ICommand LocGiaoVien { get; set; }
         public ICommand ThemGiaoVien{ get; set; }
+        public ICommand UpdateGiaoVien { get; set; }
+        public ICommand RemoveGiaoVien { get; set; }
 
         public DanhSachGiaoVienViewModel()
         {
@@ -34,7 +36,47 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThemGiaoVien window = new ThemGiaoVien();
                 ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
+                
                 window.ShowDialog();
+            });
+            UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
+            {
+                SuaGiaoVien window = new SuaGiaoVien();
+                SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
+
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select AnhThe from GiaoVien where MaGiaoVien = " + parameter.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            //StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien();
+                            parameter.Avatar = (byte[])reader.GetValue(0);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                }
+
+                data.GiaoVienHienTai = parameter;
+                window.ShowDialog();
+                LoadDanhSachGiaoVien();
+            });
+            RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
+            {
+                Model.GiaoVien item = parameter;
+                XoaGiaoVien(item);
+                LoadDanhSachGiaoVien();
+                // Hiện snackbar thông báo xóa thành công, có thể hoàn tác
+                //DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
+                //$"Xóa thành công",
+                //$"Hoàn tác",
+                //param => { HoanTac(item); },
+                //TimeSpan.FromSeconds(5));
             });
         }
         public void LoadDanhSachGiaoVien()
@@ -43,7 +85,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 con.Open();
-                string CmdString = "select * from GiaoVien";
+                string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email from GiaoVien";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -52,12 +94,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                     while (reader.Read())
                     {
                         StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien();
-                        teacher.TenGiaoVien = reader.GetString(1);
                         teacher.MaGiaoVien = reader.GetInt32(0);
+                        teacher.TenGiaoVien = reader.GetString(1);
                         teacher.NgaySinh = reader.GetDateTime(2);
                         teacher.GioiTinh = reader.GetBoolean(3);
                         teacher.DiaChi = reader.GetString(4);
                         teacher.Email = reader.GetString(5);
+                        //reader.GetString(6);
+                        //reader.GetString(7);
+                        //teacher.Avatar = (byte[])reader.GetValue(8);
                         DanhSachGiaoVien.Add(teacher);
                     }
                     reader.NextResult();
@@ -95,6 +140,20 @@ namespace StudentManagement.ViewModel.GiamHieu
                 con.Close();
             }
         }
-
+        public void XoaGiaoVien(Model.GiaoVien value)
+        {
+            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa giáo viên?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            if (ConfirmDelete == MessageBoxResult.Yes)
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                SqlCommand cmd;
+                string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
+                cmd = new SqlCommand(CmdString, con);
+                cmd.ExecuteScalar();
+                con.Close();
+                MessageBox.Show("Đã xóa " + value.TenGiaoVien);
+                }
+        }
     }
 }

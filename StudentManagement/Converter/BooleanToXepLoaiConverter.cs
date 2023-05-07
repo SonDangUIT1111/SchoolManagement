@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 namespace StudentManagement.Converter
 {
-    public class BooleanToXepLoaiConverter:IValueConverter
+    public class BooleanToXepLoaiConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

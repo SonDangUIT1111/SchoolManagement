@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.IO;
 
 namespace StudentManagement.ViewModel
 {
@@ -49,4 +50,5 @@ namespace StudentManagement.ViewModel
             remove { CommandManager.RequerySuggested -= value; }
         }
     }
+
 }

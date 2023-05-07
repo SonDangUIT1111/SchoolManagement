@@ -4,12 +4,23 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagement.Views.GiaoVien"
+      xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
       Title="LopHoc"
-      Background="#FFECECEC">
-
+      Name="LopHocWD"
+      Background="#FFECECEC"
+      DataContext="{StaticResource LopHocVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadWindow}"
+                               CommandParameter="{Binding ElementName=LopHocWD}">
+            </i:InvokeCommandAction>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -43,7 +54,131 @@
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
             <Grid>
-                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="160"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Danh sách học sinh" 
+                           Margin="25" 
+                           FontSize="30"/>
+                <StackPanel Orientation="Horizontal"
+                            Margin="0 100 0 0"
+                            VerticalAlignment="Top">
+                    <ComboBox materialDesign:HintAssist.Hint="Khối"
+                              x:Name="ChonKhoi"
+                              IsEditable="False"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              ItemsSource="{Binding DanhSachKhoi}"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding LoadKhoa}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <ComboBox materialDesign:HintAssist.Hint="Niên Khóa"
+                              IsEditable="False"
+                              x:Name="ChonKhoa"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              ItemsSource="{Binding DanhSachNienKhoa}"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding LoadLop}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <ComboBox materialDesign:HintAssist.Hint="Lớp"
+                              IsEditable="False"
+                              x:Name="ChonLop"
+                              SelectedItem="{Binding LopDaChon}"
+                              Width="200"
+                              Height="40"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              ItemsSource="{Binding DanhSachLop}"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding LoadHocSinh}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="0 0 0 0"
+                                                       FontSize="14"
+                                                       Text="{Binding TenLop}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBox materialDesign:HintAssist.Hint="Floating Hint"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             Width="250"
+                             Height="40"
+                             Padding="10"
+                             Margin="25 0 0 0"/>
+                    <Button Margin="10 0 0 0"
+                            Background="Transparent"
+                            BorderBrush="#0099FF"
+                            Command="{Binding LocHocSinh}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="Magnify" />
+                    </Button>
+                </StackPanel>
+                <ScrollViewer Grid.Row="1"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Style="{StaticResource FavsScrollViewer}">
+                    <DataGrid Margin="25,0,25,10"
+                              ItemsSource="{Binding DanhSachhs}"
+                              Style="{StaticResource DataGridStyle1}"
+                              RowStyle="{StaticResource DataGridRowStyle1}"
+                              CellStyle="{StaticResource DataGridCellStyle1}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="1010">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border CornerRadius="10"
+                                                Height="40"
+                                                Width="40">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <TextBlock Margin="20 0 0 0"
+                                                       FontSize="14"
+                                                       Width="200"
+                                                       Text="{Binding TenHocSinh}"/>
+                                            <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                    Background="#FF68BB08"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Command="{Binding Source={StaticResource LopHocVM}, Path=UpdateHocSinh}"
+                                                    CommandParameter="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
             </Grid>
         </Border>
     </Grid>

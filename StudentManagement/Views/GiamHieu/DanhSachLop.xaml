@@ -93,8 +93,9 @@
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
-                              IsEnabled="False"
+                              ItemsSource="{Binding DanhSachKhoi}"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        
                     </ComboBox>
                     <ComboBox materialDesign:HintAssist.Hint="Khối"
                               IsEditable="False"

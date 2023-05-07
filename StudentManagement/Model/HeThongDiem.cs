@@ -28,12 +28,12 @@ namespace StudentManagement.Model
         public int MaHocSinh { get { return _maHocSinh; } set { _maHocSinh = value;} }
         private string _tenHocSinh;
         public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
-        private float _diem15Phut;
-        public float Diem15Phut { get { return _diem15Phut; } set { _diem15Phut = value; } }
-        private float _diem1Tiet;
-        public float Diem1Tiet { get { return _diem1Tiet; } set { _diem1Tiet = value; } }
-        private float _diemTB;
-        public float DiemTB { get { return _diemTB; } set { _diemTB = value; } }
+        private decimal _diem15Phut;
+        public decimal Diem15Phut { get { return _diem15Phut; } set { _diem15Phut = value; } }
+        private decimal _diem1Tiet;
+        public decimal Diem1Tiet { get { return _diem1Tiet; } set { _diem1Tiet = value; } }
+        private decimal _diemTB;
+        public decimal DiemTB { get { return _diemTB; } set { _diemTB = value; } }
         private bool _xepLoai;
         public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value;} }
         private bool _trangThai;
