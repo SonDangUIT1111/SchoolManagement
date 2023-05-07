@@ -15,6 +15,14 @@
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
     <viewmodelGH:XepLopViewModel x:Key="XepLopVM"></viewmodelGH:XepLopViewModel>
     <viewmodelGH:QuanLiDiemSoViewModel x:Key="QuanLiDiemSoVM"></viewmodelGH:QuanLiDiemSoViewModel>
+    <viewmodelGH:ThongTinHocSinhViewModel x:Key="ThongTinHocSinhVM"></viewmodelGH:ThongTinHocSinhViewModel>
+    <viewmodelGH:ThemHocSinhMoiViewModel x:Key="ThemHocSinhMoiVM"></viewmodelGH:ThemHocSinhMoiViewModel>
+    <viewmodelGH:SuaThongTinHocSinhViewModel x:Key="SuaThongTinHocSinhVM"></viewmodelGH:SuaThongTinHocSinhViewModel>
+    <viewmodelGH:ThayDoiQuyDinhViewModel x:Key="ThayDoiQuyDinhVM"></viewmodelGH:ThayDoiQuyDinhViewModel>
+    <viewmodelGH:MonHocViewModel x:Key="MonHocVM"></viewmodelGH:MonHocViewModel>
+    <viewmodelGH:PhanCongGiangDayViewModel x:Key="PhanCongGiangDayVM"></viewmodelGH:PhanCongGiangDayViewModel>
+    <viewmodelGH:ThemPhanCongViewModel x:Key="ThemPhanCongVM"></viewmodelGH:ThemPhanCongViewModel>
+    <viewmodelGH:SuaPhanCongViewModel x:Key="SuaPhanCongVM"></viewmodelGH:SuaPhanCongViewModel>
     <viewmodelGH:DanhSachGiaoVienViewModel x:Key="DanhSachGiaoVienVM"></viewmodelGH:DanhSachGiaoVienViewModel>
     <viewmodelGH:ThemGiaoVienViewModel x:Key="ThemGiaoVienVM"></viewmodelGH:ThemGiaoVienViewModel>
     <viewmodelGH:SuaGiaoVienViewModel x:Key="SuaGiaoVienVM"></viewmodelGH:SuaGiaoVienViewModel>

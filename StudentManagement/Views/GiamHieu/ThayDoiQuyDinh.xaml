@@ -4,11 +4,27 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      FontFamily="{DynamicResource MaterialDesignFont}"
       d:DesignHeight="1033" 
       d:DesignWidth="1056"
+      Background="#FFECECEC"
+      Name="ThayDoiQuyDinhWD"
       Title="ThayDoiQuyDinh"
-      Background="#FFECECEC">
+      DataContext="{StaticResource ThayDoiQuyDinhVM}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadData}"
+                                   CommandParameter="{Binding ElementName=ThayDoiQuyDinhWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -42,11 +58,80 @@
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
-            <TextBlock Text="Chọn quy định" 
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel HorizontalAlignment="Stretch">
+                    <TextBlock Text="Chọn quy định" 
                        FontSize="30" 
-                       Margin="41" 
+                       Margin="30" 
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cmbQuyDinh"
+                              materialDesign:HintAssist.Hint="Quy định"
+                              IsEditable="False"
+                              Width="450"
+                              Height="72"
+                              Padding="10"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                              ItemsSource="{Binding DanhSachQuyDinh}"
+                              DisplayMemberPath="TenQuiDinh"
+                              VerticalContentAlignment="Center"
+                              FontSize="20">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterQuyDinh}"
+                                   CommandParameter="{Binding ElementName=cmbQuyDinh}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Giá trị" 
+                       FontSize="30" 
+                       Margin="30" 
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+                    <TextBox Margin="25 0 0 0"
+                             materialDesign:HintAssist.Hint="Giá Trị"
+                             x:Name="tbGiaTri"
+                             Width="450"
+                             Height="72"
+                             Padding="10"
+                             HorizontalAlignment="Left"
+                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                             VerticalContentAlignment="Center"
+                             FontSize="20" IsEnabled="False">
+                    </TextBox>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="25">
+                        <Button Style="{StaticResource InteractiveButton}"
+                            Content="Thay đổi"
+                            Width="150"
+                            Height="40"
+                            Margin="15"
+                            HorizontalAlignment="Right"
+                            Command="{Binding EnableChange}">
+                        </Button>
+                        <Button x:Name="btnXacNhan"
+                            Style="{StaticResource InteractiveButton}"
+                            Content="Xác nhận"
+                            Width="150"
+                            Height="40"
+                            Margin="15"
+                            HorizontalAlignment="Right"
+                            Command="{Binding ChangeRule}"
+                            CommandParameter="{Binding ElementName=cmbQuyDinh}"
+                            IsEnabled="False"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>
