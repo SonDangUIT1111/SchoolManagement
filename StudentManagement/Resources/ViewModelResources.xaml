@@ -13,6 +13,11 @@
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
+    <viewmodelGH:LopHocViewModel x:Key="LopHocVM"></viewmodelGH:LopHocViewModel>
+    <viewmodelGH:BaoCaoMonHocViewModel x:Key="BaoCaoMonHocVM"></viewmodelGH:BaoCaoMonHocViewModel>
+    <viewmodelGH:BaoCaoHocKyViewModel x:Key="BaoCaoHocKyVM"></viewmodelGH:BaoCaoHocKyViewModel>
+    <viewmodelGH:ThemLopHocViewModel x:Key="ThemLopVM"></viewmodelGH:ThemLopHocViewModel>
+    <viewmodelGH:SuaLopHocViewModel x:Key="SuaLopVM"></viewmodelGH:SuaLopHocViewModel>
     <viewmodelGH:XepLopViewModel x:Key="XepLopVM"></viewmodelGH:XepLopViewModel>
     <viewmodelGH:QuanLiDiemSoViewModel x:Key="QuanLiDiemSoVM"></viewmodelGH:QuanLiDiemSoViewModel>
     <viewmodelGH:ThongTinHocSinhViewModel x:Key="ThongTinHocSinhVM"></viewmodelGH:ThongTinHocSinhViewModel>
@@ -31,6 +36,7 @@
     <viewmodelGV:LopHocViewModel x:Key="LopHocVM"></viewmodelGV:LopHocViewModel>
     <viewmodelGV:SuaHocSinhViewModel x:Key="SuaHocSinhVM"></viewmodelGV:SuaHocSinhViewModel>
     <viewmodelGV:HeThongBangDiemViewModel x:Key="HeThongBangDiemGVVM"></viewmodelGV:HeThongBangDiemViewModel>
+    <viewmodelGV:ThanhTichHocSinhViewModel x:Key="ThanhTichVM"></viewmodelGV:ThanhTichHocSinhViewModel>
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <viewmodelHS:DiemSoViewModel x:Key="DiemSoVM"></viewmodelHS:DiemSoViewModel>

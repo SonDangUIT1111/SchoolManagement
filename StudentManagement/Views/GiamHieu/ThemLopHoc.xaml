@@ -1,0 +1,100 @@
+﻿<Window x:Class="StudentManagement.Views.GiamHieu.ThemLopHoc"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        AllowsTransparency="True"
+        Background="White"
+        ResizeMode="NoResize" WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        Title="Thêm lớp học mới" Height="500" Width="800"
+        DataContext="{StaticResource ThemLopVM}"
+        Name="ThemLopWD">
+    <Grid>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Loaded">
+                <i:InvokeCommandAction Command="{Binding LoadData}"
+                                   CommandParameter="{Binding ElementName=ThemLopWD}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="80"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            Text="Thêm lớp học mới"
+            FontSize="32"
+            FontWeight="Bold"
+            Padding="20">
+        </TextBlock>
+        <StackPanel
+            Grid.Row="1"
+            Margin="0 50 0 0">
+            <TextBox
+                materialDesign:HintAssist.Hint="Nhập tên lớp"
+                x:Name="ClassName"
+                HorizontalAlignment="Center"
+                Margin="10 10 10 0"    
+                Width="350"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+            </TextBox>
+            <TextBox
+                materialDesign:HintAssist.Hint="Nhập năm học"
+                x:Name="AcademyYear"
+                HorizontalAlignment="Center"
+                Margin="10 20 10 0"    
+                Width="350"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+            </TextBox>
+            <TextBox
+                materialDesign:HintAssist.Hint="Số lượng học sinh"
+                x:Name="NumberOfStudent"
+                HorizontalAlignment="Center"
+                Margin="10 20 10 0"    
+                Width="350"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+            </TextBox>
+            <ComboBox 
+                materialDesign:HintAssist.Hint="Giáo viên chủ nhiệm"
+                x:Name="cmbFormTeacher"
+                IsEditable="False"
+                Margin="10 20 10 0"    
+                Width="350"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                ItemsSource="{Binding GiaoVienComboBox}"
+                SelectedItem="{Binding SelectedGiaoVien, Mode=TwoWay}">
+            </ComboBox>
+        </StackPanel>
+        <StackPanel 
+            Grid.Row="2"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            >
+            <Button 
+                Content="Xác nhận"
+                Command="{Binding AddClass}">
+                
+            </Button>
+            <Button 
+                Content="Huỷ"
+                Margin="10 0 0 0"
+				Command="{Binding CancelAddClass}">
+                
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

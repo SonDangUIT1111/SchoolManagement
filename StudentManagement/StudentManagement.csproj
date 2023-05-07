@@ -37,6 +37,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=2.1.2.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.1.2\lib\net462\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -73,6 +79,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Converter\BooleanToIsEnabledConverter.cs" />
+    <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
     <Compile Include="Converter\BooleanToScoreStateConverter.cs" />
     <Compile Include="Converter\BooleanToXepLoaiConverter.cs" />
@@ -93,6 +101,14 @@
       <DependentUpon>Title_Bar_Log.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\BaseViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\BaoCaoHocKyViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\BaoCaoMonHocViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\LopHocViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaLopHocViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachGiaoVienViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\MonHocViewModel.cs" />
@@ -114,8 +130,11 @@
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
-    <Compile Include="Views\GiamHieu\BaoCao.xaml.cs">
-      <DependentUpon>BaoCao.xaml</DependentUpon>
+    <Compile Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml.cs">
+      <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiamHieu\BaoCaoMonHoc.xaml.cs">
+      <DependentUpon>BaoCaoMonHoc.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiamHieu\DanhSachLop.xaml.cs">
       <DependentUpon>DanhSachLop.xaml</DependentUpon>
@@ -126,6 +145,8 @@
     <Compile Include="Views\GiamHieu\LopHoc.xaml.cs">
       <DependentUpon>LopHoc.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GiamHieu\SuaThongTinLopHoc.xaml.cs">
+      <DependentUpon>SuaThongTinLopHoc.xaml</DependentUpon>
     <Compile Include="Views\GiamHieu\QuanLiDiemSo.xaml.cs">
       <DependentUpon>QuanLiDiemSo.xaml</DependentUpon>
     <Compile Include="Views\GiamHieu\MonHoc.xaml.cs">
@@ -145,6 +166,8 @@
     <Compile Include="Views\GiamHieu\ThayDoiQuyDinh.xaml.cs">
       <DependentUpon>ThayDoiQuyDinh.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GiamHieu\ThemLopHoc.xaml.cs">
+      <DependentUpon>ThemLopHoc.xaml</DependentUpon>
     <Compile Include="Views\GiamHieu\ThemHocSinhMoi.xaml.cs">
       <DependentUpon>ThemHocSinhMoi.xaml</DependentUpon>
     </Compile>
@@ -177,6 +200,8 @@
     <Compile Include="Views\GiaoVien\LopHoc.xaml.cs">
       <DependentUpon>LopHoc.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GiaoVien\ThanhTichHocSinh.xaml.cs">
+      <DependentUpon>ThanhTichHocSinh.xaml</DependentUpon>
     <Compile Include="Views\GiaoVien\SuaHocSinh.xaml.cs">
       <DependentUpon>SuaHocSinh.xaml</DependentUpon>
     </Compile>
@@ -272,7 +297,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiamHieu\BaoCao.xaml">
+    <Page Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiamHieu\BaoCaoMonHoc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -288,6 +317,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GiamHieu\SuaThongTinLopHoc.xaml">
     <Page Include="Views\GiamHieu\QuanLiDiemSo.xaml">
     <Page Include="Views\GiamHieu\MonHoc.xaml">
       <SubType>Designer</SubType>
@@ -310,6 +340,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GiamHieu\ThemLopHoc.xaml">
     <Page Include="Views\GiamHieu\ThemHocSinhMoi.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -351,6 +382,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GiaoVien\ThanhTichHocSinh.xaml">
     <Page Include="Views\GiaoVien\SuaHocSinh.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
