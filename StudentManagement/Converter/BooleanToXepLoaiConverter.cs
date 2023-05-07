@@ -5,30 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-
 namespace StudentManagement.Converter
 {
-    public class BooleanToGenderConverter:IValueConverter
+    public class BooleanToXepLoaiConverter:IValueConverter
     {
-
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool gender = System.Convert.ToBoolean(value);
-            if (gender == true)
-                return "Nam";
+            bool state = System.Convert.ToBoolean(value);
+            if (state == true)
+                return "Đạt";
             else
-                return "Nữ";
+                return "Chưa đạt";
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value.ToString().ToUpper() == "Nam")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
     }
 }

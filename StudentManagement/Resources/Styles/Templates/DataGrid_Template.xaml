@@ -92,10 +92,11 @@
     </Style>
     <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="Margin" Value="15 0"/>
-        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="0 0"/>
+        <Setter Property="Height" Value="30"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -107,8 +108,10 @@
         </Setter>
     </Style>
     <Style x:Key="DataGridRowStyle1" TargetType="{x:Type DataGridRow}">
-        <Setter Property="Background" Value="#C2E2F5"/>
-        <Setter Property="Margin" Value="0 4 0 0"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="0 10 0 0"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
         <Setter Property="ValidationErrorTemplate">
@@ -121,7 +124,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridRow}">
-                    <Border x:Name="DGR_Border" Padding="0 8" Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="5" SnapsToDevicePixels="True">
+                    <Border x:Name="DGR_Border" Padding="0 8" Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="10" SnapsToDevicePixels="True">
                         <SelectiveScrollingGrid>
                             <SelectiveScrollingGrid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -141,11 +144,11 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#0099FF"/>
-                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="#BFF9FF"/>
+                <Setter Property="Foreground" Value="Black"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#0099FF"/>
+                <Setter Property="Background" Value="#BFF9FF"/>
                 <Setter Property="Foreground" Value="Black"/>
             </Trigger>
             <MultiTrigger>
@@ -153,7 +156,7 @@
                     <Condition Property="IsSelected" Value="True"></Condition>
                     <Condition Property="Selector.IsSelectionActive" Value="False"></Condition>
                 </MultiTrigger.Conditions>
-                <Setter Property="Background" Value="#0099FF"/>
+                <Setter Property="Background" Value="#BFF9FF"/>
                 <Setter Property="Foreground" Value="Black"/>
             </MultiTrigger>
         </Style.Triggers>
