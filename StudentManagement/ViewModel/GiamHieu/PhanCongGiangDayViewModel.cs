@@ -13,45 +13,47 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using PhanCongGiangDay = StudentManagement.Views.GiamHieu.PhanCongGiangDay;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class ThongTinHocSinhViewModel : BaseViewModel
+    public class PhanCongGiangDayViewModel : BaseViewModel
     {
-        public ThongTinHocSinh ThongTinHocSinhWD { get; set; }
+        public PhanCongGiangDay PhanCongGiangDayWD { get; set; }
         public string NienKhoaQueries { get; set; }
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
-        private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachHocSinh;
-        public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachHocSinh { get => _danhSachHocSinh; set { _danhSachHocSinh = value; OnPropertyChanged(); } }
+
+        private ObservableCollection<StudentManagement.Model.PhanCongGiangDay> _danhSachPhanCong;
+        public ObservableCollection<StudentManagement.Model.PhanCongGiangDay> DanhSachPhanCong { get => _danhSachPhanCong; set { _danhSachPhanCong = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
         public ObservableCollection<string> NienKhoaCmb { get => _nienKhoaCmb; set { _nienKhoaCmb = value; OnPropertyChanged(); } }
         private ObservableCollection<StudentManagement.Model.Khoi> _khoiCmb;
         public ObservableCollection<StudentManagement.Model.Khoi> KhoiCmb { get => _khoiCmb; set { _khoiCmb = value; OnPropertyChanged(); } }
         private ObservableCollection<StudentManagement.Model.Lop> _lopCmb;
         public ObservableCollection<StudentManagement.Model.Lop> LopCmb { get => _lopCmb; set { _lopCmb = value; OnPropertyChanged(); } }
-        //public ICommand Test { get; set; }
         public ICommand LoadData { get; set; }
         public ICommand FilterNienKhoa { get; set; }
         public ICommand FilterKhoi { get; set; }
         public ICommand FilterLop { get; set; }
-        public ICommand StudentSearch { get; set; }
-        public ICommand AddStudent { get; set; }
-        public ICommand UpdateStudent { get; set; }
-        public ICommand DeleteStudent { get; set; }
-        public ThongTinHocSinhViewModel()
+        public ICommand UpdatePhanCong { get; set; }
+        public ICommand RemovePhanCong { get; set; }
+        public ICommand AddPhanCong { get; set; }
+        public ICommand SearchPhanCong { get; set; }
+
+        public PhanCongGiangDayViewModel() 
         {
             NienKhoaQueries = "";
             KhoiQueries = "";
             LopQueries = "";
             LoadThongTinCmb();
-            LoadThongTinHocSinh();
+            LoadThongTinPhanCong();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThongTinHocSinhWD = parameter as ThongTinHocSinh;
-                ThongTinHocSinhWD.cmbNienKhoa.SelectedIndex = 0;
-                ThongTinHocSinhWD.cmbKhoi.SelectedIndex = 0;
-                ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                PhanCongGiangDayWD = parameter as PhanCongGiangDay;
+                PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
+                PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
+                PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -63,17 +65,17 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         NienKhoaQueries = item.ToString();
                         FilterLopFromSelection();
-                        if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
-                            LoadThongTinHocSinh();
-                        else DanhSachHocSinh.Clear();
+                        if (PhanCongGiangDayWD.cmbLop.SelectedIndex >= 0)
+                            LoadThongTinPhanCong();
+                        else DanhSachPhanCong.Clear();
                     }
                 }
             });
             FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
-                if (cmb != null) 
-                { 
+                if (cmb != null)
+                {
                     Khoi item = cmb.SelectedItem as Khoi;
                     if (item != null)
                     {
@@ -91,19 +93,40 @@ namespace StudentManagement.ViewModel.GiamHieu
                     if (item != null)
                     {
                         LopQueries = item.MaLop.ToString();
-                        if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
-                            LoadThongTinHocSinh();
-                        else DanhSachHocSinh.Clear();
+                        if (PhanCongGiangDayWD.cmbLop.SelectedIndex >= 0)
+                            LoadThongTinPhanCong();
+                        else DanhSachPhanCong.Clear();
                     }
                 }
             });
-            StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            AddPhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                DanhSachHocSinh.Clear();
+                ThemPhanCong window = new ThemPhanCong();
+                ThemPhanCongViewModel data = window.DataContext as ThemPhanCongViewModel;
+                window.ShowDialog();
+                LoadThongTinPhanCong();
+            });
+            UpdatePhanCong = new RelayCommand<Model.PhanCongGiangDay>((parameter) => { return true; }, (parameter) =>
+            {
+                SuaPhanCong window = new SuaPhanCong();
+                SuaPhanCongViewModel data = window.DataContext as SuaPhanCongViewModel;
+                data.PhanCongHienTai = parameter;
+                window.ShowDialog();
+                LoadThongTinPhanCong(); 
+            });
+            RemovePhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                Model.PhanCongGiangDay item = parameter as Model.PhanCongGiangDay;
+                XoaPhanCong(item);
+                LoadThongTinPhanCong();
+            });
+            SearchPhanCong = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachPhanCong.Clear();
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     con.Open();
-                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
+                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'" + LopQueries + "' and TenMon like N'%" + parameter.Text + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -111,87 +134,20 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         while (reader.Read())
                         {
-                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
-                            student.MaHocSinh = reader.GetInt32(0);
-                            student.TenHocSinh = reader.GetString(1);
-                            student.NgaySinh = reader.GetDateTime(2);
-                            student.GioiTinh = reader.GetBoolean(3);
-                            student.DiaChi = reader.GetString(4);
-                            student.Avatar = (byte[])reader[5];
-                            student.Email = reader.GetString(6);
-                            DanhSachHocSinh.Add(student);
+                            StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
+                            phancong.MaPhanCong = reader.GetInt32(0);
+                            phancong.NienKhoa = reader.GetString(1);
+                            phancong.TenLop = reader.GetString(2);
+                            phancong.SiSo = reader.GetInt32(3);
+                            phancong.TenMon = reader.GetString(4);
+                            phancong.TenGiaoVien = reader.GetString(5);
+                            DanhSachPhanCong.Add(phancong);
                         }
                         reader.NextResult();
                     }
                     con.Close();
                 }
             });
-            AddStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                ThemHocSinhMoi window = new ThemHocSinhMoi();
-                ThemHocSinhMoiViewModel data = window.DataContext as ThemHocSinhMoiViewModel;
-                window.ShowDialog();
-                LoadThongTinHocSinh();
-            });
-            UpdateStudent = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
-            {
-                SuaThongTinHocSinh window = new SuaThongTinHocSinh();
-                SuaThongTinHocSinhViewModel data = window.DataContext as SuaThongTinHocSinhViewModel;
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    con.Open();
-                    string CmdString = "select AnhThe from HocSinh where MaHocSinh = " + parameter.MaHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            parameter.Avatar = (byte[])reader.GetValue(0);
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
-                data.HocSinhHienTai = parameter;
-                window.ShowDialog();
-                LoadThongTinHocSinh();
-            });
-            DeleteStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                Model.HocSinh item = parameter as Model.HocSinh;
-                XoaHocSinh(item);
-                LoadThongTinHocSinh();
-            });
-        }
-        public void LoadThongTinHocSinh()
-        {
-            DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                con.Open();
-                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = "+LopQueries;
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
-                        student.MaHocSinh = reader.GetInt32(0);
-                        student.TenHocSinh = reader.GetString(1);
-                        student.NgaySinh = reader.GetDateTime(2);
-                        student.GioiTinh = reader.GetBoolean(3);
-                        student.DiaChi = reader.GetString(4);
-                        student.Avatar = (byte[])reader[5];
-                        student.Email = reader.GetString(6);
-                        DanhSachHocSinh.Add(student);
-                    }
-                    reader.NextResult();
-                }
-                con.Close();
-            }
         }
         public void LoadThongTinCmb()
         {
@@ -242,7 +198,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 con.Close();
 
                 con.Open();
-                CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries+"' and MaKhoi = " + KhoiQueries;
+                CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
                 cmd = new SqlCommand(CmdString, con);
                 reader = cmd.ExecuteReader();
 
@@ -262,8 +218,34 @@ namespace StudentManagement.ViewModel.GiamHieu
                     reader.NextResult();
                 }
                 con.Close();
-                
-                
+            }
+        }
+        public void LoadThongTinPhanCong()
+        {
+            DanhSachPhanCong = new ObservableCollection<Model.PhanCongGiangDay>();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                con.Open();
+                string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'"+LopQueries+"'";
+                SqlCommand cmd = new SqlCommand(CmdString, con);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
+                        phancong.MaPhanCong = reader.GetInt32(0);
+                        phancong.NienKhoa = reader.GetString(1);
+                        phancong.TenLop = reader.GetString(2);
+                        phancong.SiSo = reader.GetInt32(3);
+                        phancong.TenMon = reader.GetString(4);
+                        phancong.TenGiaoVien = reader.GetString(5);
+                        DanhSachPhanCong.Add(phancong);
+                    }
+                    reader.NextResult();
+                }
+                con.Close();
             }
         }
         public void FilterLopFromSelection()
@@ -291,37 +273,23 @@ namespace StudentManagement.ViewModel.GiamHieu
                 con.Close();
                 if (LopCmb.Count > 0)
                 {
-                    ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                    PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
                 }
                 else
                 {
-                    ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
+                    PhanCongGiangDayWD.cmbLop.SelectedIndex = -1;
                 }
             }
         }
-        public void XoaHocSinh(Model.HocSinh item)
+        public void XoaPhanCong(Model.PhanCongGiangDay item)
         {
-            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa học sinh này không?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
+            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa phân công?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
             if (ConfirmDelete == MessageBoxResult.Yes)
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     con.Open();
                     SqlCommand cmd;
-                    string CmdString = "Delete from HeThongDiem where MaHocSinh = " + item.MaHocSinh;
-                    //MessageBox.Show(CmdString);
-                    cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-
-                    con.Open();
-                    CmdString = "Delete from ThanhTich where MaHocSinh = " + item.MaHocSinh;
-                    //MessageBox.Show(CmdString);
-                    cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-
-                    con.Open();
-                    CmdString = "Delete from HocSinh where MaHocSinh = " + item.MaHocSinh;
+                    string CmdString = "Delete from PhanCongGiangDay where MaPhanCong = " + item.MaPhanCong;
                     //MessageBox.Show(CmdString);
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteNonQuery();

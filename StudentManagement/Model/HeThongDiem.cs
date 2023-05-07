@@ -25,7 +25,7 @@ namespace StudentManagement.Model
         private string _tenMon;
         public string TenMon { get { return _tenMon; } set { _tenMon = value; } }
         private int _maHocSinh;
-        public int MaHocSinh { get { return _maHocSinh; } set { _maHocSinh = value;} }
+        public int MaHocSinh { get { return _maHocSinh; } set { _maHocSinh = value; } }
         private string _tenHocSinh;
         public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
         private float _diem15Phut;

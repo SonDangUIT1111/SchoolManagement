@@ -11,31 +11,37 @@ using StudentManagement.Model;
 using System.Data.SqlClient;
 using StudentManagement.Converter;
 using System.Data;
+using StudentManagement.Views.HocSinh;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class ThemHocSinhMoiViewModel: BaseViewModel
+    public class SuaThongTinHocSinhViewModel : BaseViewModel
     {
-        public ThemHocSinhMoi ThemHocSinhWD { get; set; }
+        public SuaThongTinHocSinh SuaThongTinHocSinhWD { get; set; }
         public string ImagePath { get; set; }
+        private StudentManagement.Model.HocSinh _hocSinhHienTai;
+        public StudentManagement.Model.HocSinh HocSinhHienTai { get => _hocSinhHienTai; set { _hocSinhHienTai = value; OnPropertyChanged(); } }
         public ICommand LoadData { get; set; }
+        public ICommand ConfirmChange { get; set; }
         public ICommand ChangeImage { get; set; }
-        public ICommand CreateStudent { get; set; }
-        public ICommand CancelAdd { get; set; }
-        public ThemHocSinhMoiViewModel()
-        {
-            LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+        public ICommand CancelChange { get; set; }
+        public SuaThongTinHocSinhViewModel() {
+            LoadData = new RelayCommand<SuaThongTinHocSinh>((parameter) => { return true; }, (parameter) =>
             {
-                ThemHocSinhWD = parameter as ThemHocSinhMoi;
-                // set default day
-                int defaultYear = DateTime.Now.Year - 15;
-                DateTime defaultTime = new DateTime(defaultYear, 1, 1);
-                ThemHocSinhWD.NgaySinh.SelectedDate = defaultTime;
-                
+                SuaThongTinHocSinhWD = parameter;
+                //MessageBox.Show(HocSinhHienTai.GioiTinh.ToString());
+                if (HocSinhHienTai.GioiTinh.ToString() == "True")
+                {
+                    SuaThongTinHocSinhWD.Male.IsChecked = true;
+                }
+                else
+                {
+                    SuaThongTinHocSinhWD.Female.IsChecked = true;
+                }
             });
-            CancelAdd = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            CancelChange = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThemHocSinhWD.Close();
+                SuaThongTinHocSinhWD.Close();
 
             });
             ChangeImage = new RelayCommand<Grid>((parameter) => { return true; }, (parameter) =>
@@ -68,25 +74,27 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                 }
             });
-            CreateStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            ConfirmChange = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if(String.IsNullOrEmpty(ThemHocSinhWD.Hoten.Text) || String.IsNullOrEmpty(ThemHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) || 
-                    String.IsNullOrEmpty(ThemHocSinhWD.DiaChi.Text) || String.IsNullOrEmpty(ThemHocSinhWD.Email.Text))
+                if (String.IsNullOrEmpty(SuaThongTinHocSinhWD.HoTen.Text) || String.IsNullOrEmpty(SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) ||
+                    String.IsNullOrEmpty(SuaThongTinHocSinhWD.DiaChi.Text) || String.IsNullOrEmpty(SuaThongTinHocSinhWD.Email.Text))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
-                } else if (!Regex.IsMatch(ThemHocSinhWD.Email.Text, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+                }
+                else if (!Regex.IsMatch(SuaThongTinHocSinhWD.Email.Text, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
                 {
                     MessageBox.Show("Email không hợp lệ, vui lòng nhập lại!");
-                } else
+                }
+                else
                 {
-                    MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn thêm học sinh này không?", "Add Confirmation", System.Windows.MessageBoxButton.YesNo);
+                    MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn sửa thông tin học sinh này không?", "Change Confirmation", System.Windows.MessageBoxButton.YesNo);
                     if (ConfirmAdd == MessageBoxResult.Yes)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
                             con.Open();
-                            string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'" + ThemHocSinhWD.Hoten.Text + "', '" + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', ";
-                            if (ThemHocSinhWD.Male.IsChecked == true)
+                            string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = '" + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', GioiTinh = ";
+                            if (SuaThongTinHocSinhWD.Male.IsChecked == true)
                             {
                                 CmdString += "1, ";
                             }
@@ -94,14 +102,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                             {
                                 CmdString += "0, ";
                             }
-                            CmdString = CmdString + "N'" + ThemHocSinhWD.DiaChi.Text + "', '" + ThemHocSinhWD.Email.Text + "', ";
-
-                            // tạo đệm lưu ảnh avatar
+                            CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
+                            //MessageBox.Show(CmdString);
                             ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                             byte[] buffer = converter.ImageToBinary(ImagePath);
-
-
-                            CmdString += "@imagebinary)";
                             // Định nghĩa @imagebinary
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
@@ -109,10 +113,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                             cmd.ExecuteNonQuery();
                             con.Close();
                         }
-                        MessageBox.Show("Thêm học sinh thành công!");
-                        ThemHocSinhWD.Close();
+                        MessageBox.Show("Sửa thông tin học sinh thành công!");
+                        SuaThongTinHocSinhWD.Close();
                     }
-                    
+
                 }
 
             });
