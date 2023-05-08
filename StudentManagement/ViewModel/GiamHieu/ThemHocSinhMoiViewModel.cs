@@ -1,20 +1,20 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using StudentManagement.Views.GiamHieu;
-using System.Text.RegularExpressions;
-using StudentManagement.Model;
-using System.Data.SqlClient;
 using StudentManagement.Converter;
+using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
+using System;
 using System.Data;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class ThemHocSinhMoiViewModel: BaseViewModel
+    public class ThemHocSinhMoiViewModel : BaseViewModel
     {
         public ThemHocSinhMoi ThemHocSinhWD { get; set; }
         public string ImagePath { get; set; }
@@ -31,7 +31,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 int defaultYear = DateTime.Now.Year - 15;
                 DateTime defaultTime = new DateTime(defaultYear, 1, 1);
                 ThemHocSinhWD.NgaySinh.SelectedDate = defaultTime;
-                
+
             });
             CancelAdd = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -70,21 +70,32 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             CreateStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if(String.IsNullOrEmpty(ThemHocSinhWD.Hoten.Text) || String.IsNullOrEmpty(ThemHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) || 
+                if (String.IsNullOrEmpty(ThemHocSinhWD.Hoten.Text) || String.IsNullOrEmpty(ThemHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) ||
                     String.IsNullOrEmpty(ThemHocSinhWD.DiaChi.Text) || String.IsNullOrEmpty(ThemHocSinhWD.Email.Text))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
-                } else if (!Regex.IsMatch(ThemHocSinhWD.Email.Text, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+                }
+                else if (!Regex.IsMatch(ThemHocSinhWD.Email.Text, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
                 {
                     MessageBox.Show("Email không hợp lệ, vui lòng nhập lại!");
-                } else
+                }
+                else
                 {
                     MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn thêm học sinh này không?", "Add Confirmation", System.Windows.MessageBoxButton.YesNo);
                     if (ConfirmAdd == MessageBoxResult.Yes)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            con.Open();
+                            try
+                            {
+                                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return;
+                            }
                             string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'" + ThemHocSinhWD.Hoten.Text + "', '" + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + ThemHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', ";
                             if (ThemHocSinhWD.Male.IsChecked == true)
                             {
@@ -112,7 +123,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MessageBox.Show("Thêm học sinh thành công!");
                         ThemHocSinhWD.Close();
                     }
-                    
+
                 }
 
             });

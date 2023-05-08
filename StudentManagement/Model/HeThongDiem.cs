@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StudentManagement.Model
+﻿namespace StudentManagement.Model
 {
     public class HeThongDiem
     {
@@ -35,9 +29,9 @@ namespace StudentManagement.Model
         private decimal _diemTB;
         public decimal DiemTB { get { return _diemTB; } set { _diemTB = value; } }
         private bool _xepLoai;
-        public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value;} }
+        public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value; } }
         private bool _trangThai;
-        public bool TrangThai { get { return _trangThai; } set { _trangThai = value;} }
+        public bool TrangThai { get { return _trangThai; } set { _trangThai = value; } }
 
     }
 }

@@ -1,20 +1,15 @@
 ﻿using Microsoft.Win32;
+using StudentManagement.Converter;
+using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using StudentManagement.Model;
-using System.Data.SqlClient;
-using System.Text.RegularExpressions;
-using StudentManagement.Converter;
-using System.Runtime.Remoting.Messaging;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -40,7 +35,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 SuaGiaoVienWD = parameter;
             });
-            
+
             CancelCommand = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 SuaGiaoVienWD.Close();
@@ -112,12 +107,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        con.Open();
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
 
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                         return;
                     }
                     string CmdString = "Update GiaoVien set TenGiaoVien = N\'" + SuaGiaoVienWD.TenGV.Text +
@@ -135,7 +130,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         //MessageBox.Show(ImagePath);
                         ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                         byte[] buffer = converter.ImageToBinary(ImagePath);
-                        con.Open();
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                         string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
                         cmd = new SqlCommand(cmdstring, con);
                         cmd.Parameters.AddWithValue("@image", buffer);

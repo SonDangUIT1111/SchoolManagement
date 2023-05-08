@@ -13,8 +13,8 @@
       TextOptions.TextRenderingMode="Auto"
       FontFamily="{DynamicResource MaterialDesignFont}"
       mc:Ignorable="d" 
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Background="#FFECECEC"
       Title="MonHoc"
       Name="MonHocWD"
@@ -65,18 +65,6 @@
                 <TextBlock Text="Danh sách môn học" 
                            Margin="25" 
                            FontSize="30"/>
-                <Button x:Name="btnThemMonHoc" 
-                        Style="{StaticResource InteractiveButton}"
-                        Width="160" 
-                        Height="50" 
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Margin="25"
-                        Content="Thêm Học Sinh" 
-                        FontSize="18" 
-                        FontWeight="Bold"
-                        Command="{Binding AddSubject}">
-                </Button>
                 <StackPanel Orientation="Horizontal" 
                             Margin="0 80 0 0">
 
@@ -101,59 +89,94 @@
                     <TextBox x:Name="txtTenMH"
                              materialDesign:HintAssist.Hint="Nhập tên môn học"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             Width="350"
+                             Width="400"
                              Height="40"
                              Padding="10"
-                             Margin="47 0 0 0"
+                             Margin="50 0 0 0"
                              IsEnabled="False"/>
-                    <Button x:Name="btnXacNhan" 
-                        Style="{StaticResource InteractiveButton}"
-                        Width="160" 
-                        Height="40" 
-                        Margin="25 0 0 0"
-                        Content="Xác nhận" 
-                        FontSize="18" 
-                        FontWeight="Bold"
-                        Command="{Binding AddConfirm}"
-                        CommandParameter="{Binding ElementName=txtTenMH}"
-                        IsEnabled="False">
+                    <Button x:Name="btnThemMonHoc"
+                            Margin="25 0 0 0"
+                            Background="Transparent"
+                            BorderBrush="#1ED760"
+                            IsDefault="True"
+                            Command="{Binding  AddSubject}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="Plus" />
+                    </Button>
+                    <Button x:Name="btnXacNhan"
+                            Margin="-40 0 0 0"
+                            Visibility="Hidden"
+                            Background="Transparent"
+                            BorderBrush="#1ED760"
+                            IsDefault="True"
+                            Command="{Binding AddConfirm}"
+                            CommandParameter="{Binding ElementName=txtTenMH}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="Check" />
                     </Button>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
+                          Margin="25 0 50 0"
+                          Width="450"
+                          HorizontalAlignment="Right"
+                          BorderThickness="0"
                           RowStyle="{StaticResource DataGridRowStyle1}"
                           CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
                           ItemsSource="{Binding DanhSachMonHoc}"
                           SelectedItem="{Binding GridSelectedItem}">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="1010">
+                        <DataGridTemplateColumn Width="450">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock x:Name="tbMonHoc"
-                                                   Margin="20 0 0 0"
-                                                   FontSize="14"
-                                                   Text="{Binding TenMon}"
-                                                   VerticalAlignment="Center"
-                                                   Width="200">
-                                        </TextBlock>
-                                        <Button x:Name="btnXoaMH" 
-                                                Style="{StaticResource InteractiveButton}"
-                                                Width="160" 
-                                                Height="40" 
-                                                Margin="25 0 0 0"
-                                                Content="Xóa" 
-                                                FontSize="18" 
-                                                FontWeight="Bold"
+                                        <TextBox 
+                                                x:Name="tbMonHoc"
+                                                Margin="20 0 0 0"
+                                                FontSize="14"
+                                                Text="{Binding TenMon}"
+                                                VerticalAlignment="Center"
+                                                TextAlignment="Center"
+                                                Width="300">
+                                        </TextBox>
+                                        <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                Background="#FF47D440"
+                                                Foreground="White"
+                                                BorderBrush="Transparent"
+                                                Width="30"
+                                                Height="30"
+                                                Padding="0"
+                                                Margin="20 0 0 0"
+                                                Command="{Binding DataContext.EditSubject, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                CommandParameter="{Binding ElementName=tbMonHoc}"/>
+                                        <Button x:Name="btnXoaMH"
+                                                Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                                Background="#FFF65D5D"
+                                                Foreground="White"
+                                                BorderBrush="Transparent"
+                                                Width="30"
+                                                Height="30"
+                                                Padding="0"
+                                                Margin="10,0,0,0"
                                                 Command="{Binding DataContext.DeleteSubject, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                                CommandParameter="{Binding ElementName=tbMonHoc}">
-                                         </Button>
+                                                CommandParameter="{Binding ElementName=tbMonHoc}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+                <materialDesign:Snackbar x:Name="Snackbar"
+                                         MessageQueue="{materialDesign:MessageQueue}"
+                                         VerticalAlignment="Bottom"
+                                         Grid.Row="2">
+                    <materialDesign:SnackbarMessage ActionContent="Hoàn tác"
+                                                    Content="Đổi tên môn thành công" />
+                </materialDesign:Snackbar>
             </Grid>
         </Border>
 

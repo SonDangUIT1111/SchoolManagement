@@ -1,20 +1,15 @@
 ﻿using Microsoft.Win32;
-using StudentManagement.Views.GiamHieu;
-using StudentManagement.Views.GiaoVien;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using StudentManagement.Converter;
 using StudentManagement.Model;
+using StudentManagement.Views.GiaoVien;
+using System;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
@@ -29,7 +24,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand LoadWindow { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand ChangeHocSinh { get; set; }
-        public SuaHocSinhViewModel() 
+        public SuaHocSinhViewModel()
         {
             HocSinhHienTai = new StudentManagement.Model.HocSinh { };
             LoadWindow = new RelayCommand<SuaHocSinh>((parameter) => { return true; }, (parameter) =>
@@ -107,7 +102,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     try
                     {
-                        con.Open();
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
 
                     }
                     catch (Exception)
@@ -130,7 +125,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         //MessageBox.Show(ImagePath);
                         ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                         byte[] buffer = converter.ImageToBinary(ImagePath);
-                        con.Open();
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                         string cmdstring = "update HocSinh set AnhThe = @image where MaHocSinh = " + HocSinhHienTai.MaHocSinh.ToString();
                         cmd = new SqlCommand(cmdstring, con);
                         cmd.Parameters.AddWithValue("@image", buffer);

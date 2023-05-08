@@ -13,7 +13,7 @@
       Title="LopHoc"
       Name="LopHocWD"
       Background="#FFECECEC"
-      DataContext="{StaticResource LopHocVM}">
+      DataContext="{StaticResource LopHocGVVM}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"

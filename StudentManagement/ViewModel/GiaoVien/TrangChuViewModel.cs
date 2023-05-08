@@ -2,20 +2,15 @@
 using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
-using StudentManagement.Views.HocSinh;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
-    internal class TrangChuViewModel:BaseViewModel
+    internal class TrangChuViewModel : BaseViewModel
     {
         //declare variable
         private int _idGiaoVien;
@@ -78,7 +73,7 @@ namespace StudentManagement.ViewModel.GiaoVien
 
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                     string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email from GiaoVien where MaGiaoVien = " + IdGiaoVien;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -86,20 +81,21 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         while (reader.Read())
                         {
-                            Model.GiaoVien teacher = new Model.GiaoVien() {
-                            MaGiaoVien = IdGiaoVien,
-                            TenGiaoVien = TenGiaoVien,
-                            NgaySinh = reader.GetDateTime(0),
-                            GioiTinh = reader.GetBoolean(1),
-                            DiaChi = reader.GetString(2),
-                            Email = reader.GetString(3),
-                            Avatar = Avatar
-                        };
-                        SuaGiaoVien window = new SuaGiaoVien();
-                        SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
-                        data.GiaoVienHienTai = teacher;
-                        window.ShowDialog();
-                        LoadThongTinCaNhan();
+                            Model.GiaoVien teacher = new Model.GiaoVien()
+                            {
+                                MaGiaoVien = IdGiaoVien,
+                                TenGiaoVien = TenGiaoVien,
+                                NgaySinh = reader.GetDateTime(0),
+                                GioiTinh = reader.GetBoolean(1),
+                                DiaChi = reader.GetString(2),
+                                Email = reader.GetString(3),
+                                Avatar = Avatar
+                            };
+                            SuaGiaoVien window = new SuaGiaoVien();
+                            SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
+                            data.GiaoVienHienTai = teacher;
+                            window.ShowDialog();
+                            LoadThongTinCaNhan();
                         }
                         reader.NextResult();
                     }
@@ -112,12 +108,12 @@ namespace StudentManagement.ViewModel.GiaoVien
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                 string CmdString = "select TenGiaoVien,AnhThe from GiaoVien where MaGiaoVien = " + IdGiaoVien.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.HasRows) reader.Read();
-                TenGiaoVien= reader.GetString(0);
+                TenGiaoVien = reader.GetString(0);
                 Avatar = (byte[])reader.GetValue(1);
                 con.Close();
             }

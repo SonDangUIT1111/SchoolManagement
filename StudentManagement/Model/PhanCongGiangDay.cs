@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace StudentManagement.Model
+﻿namespace StudentManagement.Model
 {
     public class PhanCongGiangDay
     {
@@ -17,7 +11,7 @@ namespace StudentManagement.Model
         private string _tenLop;
         public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
         private int _siSo;
-        public int SiSo { get { return _siSo; } set { _siSo = value;} }
+        public int SiSo { get { return _siSo; } set { _siSo = value; } }
         private int _maMon;
         public int MaMon { get { return _maMon; } set { _maMon = value; } }
         private string _tenMon;
@@ -25,7 +19,7 @@ namespace StudentManagement.Model
         private int _maGiaoVienPhuTrach;
         public int MaGiaoVienPhuTrach { get { return _maGiaoVienPhuTrach; } set { _maGiaoVienPhuTrach = value; } }
         private string _tenGiaoVien;
-        public string TenGiaoVien { get { return _tenGiaoVien; } set { _tenGiaoVien = value; } } 
+        public string TenGiaoVien { get { return _tenGiaoVien; } set { _tenGiaoVien = value; } }
 
 
     }

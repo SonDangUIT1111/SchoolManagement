@@ -1,16 +1,10 @@
-﻿using StudentManagement.Model;
-using StudentManagement.Views.GiamHieu;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StudentManagement.Views.GiamHieu;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class TrangChuViewModel:BaseViewModel
+    public class TrangChuViewModel : BaseViewModel
     {
         //declare variable
 
@@ -24,6 +18,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ThongTinGiaoVien ThongTinGiaoVienPage { get; set; }
         public ThongTinHocSinh ThongTinHocSinhPage { get; set; }
         public ThongTinTruong ThongTinTruongPage { get; set; }
+        public QuanLiDiemSo QuanLiDiemSoPage { get; set; }
 
 
         //declare ICommand
@@ -33,6 +28,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand SwitchThongTinTruong { get; set; }
         public ICommand SwitchBaoCao { get; set; }
         public ICommand SwitchThayDoiQuyDinh { get; set; }
+        public ICommand SwitchQuanLyBangDiem { get; set; }
 
 
         public TrangChuViewModel()
@@ -43,6 +39,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             ThongTinGiaoVienPage = new ThongTinGiaoVien();
             ThongTinHocSinhPage = new ThongTinHocSinh();
             ThongTinTruongPage = new ThongTinTruong();
+            QuanLiDiemSoPage = new QuanLiDiemSo();
 
             //define ICommand
             SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
@@ -68,6 +65,10 @@ namespace StudentManagement.ViewModel.GiamHieu
             SwitchThayDoiQuyDinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = ThayDoiQuyDinhPage;
+            });
+            SwitchQuanLyBangDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = QuanLiDiemSoPage;
             });
 
         }

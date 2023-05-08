@@ -6,10 +6,11 @@
         xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1440"
+        Title="MainWindow" Height="800" Width="1300"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" 
         WindowStyle="None"
+        ResizeMode="NoResize"
         Background="Transparent"
         DataContext="{StaticResource TrangChuVM}">
     <Window.Resources>
@@ -25,11 +26,11 @@
         </Style>
     </Window.Resources>
     <Window.Clip>
-        <RectangleGeometry Rect="0,0,1443,790" RadiusX="25" RadiusY="25"/>
+        <RectangleGeometry Rect="0,0,1300,800" RadiusX="25" RadiusY="25"/>
     </Window.Clip>
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="282"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -84,7 +85,9 @@
                 BorderThickness="0"
                 Margin="30,5,0,5" 
                 Grid.ColumnSpan="2" 
-                HorizontalAlignment="Left">
+                HorizontalAlignment="Left"
+                Command="{Binding SwitchThongTinTruong}"
+                CommandParameter="{Binding ElementName=RPage}">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="20"></Setter>
@@ -236,7 +239,7 @@
                 Margin="30,5,0,5" 
                 Grid.ColumnSpan="2" 
                 HorizontalAlignment="Left"
-                Command="{Binding SwitchThongTinTruong}"
+                Command="{Binding SwitchQuanLyBangDiem}"
                 CommandParameter="{Binding ElementName=RPage}">
                 <Button.Resources>
                     <Style TargetType="Border">
@@ -244,7 +247,7 @@
                     </Style>
                 </Button.Resources>
                 <Grid>
-                    <TextBlock Text="Thông tin trường   " 
+                    <TextBlock Text="Quản lý bảng điểm" 
                                HorizontalAlignment="Left" 
                                Margin="20,0,0,0" 
                                FontSize="20"/>

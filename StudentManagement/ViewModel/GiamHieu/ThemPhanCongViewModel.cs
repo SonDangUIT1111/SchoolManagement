@@ -1,21 +1,15 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
+﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
-using System.Text.RegularExpressions;
-using StudentManagement.Model;
-using System.Data.SqlClient;
-using StudentManagement.Converter;
-using System.Data;
+using System;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class ThemPhanCongViewModel:BaseViewModel
+    public class ThemPhanCongViewModel : BaseViewModel
     {
         public ThemPhanCong ThemPhanCongWD { get; set; }
         public string NienKhoaQueries { get; set; }
@@ -39,7 +33,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand AddPhanCong { get; set; }
         public ICommand HuyThemPC { get; set; }
 
-        public ThemPhanCongViewModel() {
+        public ThemPhanCongViewModel()
+        {
             LoadThongTinCmb();
             LoadOptionFromSelection();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -102,14 +97,25 @@ namespace StudentManagement.ViewModel.GiamHieu
                 if (monhoc == null)
                 {
                     MessageBox.Show("Vui lòng chọn môn học!");
-                } else if (giaovien==null)
+                }
+                else if (giaovien == null)
                 {
                     MessageBox.Show("Vui lòng chọn giáo viên giảng dạy!");
-                } else
+                }
+                else
                 {
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
+                        try
+                        {
+                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
                         string CmdString = "insert into PhanCongGiangDay(NienKhoa,MaLop,TenLop,SiSo,MaMon,TenMon,MaGiaoVienPhuTrach,TenGiaoVien) values (N'" + nienkhoa + "'," + lop.MaLop + ",N'" + lop.TenLop + "'," + lop.SiSo + "," + monhoc.MaMon + ",N'" + monhoc.TenMon + "'," + giaovien.MaGiaoVien + ",N'" + giaovien.TenGiaoVien + "')";
                         //MessageBox.Show(CmdString);
                         SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -132,7 +138,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 string CmdString = "select distinct NienKhoa from Lop";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -151,7 +166,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
 
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 CmdString = "select distinct MaKhoi,Khoi from Khoi";
                 cmd = new SqlCommand(CmdString, con);
                 reader = cmd.ExecuteReader();
@@ -173,7 +197,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
 
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
                 cmd = new SqlCommand(CmdString, con);
                 reader = cmd.ExecuteReader();
@@ -199,13 +232,22 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
         public void LoadOptionFromSelection()
-        { 
+        {
             MonHocCmb = new ObservableCollection<StudentManagement.Model.MonHoc>();
             GiaoVienCmb = new ObservableCollection<StudentManagement.Model.GiaoVien>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select * from MonHoc where TenMon not in (select TenMon from PhanCongGiangDay where MaLop="+LopQueries+")";
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
+                string CmdString = "select * from MonHoc where TenMon not in (select TenMon from PhanCongGiangDay where MaLop=" + LopQueries + ")";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)
@@ -223,7 +265,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 string CmdString = "select MaGiaoVien, TenGiaoVien from GiaoVien";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -246,7 +297,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             LopCmb.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 string CmdString = "select Malop, TenLop, SiSo from Lop where MaKhoi = " + KhoiQueries + " and NienKhoa = '" + NienKhoaQueries + "'";
                 //MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);

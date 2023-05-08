@@ -1,17 +1,16 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using StudentManagement.Views.GiamHieu;
-using System.Text.RegularExpressions;
-using StudentManagement.Model;
-using System.Data.SqlClient;
 using StudentManagement.Converter;
+using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
+using System;
 using System.Data;
-using StudentManagement.Views.HocSinh;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -25,7 +24,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ConfirmChange { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand CancelChange { get; set; }
-        public SuaThongTinHocSinhViewModel() {
+        public SuaThongTinHocSinhViewModel()
+        {
             LoadData = new RelayCommand<SuaThongTinHocSinh>((parameter) => { return true; }, (parameter) =>
             {
                 SuaThongTinHocSinhWD = parameter;
@@ -92,7 +92,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            con.Open();
+                            try
+                            {
+                                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền");
+                            }
                             string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = '" + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', GioiTinh = ";
                             if (SuaThongTinHocSinhWD.Male.IsChecked == true)
                             {

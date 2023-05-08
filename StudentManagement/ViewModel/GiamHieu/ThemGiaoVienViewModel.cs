@@ -1,24 +1,17 @@
-﻿using StudentManagement.Model;
+﻿using Microsoft.Win32;
+using StudentManagement.Converter;
+using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Net.Mail;
 using System.Net;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Win32;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using StudentManagement.Converter;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 //using System.Drawing.Image;
 
 namespace StudentManagement.ViewModel.GiamHieu
@@ -81,8 +74,9 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         }
 
-        public string ToShortDateTime(string st) {
-            string Converted_String="";
+        public string ToShortDateTime(string st)
+        {
+            string Converted_String = "";
             for (int i = 0; i < st.Length; i++)
             {
                 if (st[i] == '/')
@@ -151,12 +145,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        con.Open();
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
 
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                         return;
                     }
                     string CmdString = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (\'" +
@@ -174,7 +168,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     string MatKhau = rnd.Next(100000, 999999).ToString();
                     string TaiKhoan = "gv";
 
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    }
                     CmdString = "select top 1 * from GiaoVien order by MaGiaoVien desc";
                     cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -194,7 +195,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     con.Close();
 
                     //Update tai khoan va mat khau
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    }
                     CmdString = "Update GiaoVien set Username = \'" + TaiKhoan + "\', UserPassword = \'" + MatKhau + "\' where MaGiaoVien =" + MaSo.ToString();
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
@@ -204,14 +212,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                     //Update anh dai dien
                     ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                     byte[] buffer = converter.ImageToBinary(ImagePath);
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    }
                     string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + MaSo.ToString();
                     cmd = new SqlCommand(cmdstring, con);
                     cmd.Parameters.AddWithValue("@image", buffer);
                     cmd.ExecuteScalar();
                     con.Close();
 
-                    MessageBox.Show("Thêm giáo viên thành công! (" + MaSo.ToString()+")");
+                    MessageBox.Show("Thêm giáo viên thành công! (" + MaSo.ToString() + ")");
                 }
             }
         }

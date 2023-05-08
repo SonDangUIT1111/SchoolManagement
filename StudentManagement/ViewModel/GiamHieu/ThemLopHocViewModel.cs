@@ -1,12 +1,8 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -34,7 +30,8 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public string SelectedGiaoVien
         {
-            get { return selectedGiaoVien; } set
+            get { return selectedGiaoVien; }
+            set
             {
                 if (selectedGiaoVien != value)
                 {
@@ -48,8 +45,18 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string cmdString = "SELECT MaGiaoVien FROM GiaoVien WHERE TenGiaoVien = '"+ selectedGiaoVien + "'";
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
+
+                string cmdString = "SELECT MaGiaoVien FROM GiaoVien WHERE TenGiaoVien = '" + selectedGiaoVien + "'";
                 SqlCommand cmd = new SqlCommand(cmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)
@@ -80,39 +87,49 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             AddClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.NumberOfStudent.Text) || String.IsNullOrEmpty(ThemLopHocWD.AcademyYear.Text) || String.IsNullOrEmpty(selectedGiaoVien)){
+                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.NumberOfStudent.Text) || String.IsNullOrEmpty(ThemLopHocWD.AcademyYear.Text) || String.IsNullOrEmpty(selectedGiaoVien))
+                {
                     MessageBox.Show("Nhập đầy đủ thông tin");
                 }
                 else using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    con.Open();
-
-
-
-                    string cmdString = "INSERT INTO Lop(TenLop, SiSo, NienKhoa, MaKhoi, Khoi, MaGVCN, TenGVCN) VALUES ('" + ThemLopHocWD.ClassName.Text + "', '" + ThemLopHocWD.NumberOfStudent.Text + "', '" + ThemLopHocWD.AcademyYear.Text + "'";
-
-                    switch (ThemLopHocWD.ClassName.Text.Substring(0, 2))
                     {
-                        case "10":
-                            MaKhoi = 1;
-                            Khoi = 10;
-                            break;
-                        case "11":
-                            MaKhoi = 2;
-                            Khoi = 11;
-                            break;
-                        case "12":
-                            MaKhoi = 3;
-                            Khoi = 12;
-                            break;
-                    }
+                        try
+                        {
+                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
 
-                    cmdString = cmdString + ", '" + MaKhoi + "', '" + Khoi + "','" + MaGiaoVien + "', '" + selectedGiaoVien + "')";
-                    SqlCommand cmd = new SqlCommand(cmdString, con);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    MessageBox.Show("Thêm lớp học thành công");
-                    ThemLopHocWD.Close();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
+
+
+
+                        string cmdString = "INSERT INTO Lop(TenLop, SiSo, NienKhoa, MaKhoi, Khoi, MaGVCN, TenGVCN) VALUES ('" + ThemLopHocWD.ClassName.Text + "', '" + ThemLopHocWD.NumberOfStudent.Text + "', '" + ThemLopHocWD.AcademyYear.Text + "'";
+
+                        switch (ThemLopHocWD.ClassName.Text.Substring(0, 2))
+                        {
+                            case "10":
+                                MaKhoi = 1;
+                                Khoi = 10;
+                                break;
+                            case "11":
+                                MaKhoi = 2;
+                                Khoi = 11;
+                                break;
+                            case "12":
+                                MaKhoi = 3;
+                                Khoi = 12;
+                                break;
+                        }
+
+                        cmdString = cmdString + ", '" + MaKhoi + "', '" + Khoi + "','" + MaGiaoVien + "', '" + selectedGiaoVien + "')";
+                        SqlCommand cmd = new SqlCommand(cmdString, con);
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                        MessageBox.Show("Thêm lớp học thành công");
+                        ThemLopHocWD.Close();
                     }
             });
 
@@ -127,7 +144,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             GiaoVienComboBox = new ObservableCollection<string>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                };
                 string cmdString = "SELECT DISTINCT TenGiaoVien FROM GiaoVien WHERE TenGiaoVien NOT IN (SELECT DISTINCT TenGVCN FROM Lop)";
                 SqlCommand cmd = new SqlCommand(cmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -144,7 +170,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     reader.NextResult();
                 }
                 con.Close();
-            }    
+            }
         }
     }
 }

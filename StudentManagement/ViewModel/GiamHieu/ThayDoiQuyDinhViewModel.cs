@@ -1,22 +1,15 @@
-﻿using Microsoft.Win32;
-using StudentManagement.Model;
+﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class ThayDoiQuyDinhViewModel: BaseViewModel
+    public class ThayDoiQuyDinhViewModel : BaseViewModel
     {
         public ThayDoiQuyDinh ThayDoiQuyDinhWD { get; set; }
         public string QuyDinhQueries { get; set; }
@@ -73,7 +66,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            con.Open();
+                            try
+                            {
+                                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            }
                             string CmdString = "update QuiDinh SET GiaTri =" + value + " where TenQuiDinh = N'" + tenqd + "'";
                             //MessageBox.Show(CmdString);
                             SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -82,12 +82,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
                         MessageBox.Show("Thay đổi thành công!");
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("Giá trị không được rỗng và phải là một số nguyên!");
                     }
 
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Hãy chọn quy định trước!");
                 }
@@ -99,7 +101,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             DanhSachQuyDinh = new ObservableCollection<StudentManagement.Model.QuiDinh>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                }
                 string CmdString = "select * from QuiDinh";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -123,8 +132,12 @@ namespace StudentManagement.ViewModel.GiamHieu
             QuiDinh item = new QuiDinh();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries +"'";
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                }
+                catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); }
+                string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries + "'";
                 //MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -140,8 +153,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
             }
-            ThayDoiQuyDinhWD.tbGiaTri.Text= item.GiaTri.ToString();
+            ThayDoiQuyDinhWD.tbGiaTri.Text = item.GiaTri.ToString();
         }
     }
-    
+
 }

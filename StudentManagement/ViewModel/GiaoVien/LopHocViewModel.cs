@@ -1,12 +1,8 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.GiaoVien;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,7 +19,7 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachhs;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachhs { get => _danhSachhs; set { _danhSachhs = value; OnPropertyChanged(); } }
-        
+
         private ObservableCollection<String> _danhsachkhoi;
         public ObservableCollection<String> DanhSachKhoi { get => _danhsachkhoi; set { _danhsachkhoi = value; OnPropertyChanged(); } }
 
@@ -50,7 +46,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 TextBox tb = parameter;
             });
             LoadKhoa = new RelayCommand<String>((parameter) => { return true; }, (parameter) =>
-            { 
+            {
                 LoadDanhSachNienKhoa();
             });
             LoadLop = new RelayCommand<String>((parameter) => { return true; }, (parameter) =>
@@ -61,46 +57,46 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 LoadDanhSachHocSinh();
             });
-            UpdateHocSinh= new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
-            {
-                if (!IsGiaoVienChuNhiem(parameter.MaHocSinh.ToString()))
-                {
-                    MessageBox.Show("Bạn không thể chỉnh sửa đối tượng này");
-                    return;
-                }
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    con.Open();
-                    string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + parameter.MaHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+            UpdateHocSinh = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
+             {
+                 if (!IsGiaoVienChuNhiem(parameter.MaHocSinh.ToString()))
+                 {
+                     MessageBox.Show("Bạn không thể chỉnh sửa đối tượng này");
+                     return;
+                 }
+                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                 {
+                     try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                     string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + parameter.MaHocSinh.ToString();
+                     SqlCommand cmd = new SqlCommand(CmdString, con);
+                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh()
-                            {
-                            MaHocSinh = parameter.MaHocSinh,
-                            TenHocSinh = parameter.TenHocSinh,
-                            NgaySinh = reader.GetDateTime(0),
-                            GioiTinh = reader.GetBoolean(1),
-                            DiaChi = reader.GetString(2),
-                            Email = reader.GetString(3),
-                            Avatar = (byte[])reader.GetValue(4)
-                            };
-                            SuaHocSinh window = new SuaHocSinh();
-                            SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
-                            data.HocSinhHienTai = student;
-                            window.ShowDialog();
-                            LoadDanhSachHocSinh();
-                        }
-                        reader.NextResult();
-                    }
-   
-                    con.Close();
-                }
-            });
+                     while (reader.HasRows)
+                     {
+                         while (reader.Read())
+                         {
+                             StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh()
+                             {
+                                 MaHocSinh = parameter.MaHocSinh,
+                                 TenHocSinh = parameter.TenHocSinh,
+                                 NgaySinh = reader.GetDateTime(0),
+                                 GioiTinh = reader.GetBoolean(1),
+                                 DiaChi = reader.GetString(2),
+                                 Email = reader.GetString(3),
+                                 Avatar = (byte[])reader.GetValue(4)
+                             };
+                             SuaHocSinh window = new SuaHocSinh();
+                             SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
+                             data.HocSinhHienTai = student;
+                             window.ShowDialog();
+                             LoadDanhSachHocSinh();
+                         }
+                         reader.NextResult();
+                     }
+
+                     con.Close();
+                 }
+             });
             //LoadDanhSachHocSinh();
             LoadDanhSachKhoi();
             //LoadDanhSachLop();
@@ -110,7 +106,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             int IdGVCN;
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return false; }
                 string CmdString = "select MaGVCN from HocSinh,Lop where HocSinh.MaLop = Lop.MaLop and MaHocSinh = " + ID;
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -127,7 +123,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             DanhSachhs = new ObservableCollection<Model.HocSinh>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                 //string CmdString = "select MaHocSinh,TenHocSinh from HocSinh where MaLop = '100'";
                 string CmdString = "select MaHocSinh,TenHocSinh from HocSinh where MaLop = \'" + LopDaChon.MaLop.ToString() + "\'";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -152,7 +148,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             DanhSachKhoi = new ObservableCollection<String>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                 string CmdString = "select Khoi from Khoi";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -169,7 +165,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 con.Close();
             }
             if (DanhSachhs != null) DanhSachhs.Clear();
-            
+
         }
         public void LoadDanhSachNienKhoa()
         {
@@ -178,7 +174,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             DanhSachNienKhoa = new ObservableCollection<String>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                 string CmdString = "Select distinct NienKhoa from Lop where Khoi = \'" + LopHocWD.ChonKhoi.SelectedItem.ToString() + "\'";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -203,8 +199,8 @@ namespace StudentManagement.ViewModel.GiaoVien
             DanhSachLop = new ObservableCollection<StudentManagement.Model.Lop>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select MaLop,TenLop from Lop where Khoi = \'" + LopHocWD.ChonKhoi.SelectedItem.ToString() + 
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                string CmdString = "select MaLop,TenLop from Lop where Khoi = \'" + LopHocWD.ChonKhoi.SelectedItem.ToString() +
                     "\' and NienKhoa = \'" + LopHocWD.ChonKhoa.SelectedItem.ToString() + "\'";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -213,10 +209,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     while (reader.Read())
                     {
-                        StudentManagement.Model.Lop lop= new StudentManagement.Model.Lop();
+                        StudentManagement.Model.Lop lop = new StudentManagement.Model.Lop();
                         lop.MaLop = reader.GetInt32(0);
                         lop.TenLop = reader.GetString(1);
-                        
+
                         DanhSachLop.Add(lop);
                     }
                     reader.NextResult();

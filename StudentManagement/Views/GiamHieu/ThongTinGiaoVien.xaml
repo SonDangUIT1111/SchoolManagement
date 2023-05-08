@@ -6,8 +6,8 @@
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Title="ThongTinGiaoVien"
       DataContext="{StaticResource DanhSachGiaoVienVM}"
       Background="#FFECECEC">
@@ -46,7 +46,7 @@
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="30" Grid.Row="1" Background="White" Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="160"/>
+                    <RowDefinition Height="140"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Danh sách giáo viên" 
@@ -66,7 +66,7 @@
                         Command="{Binding ThemGiaoVien}">
                 </Button>
                 <StackPanel Orientation="Horizontal"
-                            Margin="0 100 0 0"
+                            Margin="0 80 0 0"
                             VerticalAlignment="Top">
                     <TextBox materialDesign:HintAssist.Hint="Search ..."
                              x:Name="tbSearch"
@@ -88,66 +88,94 @@
                                                  Kind="Magnify" />
                     </Button>
                 </StackPanel>
-                <ScrollViewer Grid.Row="1"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled"
-                              Style="{StaticResource FavsScrollViewer}">
-                    <DataGrid Margin="25,0,25,10"
-                              ItemsSource="{Binding DanhSachGiaoVien}"
-                              Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="1010">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal"
-                                                    Width="980"
-                                                    HorizontalAlignment="Left">
-                                            <Border CornerRadius="10"
-                                                Height="40"
-                                                Width="40">
-                                                <Border.Background>
-                                                    <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
-                                                </Border.Background>
-                                            </Border>
-                                            <TextBlock VerticalAlignment="Center"
+                <StackPanel Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Họ và tên"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="85 0 0 0"/>
+                        <TextBlock Text="Ngày sinh"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="160 0 0 0"/>
+                        <TextBlock Text="Giới tính"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="55 0 0 0"/>
+                        <TextBlock Text="Địa chỉ"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="15 0 0 0"/>
+                        <TextBlock Text="Email"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="180 0 0 0"/>
+                    </StackPanel>
+                    <Separator Margin="0 10 0 0"
+                               Width="920"
+                               Opacity="0.7"/>
+                </StackPanel>
+                <DataGrid Grid.Row="1"
+                          Margin="25,20,25,10"
+                          ItemsSource="{Binding DanhSachGiaoVien}"
+                          Style="{StaticResource DataGridStyle1}"
+                          RowStyle="{StaticResource DataGridRowStyle1}"
+                          CellStyle="{StaticResource DataGridCellStyle1}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="1010">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Width="980"
+                                                HorizontalAlignment="Left">
+                                        <Border CornerRadius="10"
+                                                Height="35"
+                                                Width="35"
+                                                Margin="0 -10 0 0">
+                                            <Border.Background>
+                                                <ImageBrush ImageSource="{Binding Avatar, Converter={StaticResource ByteToImageConverter}}"
+                                                            Stretch="UniformToFill"/>
+                                            </Border.Background>
+                                        </Border>
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="200"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding TenGiaoVien}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="100"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding NgaySinh}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="50"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding GioiTinh, Converter={StaticResource BooleanToGenderConverter}}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
-                                                       Width="200"
+                                                       Width="180"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding DiaChi}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <TextBlock VerticalAlignment="Center"
+                                        <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
                                                        Width="160"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding Email}"
                                                        TextTrimming="WordEllipsis"/>
-                                            <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
-                                                    Background="#FF68BB08"
+                                        <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                    Background="#FF47D440"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"
@@ -155,8 +183,8 @@
                                                     Padding="0" 
                                                     Command="{Binding Source={StaticResource DanhSachGiaoVienVM}, Path=UpdateGiaoVien}"
                                                     CommandParameter="{Binding}"/>
-                                            <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
-                                                    Background="#FC8484"
+                                        <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                                    Background="#FFF65D5D"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"
@@ -165,15 +193,14 @@
                                                     Margin="10,0,0,0"
                                                     Command="{Binding Source={StaticResource DanhSachGiaoVienVM}, Path=RemoveGiaoVien}"
                                                     CommandParameter="{Binding}"/>
-                                            
-                                        </StackPanel>
-                                    </DataTemplate>
 
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ScrollViewer>
+                                    </StackPanel>
+                                </DataTemplate>
+
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Border>
     </Grid>

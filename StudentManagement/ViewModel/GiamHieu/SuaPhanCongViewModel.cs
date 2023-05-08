@@ -1,18 +1,11 @@
-﻿using Microsoft.Win32;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
 using System;
-using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using StudentManagement.Views.GiamHieu;
-using System.Text.RegularExpressions;
-using StudentManagement.Model;
-using System.Data.SqlClient;
-using StudentManagement.Converter;
-using System.Data;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -41,7 +34,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 SuaPhanCongWD = parameter;
                 LoadThongTinCmb();
             });
-            
+
             SuaPhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 Model.MonHoc monhoc = SuaPhanCongWD.cmbMonHoc.SelectedItem as Model.MonHoc;
@@ -61,7 +54,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            con.Open();
+                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                             string CmdString = "update PhanCongGiangDay set MaMon=" + monhoc.MaMon + ", TenMon=N'" + monhoc.TenMon + "', MaGiaoVienPhuTrach=" + giaovien.MaGiaoVien + ", TenGiaoVien=N'" + giaovien.TenGiaoVien + "' where MaPhanCong = " + PhanCongHienTai.MaPhanCong + "";
                             //MessageBox.Show(CmdString);
                             SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -85,8 +78,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             GiaoVienCmb = new ObservableCollection<StudentManagement.Model.GiaoVien>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select * from MonHoc where TenMon=N'"+PhanCongHienTai.TenMon+"' or TenMon not in (select TenMon from PhanCongGiangDay where TenLop=N'" + PhanCongHienTai.TenLop.ToString() + "' and NienKhoa=N'"+PhanCongHienTai.NienKhoa.ToString()+"')";
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                }
+                string CmdString = "select * from MonHoc where TenMon=N'" + PhanCongHienTai.TenMon + "' or TenMon not in (select TenMon from PhanCongGiangDay where TenLop=N'" + PhanCongHienTai.TenLop.ToString() + "' and NienKhoa=N'" + PhanCongHienTai.NienKhoa.ToString() + "')";
                 //MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -98,7 +98,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         item.MaMon = reader.GetInt32(0);
                         item.TenMon = reader.GetString(1);
                         MonHocCmb.Add(item);
-                        
+
 
                     }
                     reader.NextResult();
@@ -107,7 +107,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                }
                 string CmdString = "select MaGiaoVien, TenGiaoVien from GiaoVien";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();

@@ -1,25 +1,19 @@
 ﻿using StudentManagement.Model;
-using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.Login;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    public class LoginViewModel:BaseViewModel, IDataErrorInfo
+    public class LoginViewModel : BaseViewModel, IDataErrorInfo
     {
 
         // khai báo biến
@@ -75,7 +69,7 @@ namespace StudentManagement.ViewModel.Login
                     return ErrorMess;
                 }
                 else return null;
-                
+
             }
         }
 
@@ -94,7 +88,7 @@ namespace StudentManagement.ViewModel.Login
             {
                 LoginWindow = parameter;
             });
-          
+
             // navigate
             LoginSuccess = new RelayCommand<Window>((paramater) => { return true; }, (paramater) =>
             {
@@ -136,7 +130,7 @@ namespace StudentManagement.ViewModel.Login
                 IndexRole = -1;
                 LoginWindow.GiamHieuRole.IsChecked = false;
                 LoginWindow.GiaoVienRole.IsChecked = false;
-                LoginWindow.HocSinhRole.IsChecked = false;  
+                LoginWindow.HocSinhRole.IsChecked = false;
                 LoginWindow.LoginForm.Visibility = Visibility.Collapsed;
                 LoginWindow.RoleForm.Visibility = Visibility.Visible;
                 Username = "";
@@ -187,15 +181,23 @@ namespace StudentManagement.ViewModel.Login
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
-                        CmdString = "Select count(*) from GiamHieu where Username = '"+username+ "' and UserPassword = '" + passEncode+"'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                        // select id
-                        CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                        cmd = new SqlCommand(CmdString, con);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
+                        try
+                        {
+                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                            // select id
+                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            cmd = new SqlCommand(CmdString, con);
+                            id = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+                        }
+
                     }
 
                     if (checkUser > 0)
@@ -223,15 +225,23 @@ namespace StudentManagement.ViewModel.Login
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
-                        CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        try
+                        {
+                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
-                        CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                        cmd = new SqlCommand(CmdString, con);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
+                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            cmd = new SqlCommand(CmdString, con);
+                            id = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+                        }
+
                     }
 
                     if (checkUser > 0)
@@ -259,16 +269,24 @@ namespace StudentManagement.ViewModel.Login
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
-                        CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        try
+                        {
+                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
 
-                        CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                        cmd = new SqlCommand(CmdString, con);
-                        id = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
+                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            cmd = new SqlCommand(CmdString, con);
+                            id = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+                        }
+
                     }
 
                     if (checkUser > 0)

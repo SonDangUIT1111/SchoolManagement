@@ -3,18 +3,14 @@ using StudentManagement.ViewModel.GiaoVien;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
-    internal class TrangChuViewModel:BaseViewModel
+    internal class TrangChuViewModel : BaseViewModel
     {
         //declare variable
         public HocSinhWindow HocSinhWD { get; set; }
@@ -22,9 +18,9 @@ namespace StudentManagement.ViewModel.HocSinh
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
 
         private byte[] _avatar;
-        public byte[] Avatar { get { return _avatar; } set { _avatar= value; OnPropertyChanged(); } }
+        public byte[] Avatar { get { return _avatar; } set { _avatar = value; OnPropertyChanged(); } }
         private string _tenHocSinh;
-        public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh= value; OnPropertyChanged(); } }
+        public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; OnPropertyChanged(); } }
         //declare Pages
         public StudentManagement.Views.HocSinh.LopHoc LopHocPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
@@ -71,14 +67,14 @@ namespace StudentManagement.ViewModel.HocSinh
             {
                 XemDiemPage = new DiemSo();
                 StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
-                vm.IdHocSinh= IdHocSinh;
+                vm.IdHocSinh = IdHocSinh;
                 parameter.Content = XemDiemPage;
             });
             CapNhatThongTin = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                     string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -113,7 +109,7 @@ namespace StudentManagement.ViewModel.HocSinh
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                 string CmdString = "select TenHocSinh,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();

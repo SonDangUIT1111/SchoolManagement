@@ -1,18 +1,11 @@
-﻿using Microsoft.Win32;
-using StudentManagement.Model;
+﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -72,8 +65,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
-                if (cmb != null) 
-                { 
+                if (cmb != null)
+                {
                     Khoi item = cmb.SelectedItem as Khoi;
                     if (item != null)
                     {
@@ -102,7 +95,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                 DanhSachHocSinh.Clear();
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
                     string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -139,7 +141,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                 SuaThongTinHocSinhViewModel data = window.DataContext as SuaThongTinHocSinhViewModel;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
                     string CmdString = "select AnhThe from HocSinh where MaHocSinh = " + parameter.MaHocSinh.ToString();
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -169,8 +180,17 @@ namespace StudentManagement.ViewModel.GiamHieu
             DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = "+LopQueries;
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
+                string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = " + LopQueries;
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
 
@@ -200,7 +220,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 string CmdString = "select distinct NienKhoa from Lop";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -219,7 +248,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
 
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 CmdString = "select distinct MaKhoi,Khoi from Khoi";
                 cmd = new SqlCommand(CmdString, con);
                 reader = cmd.ExecuteReader();
@@ -241,8 +279,17 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 con.Close();
 
-                con.Open();
-                CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries+"' and MaKhoi = " + KhoiQueries;
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
+                CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
                 cmd = new SqlCommand(CmdString, con);
                 reader = cmd.ExecuteReader();
 
@@ -262,8 +309,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     reader.NextResult();
                 }
                 con.Close();
-                
-                
+
+
             }
         }
         public void FilterLopFromSelection()
@@ -271,7 +318,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             LopCmb.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
+                try
+                {
+                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    return;
+                }
                 string CmdString = "select Malop, TenLop from Lop where MaKhoi = " + KhoiQueries + " and NienKhoa = '" + NienKhoaQueries + "'";
                 //MessageBox.Show(CmdString);
                 SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -305,7 +361,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             if (ConfirmDelete == MessageBoxResult.Yes)
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
                     SqlCommand cmd;
                     string CmdString = "Delete from HeThongDiem where MaHocSinh = " + item.MaHocSinh;
                     //MessageBox.Show(CmdString);
@@ -313,14 +378,32 @@ namespace StudentManagement.ViewModel.GiamHieu
                     cmd.ExecuteNonQuery();
                     con.Close();
 
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
                     CmdString = "Delete from ThanhTich where MaHocSinh = " + item.MaHocSinh;
                     //MessageBox.Show(CmdString);
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteNonQuery();
                     con.Close();
 
-                    con.Open();
+                    try
+                    {
+                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
                     CmdString = "Delete from HocSinh where MaHocSinh = " + item.MaHocSinh;
                     //MessageBox.Show(CmdString);
                     cmd = new SqlCommand(CmdString, con);
