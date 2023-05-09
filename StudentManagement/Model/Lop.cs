@@ -10,9 +10,9 @@
         public int SiSo { get { return _siSo; } set { _siSo = value; } }
         private string _nienKhoa;
         public string NienKhoa { get { return _nienKhoa; } set { _nienKhoa = value; } }
-        private string _tenKhoi;
-        public string TenKhoi { get { return _tenKhoi; } set { _tenKhoi = value; } }
-        private string _tenGVCN;
-        public string TenGVCN { get { return _tenGVCN; } set { _tenGVCN = value; } }
+        private int _maKhoi;
+        public int MaKhoi { get { return _maKhoi; } set { _maKhoi = value;} }
+        private int _maGVCN;
+        public int MaGVCN { get { return _maGVCN; } set { _maGVCN = value; } }
     }
 }

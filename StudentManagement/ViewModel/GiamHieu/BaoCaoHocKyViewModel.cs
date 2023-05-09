@@ -143,7 +143,16 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public BaoCaoHocKyViewModel()
         {
-
+            NienKhoaComboBox = new ObservableCollection<string>();
+            HocKyComboBox = new ObservableCollection<string>();
+            KhoiComboBox = new ObservableCollection<string>();
+            TenLop = new List<string>();
+            SoLuongDatChartVal = new List<int>();
+            SoLuongDat = new SeriesCollection();
+            DanhSachBaoCaoHocKy = new ObservableCollection<Model.BaoCaoHocKy>();
+            Dat = new int();
+            KhongDat = new int();
+            TiLeDat = new SeriesCollection();
             LoadBaoCao = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 BaoCaoHocKyWD = parameter as BaoCaoTongKetHocKy;
@@ -200,15 +209,12 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public void LoadComboboxData()
         {
-            NienKhoaComboBox = new ObservableCollection<string>();
-            HocKyComboBox = new ObservableCollection<string>();
-            KhoiComboBox = new ObservableCollection<string>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
                     try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string cmdString = "select distinct NienKhoa from BaoCaoHocKy";
+                    string cmdString = "select distinct NienKhoa from Lop";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -310,7 +316,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public void LoadDanhSachBaoCaoHocKy()
         {
-            DanhSachBaoCaoHocKy = new ObservableCollection<Model.BaoCaoHocKy>();
             DanhSachBaoCaoHocKy.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
@@ -354,9 +359,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public void LoadCartesianChart()
         {
-            TenLop = new List<string>();
-            SoLuongDatChartVal = new List<int>();
-            SoLuongDat = new SeriesCollection();
             TenLop.Clear();
             SoLuongDatChartVal.Clear();
             SoLuongDat.Clear();
@@ -419,9 +421,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public void LoadPieChart()
         {
-            Dat = new int();
-            KhongDat = new int();
-            TiLeDat = new SeriesCollection();
             TiLeDat.Clear();
             if (!String.IsNullOrEmpty(NienKhoaQueries) && !String.IsNullOrEmpty(HocKyQueries))
             {
@@ -467,7 +466,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     KhongDat = TongSiSoLop - Dat;
                     TiLeDat = new SeriesCollection
-                {
+                    {
                     new PieSeries
                     {
                         Title = "Tỉ lệ đạt",
