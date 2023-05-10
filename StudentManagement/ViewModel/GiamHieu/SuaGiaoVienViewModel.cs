@@ -105,45 +105,53 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        con.Open();
-
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                        return;
-                    }
-                    string CmdString = "Update GiaoVien set TenGiaoVien = N\'" + SuaGiaoVienWD.TenGV.Text +
-                        "\', NgaySinh = \'" + SuaGiaoVienWD.NgaySinh.DisplayDate.ToString() +
-                        "\', GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
-                        ", DiaChi = N\'" + SuaGiaoVienWD.DiaChi.Text +
-                        "\', Email = \'" + SuaGiaoVienWD.Email.Text +
-                        "\' where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    con.Close();
-                    if (ImagePath != null)
-                    {
-                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                        byte[] buffer = converter.ImageToBinary(ImagePath);
-                        try 
-                        { 
-                            con.Open(); 
-                        } 
-                        catch (Exception) 
+                        try
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                            return; 
+                            con.Open();
+
                         }
-                        string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                        cmd = new SqlCommand(cmdstring, con);
-                        cmd.Parameters.AddWithValue("@image", buffer);
-                        cmd.ExecuteScalar();
-                        con.Close();
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
+                        string CmdString = "Update GiaoVien set TenGiaoVien = N'" + SuaGiaoVienWD.TenGV.Text +
+                            "', NgaySinh = CAST(N'" + ToShortDateTime(SuaGiaoVienWD.NgaySinh) +
+                            "' AS DATE), GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
+                            ", DiaChi = N'" + SuaGiaoVienWD.DiaChi.Text +
+                            "', Email = '" + SuaGiaoVienWD.Email.Text +
+                            "', AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+
+                        if (ImagePath != null)
+                        {
+                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                            byte[] buffer = converter.ImageToBinary(ImagePath);
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.Parameters.AddWithValue("@image", buffer);
+                            cmd.ExecuteScalar();
+                            con.Close();
+                        }
+                        else
+                        {
+                            byte[] buffer = GiaoVienHienTai.Avatar;
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.Parameters.AddWithValue("@image", buffer);
+                            cmd.ExecuteScalar();
+                            MessageBox.Show("Cập nhật thành công!");
+                            con.Close();
+                        }
                     }
-                    MessageBox.Show("Cập nhật thành công!");
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             }
+        }
+        public string ToShortDateTime(DatePicker st)
+        {
+            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+            return date;
         }
     }
 }

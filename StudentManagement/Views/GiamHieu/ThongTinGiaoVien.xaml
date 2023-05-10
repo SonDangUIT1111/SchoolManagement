@@ -151,7 +151,7 @@
                                                        Width="100"
                                                        FontSize="14"
                                                        Foreground="#000000"
-                                                       Text="{Binding NgaySinh}"
+                                                       Text="{Binding NgaySinh, Converter={StaticResource DateTimeToDateConverter}}"
                                                        TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"

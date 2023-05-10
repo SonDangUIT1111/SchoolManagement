@@ -4,6 +4,7 @@ using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -28,6 +29,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ChangeImage { get; set; }
         public ThemGiaoVienViewModel()
         {
+            ImagePath = null;
             ChangeImage = new RelayCommand<Grid>((parameter) => { return true; }, (parameter) =>
             {
                 OpenFileDialog op = new OpenFileDialog();
@@ -74,17 +76,10 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         }
 
-        public string ToShortDateTime(string st)
+        public string ToShortDateTime(DatePicker st)
         {
-            string Converted_String = "";
-            for (int i = 0; i < st.Length; i++)
-            {
-                if (st[i] == '/')
-                    Converted_String += '-';
-                else
-                    Converted_String += st[i];
-            }
-            return Converted_String;
+            string date = st.SelectedDate.Value.Year.ToString()+"-"+st.SelectedDate.Value.Month.ToString()+"-"+st.SelectedDate.Value.Day.ToString();
+            return date;
         }
 
 
@@ -123,8 +118,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         void ThemGiaoVienMoi()
         {
-            //MessageBox.Show(Avatar);
-            // MessageBox.Show("testin end");
             if (ThemGiaoVienWD.TenGV.Text == "" |
                 ThemGiaoVienWD.NgaySinh.Text == "" |
                 ThemGiaoVienWD.DiaChi.Text == "" |
@@ -145,88 +138,105 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return; 
+                        }
+                        string CmdString1 = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (N'" +
+                        ThemGiaoVienWD.TenGV.Text + "' , CAST(N'" +
+                        ToShortDateTime(ThemGiaoVienWD.NgaySinh) + "' AS DATE) ," + ThemGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
+                        ", N'" + ThemGiaoVienWD.DiaChi.Text + "' , '" + ThemGiaoVienWD.Email.Text + "', 1);";
+                        SqlCommand cmd1 = new SqlCommand(CmdString1, con);
+                        cmd1.ExecuteScalar();
+                        con.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBox.Show(ex.Message);
                         return;
                     }
-                    string CmdString = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (\'" +
-                        ThemGiaoVienWD.TenGV.Text + "\' , \'" +
-                        ToShortDateTime(ThemGiaoVienWD.NgaySinh.DisplayDate.ToString()) + "\' ," + ThemGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
-                        ", N\'" + ThemGiaoVienWD.DiaChi.Text + "\' , \'" + ThemGiaoVienWD.Email.Text + "\', 1);";
-                    //MessageBox.Show(CmdString);
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    con.Close();
+
 
 
                     //Tao tai khoan va mat khau
                     Random rnd = new Random();
                     string MatKhau = rnd.Next(100000, 999999).ToString();
                     string TaiKhoan = "gv";
-
+                    string emailOfNewUser = "";
+                    int maSo = 0;
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception) 
+                        { 
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return; 
+                        }
+                        string CmdString = "select top 1 MaGiaoVien,Email from GiaoVien order by MaGiaoVien desc";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        reader.Read();
+                        StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien
+                        {
+                            MaGiaoVien = reader.GetInt32(0),
+                            Email = reader.GetString(1)
+                        };
+                        maSo = teacher.MaGiaoVien;
+                        emailOfNewUser = teacher.Email;
+                        TaiKhoan += maSo.ToString();
+                        con.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBox.Show(ex.Message);
                     }
-                    CmdString = "select top 1 * from GiaoVien order by MaGiaoVien desc";
-                    cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    reader.Read();
-                    StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien
-                    {
-                        MaGiaoVien = reader.GetInt32(0),
-                        TenGiaoVien = reader.GetString(1),
-                        NgaySinh = reader.GetDateTime(2),
-                        GioiTinh = reader.GetBoolean(3),
-                        DiaChi = reader.GetString(4),
-                        Email = reader.GetString(5)
-                    };
-                    int MaSo = teacher.MaGiaoVien;
-                    TaiKhoan += MaSo.ToString();
-                    //MessageBox.Show("TK: "+TaiKhoan+" MK: "+MatKhau);
-                    con.Close();
+                    
 
-                    //Update tai khoan va mat khau
+                    //Update tai khoan va mat khau, avatar
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                    }
-                    CmdString = "Update GiaoVien set Username = \'" + TaiKhoan + "\', UserPassword = \'" + MatKhau + "\' where MaGiaoVien =" + MaSo.ToString();
-                    cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    SendAccountByEmail(TaiKhoan, MatKhau, teacher.Email);
-                    con.Close();
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception) 
+                        { 
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return; 
+                        }
 
-                    //Update anh dai dien
-                    ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                    byte[] buffer = converter.ImageToBinary(ImagePath);
-                    try
-                    {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                    }
-                    string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + MaSo.ToString();
-                    cmd = new SqlCommand(cmdstring, con);
-                    cmd.Parameters.AddWithValue("@image", buffer);
-                    cmd.ExecuteScalar();
-                    con.Close();
+                        string uriImage = "";
+                        if (ImagePath == null)
+                        {
+                            var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                            var filePath = Path.Combine(projectPath, "Resources","Images", "user_image.jpg");
+                            uriImage = filePath;
+                        }
+                        else uriImage = ImagePath;
 
-                    MessageBox.Show("Thêm giáo viên thành công! (" + MaSo.ToString() + ")");
+                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                        byte[] buffer = converter.ImageToBinary(uriImage);
+                        string CmdString = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + MatKhau + "', AnhThe = @image " +
+                                            " where MaGiaoVien =" + maSo.ToString();
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        cmd.Parameters.AddWithValue("@image", buffer);
+                        cmd.ExecuteScalar();
+
+
+                        SendAccountByEmail(TaiKhoan, MatKhau, emailOfNewUser);
+                        MessageBox.Show("Thêm giáo viên thành công! Tài khoản và mật khẩu đã được gửi đến email đăng ký của giáo viên.");
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                    ThemGiaoVienWD.Close();
                 }
             }
         }

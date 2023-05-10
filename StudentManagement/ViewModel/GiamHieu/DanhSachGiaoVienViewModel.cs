@@ -32,8 +32,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThemGiaoVien window = new ThemGiaoVien();
                 ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
-
                 window.ShowDialog();
+                LoadDanhSachGiaoVien();
             });
             UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
             {
@@ -57,7 +57,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
+                    }
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -80,9 +87,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -93,8 +100,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string CmdString = "select * from GiaoVien where TenGiaoVien is not null and TenGiaoVien like '%" + value + "%'";
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
+                    }
+                    string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where TenGiaoVien is not null and TenGiaoVien like N'%" + value + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -110,6 +124,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 GioiTinh = reader.GetBoolean(3),
                                 DiaChi = reader.GetString(4),
                                 Email = reader.GetString(5),
+                                Avatar = (byte[])reader[6],
                             };
                             DanhSachGiaoVien.Add(teacher);
                         }
@@ -117,9 +132,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -131,18 +146,25 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception) 
+                        { 
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return; 
+                        }
                         SqlCommand cmd;
                         string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
                         cmd = new SqlCommand(CmdString, con);
                         cmd.ExecuteScalar();
+                        MessageBox.Show("Đã xóa " + value.TenGiaoVien);
                         con.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBox.Show(ex.Message);
                     }
-                    MessageBox.Show("Đã xóa " + value.TenGiaoVien);
                 }
         }
     }

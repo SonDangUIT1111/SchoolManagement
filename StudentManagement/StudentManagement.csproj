@@ -84,6 +84,7 @@
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
     <Compile Include="Converter\BooleanToScoreStateConverter.cs" />
     <Compile Include="Converter\BooleanToXepLoaiConverter.cs" />
+    <Compile Include="Converter\DateTimeToDateConverter.cs" />
     <Compile Include="Converter\SelectedMonHocConverter.cs" />
     <Compile Include="Model\BaoCaoHocKy.cs" />
     <Compile Include="Model\BaoCaoMon.cs" />
@@ -496,6 +497,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\logo-uit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\user_image.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" />
