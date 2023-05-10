@@ -278,7 +278,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem
                         {
-                            SoThuTu = sothuthu,
                             MaDiem = reader.GetInt32(0),
                             NienKhoa = reader.GetString(1),
                             HocKy = reader.GetInt32(2),

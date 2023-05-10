@@ -44,9 +44,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 PhanCongGiangDayWD = parameter as PhanCongGiangDay;
-                PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
-                PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
-                PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
+                try
+                {
+                    PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
+                    PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
+                    PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
+                }
+                catch (Exception)
+                {
+
+                }
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -121,7 +128,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     try
                     {
                         try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'" + LopQueries + "' and TenMon like N'%" + parameter.Text + "%'";
+                        string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay pc join Lop l on pc.MaLop = l.MaLop " +
+                                            " join MonHoc mh on mh.MaMon = pc.MaMon join GiaoVien gv on gv.MaGiaoVien = pc.MaGiaoVienPhuTrach " +
+                                            " where MaLop = N'" + LopQueries + "' and TenMon like N'%" + parameter.Text + "%'";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -235,7 +244,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                 try
                 {
                     try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'" + LopQueries + "'";
+                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay " +
+                                        " pc join Lop l on pc.MaLop = l.MaLop join GiaoVien gv on gv.MaGiaoVien = pc.MaGiaoVienPhuTrach " +
+                                        " where MaLop = N'" + LopQueries + "'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 

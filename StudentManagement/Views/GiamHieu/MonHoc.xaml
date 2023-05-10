@@ -151,8 +151,8 @@
                                                 Height="30"
                                                 Padding="0"
                                                 Margin="20 0 0 0"
-                                                Command="{Binding DataContext.EditSubject, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                                CommandParameter="{Binding ElementName=tbMonHoc}"/>
+                                                Command="{Binding Source={StaticResource MonHocVM},Path=EditSubject}"
+                                                CommandParameter="{Binding}"/>
                                         <Button x:Name="btnXoaMH"
                                                 Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
                                                 Background="#FFF65D5D"
@@ -162,8 +162,8 @@
                                                 Height="30"
                                                 Padding="0"
                                                 Margin="10,0,0,0"
-                                                Command="{Binding DataContext.DeleteSubject, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
-                                                CommandParameter="{Binding ElementName=tbMonHoc}"/>
+                                                Command="{Binding Source={StaticResource MonHocVM}, Path=DeleteSubject}"
+                                                CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

@@ -29,7 +29,6 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
 
             GiaoVienHienTai = new StudentManagement.Model.GiaoVien { };
-            //GiaoVienHienTai.TenGiaoVien = "skajdl";
 
             LoadWindow = new RelayCommand<SuaGiaoVien>((parameter) => { return true; }, (parameter) =>
             {
@@ -85,14 +84,13 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void CapNhatGiaoVien()
         {
-            //MessageBox.Show(Avatar);
-            // MessageBox.Show("testin end");
             if (SuaGiaoVienWD.TenGV.Text == "" |
                 SuaGiaoVienWD.NgaySinh.Text == "" |
                 SuaGiaoVienWD.DiaChi.Text == "" |
                 SuaGiaoVienWD.Email.Text == "")
             {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin");
+                return;
             }
             else
             if (!IsValidEmail(SuaGiaoVienWD.Email.Text)
@@ -107,7 +105,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                        con.Open();
 
                     }
                     catch (Exception)
@@ -121,16 +119,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                         ", DiaChi = N\'" + SuaGiaoVienWD.DiaChi.Text +
                         "\', Email = \'" + SuaGiaoVienWD.Email.Text +
                         "\' where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                    //MessageBox.Show(CmdString);
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
                     con.Close();
                     if (ImagePath != null)
                     {
-                        //MessageBox.Show(ImagePath);
                         ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                         byte[] buffer = converter.ImageToBinary(ImagePath);
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                        try 
+                        { 
+                            con.Open(); 
+                        } 
+                        catch (Exception) 
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return; 
+                        }
                         string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
                         cmd = new SqlCommand(cmdstring, con);
                         cmd.Parameters.AddWithValue("@image", buffer);

@@ -39,31 +39,28 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 MonHocWD = parameter as MonHoc;
-                //MessageBox.Show("Hello");
             });
             DeleteSubject = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 if (MessageBox.Show("Bạn có muốn xoá môn học này không?", "Xoá môn học", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    TextBox textBlock = parameter as TextBox;
-                    if (textBlock != null)
+                    Model.MonHoc mh = parameter as Model.MonHoc;
+                    if (mh != null)
                     {
                         try
                         {
-                            string subjectName = textBlock.Text;
                             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                             {
                                 try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                                string CmdString = "delete from MonHoc where TenMon=N'" + subjectName + "'";
-                                MessageBox.Show(CmdString);
+                                string CmdString = "update MonHoc set ApDung = 0 where MaMon = " + mh.MaMon.ToString();
                                 SqlCommand cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
                                 con.Close();
                             }
-                            MessageBox.Show("Thay đổi thành công!");
+                            MessageBox.Show("Môn học này sẽ không được áp dụng trong dạy học nữa");
                             LoadThongTinMonHoc();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             MessageBox.Show("Đang có giáo viên được phân công giảng dạy môn này. Vui lòng đảm bảo môn không được giảng dạy mới có thể xóa được.");
                         }
@@ -72,19 +69,28 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             EditSubject = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                TextBox textBox = parameter as TextBox;
-                if (textBox != null )
+                Model.MonHoc mh = parameter as Model.MonHoc;
+                if (mh != null )
                 {
                     MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đổi tên", "Thông báo", MessageBoxButton.YesNo); 
                     if (result == MessageBoxResult.Yes)
                     {
-
+                        using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                        {
+                            try
+                            {
+                                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                                string CmdString = "update MonHoc set TenMon = "+mh.TenMon + " where MaMon = "+mh.MaMon.ToString();
+                                SqlCommand cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            }
+                        }
                         LoadThongTinMonHoc();
-                        MonHocWD.Snackbar.MessageQueue?.Enqueue(
-                        $"Đổi tên thành công",
-                        $"Hoàn tác",
-                        param => {/* HoanTac(item);*/ },
-                        TimeSpan.FromSeconds(5));
                     }    
                 }
             });
@@ -96,7 +102,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     try
                     {
                         try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        string CmdString = "select * from MonHoc where TenMon like '%" + parameter.Text + "%'";
+                        string CmdString = "select * from MonHoc where TenMon like '%" + parameter.Text + "%' and ApDung = 1";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -136,7 +142,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 else
                 {
-                    MessageBox.Show(monhoc);
                     if (MessageBox.Show("Bạn có muốn thêm môn học này không?", "Thêm môn học", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -144,10 +149,28 @@ namespace StudentManagement.ViewModel.GiamHieu
                             try
                             {
                                 try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                                string CmdString = "insert into MonHoc (TenMon, MaTruong) values (N'" + monhoc + "', 1)";
-                                MessageBox.Show(CmdString);
+                                string CmdString = "select * from MonHoc where TenMon = N'" + monhoc+"'";
                                 SqlCommand cmd = new SqlCommand(CmdString, con);
+                                int count = Convert.ToInt32(cmd.ExecuteScalar());   
+                                if (count > 0 )
+                                {
+                                    MessageBox.Show("Tên môn học đã tồn tại, vui lòng chọn tên khác");
+                                    con.Close();
+                                    MonHocWD.txtTenMH.Text = "";
+                                    MonHocWD.txtTenMH.IsEnabled = false;
+                                    MonHocWD.btnThemMonHoc.Visibility = Visibility.Visible;
+                                    MonHocWD.btnXacNhan.Visibility = Visibility.Hidden;
+                                    MonHocWD.btnXacNhan.IsEnabled = false;
+                                    return;
+                                }
+
+
+                                con.Close();
+                                con.Open();
+                                CmdString = "insert into MonHoc (TenMon, MaTruong, ApDung) values (N'" + monhoc + "', 1, 1)";
+                                cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
+                                MessageBox.Show("Thêm môn học thành công!");
                                 con.Close();
                             }
                             catch (Exception)
@@ -155,7 +178,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                             }
                         }
-                        MessageBox.Show("Thêm môn học thành công!");
                         MonHocWD.txtTenMH.Text = "";
                         MonHocWD.txtTenMH.IsEnabled = false;
                         MonHocWD.btnThemMonHoc.Visibility = Visibility.Visible;
@@ -174,7 +196,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 try
                 {
                     try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string CmdString = "select * from MonHoc";
+                    string CmdString = "select * from MonHoc where ApDung = 1";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 

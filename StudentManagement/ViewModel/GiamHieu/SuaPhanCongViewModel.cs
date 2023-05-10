@@ -28,7 +28,6 @@ namespace StudentManagement.ViewModel.GiamHieu
         public SuaPhanCongViewModel()
         {
 
-            //PhanCongHienTai = new StudentManagement.Model.PhanCongGiangDay();
             LoadData = new RelayCommand<SuaPhanCong>((parameter) => { return true; }, (parameter) =>
             {
                 SuaPhanCongWD = parameter;
@@ -54,9 +53,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                            string CmdString = "update PhanCongGiangDay set MaMon=" + monhoc.MaMon + ", TenMon=N'" + monhoc.TenMon + "', MaGiaoVienPhuTrach=" + giaovien.MaGiaoVien + ", TenGiaoVien=N'" + giaovien.TenGiaoVien + "' where MaPhanCong = " + PhanCongHienTai.MaPhanCong + "";
-                            //MessageBox.Show(CmdString);
+                            try 
+                            { 
+                                con.Open(); 
+                            } 
+                            catch (Exception) 
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                return; 
+                            }
+                            string CmdString = "update PhanCongGiangDay set MaMon=" + monhoc.MaMon + ", MaGiaoVienPhuTrach=" + giaovien.MaGiaoVien +  " where MaPhanCong = " + PhanCongHienTai.MaPhanCong + "";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             cmd.ExecuteNonQuery();
                             con.Close();
@@ -80,14 +86,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                    con.Open();
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                 }
-                string CmdString = "select * from MonHoc where TenMon=N'" + PhanCongHienTai.TenMon + "' or TenMon not in (select TenMon from PhanCongGiangDay where TenLop=N'" + PhanCongHienTai.TenLop.ToString() + "' and NienKhoa=N'" + PhanCongHienTai.NienKhoa.ToString() + "')";
-                //MessageBox.Show(CmdString);
+                string CmdString = "select * from MonHoc where TenMon=N'" + PhanCongHienTai.TenMon + 
+                                    "' or TenMon not in (select TenMon from PhanCongGiangDay where TenLop=N'" + 
+                                    PhanCongHienTai.TenLop + "' and NienKhoa=N'" + PhanCongHienTai.NienKhoa.ToString() + "')";
                 SqlCommand cmd = new SqlCommand(CmdString, con);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.HasRows)

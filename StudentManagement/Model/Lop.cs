@@ -1,4 +1,10 @@
-﻿namespace StudentManagement.Model
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StudentManagement.Model
 {
     public class Lop
     {
@@ -10,9 +16,9 @@
         public int SiSo { get { return _siSo; } set { _siSo = value; } }
         private string _nienKhoa;
         public string NienKhoa { get { return _nienKhoa; } set { _nienKhoa = value; } }
-        private int _maKhoi;
-        public int MaKhoi { get { return _maKhoi; } set { _maKhoi = value;} }
-        private int _maGVCN;
-        public int MaGVCN { get { return _maGVCN; } set { _maGVCN = value; } }
+        private string _tenKhoi;
+        public string TenKhoi { get { return _tenKhoi; } set { _tenKhoi = value; } }
+        private string _tenGVCN;
+        public string TenGVCN { get { return _tenGVCN; } set { _tenGVCN = value; } }
     }
 }

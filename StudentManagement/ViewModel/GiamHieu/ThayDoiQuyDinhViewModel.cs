@@ -26,7 +26,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ThayDoiQuyDinhWD = parameter as ThayDoiQuyDinh;
-                //ThayDoiQuyDinhWD.cmbQuyDinh.SelectedIndex = 0;
 
             });
             FilterQuyDinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -54,12 +53,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb.SelectedItem != null)
                 {
-                    //MessageBox.Show("Co quy dinh");
                     QuiDinh rule = cmb.SelectedItem as QuiDinh;
                     string tenqd = rule.TenQuiDinh;
-                    //MessageBox.Show(tenqd);
                     string strvalue = ThayDoiQuyDinhWD.tbGiaTri.Text;
-                    //MessageBox.Show(strvalue);
                     int value;
                     bool isInt = int.TryParse(strvalue, out value);
                     if (isInt)
@@ -68,19 +64,27 @@ namespace StudentManagement.ViewModel.GiamHieu
                         {
                             try
                             {
-                                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                                try 
+                                { 
+                                    con.Open(); 
+                                } catch (Exception) 
+                                { 
+                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                    return; 
+                                }
+                                string CmdString = "update QuiDinh SET GiaTri =" + value + " where TenQuiDinh = N'" + tenqd + "'";
+                                SqlCommand cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteNonQuery();
+                                con.Close();
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                MessageBox.Show(ex.Message);
                             }
-                            string CmdString = "update QuiDinh SET GiaTri =" + value + " where TenQuiDinh = N'" + tenqd + "'";
-                            //MessageBox.Show(CmdString);
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.ExecuteNonQuery();
-                            con.Close();
+                            
                         }
                         ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
+                        ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                         MessageBox.Show("Thay đổi thành công!");
                     }
                     else
@@ -103,28 +107,36 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                }
-                string CmdString = "select * from QuiDinh";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        QuiDinh item = new QuiDinh();
-                        item.MaQuiDinh = reader.GetInt32(0);
-                        item.TenQuiDinh = reader.GetString(1);
-                        item.GiaTri = reader.GetInt32(2);
-                        DanhSachQuyDinh.Add(item);
+                    try 
+                    { 
+                        con.Open(); 
+                    } 
+                    catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
                     }
-                    reader.NextResult();
+                    string CmdString = "select * from QuiDinh";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            QuiDinh item = new QuiDinh();
+                            item.MaQuiDinh = reader.GetInt32(0);
+                            item.TenQuiDinh = reader.GetString(1);
+                            item.GiaTri = reader.GetInt32(2);
+                            DanhSachQuyDinh.Add(item);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
         public void LoadQuyDinhFromSelection()
@@ -134,24 +146,35 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                }
-                catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); }
-                string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries + "'";
-                //MessageBox.Show(CmdString);
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        item.MaQuiDinh = reader.GetInt32(0);
-                        item.TenQuiDinh = reader.GetString(1);
-                        item.GiaTri = reader.GetInt32(2);
+                    
+                    try 
+                    { 
+                        con.Open(); 
                     }
-                    reader.NextResult();
+                    catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return;
+                    }
+                    string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            item.MaQuiDinh = reader.GetInt32(0);
+                            item.TenQuiDinh = reader.GetString(1);
+                            item.GiaTri = reader.GetInt32(2);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex) 
+                { 
+                    MessageBox.Show(ex.Message); 
+                }
             }
             ThayDoiQuyDinhWD.tbGiaTri.Text = item.GiaTri.ToString();
         }

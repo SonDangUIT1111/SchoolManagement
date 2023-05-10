@@ -75,12 +75,12 @@ namespace StudentManagement.ViewModel.GiamHieu
             NienKhoaCmb = new ObservableCollection<string>();
             KhoiCmb = new ObservableCollection<string>();
             DanhSachLopHoc = new ObservableCollection<Model.Lop>();
-            LoadDanhSachLopHoc();
 
             LoadLopHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 LopHocWD = parameter as LopHoc;
                 LoadComboBox();
+                LoadDanhSachLopHoc();
             });
 
             ThemLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -115,7 +115,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     NienKhoaQueries = cmb.SelectedItem.ToString();
                     LoadDanhSachLopHoc();
-                    FilterKhoiFromNiemKhoa();
                 }
             });
 
@@ -249,7 +248,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                     }
 
-                    string CmdString = "SELECT * FROM Lop" + WhereCmdString;
+                    string CmdString = "SELECT TenLop,SiSo,NienKhoa,TenGVCN FROM Lop l join Khoi k on l.MaKhoi = k.MaKhoi left join GiaoVien gv on l.MaGVCN = gv.MaGiaoVien " + WhereCmdString;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -258,10 +257,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         while (reader.Read())
                         {
                             StudentManagement.Model.Lop lophoc = new StudentManagement.Model.Lop();
-                            lophoc.TenLop = reader.GetString(1);
-                            lophoc.SiSo = reader.GetInt32(2);
-                            lophoc.NienKhoa = reader.GetString(3);
-                            lophoc.TenGVCN = reader.GetString(7);
+                            lophoc.TenLop = reader.GetString(0);
+                            lophoc.SiSo = reader.GetInt32(1);
+                            lophoc.NienKhoa = reader.GetString(2);
+                            lophoc.TenGVCN = reader.GetString(3);
                             DanhSachLopHoc.Add(lophoc);
                         }
                         reader.NextResult();
@@ -314,7 +313,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                     }
 
-                    string CmdString = "SELECT * FROM Lop" + WhereCmdString;
+                    string CmdString = "SELECT TenLop,SiSo,NienKhoa,TenGVCN FROM Lop l join Khoi k on l.MaKhoi = k.MaKhoi left join GiaoVien gv on l.MaGVCN = gv.MaGVCN" + WhereCmdString;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -323,10 +322,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         while (reader.Read())
                         {
                             StudentManagement.Model.Lop lophoc = new StudentManagement.Model.Lop();
-                            lophoc.TenLop = reader.GetString(1);
-                            lophoc.SiSo = reader.GetInt32(2);
-                            lophoc.NienKhoa = reader.GetString(3);
-                            lophoc.TenGVCN = reader.GetString(7);
+                            lophoc.TenLop = reader.GetString(0);
+                            lophoc.SiSo = reader.GetInt32(1);
+                            lophoc.NienKhoa = reader.GetString(2);
+                            lophoc.TenGVCN = reader.GetString(3);
                             DanhSachLopHoc.Add(lophoc);
                         }
                         reader.NextResult();
@@ -339,9 +338,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
-        public void FilterKhoiFromNiemKhoa()
-        {
 
-        }
     }
 }

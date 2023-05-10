@@ -31,6 +31,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             MaLop = 100;
             TenLop = "10A1";
+            DanhSachLop = new ObservableCollection<Model.HocSinh>();
             LoadWindow = new RelayCommand<DanhSachLop>((parameter) => { return true; }, (parameter) =>
             {
                 DanhSachLopWindow = parameter;
@@ -69,7 +70,6 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void LoadDanhSachHocSinh()
         {
-            DanhSachLop = new ObservableCollection<Model.HocSinh>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
@@ -113,15 +113,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
                     SqlCommand cmd;
-                    string CmdString = "Update HocSinh set MaLop = null, TenLop = null where MaHocSinh = " + value.MaHocSinh;
+                    string CmdString = "Update HocSinh set MaLop = null where MaHocSinh = " + value.MaHocSinh;
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
 
-                    CmdString = "Update HeThongDiem set MaLop = null, TenLop = null where MaHocSinh = " + value.MaHocSinh;
+                    CmdString = "Update HeThongDiem set MaLop = null where MaHocSinh = " + value.MaHocSinh;
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
 
-                    CmdString = "Update ThanhTich set MaLop = null, TenLop = null where MaHocSinh = " + value.MaHocSinh;
+                    CmdString = "Update ThanhTich set MaLop = null where MaHocSinh = " + value.MaHocSinh;
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
                     con.Close();
@@ -139,15 +139,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                 try
                 {
                     SqlCommand cmd;
-                    string CmdString = "Update HocSinh set MaLop = " + MaLop.ToString() + ", TenLop = '" + TenLop + "' where MaHocSinh = " + value.MaHocSinh;
+                    string CmdString = "Update HocSinh set MaLop = " + MaLop.ToString() + " where MaHocSinh = " + value.MaHocSinh;
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
 
-                    CmdString = "Update HeThongDiem set MaLop = " + MaLop.ToString() + ", TenLop = '" + TenLop + "' where MaHocSinh = " + value.MaHocSinh;
+                    CmdString = "Update HeThongDiem set MaLop = " + MaLop.ToString() + " where MaHocSinh = " + value.MaHocSinh;
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
 
-                    CmdString = "Update ThanhTich set MaLop = " + MaLop.ToString() + ", TenLop = '" + TenLop + "' where MaHocSinh = " + value.MaHocSinh;
+                    CmdString = "Update ThanhTich set MaLop = " + MaLop.ToString() + " where MaHocSinh = " + value.MaHocSinh;
                     cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
                     con.Close();
