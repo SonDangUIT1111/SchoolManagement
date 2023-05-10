@@ -139,6 +139,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             cmd.ExecuteScalar();
                             MessageBox.Show("Cập nhật thành công!");
                             con.Close();
+                            SuaGiaoVienWD.Close();
                         }
                     }
                     catch (Exception ex)

@@ -72,13 +72,13 @@
                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                      IsEnabled="False"
                      Text="{Binding PhanCongHienTai.SiSo}"/>
-            <ComboBox x:Name="cmbMonHoc"
+            <TextBox x:Name="cmbMonHoc"
                       Margin="20 20 20 0"
-                      Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                      IsEnabled="False"
+                      Style="{StaticResource MaterialDesignOutlinedTextBox}"
                       materialDesign:HintAssist.Hint="Môn học"
-                      ItemsSource="{Binding MonHocCmb}"
-                      DisplayMemberPath="TenMon">
-            </ComboBox>
+                      Text="{Binding PhanCongHienTai.TenMon}">
+            </TextBox>
             <ComboBox x:Name="cmbGiaoVien"
                       Margin="20 20 20 0"
                       Style="{StaticResource MaterialDesignOutlinedComboBox}"

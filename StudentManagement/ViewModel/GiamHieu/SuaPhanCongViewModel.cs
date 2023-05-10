@@ -16,8 +16,6 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int idxGV = -1;
         private StudentManagement.Model.PhanCongGiangDay _phanCongHienTai;
         public StudentManagement.Model.PhanCongGiangDay PhanCongHienTai { get => _phanCongHienTai; set { _phanCongHienTai = value; OnPropertyChanged(); } }
-        private ObservableCollection<StudentManagement.Model.MonHoc> _monHocCmb;
-        public ObservableCollection<StudentManagement.Model.MonHoc> MonHocCmb { get => _monHocCmb; set { _monHocCmb = value; OnPropertyChanged(); } }
         private ObservableCollection<StudentManagement.Model.GiaoVien> _giaoVienCmb;
         public ObservableCollection<StudentManagement.Model.GiaoVien> GiaoVienCmb { get => _giaoVienCmb; set { _giaoVienCmb = value; OnPropertyChanged(); } }
 
@@ -36,13 +34,8 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             SuaPhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                Model.MonHoc monhoc = SuaPhanCongWD.cmbMonHoc.SelectedItem as Model.MonHoc;
                 Model.GiaoVien giaovien = SuaPhanCongWD.cmbGiaoVien.SelectedItem as Model.GiaoVien;
-                if (monhoc == null)
-                {
-                    MessageBox.Show("Vui lòng chọn môn học!");
-                }
-                else if (giaovien == null)
+                if (giaovien == null)
                 {
                     MessageBox.Show("Vui lòng chọn giáo viên giảng dạy!");
                 }
@@ -53,22 +46,29 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            try 
-                            { 
-                                con.Open(); 
-                            } 
-                            catch (Exception) 
-                            { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                                return; 
+                            try
+                            {
+                                try
+                                {
+                                    con.Open();
+                                }
+                                catch (Exception)
+                                {
+                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                    return;
+                                }
+                                string CmdString = "update PhanCongGiangDay set  MaGiaoVienPhuTrach=" + giaovien.MaGiaoVien + " where MaPhanCong = " + PhanCongHienTai.MaPhanCong + "";
+                                SqlCommand cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                                MessageBox.Show("Sửa phân công giảng dạy thành công!");
+                                SuaPhanCongWD.Close();
                             }
-                            string CmdString = "update PhanCongGiangDay set MaMon=" + monhoc.MaMon + ", MaGiaoVienPhuTrach=" + giaovien.MaGiaoVien +  " where MaPhanCong = " + PhanCongHienTai.MaPhanCong + "";
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.ExecuteNonQuery();
-                            con.Close();
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                            }
                         }
-                        MessageBox.Show("Sửa phân công giảng dạy thành công!");
-                        SuaPhanCongWD.Close();
                     }
 
                 }
@@ -80,65 +80,40 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void LoadThongTinCmb()
         {
-            MonHocCmb = new ObservableCollection<StudentManagement.Model.MonHoc>();
             GiaoVienCmb = new ObservableCollection<StudentManagement.Model.GiaoVien>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    con.Open();
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                }
-                string CmdString = "select * from MonHoc where TenMon=N'" + PhanCongHienTai.TenMon + 
-                                    "' or TenMon not in (select TenMon from PhanCongGiangDay where TenLop=N'" + 
-                                    PhanCongHienTai.TenLop + "' and NienKhoa=N'" + PhanCongHienTai.NienKhoa.ToString() + "')";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        Model.MonHoc item = new Model.MonHoc();
-                        item.MaMon = reader.GetInt32(0);
-                        item.TenMon = reader.GetString(1);
-                        MonHocCmb.Add(item);
-
-
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
                     }
-                    reader.NextResult();
-                }
-                con.Close();
-            }
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                }
-                string CmdString = "select MaGiaoVien, TenGiaoVien from GiaoVien";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
+                    string CmdString = "select MaGiaoVien, TenGiaoVien from GiaoVien";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
                     {
-                        Model.GiaoVien item = new Model.GiaoVien();
-                        item.MaGiaoVien = reader.GetInt32(0);
-                        item.TenGiaoVien = reader.GetString(1);
-                        GiaoVienCmb.Add(item);
+                        while (reader.Read())
+                        {
+                            Model.GiaoVien item = new Model.GiaoVien();
+                            item.MaGiaoVien = reader.GetInt32(0);
+                            item.TenGiaoVien = reader.GetString(1);
+                            GiaoVienCmb.Add(item);
+                        }
+                        reader.NextResult();
                     }
-                    reader.NextResult();
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
-            SuaPhanCongWD.cmbMonHoc.SelectedIndex = MonHocCmb.ToList().FindIndex(x => x.TenMon == PhanCongHienTai.TenMon); ;
             SuaPhanCongWD.cmbGiaoVien.SelectedIndex = GiaoVienCmb.ToList().FindIndex(x => x.TenGiaoVien == PhanCongHienTai.TenGiaoVien); ;
 
         }
