@@ -73,14 +73,14 @@
                         FontSize="30" 
                         FontWeight="SemiBold"/>
                         <TextBox
-                        x:Name="ClassName"
-                        Height="40"
-                        Padding="10 0 0 0"
-                        Width="400"
-                        HorizontalAlignment="Left"
-                        materialDesign:HintAssist.Hint="Nhập tên lớp"
-                        Margin="480 50 0 0 "
-                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                            x:Name="ClassName"
+                            Height="40"
+                            Padding="10"
+                            Width="400"
+                            HorizontalAlignment="Left"
+                            materialDesign:HintAssist.Hint="Nhập tên lớp"
+                            Margin="480 50 0 0 "
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}">
                           
                         </TextBox>
                         <Button Margin="850 50 0 0"
@@ -126,6 +126,7 @@
                               HorizontalAlignment="Left"
                               Margin="30 0 0 0"
                               ItemsSource="{Binding KhoiCmb}"
+                              DisplayMemberPath="TenKhoi"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
@@ -171,7 +172,7 @@
                                FontSize="14"
                                FontWeight="Medium"
                                Margin="140 0 0 0"/>
-                            <TextBlock Text="Địa chỉ"
+                            <TextBlock Text="Tên GVCN"
                                FontSize="14"
                                FontWeight="Medium"
                                Margin="70 0 0 0"/>

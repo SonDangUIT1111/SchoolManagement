@@ -68,6 +68,7 @@
                 HorizontalAlignment="Center"
                 Margin="10 20 10 0"    
                 Width="350"
+                IsEnabled="False"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding LopHocHienTai.SiSo}">
             </TextBox>
@@ -78,8 +79,8 @@
                 Margin="10 20 10 0"    
                 Width="350"
                 ItemsSource="{Binding GiaoVienComboBox}"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                SelectedItem="{Binding SelectedGiaoVien, Mode=TwoWay}">
+                DisplayMemberPath="TenGiaoVien"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}">
             </ComboBox>
         </StackPanel>
         <StackPanel 

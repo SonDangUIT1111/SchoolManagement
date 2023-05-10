@@ -33,67 +33,48 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="80"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock
-            Grid.Row="0"
-            Text="Thêm lớp học mới"
-            FontSize="32"
-            FontWeight="Bold"
-            Padding="20">
+        <TextBlock  Grid.Row="0"
+                    Text="Thêm lớp học mới"
+                    FontSize="32"
+                    FontWeight="Bold"
+                    Padding="20">
         </TextBlock>
-        <StackPanel
-            Grid.Row="1"
-            Margin="0 50 0 0">
-            <TextBox
-                materialDesign:HintAssist.Hint="Nhập tên lớp"
-                x:Name="ClassName"
-                HorizontalAlignment="Center"
-                Margin="10 10 10 0"    
-                Width="350"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+        <StackPanel Grid.Row="1"
+                    Margin="0 50 0 0">
+            <TextBox    materialDesign:HintAssist.Hint="Nhập tên lớp"
+                        x:Name="ClassName"
+                        HorizontalAlignment="Center"
+                        Margin="10 10 10 0"    
+                        Width="350"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
             </TextBox>
-            <TextBox
-                materialDesign:HintAssist.Hint="Nhập năm học"
-                x:Name="AcademyYear"
-                HorizontalAlignment="Center"
-                Margin="10 20 10 0"    
-                Width="350"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+            <TextBox    materialDesign:HintAssist.Hint="Nhập năm học"
+                        x:Name="AcademyYear"
+                        HorizontalAlignment="Center"
+                        Margin="10 20 10 0"    
+                        Width="350"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
             </TextBox>
-            <TextBox
-                materialDesign:HintAssist.Hint="Số lượng học sinh"
-                x:Name="NumberOfStudent"
-                HorizontalAlignment="Center"
-                Margin="10 20 10 0"    
-                Width="350"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}">
-            </TextBox>
-            <ComboBox 
-                materialDesign:HintAssist.Hint="Giáo viên chủ nhiệm"
-                x:Name="cmbFormTeacher"
-                IsEditable="False"
-                Margin="10 20 10 0"    
-                Width="350"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                ItemsSource="{Binding GiaoVienComboBox}"
-                SelectedItem="{Binding SelectedGiaoVien, Mode=TwoWay}">
+            <ComboBox   materialDesign:HintAssist.Hint="Khối"
+                        x:Name="KhoiCmb"
+                        HorizontalAlignment="Center"
+                        Margin="10"    
+                        Width="350"
+                        ItemsSource="{Binding KhoiCmb}"
+                        DisplayMemberPath="TenKhoi"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}">
             </ComboBox>
         </StackPanel>
-        <StackPanel 
-            Grid.Row="2"
-            Orientation="Horizontal"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            >
-            <Button 
-                Content="Xác nhận"
-                Command="{Binding AddClass}">
-                
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top">
+            <Button Content="Xác nhận"
+                    Command="{Binding AddClass}">
             </Button>
-            <Button 
-                Content="Huỷ"
-                Margin="10 0 0 0"
-				Command="{Binding CancelAddClass}">
-                
+            <Button Content="Huỷ"
+                    Margin="10 0 0 0"
+				    Command="{Binding CancelAddClass}">
             </Button>
         </StackPanel>
     </Grid>
