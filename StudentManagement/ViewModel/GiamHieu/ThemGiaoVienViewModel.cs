@@ -108,7 +108,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             try
             {
                 client.Send(message);
-                MessageBox.Show("Tài khoản giáo viên đã được gửi đến email " + to);
+                MessageBox.Show("Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to);
             }
             catch (Exception)
             {
@@ -229,14 +229,13 @@ namespace StudentManagement.ViewModel.GiamHieu
 
 
                         SendAccountByEmail(TaiKhoan, MatKhau, emailOfNewUser);
-                        MessageBox.Show("Thêm giáo viên thành công! Tài khoản và mật khẩu đã được gửi đến email đăng ký của giáo viên.");
                         con.Close();
+                        ThemGiaoVienWD.Close();
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                     }
-                    ThemGiaoVienWD.Close();
                 }
             }
         }

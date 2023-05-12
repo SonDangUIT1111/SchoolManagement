@@ -29,7 +29,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<SuaThongTinHocSinh>((parameter) => { return true; }, (parameter) =>
             {
                 SuaThongTinHocSinhWD = parameter;
-                //MessageBox.Show(HocSinhHienTai.GioiTinh.ToString());
                 if (HocSinhHienTai.GioiTinh.ToString() == "True")
                 {
                     SuaThongTinHocSinhWD.Male.IsChecked = true;
@@ -94,39 +93,62 @@ namespace StudentManagement.ViewModel.GiamHieu
                         {
                             try
                             {
-                                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                                try 
+                                { 
+                                    con.Open(); 
+                                } catch (Exception) 
+                                { 
+                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                    return; 
+                                }
+                                string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = CAST(N'" 
+                                + ToShortDateTime(SuaThongTinHocSinhWD.NgaySinh) + "' AS DATE), GioiTinh = ";
+                                if (SuaThongTinHocSinhWD.Male.IsChecked == true)
+                                {
+                                    CmdString += "1, ";
+                                }
+                                else
+                                {
+                                    CmdString += "0, ";
+                                }
+                                CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
+                                // Định nghĩa @imagebinary
+                                if (ImagePath != null)
+                                {
+                                    ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                                    byte[] buffer = converter.ImageToBinary(ImagePath);
+                                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                                    cmd.Parameters.AddWithValue("@image", buffer);
+                                    cmd.ExecuteScalar();
+                                    con.Close();
+                                }
+                                else
+                                {
+                                    byte[] buffer = HocSinhHienTai.Avatar;
+                                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                                    cmd.Parameters.AddWithValue("@image", buffer);
+                                    cmd.ExecuteScalar();
+                                    MessageBox.Show("Cập nhật thành công!");
+                                    con.Close();
+                                }
+                                MessageBox.Show("Sửa thông tin học sinh thành công!");
+                                SuaThongTinHocSinhWD.Close();
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền");
+                                MessageBox.Show(ex.Message);
                             }
-                            string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = '" + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', GioiTinh = ";
-                            if (SuaThongTinHocSinhWD.Male.IsChecked == true)
-                            {
-                                CmdString += "1, ";
-                            }
-                            else
-                            {
-                                CmdString += "0, ";
-                            }
-                            CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
-                            //MessageBox.Show(CmdString);
-                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                            byte[] buffer = converter.ImageToBinary(ImagePath);
-                            // Định nghĩa @imagebinary
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                            sqlParam.DbType = DbType.Binary;
-                            cmd.ExecuteNonQuery();
-                            con.Close();
                         }
-                        MessageBox.Show("Sửa thông tin học sinh thành công!");
-                        SuaThongTinHocSinhWD.Close();
                     }
 
                 }
 
             });
+        }
+        public string ToShortDateTime(DatePicker st)
+        {
+            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+            return date;
         }
     }
 }

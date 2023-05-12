@@ -20,5 +20,9 @@ namespace StudentManagement.Model
         public byte[] Avatar { get { return _avatar; } set { _avatar = value; } }
         private int _maLop;
         public int MaLop { get { return _maLop; } set { _maLop = value; } }
+        private string _diemTB1;
+        public string DiemTB1 { get { return _diemTB1; } set { _diemTB1 = value; } }
+        private string _diemTB2;
+        public string DiemTB2 { get { return _diemTB2; } set { _diemTB2 = value; } }
     }
 }
