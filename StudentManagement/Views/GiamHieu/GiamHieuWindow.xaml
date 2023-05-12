@@ -338,6 +338,8 @@
                     </Path>
                 </Grid>
             </Button>
+            <Button Content="Phân công"/>
+            <Button Content="Môn học"/>
         </ListBox>
         <Frame x:Name="RPage"  NavigationUIVisibility="Hidden" Grid.Column="1" Grid.Row="1" Content="{Binding PageContent}" />
         <!--<TextBox Grid.Row="1" Grid.Column="0" FontSize="30" VerticalAlignment="Bottom" Margin="90" Text="{Binding Tex, UpdateSourceTrigger=PropertyChanged}"/>-->
