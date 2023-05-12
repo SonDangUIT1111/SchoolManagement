@@ -37,6 +37,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     SuaThongTinHocSinhWD.Female.IsChecked = true;
                 }
+                SuaThongTinHocSinhWD.DiaChi.Text = HocSinhHienTai.DiaChi;
+                SuaThongTinHocSinhWD.Email.Text = HocSinhHienTai.Email; 
             });
             CancelChange = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -118,7 +120,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                                     byte[] buffer = converter.ImageToBinary(ImagePath);
                                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                                    cmd.Parameters.AddWithValue("@image", buffer);
+                                    cmd.Parameters.AddWithValue("@imagebinary", buffer);
                                     cmd.ExecuteScalar();
                                     con.Close();
                                 }
@@ -126,7 +128,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 {
                                     byte[] buffer = HocSinhHienTai.Avatar;
                                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                                    cmd.Parameters.AddWithValue("@image", buffer);
+                                    cmd.Parameters.AddWithValue("@imagebinary", buffer);
                                     cmd.ExecuteScalar();
                                     MessageBox.Show("Cập nhật thành công!");
                                     con.Close();

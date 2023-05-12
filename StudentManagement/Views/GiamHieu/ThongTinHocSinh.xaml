@@ -182,11 +182,11 @@
                         <TextBlock Text="Trung bình học kỳ 1"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="20 0 0 0"/>
+                               Margin="50 0 0 0"/>
                         <TextBlock Text="Trung bình học kỳ 2"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="180 0 0 0"/>
+                               Margin="100 0 0 0"/>
                     </StackPanel>
                     <Separator Margin="0 10 0 0"
                                Width="920"
@@ -220,7 +220,7 @@
                                                    Width="160"/>
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
-                                                   Text="{Binding NgaySinh}"
+                                                   Text="{Binding NgaySinh, Converter={StaticResource DateTimeToDateConverter}}"
                                                    VerticalAlignment="Center"
                                                    Width="80"
                                                    TextTrimming="WordEllipsis"/>
@@ -232,12 +232,14 @@
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
                                                    Width="200"
+                                                   TextAlignment="Center"
                                                    TextTrimming="WordEllipsis"
                                                    VerticalAlignment="Center"
                                                    Text="{Binding DiemTB1}"/>
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
                                                    Width="200"
+                                                   TextAlignment="Center"
                                                    VerticalAlignment="Center"
                                                    Text="{Binding DiemTB2}"/>
                                         <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"

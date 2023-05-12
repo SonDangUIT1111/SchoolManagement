@@ -15,6 +15,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string NienKhoaQueries { get; set; }
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
+        public bool IsLoadAll { get; set; } = false;
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachHocSinh;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachHocSinh { get => _danhSachHocSinh; set { _danhSachHocSinh = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
@@ -49,6 +50,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
+                IsLoadAll = false;
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
@@ -65,6 +67,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
+                IsLoadAll = false;
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
@@ -78,6 +81,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
+                IsLoadAll = false;
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
@@ -94,6 +98,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
             {
                 DanhSachHocSinh.Clear();
+                IsLoadAll = false;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
@@ -108,6 +113,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
                                             " where hs.MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
+                        if (IsLoadAll)
+                        {
+                            CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
+                                            " where TenHocSinh like N'%" + parameter.Text + "%'";
+                        }
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -123,6 +133,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = false;
                                         }
                                         catch (Exception)
                                         {
@@ -134,6 +145,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = false;
                                         }
                                         catch (Exception)
                                         {
@@ -154,6 +166,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = true;
                                         }
                                         catch (Exception)
                                         {
@@ -165,6 +178,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = true;
                                         }
                                         catch (Exception)
                                         {
@@ -176,8 +190,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 }
                             }
                             reader.NextResult();
-                            con.Close();
                         }
+                        con.Close();
                     }
                     catch (Exception ex)
                     {
@@ -189,6 +203,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             StudentSearchAll = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
             {
                 DanhSachHocSinh.Clear();
+                IsLoadAll = true;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
@@ -218,10 +233,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = false;
                                         }
                                         catch (Exception)
                                         {
                                             DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
+                                            stillLoad = false;
                                         }
                                     }
                                     else if (reader.GetInt32(5) == 2)
@@ -229,10 +246,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = false;
                                         }
                                         catch (Exception)
                                         {
                                             DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 =  "Chưa có thông tin";
+                                            stillLoad = false;
                                         }
                                     }
                                 }   
@@ -249,10 +268,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = true;
                                         }
                                         catch (Exception)
                                         {
                                             student.DiemTB1 = "Chưa có thông tin";
+                                            stillLoad = true;
                                         }
                                     }
                                     else if (reader.GetInt32(5) == 2)
@@ -260,10 +281,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         try
                                         {
                                             student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                            stillLoad = true;
                                         }
                                         catch (Exception)
                                         {
                                             student.DiemTB2 = "Chưa có thông tin";
+                                            stillLoad = true;
                                         }
                                     }
                                     DanhSachHocSinh.Add(student);
@@ -318,23 +341,87 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                         return; 
                     }
-                    string CmdString = "select MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, DiaChi, AnhThe, Email from HocSinh where MaLop = " + LopQueries;
+
+                    string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh where hs.MaLop = " + LopQueries;
+                    if (IsLoadAll)
+                    {
+                        CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
+
+                    }
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
+                    bool stillLoad = false;
                     while (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
-                            student.MaHocSinh = reader.GetInt32(0);
-                            student.TenHocSinh = reader.GetString(1);
-                            student.NgaySinh = reader.GetDateTime(2);
-                            student.GioiTinh = reader.GetBoolean(3);
-                            student.DiaChi = reader.GetString(4);
-                            student.Avatar = (byte[])reader[5];
-                            student.Email = reader.GetString(6);
-                            DanhSachHocSinh.Add(student);
+                            if (stillLoad == true)
+                            {
+                                if (reader.GetInt32(5) == 1)
+                                {
+                                    try
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = false;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
+                                        stillLoad = false;
+                                    }
+                                }
+                                else if (reader.GetInt32(5) == 2)
+                                {
+                                    try
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = false;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
+                                        stillLoad = false;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
+                                student.MaHocSinh = reader.GetInt32(0);
+                                student.TenHocSinh = reader.GetString(1);
+                                student.NgaySinh = reader.GetDateTime(2);
+                                student.GioiTinh = reader.GetBoolean(3);
+                                student.Avatar = (byte[])reader[6];
+                                if (reader.GetInt32(5) == 1)
+                                {
+                                    try
+                                    {
+                                        student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        student.DiemTB1 = "Chưa có thông tin";
+                                        stillLoad = true;
+                                    }
+                                }
+                                else if (reader.GetInt32(5) == 2)
+                                {
+                                    try
+                                    {
+                                        student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        student.DiemTB2 = "Chưa có thông tin";
+                                        stillLoad = true;
+                                    }
+                                }
+                                DanhSachHocSinh.Add(student);
+                                stillLoad = true;
+                            }
                         }
                         reader.NextResult();
                     }

@@ -3,6 +3,7 @@ using StudentManagement.Converter;
 using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -25,6 +26,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ChangeImage { get; set; }
         public ICommand CreateStudent { get; set; }
         public ICommand CancelAdd { get; set; }
+        public ObservableCollection<string> ListCommand = new ObservableCollection<string>();
         public ThemHocSinhMoiViewModel()
         {
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -87,6 +89,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn thêm học sinh này không?", "Add Confirmation", System.Windows.MessageBoxButton.YesNo);
                     if (ConfirmAdd == MessageBoxResult.Yes)
                     {
+                        ListCommand.Clear();
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
                             try
@@ -147,22 +150,30 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 // Tạo bảng điểm cho học sinh
                                 CmdString = "select MaMon from MonHoc where ApDung = 1";
                                 cmd = new SqlCommand(CmdString, con);
-                                reader = cmd.ExecuteReader();
-                                while (reader.HasRows)
+                                SqlDataReader reader1 = cmd.ExecuteReader();
+                                while (reader1.HasRows)
                                 {
-                                    while (reader.Read())
+                                    while (reader1.Read())
                                     {
-                                        CmdString = "insert into HeThongDiem (HocKy,MaMon,MaHocSinh) values (1,"+ reader.GetInt32(0).ToString()
+                                        string CmdString1 = "insert into HeThongDiem (HocKy,MaMon,MaHocSinh) values (1,"+ reader1.GetInt32(0).ToString()
                                                     +", "+hocsinh.MaHocSinh.ToString() +")  ";
-                                        CmdString = CmdString + "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,TrungBinhHocKy) values (2," + reader.GetInt32(0).ToString()
-                                                                + ", " + hocsinh.MaHocSinh.ToString() + ",NULL) ";
-                                        cmd = new SqlCommand(CmdString, con);
-                                        cmd.ExecuteNonQuery();
+                                        CmdString1 = CmdString1 + "insert into HeThongDiem (HocKy,MaMon,MaHocSinh) values (2," + reader1.GetInt32(0).ToString()
+                                                                + ", " + hocsinh.MaHocSinh.ToString() + ") ";
+                                        ListCommand.Add(CmdString1);
                                     }
-                                    reader.NextResult();
+                                    reader1.NextResult();
                                 }
-                                CmdString = "insert into ThanhTich (HocKy,MaHocSinh) values (1,"+hocsinh.MaHocSinh.ToString()
-                                            +") insert into ThanhTich (HocKy,MaHocSinh) values (2, "+hocsinh.MaHocSinh.ToString()+") ";
+                                reader1.Close();
+
+                                for (int i = 0;i<ListCommand.Count;i++)
+                                {
+                                    CmdString = ListCommand[i].ToString();
+                                    cmd = new SqlCommand(CmdString, con);
+                                    cmd.ExecuteNonQuery();
+                                }
+
+                                CmdString = "insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy) values (1,"+hocsinh.MaHocSinh.ToString()
+                                            +",NULL) insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy) values (2, "+hocsinh.MaHocSinh.ToString()+",NULL) ";
                                 cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
 
