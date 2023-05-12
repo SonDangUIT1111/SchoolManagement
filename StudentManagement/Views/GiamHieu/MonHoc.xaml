@@ -93,11 +93,12 @@
                              Height="40"
                              Padding="10"
                              Margin="50 0 0 0"
-                             IsEnabled="False"/>
+                             IsEnabled="False">
+                    </TextBox>
                     <Button x:Name="btnThemMonHoc"
                             Margin="25 0 0 0"
                             Background="Transparent"
-                            BorderBrush="#1ED760"
+                            BorderBrush="#0099FF"
                             IsDefault="True"
                             Command="{Binding  AddSubject}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
@@ -109,7 +110,7 @@
                             Margin="-40 0 0 0"
                             Visibility="Hidden"
                             Background="Transparent"
-                            BorderBrush="#1ED760"
+                            BorderBrush="#0099FF"
                             IsDefault="True"
                             Command="{Binding AddConfirm}"
                             CommandParameter="{Binding ElementName=txtTenMH}"
@@ -118,31 +119,45 @@
                                                  Height="20"
                                                  Kind="Check" />
                     </Button>
+                    <Button x:Name="btnXacNhanDoiTen"
+                            Margin="-40 0 0 0"
+                            Visibility="Hidden"
+                            Background="Transparent"
+                            BorderBrush="#1ED760"
+                            IsDefault="True"
+                            Command="{Binding EditSubject}"
+                            CommandParameter="{Binding ElementName=txtTenMH}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="PencilRulerOutline" />
+                    </Button>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
                           Margin="25 0 50 0"
                           Width="450"
                           HorizontalAlignment="Right"
                           BorderThickness="0"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           RowStyle="{StaticResource DataGridRowStyle1}"
                           CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
-                          ItemsSource="{Binding DanhSachMonHoc}"
-                          SelectedItem="{Binding GridSelectedItem}">
+                          ItemsSource="{Binding DanhSachMonHoc}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="450">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBox 
+                                        <TextBlock 
                                                 x:Name="tbMonHoc"
                                                 Margin="20 0 0 0"
                                                 FontSize="14"
                                                 Text="{Binding TenMon}"
+                                                Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                                 VerticalAlignment="Center"
                                                 TextAlignment="Center"
                                                 Width="300">
-                                        </TextBox>
+                                        </TextBlock>
                                         <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
                                                 Background="#FF47D440"
                                                 Foreground="White"
@@ -151,7 +166,7 @@
                                                 Height="30"
                                                 Padding="0"
                                                 Margin="20 0 0 0"
-                                                Command="{Binding Source={StaticResource MonHocVM},Path=EditSubject}"
+                                                Command="{Binding Source={StaticResource MonHocVM},Path=EditEnable}"
                                                 CommandParameter="{Binding}"/>
                                         <Button x:Name="btnXoaMH"
                                                 Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
