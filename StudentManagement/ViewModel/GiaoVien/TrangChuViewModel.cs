@@ -13,12 +13,8 @@ namespace StudentManagement.ViewModel.GiaoVien
     internal class TrangChuViewModel : BaseViewModel
     {
         //declare variable
-        private int _idGiaoVien;
-        public int IdGiaoVien { get { return _idGiaoVien; } set { _idGiaoVien = value; } }
-        private byte[] _avatar;
-        public byte[] Avatar { get { return _avatar; } set { _avatar = value; OnPropertyChanged(); } }
-        private string _tenGiaoVien;
-        public string TenGiaoVien { get { return _tenGiaoVien; } set { _tenGiaoVien = value; OnPropertyChanged(); } }
+        private Model.GiaoVien _currentUser;
+        public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
         public GiaoVienWindow GiaoVienWD { get; set; }
         //declare Pages
         public StudentManagement.Views.GiaoVien.BaoCao BaoCaoPage { get; set; }
@@ -37,12 +33,12 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand SuaThongTinCaNhan { get; set; }
         public TrangChuViewModel()
         {
-            //IdGiaoVien = 100000;
             BaoCaoPage = new StudentManagement.Views.GiaoVien.BaoCao();
             LopHocPage = new StudentManagement.Views.GiaoVien.LopHoc();
             ThongTinGiaoVienPage = new StudentManagement.Views.GiaoVien.ThongTinGiaoVien();
             ThongTinTruongPage = new StudentManagement.Views.GiaoVien.ThongTinTruong();
-
+            CurrentUser = new StudentManagement.Model.GiaoVien();
+            CurrentUser.MaGiaoVien = 100000;
             //define ICommand
             LoadWindow = new RelayCommand<GiaoVienWindow>((parameter) => { return true; }, (parameter) =>
             {
@@ -57,7 +53,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 StudentManagement.ViewModel.GiaoVien.LopHocViewModel vm = LopHocPage.DataContext as StudentManagement.ViewModel.GiaoVien.LopHocViewModel;
-                vm.IdGiaoVien = IdGiaoVien;
+                vm.IdGiaoVien = CurrentUser.MaGiaoVien;
                 parameter.Content = LopHocPage;
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
@@ -73,33 +69,18 @@ namespace StudentManagement.ViewModel.GiaoVien
 
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email from GiaoVien where MaGiaoVien = " + IdGiaoVien;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
+                    try
                     {
-                        while (reader.Read())
-                        {
-                            Model.GiaoVien teacher = new Model.GiaoVien()
-                            {
-                                MaGiaoVien = IdGiaoVien,
-                                TenGiaoVien = TenGiaoVien,
-                                NgaySinh = reader.GetDateTime(0),
-                                GioiTinh = reader.GetBoolean(1),
-                                DiaChi = reader.GetString(2),
-                                Email = reader.GetString(3),
-                                Avatar = Avatar
-                            };
-                            SuaGiaoVien window = new SuaGiaoVien();
-                            SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
-                            data.GiaoVienHienTai = teacher;
-                            window.ShowDialog();
-                            LoadThongTinCaNhan();
-                        }
-                        reader.NextResult();
+                        SuaGiaoVien window = new SuaGiaoVien();
+                        SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
+                        data.GiaoVienHienTai = CurrentUser;
+                        window.ShowDialog();
+                        LoadThongTinCaNhan();
                     }
-                    con.Close();
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             });
 
@@ -108,14 +89,32 @@ namespace StudentManagement.ViewModel.GiaoVien
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                string CmdString = "select TenGiaoVien,AnhThe from GiaoVien where MaGiaoVien = " + IdGiaoVien.ToString();
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows) reader.Read();
-                TenGiaoVien = reader.GetString(0);
-                Avatar = (byte[])reader.GetValue(1);
-                con.Close();
+                try
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string CmdString = "select TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    CurrentUser.TenGiaoVien = reader.GetString(0);
+                    CurrentUser.NgaySinh = reader.GetDateTime(1);
+                    CurrentUser.GioiTinh = reader.GetBoolean(2);
+                    CurrentUser.DiaChi = reader.GetString(3);
+                    CurrentUser.Email = reader.GetString(4);
+                    CurrentUser.Avatar = (byte[])reader[5];
+                    con.Close();
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

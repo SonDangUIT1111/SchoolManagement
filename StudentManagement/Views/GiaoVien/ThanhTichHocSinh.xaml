@@ -86,6 +86,7 @@
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              DisplayMemberPath="TenKhoi"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               ItemsSource="{Binding KhoiCombobox}">
                             <i:Interaction.Triggers>
@@ -104,6 +105,7 @@
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              DisplayMemberPath="TenLop"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               ItemsSource="{Binding LopCombobox}">
                             <i:Interaction.Triggers>

@@ -70,6 +70,7 @@
                               Width="200"
                               Height="40"
                               Padding="10"
+                              DisplayMemberPath="TenKhoi"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
                               ItemsSource="{Binding DanhSachKhoi}"

@@ -130,15 +130,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             cmd.Parameters.AddWithValue("@image", buffer);
                             cmd.ExecuteScalar();
                             con.Close();
-                        }
-                        else
-                        {
-                            byte[] buffer = GiaoVienHienTai.Avatar;
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.Parameters.AddWithValue("@image", buffer);
-                            cmd.ExecuteScalar();
-                            MessageBox.Show("Cập nhật thành công!");
-                            con.Close();
+                            MessageBox.Show("Cập nhật thành công.");
                             SuaGiaoVienWD.Close();
                         }
                     }

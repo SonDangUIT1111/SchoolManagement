@@ -122,18 +122,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     SqlCommand cmd = new SqlCommand(CmdString, con);
                                     cmd.Parameters.AddWithValue("@imagebinary", buffer);
                                     cmd.ExecuteScalar();
-                                    con.Close();
-                                }
-                                else
-                                {
-                                    byte[] buffer = HocSinhHienTai.Avatar;
-                                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                                    cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                                    cmd.ExecuteScalar();
                                     MessageBox.Show("Cập nhật thành công!");
                                     con.Close();
                                 }
-                                MessageBox.Show("Sửa thông tin học sinh thành công!");
                                 SuaThongTinHocSinhWD.Close();
                             }
                             catch (Exception ex)

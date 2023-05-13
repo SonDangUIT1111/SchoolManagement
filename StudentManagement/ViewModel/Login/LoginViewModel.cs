@@ -250,7 +250,7 @@ namespace StudentManagement.ViewModel.Login
                         paramater.Hide();
                         GiaoVienWindow window = new GiaoVienWindow();
                         StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
-                        vm.IdGiaoVien = id;
+                        vm.CurrentUser.MaGiaoVien = id;
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -263,7 +263,6 @@ namespace StudentManagement.ViewModel.Login
                 }
                 else if (IndexRole == 2)
                 {
-                    // queries hoc sinh
                     int id = -1;
                     int checkUser = 0;
                     string CmdString = string.Empty;

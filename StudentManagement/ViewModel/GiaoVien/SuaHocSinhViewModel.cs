@@ -26,7 +26,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand ChangeHocSinh { get; set; }
         public SuaHocSinhViewModel()
         {
-            HocSinhHienTai = new StudentManagement.Model.HocSinh { };
+            HocSinhHienTai = new StudentManagement.Model.HocSinh();
             LoadWindow = new RelayCommand<SuaHocSinh>((parameter) => { return true; }, (parameter) =>
             {
                 SuaHocSinhWD = parameter;
@@ -80,8 +80,6 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void CapNhatHocSinh()
         {
-            //MessageBox.Show(Avatar);
-            // MessageBox.Show("testin end");
             if (SuaHocSinhWD.TenHS.Text == "" |
                 SuaHocSinhWD.NgaySinh.Text == "" |
                 SuaHocSinhWD.DiaChi.Text == "" |
@@ -102,39 +100,45 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-
+                        try 
+                        { 
+                            con.Open();
+                        } catch (Exception) 
+                        { 
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return;
+                        }
+                        string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
+                                            "', NgaySinh = '" + ToShortDateTime(SuaHocSinhWD.NgaySinh) +
+                                            "', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
+                                            ", DiaChi = N'" + SuaHocSinhWD.DiaChi.Text +
+                                            "', Email = '" + SuaHocSinhWD.Email.Text +
+                                            "' ,AnhThe = @image" +
+                                            " where MaHocSinh = " + HocSinhHienTai.MaHocSinh.ToString();
+                        if (ImagePath != null)
+                        {
+                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                            byte[] buffer = converter.ImageToBinary(ImagePath);
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                            cmd.ExecuteScalar();
+                            MessageBox.Show("Cập nhật thành công!");
+                            con.Close();
+                        }
+                        SuaHocSinhWD.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
+                        MessageBox.Show(ex.Message);
                         return;
                     }
-                    string CmdString = "Update HocSinh set TenHocSinh = N\'" + SuaHocSinhWD.TenHS.Text +
-                        "\', NgaySinh = \'" + SuaHocSinhWD.NgaySinh.DisplayDate.ToString() +
-                        "\', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
-                        ", DiaChi = N\'" + SuaHocSinhWD.DiaChi.Text +
-                        "\', Email = \'" + SuaHocSinhWD.Email.Text +
-                        "\' where MaHocSinh = " + HocSinhHienTai.MaHocSinh.ToString();
-                    //MessageBox.Show(CmdString);
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    con.Close();
-                    if (ImagePath != null)
-                    {
-                        //MessageBox.Show(ImagePath);
-                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                        byte[] buffer = converter.ImageToBinary(ImagePath);
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        string cmdstring = "update HocSinh set AnhThe = @image where MaHocSinh = " + HocSinhHienTai.MaHocSinh.ToString();
-                        cmd = new SqlCommand(cmdstring, con);
-                        cmd.Parameters.AddWithValue("@image", buffer);
-                        cmd.ExecuteScalar();
-                        con.Close();
-                    }
-                    MessageBox.Show("Cập nhật thành công!");
                 }
             }
+        }
+        public string ToShortDateTime(DatePicker st)
+        {
+            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+            return date;
         }
     }
 }
