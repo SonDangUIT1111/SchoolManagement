@@ -98,6 +98,7 @@
                     <ComboBox x:Name="cmbMonHoc"
                                 Width="256" 
                                 Margin="20 0 0 0"
+                                DisplayMemberPath="TenMon"
                                 materialDesign:HintAssist.Hint="Môn học"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                                 ItemsSource="{Binding MonHocComboBox}"
@@ -172,12 +173,6 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding BaoCaoMonSelectionChanged}"
-                                   CommandParameter="{Binding ElementName=BaoCaoMonDataGrid}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
                     </DataGrid>
                     <lvc:CartesianChart
                                     Grid.Row="0"
@@ -189,7 +184,7 @@
                             <lvc:Axis Title="Lớp" Labels="{Binding TenLop}"></lvc:Axis>
                         </lvc:CartesianChart.AxisX>
                         <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="Số lượng đạt"></lvc:Axis>
+                            <lvc:Axis Title="Số lượng đạt" LabelFormatter="{Binding Formatter}"></lvc:Axis>
                         </lvc:CartesianChart.AxisY>
                     </lvc:CartesianChart>
                     <lvc:PieChart

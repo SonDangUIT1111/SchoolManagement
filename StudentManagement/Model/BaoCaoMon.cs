@@ -14,6 +14,8 @@ namespace StudentManagement.Model
         public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
         public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
+        private int _siSo;
+        public int SiSo { get { return _siSo; } set { _siSo = value; } }
         private int _maMon;
         public int MaMon { get { return _maMon; } set { _maMon = value; } }
         private string _tenMon;

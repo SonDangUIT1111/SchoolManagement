@@ -194,6 +194,7 @@
                 </StackPanel>
                 <DataGrid Grid.Row="1"
                           Margin="20"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           RowStyle="{StaticResource DataGridRowStyle1}"
                           CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"

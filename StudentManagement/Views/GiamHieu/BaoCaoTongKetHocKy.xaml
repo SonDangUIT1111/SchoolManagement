@@ -98,6 +98,7 @@
                     <ComboBox x:Name="cmbKhoi"
                                 Width="256" 
                                 Margin="20 0 0 0"
+                                DisplayMemberPath="TenKhoi"
                                 materialDesign:HintAssist.Hint="Khối"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                                 ItemsSource="{Binding KhoiComboBox}"
@@ -166,12 +167,6 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding BaoCaoHocKySelectionChanged}"
-                                   CommandParameter="{Binding ElementName=BaoCaoHocKyDataGrid}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
                     </DataGrid>
                     <lvc:CartesianChart
                     Grid.Row="0"

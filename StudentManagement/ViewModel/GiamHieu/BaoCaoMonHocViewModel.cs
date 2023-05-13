@@ -36,9 +36,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
 
        
-        public ObservableCollection<string> _monHocComboBox;
+        public ObservableCollection<Model.MonHoc> _monHocComboBox;
 
-        public ObservableCollection<string> MonHocComboBox
+        public ObservableCollection<Model.MonHoc> MonHocComboBox
         {
             get => _monHocComboBox;
             set { _monHocComboBox = value; OnPropertyChanged(); }
@@ -92,17 +92,6 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public CartesianChart ReportChart { get; set; }
 
-        private BaoCaoMon _gridSeletecdItem;
-
-        public BaoCaoMon GridSelectedItem
-        {
-            get { return _gridSeletecdItem; }
-            set
-            {
-                _gridSeletecdItem = value;
-                OnPropertyChanged();
-            }
-        }
 
         private bool _cartesianChartVisibility;
         public bool CartersianChartVisibility
@@ -126,16 +115,35 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
 
+        public Func<double, string> Formatter { get; set; }
+
+        public BaoCaoMon _gridSeletecdItem;
+
+        public BaoCaoMon GridSelectedItem
+        {
+            get { return _gridSeletecdItem; }
+            set
+            {
+                _gridSeletecdItem = value;
+                OnPropertyChanged();
+                if (_gridSeletecdItem != null)
+                {
+                    LoadPieChart();
+                    CartersianChartVisibility = false;
+                    PieChartVisibility = true;
+                }
+            }
+        }
+
         public ICommand LoadBaoCao { get; set; }
         public ICommand FilterNienKhoa { get; set; }
         public ICommand FilterHocKy { get; set; }
         public ICommand FilterMonHoc { get; set; }
-        public ICommand BaoCaoMonSelectionChanged { get; set; }
 
         public BaoCaoMonHocViewModel()
         {
             NienKhoaComboBox = new ObservableCollection<string>();
-            MonHocComboBox = new ObservableCollection<string>();
+            MonHocComboBox = new ObservableCollection<Model.MonHoc>();
             DanhSachBaoCaoMon = new ObservableCollection<Model.BaoCaoMon>();
             TenLop = new List<string>();
             SoLuongDatChartVal = new List<int>();
@@ -171,7 +179,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
                 {
-                    HocKyQueries = cmb.SelectedItem.ToString();
+                    if (cmb.SelectedItem.ToString().Contains("1"))
+                    {
+                        HocKyQueries = "1";
+                    }
+                    else if (cmb.SelectedItem.ToString().Contains("2"))
+                    {
+                        HocKyQueries= "2";
+                    }
                     LoadDanhSachBaoCaoMon();
                 }
             });
@@ -182,7 +197,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
                 {
-                    MonHocQueries = cmb.SelectedItem.ToString();
+                    Model.MonHoc item = cmb.SelectedItem as Model.MonHoc;
+                    MonHocQueries = item.MaMon.ToString();
                 }
                 LoadDanhSachBaoCaoMon();
                 LoadCartesianChart();
@@ -190,12 +206,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 PieChartVisibility = false;
             });
 
-            BaoCaoMonSelectionChanged = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                LoadPieChart();
-                CartersianChartVisibility = false;
-                PieChartVisibility = true;
-            });
+
         }
 
 
@@ -204,12 +215,20 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             BaoCaoWD.cmbHocKy.Items.Add("Học kỳ 1");
             BaoCaoWD.cmbHocKy.Items.Add("Học kỳ 2");
+            HocKyQueries = "1";
             BaoCaoWD.cmbHocKy.SelectedIndex = 0;
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                    try 
+                    {
+                        con.Open();
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return;
+                    }
                     string cmdString = "select distinct NienKhoa from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -231,9 +250,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     con.Close();
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền");
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -248,28 +267,39 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string cmdString = "select distinct TenMon from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon" +
-                                        " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = '" + HocKyQueries + "'";
+                    try 
+                    {
+                        con.Open();
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string cmdString = "select distinct bc.MaMon,TenMon from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon" +
+                                        " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = " + HocKyQueries + " ";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            MonHocComboBox.Add(reader.GetString(0));
-                            if (string.IsNullOrEmpty(LopQueries))
+                            MonHocComboBox.Add(new Model.MonHoc()
                             {
-                                MonHocQueries = reader.GetString(0);
+                                MaMon = reader.GetInt32(0),
+                                TenMon = reader.GetString(1),
+                            });
+                            if (string.IsNullOrEmpty(MonHocQueries))
+                            {
+                                MonHocQueries = reader.GetInt32(0).ToString();
                             }
                         }
                         reader.NextResult();
                     }
                     con.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -285,9 +315,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        string CmdString = "select TenLop,TenMon,SoLuongDat,TiLe from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon " +
-                                            " where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "'";
+                        try 
+                        { 
+                            con.Open();
+                        } catch (Exception) 
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return;
+                        }
+                        string CmdString = "select bc.MaLop,TenLop,SiSo,TenMon,SoLuongDat,TiLe from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon " +
+                                            " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = " + HocKyQueries + " and bc.MaMon = " + MonHocQueries + " ";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -296,19 +333,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                             while (reader.Read())
                             {
                                 StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon();
-                                baocaomon.TenLop = reader.GetString(0);
-                                baocaomon.TenMon = reader.GetString(1);
-                                baocaomon.SoLuongDat = reader.GetInt32(2);
-                                baocaomon.TiLe = reader.GetString(3);
+                                baocaomon.MaLop = reader.GetInt32(0);
+                                baocaomon.TenLop = reader.GetString(1);
+                                baocaomon.SiSo = reader.GetInt32(2);
+                                baocaomon.TenMon = reader.GetString(3);
+                                baocaomon.SoLuongDat = reader.GetInt32(4);
+                                baocaomon.TiLe = reader.GetString(5);
                                 DanhSachBaoCaoMon.Add(baocaomon);
                             }
                             reader.NextResult();
                         }
                         con.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBox.Show(ex.Message);
                     }
                 }
             }
@@ -320,57 +359,22 @@ namespace StudentManagement.ViewModel.GiamHieu
             SoLuongDat.Clear();
             if (!String.IsNullOrEmpty(NienKhoaQueries) && !String.IsNullOrEmpty(MonHocQueries))
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                try
                 {
-                    try
+                    for (int i = 0; i < DanhSachBaoCaoMon.Count; i++)
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        string CmdString = "SELECT DISTINCT TenLop from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon " +
-                                            " where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                TenLop.Add(reader.GetString(0));
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
-
-
-
-
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        CmdString = "SELECT SoLuongDat from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon " +
-                                    " where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "'";
-                        cmd = new SqlCommand(CmdString, con);
-                        reader = cmd.ExecuteReader();
-
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                SoLuongDatChartVal.Add(reader.GetInt32(0));
-                            }
-
-                            reader.NextResult();
-                        }
-
-                        SoLuongDat.Add(new ColumnSeries
-                        {
-                            Title = "Số lượng đạt",
-                            Values = new ChartValues<int>(SoLuongDatChartVal)
-                        });
-
-                        con.Close();
+                        TenLop.Add(DanhSachBaoCaoMon[i].TenLop);
+                        SoLuongDatChartVal.Add(DanhSachBaoCaoMon[i].SoLuongDat);
                     }
-                    catch (Exception)
+                    SoLuongDat.Add(new ColumnSeries
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                    }
+                        Title = "Số lượng đạt",
+                        Values = new ChartValues<int>(SoLuongDatChartVal)
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }
@@ -379,48 +383,19 @@ namespace StudentManagement.ViewModel.GiamHieu
             TiLeDat.Clear();
             if (!String.IsNullOrEmpty(NienKhoaQueries) && !String.IsNullOrEmpty(MonHocQueries) && GridSelectedItem != null)
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                try
                 {
-                    try
+
+                    if (BaoCaoWD.BaoCaoMonDataGrid.SelectedIndex >= 0 && BaoCaoWD.BaoCaoMonDataGrid.SelectedIndex < DanhSachBaoCaoMon.Count)
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        string CmdString = "SELECT SoLuongDat from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon " +
-                                            " where NienKhoa = '" + NienKhoaQueries + "' and HocKy ='" + HocKyQueries + "' and TenMon = '" + MonHocQueries + "' and TenLop = '" + GridSelectedItem.TenLop + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                Dat = reader.GetInt32(0);
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
+                        Dat = DanhSachBaoCaoMon[BaoCaoWD.BaoCaoMonDataGrid.SelectedIndex].SoLuongDat;
+                        TongSiSoLop = DanhSachBaoCaoMon[BaoCaoWD.BaoCaoMonDataGrid.SelectedIndex].SiSo;
 
 
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                        CmdString = "SELECT SiSo from Lop where NienKhoa = '" + NienKhoaQueries + "' and TenLop = '" + GridSelectedItem.TenLop + "'";
-                        cmd = new SqlCommand(CmdString, con);
-                        reader = cmd.ExecuteReader();
 
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                TongSiSoLop = reader.GetInt32(0);
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                    }
-                    KhongDat = TongSiSoLop - Dat;
-                    TiLeDat = new SeriesCollection
+
+                        KhongDat = TongSiSoLop - Dat;
+                        TiLeDat = new SeriesCollection
                     {
                     new PieSeries
                     {
@@ -431,8 +406,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         Title = "Tỉ lệ không đạt",
                         Values = new ChartValues<int> {KhongDat}
+                    } };
                     }
-                };
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
         }

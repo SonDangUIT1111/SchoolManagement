@@ -119,6 +119,7 @@
                 </StackPanel>
                 <DataGrid Grid.Row="1"
                           Margin="25,20,25,10"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           ItemsSource="{Binding DanhSachGiaoVien}"
                           Style="{StaticResource DataGridStyle1}"
                           RowStyle="{StaticResource DataGridRowStyle1}"

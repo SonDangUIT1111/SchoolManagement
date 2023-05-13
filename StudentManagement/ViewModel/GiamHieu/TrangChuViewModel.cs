@@ -1,4 +1,5 @@
-﻿using StudentManagement.Views.GiamHieu;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -19,6 +20,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ThongTinHocSinh ThongTinHocSinhPage { get; set; }
         public ThongTinTruong ThongTinTruongPage { get; set; }
         public QuanLiDiemSo QuanLiDiemSoPage { get; set; }
+        public BaoCaoTongKetHocKy BaoCaoTongKetHocKyPage { get; set; }
+        public Views.GiamHieu.MonHoc MonHocPage { get; set; }
+        public Views.GiamHieu.PhanCongGiangDay PhanCongGiangDayPage { get; set; }
 
 
         //declare ICommand
@@ -26,9 +30,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand SwitchThongTinGiaoVien { get; set; }
         public ICommand SwitchLopHoc { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
-        public ICommand SwitchBaoCao { get; set; }
+        public ICommand SwitchBaoCaoMon { get; set; }
+        public ICommand SwitchBaoCaoHocKy { get; set; }
         public ICommand SwitchThayDoiQuyDinh { get; set; }
         public ICommand SwitchQuanLyBangDiem { get; set; }
+        public ICommand SwitchMonHoc { get; set; }
+        public ICommand SwitchPhanCongGiangDay { get; set; }
 
 
         public TrangChuViewModel()
@@ -40,6 +47,9 @@ namespace StudentManagement.ViewModel.GiamHieu
             ThongTinHocSinhPage = new ThongTinHocSinh();
             ThongTinTruongPage = new ThongTinTruong();
             QuanLiDiemSoPage = new QuanLiDiemSo();
+            BaoCaoTongKetHocKyPage = new BaoCaoTongKetHocKy();
+            MonHocPage = new Views.GiamHieu.MonHoc();
+            PhanCongGiangDayPage = new Views.GiamHieu.PhanCongGiangDay();
 
             //define ICommand
             SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
@@ -58,9 +68,13 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 parameter.Content = ThongTinTruongPage;
             });
-            SwitchBaoCao = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            SwitchBaoCaoMon = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = BaoCaoPage;
+            });
+            SwitchBaoCaoHocKy = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoTongKetHocKyPage;
             });
             SwitchThayDoiQuyDinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -69,6 +83,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             SwitchQuanLyBangDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = QuanLiDiemSoPage;
+            });
+            SwitchPhanCongGiangDay = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = PhanCongGiangDayPage;
+            });
+            SwitchMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = MonHocPage;
             });
 
         }
