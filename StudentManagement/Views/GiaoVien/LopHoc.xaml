@@ -65,7 +65,6 @@
                             Margin="0 100 0 0"
                             VerticalAlignment="Top">
                     <ComboBox materialDesign:HintAssist.Hint="Niên Khóa"
-                              IsEditable="False"
                               x:Name="ChonKhoa"
                               Width="200"
                               Height="40"
@@ -76,13 +75,12 @@
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding LoadLop}"/>
+                                <i:InvokeCommandAction Command="{Binding LoadKhoi}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox materialDesign:HintAssist.Hint="Khối"
                               x:Name="ChonKhoi"
-                              IsEditable="False"
                               Width="150"
                               Height="40"
                               Padding="10"
@@ -93,37 +91,28 @@
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding LoadKhoa}"/>
+                                <i:InvokeCommandAction Command="{Binding LoadLop}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox materialDesign:HintAssist.Hint="Lớp"
-                              IsEditable="False"
                               x:Name="ChonLop"
-                              SelectedItem="{Binding LopDaChon}"
                               Width="200"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
                               ItemsSource="{Binding DanhSachLop}"
+                              DisplayMemberPath="TenLop"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding LoadHocSinh}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Margin="0 0 0 0"
-                                                       FontSize="14"
-                                                       Text="{Binding TenLop}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <TextBox materialDesign:HintAssist.Hint="Floating Hint"
+                    <TextBox x:Name="txtSearch"
+                             materialDesign:HintAssist.Hint="Search ..."
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              Width="250"
                              Height="40"
@@ -133,6 +122,7 @@
                             Background="Transparent"
                             BorderBrush="#0099FF"
                             Command="{Binding LocHocSinh}"
+                            CommandParameter="{Binding ElementName=txtSearch}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon Width="20"
                                                  Height="20"
@@ -144,6 +134,13 @@
                               HorizontalScrollBarVisibility="Disabled"
                               Style="{StaticResource FavsScrollViewer}">
                     <DataGrid Margin="25,0,25,10"
+                              CanUserAddRows="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeColumns="False"
+                              CanUserResizeRows="False"
+                              AutoGenerateColumns="False"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                               ItemsSource="{Binding DanhSachhs}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"

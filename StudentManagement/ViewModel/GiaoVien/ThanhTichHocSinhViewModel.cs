@@ -19,6 +19,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string HocKyQueries;
         private int idUser;
         public int IdUser { get { return idUser; } set { idUser = value; } }
+        public bool everLoaded { get; set; }
 
         public ObservableCollection<string> _nienKhoaCombobox;
         public ObservableCollection<string> NienKhoaCombobox
@@ -125,6 +126,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ThanhTichHocSinhViewModel()
         {
             IdUser = 100000;
+            everLoaded = false;
             DanhSachThanhTichHocSinh = new ObservableCollection<Model.ThanhTich>();
             NienKhoaCombobox = new ObservableCollection<string>();
             KhoiCombobox = new ObservableCollection<Khoi>();
@@ -132,9 +134,13 @@ namespace StudentManagement.ViewModel.GiaoVien
             LopCombobox = new ObservableCollection<Lop>();
             LoadThanhTich = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThanhTichWD = parameter as ThanhTichHocSinh;
-                LoadComboBox();
-                LoadDanhSachThanhTichHocSinh();
+                if (everLoaded == false)
+                {
+                    ThanhTichWD = parameter as ThanhTichHocSinh;
+                    LoadComboBox();
+                    LoadDanhSachThanhTichHocSinh();
+                    everLoaded = true;
+                }
             });
 
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
