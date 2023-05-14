@@ -10,33 +10,38 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
-    internal class TrangChuViewModel : BaseViewModel
+    public class TrangChuViewModel : BaseViewModel
     {
         //declare variable
         private Model.GiaoVien _currentUser;
         public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
         public GiaoVienWindow GiaoVienWD { get; set; }
         //declare Pages
-        public StudentManagement.Views.GiaoVien.BaoCao BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.GiaoVien.LopHoc LopHocPage { get; set; }
-        public StudentManagement.Views.GiaoVien.ThongTinGiaoVien ThongTinGiaoVienPage { get; set; }
-        public StudentManagement.Views.GiaoVien.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
+        public StudentManagement.Views.GiaoVien.ThanhTichHocSinh ThanhTichHocSinhPage { get; set; }
+        public StudentManagement.Views.GiaoVien.HeThongBangDiem HeThongBangDiemPage { get; set; }
         public StudentManagement.Views.GiaoVien.ThongTinTruong ThongTinTruongPage { get; set; }
+        public StudentManagement.Views.GiaoVien.SuaThongTinCaNhan ThongTinCaNhanPage { get; set; }
 
         //declare ICommand
         public ICommand LoadWindow { get; set; }
-        public ICommand SwitchThongTinHocSinh { get; set; }
-        public ICommand SwitchThongTinGiaoVien { get; set; }
-        public ICommand SwitchLopHoc { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
-        public ICommand SwitchBaoCao { get; set; }
+        public ICommand SwitchLopHoc { get; set; }
+        public ICommand SwitchThanhTichHocSinh { get; set; }
+        public ICommand SwitchQuanLiBangDiem { get; set; }
+        public ICommand SwitchBaoCaoMonHoc { get; set; }
+        public ICommand SwitchBaoCaoHocKy { get; set; }
         public ICommand SuaThongTinCaNhan { get; set; }
         public TrangChuViewModel()
         {
-            BaoCaoPage = new StudentManagement.Views.GiaoVien.BaoCao();
-            LopHocPage = new StudentManagement.Views.GiaoVien.LopHoc();
-            ThongTinGiaoVienPage = new StudentManagement.Views.GiaoVien.ThongTinGiaoVien();
-            ThongTinTruongPage = new StudentManagement.Views.GiaoVien.ThongTinTruong();
+            ThongTinTruongPage = new Views.GiaoVien.ThongTinTruong();
+            LopHocPage = new Views.GiaoVien.LopHoc();
+            ThanhTichHocSinhPage = new ThanhTichHocSinh();
+            HeThongBangDiemPage = new HeThongBangDiem();
+            BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
+            BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
             CurrentUser = new StudentManagement.Model.GiaoVien();
             CurrentUser.MaGiaoVien = 100000;
             //define ICommand
@@ -46,9 +51,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                 LoadThongTinCaNhan();
             });
 
-            SwitchThongTinGiaoVien = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
-                parameter.Content = ThongTinGiaoVienPage;
+                parameter.Content = ThongTinTruongPage;
             });
             SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -56,13 +61,21 @@ namespace StudentManagement.ViewModel.GiaoVien
                 vm.IdGiaoVien = CurrentUser.MaGiaoVien;
                 parameter.Content = LopHocPage;
             });
-            SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            SwitchThanhTichHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
-                parameter.Content = ThongTinTruongPage;
+                parameter.Content = ThanhTichHocSinhPage;
             });
-            SwitchBaoCao = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            SwitchQuanLiBangDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = HeThongBangDiemPage;
+            });
+            SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = BaoCaoPage;
+            });
+            SwitchBaoCaoHocKy = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoHocKyPage;
             });
             SuaThongTinCaNhan = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {

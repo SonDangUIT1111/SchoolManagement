@@ -13,7 +13,7 @@
       TextOptions.TextRenderingMode="Auto"
       FontFamily="{DynamicResource MaterialDesignFont}"
       d:DesignHeight="750" 
-      d:DesignWidth="1056"
+      d:DesignWidth="1000"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       x:Name="HeThongBangDiemWD"
       Background="#FFECECEC"
@@ -67,7 +67,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="120"/>
-                    <RowDefinition Height="320"/>
+                    <RowDefinition Height="300"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Bảng điểm" 
@@ -180,7 +180,7 @@
                     <ComboBox x:Name="cmbMonHoc"
                               materialDesign:HintAssist.Hint="Môn học"
                               IsEditable="False"
-                              Width="280"
+                              Width="220"
                               Height="40"
                               Padding="10"
                               ItemsSource="{Binding MonDataCmb}"
@@ -216,13 +216,50 @@
                            Foreground="#1ED760"
                            FontWeight="Medium"
                            Margin="25 100 0 0"/>
-                <DataGrid Margin="25,0,25,10"
-                          Width="1000"
+                <StackPanel Grid.Row="1"
+                            Panel.ZIndex="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mã học sinh"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                        <TextBlock Text="Họ và tên"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                        <TextBlock Text="Điểm 15 phút"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="180 0 0 0"/>
+                        <TextBlock Text="Điểm 1 tiết"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="20 0 0 0"/>
+                        <TextBlock Text="Điểm trung bình"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="20 0 0 0"/>
+                        <TextBlock Text="Xếp loại"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="60 0 0 0"/>
+                        <TextBlock Text="Trạng thái"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                    </StackPanel>
+                </StackPanel>
+                <DataGrid Margin="25,0,25,25"
                           Grid.Row="1"
                           SelectionUnit="FullRow"
                           Background="White"
                           BorderBrush="Transparent"
                           CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
                           AutoGenerateColumns="False"
                           ItemsSource="{Binding DanhSachDiem}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -235,15 +272,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal"
-                                                Width="400"
+                                                Width="350"
                                                 HorizontalAlignment="Left">
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
-                                                   Width="50"
-                                                   FontSize="14"
-                                                   Foreground="#000000"
-                                                   Text="{Binding SoThuTu}"
-                                                   TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"
                                                    Width="100"
@@ -262,22 +292,19 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Điểm 15'"
-                                            Width="100"
+                        <DataGridTextColumn Width="100"
                                             IsReadOnly="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=JustReadOnly}"
                                             CanUserReorder="False"
                                             CanUserResize="False"
                                             CanUserSort="False"
                                             Binding="{Binding Path=Diem15Phut}"/>
-                        <DataGridTextColumn Header="Điểm 1 tiết"
-                                            Width="100"
+                        <DataGridTextColumn Width="100"
                                             IsReadOnly="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=JustReadOnly}"
                                             CanUserReorder="False"
                                             CanUserResize="False"
                                             CanUserSort="False"
                                             Binding="{Binding Path=Diem1Tiet}"/>
-                        <DataGridTextColumn Header="Điểm trung bình"
-                                            Width="140"
+                        <DataGridTextColumn Width="140"
                                             IsReadOnly="True"
                                             CanUserReorder="False"
                                             CanUserResize="False"
@@ -287,7 +314,6 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal"
-                                                Width="980"
                                                 HorizontalAlignment="Left">
                                         <TextBlock VerticalAlignment="Center"
                                                    Margin="20 0 0 0"

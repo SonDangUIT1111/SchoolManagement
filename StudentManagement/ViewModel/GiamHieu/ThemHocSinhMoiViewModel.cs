@@ -155,10 +155,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 {
                                     while (reader1.Read())
                                     {
-                                        string CmdString1 = "insert into HeThongDiem (HocKy,MaMon,MaHocSinh) values (1,"+ reader1.GetInt32(0).ToString()
-                                                    +", "+hocsinh.MaHocSinh.ToString() +")  ";
-                                        CmdString1 = CmdString1 + "insert into HeThongDiem (HocKy,MaMon,MaHocSinh) values (2," + reader1.GetInt32(0).ToString()
-                                                                + ", " + hocsinh.MaHocSinh.ToString() + ") ";
+                                        string CmdString1 = "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai) values (1,"+ reader1.GetInt32(0).ToString()
+                                                    +", "+hocsinh.MaHocSinh.ToString() + ",NULL,NULL,NULL,NULL)  ";
+                                        CmdString1 = CmdString1 + "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai) values (2," + reader1.GetInt32(0).ToString()
+                                                                + ", " + hocsinh.MaHocSinh.ToString() + ",NULL,NULL,NULL,NULL) ";
                                         ListCommand.Add(CmdString1);
                                     }
                                     reader1.NextResult();

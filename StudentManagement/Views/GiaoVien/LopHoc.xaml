@@ -8,8 +8,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Title="LopHoc"
       Name="LopHocWD"
       Background="#FFECECEC"
@@ -64,23 +64,6 @@
                 <StackPanel Orientation="Horizontal"
                             Margin="0 100 0 0"
                             VerticalAlignment="Top">
-                    <ComboBox materialDesign:HintAssist.Hint="Khối"
-                              x:Name="ChonKhoi"
-                              IsEditable="False"
-                              Width="200"
-                              Height="40"
-                              Padding="10"
-                              DisplayMemberPath="TenKhoi"
-                              HorizontalAlignment="Left"
-                              Margin="25 0 0 0"
-                              ItemsSource="{Binding DanhSachKhoi}"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding LoadKhoa}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ComboBox>
                     <ComboBox materialDesign:HintAssist.Hint="Niên Khóa"
                               IsEditable="False"
                               x:Name="ChonKhoa"
@@ -94,6 +77,23 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding LoadLop}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <ComboBox materialDesign:HintAssist.Hint="Khối"
+                              x:Name="ChonKhoi"
+                              IsEditable="False"
+                              Width="150"
+                              Height="40"
+                              Padding="10"
+                              DisplayMemberPath="TenKhoi"
+                              HorizontalAlignment="Left"
+                              Margin="25 0 0 0"
+                              ItemsSource="{Binding DanhSachKhoi}"
+                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding LoadKhoa}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>

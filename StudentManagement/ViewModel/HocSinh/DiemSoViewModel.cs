@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
-    internal class DiemSoViewModel : BaseViewModel
+    public class DiemSoViewModel : BaseViewModel
     {
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }

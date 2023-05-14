@@ -8,6 +8,8 @@ namespace StudentManagement.Model
 {
     public class HeThongDiem
     {
+        private int _stt;
+        public int STT { get { return _stt; } set { _stt = value; } }
         private int _maDiem;
         public int MaDiem { get { return _maDiem; } set { _maDiem = value; } }
         private string _nienKhoa;

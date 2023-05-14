@@ -461,12 +461,19 @@ namespace StudentManagement.ViewModel.GiamHieu
                             {
                                 MaHocSinh = reader.GetInt32(0),
                                 TenHocSinh = reader.GetString(1),
-                                Diem15Phut = (decimal)reader.GetDecimal(2),
-                                Diem1Tiet = (decimal)reader.GetDecimal(3),
-                                DiemTB = (decimal)reader.GetDecimal(4),
-                                XepLoai = reader.GetBoolean(5),
                                 TrangThai = reader.GetBoolean(6),
                             };
+                            try
+                            {
+                                diem.Diem15Phut = (decimal)reader.GetDecimal(2);
+                                diem.Diem1Tiet = (decimal)reader.GetDecimal(3);
+                                diem.DiemTB = (decimal)reader.GetDecimal(4);
+                                diem.XepLoai = reader.GetBoolean(5);
+                            }
+                            catch (Exception)
+                            {
+
+                            }
                             DanhSachDiem.Add(diem);
                         }
                         reader.NextResult();
