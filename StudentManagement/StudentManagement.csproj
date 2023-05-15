@@ -213,9 +213,6 @@
     <Compile Include="Views\GiaoVien\SuaThongTinCaNhan.xaml.cs">
       <DependentUpon>SuaThongTinCaNhan.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiaoVien\ThongTinTruong.xaml.cs">
-      <DependentUpon>ThongTinTruong.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\HocSinh\DiemSo.xaml.cs">
       <DependentUpon>DiemSo.xaml</DependentUpon>
     </Compile>
@@ -224,9 +221,6 @@
     </Compile>
     <Compile Include="Views\HocSinh\ThongTinHocSinh.xaml.cs">
       <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HocSinh\ThongTinTruong.xaml.cs">
-      <DependentUpon>ThongTinTruong.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Login\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
@@ -401,10 +395,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiaoVien\ThongTinTruong.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\HocSinh\DiemSo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -414,10 +404,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HocSinh\ThongTinHocSinh.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HocSinh\ThongTinTruong.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

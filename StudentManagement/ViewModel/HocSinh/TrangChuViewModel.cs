@@ -4,32 +4,36 @@ using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
     internal class TrangChuViewModel : BaseViewModel
     {
         //declare variable
+        private string _sayHello;
+        public string SayHello { get { return _sayHello; } set { _sayHello = value;OnPropertyChanged(); } }
         public HocSinhWindow HocSinhWD { get; set; }
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
 
         private Model.HocSinh _hocSinhHienTai;
-        public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value; } }
+        public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value;OnPropertyChanged(); } }
         //declare Pages
         public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
         public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
-        public StudentManagement.Views.HocSinh.ThongTinTruong ThongTinTruongPage { get; set; }
+        public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
         public DiemSo XemDiemPage { get; set; }
 
 
         //declare ICommand
         public ICommand LoadWindow { get; set; }
-        public ICommand SwitchThongTinHocSinh { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
         public ICommand SwitchXemDiem { get; set; }
         public ICommand CapNhatThongTin { get; set; }
@@ -38,23 +42,23 @@ namespace StudentManagement.ViewModel.HocSinh
 
         public TrangChuViewModel()
         {
-            IdHocSinh = 100033;
+            IdHocSinh = 100000;
 
             HocSinhHienTai = new Model.HocSinh();
-            ThongTinHocSinhPage = new StudentManagement.Views.HocSinh.ThongTinHocSinh();
-            ThongTinTruongPage = new StudentManagement.Views.HocSinh.ThongTinTruong();
+            ThongTinTruongPage = new StudentManagement.Views.GiamHieu.ThongTinTruong();
             BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
             BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
+            XemDiemPage = new DiemSo();
 
             //define ICommand
             LoadWindow = new RelayCommand<HocSinhWindow>((parameter) => { return true; }, (parameter) =>
             {
                 HocSinhWD = parameter;
                 LoadThongTinCaNhan();
-            });
-            SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Content = ThongTinHocSinhPage;
+                LoadSayHello(HocSinhWD.imageAvatar);
+                StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
+                vm.IdHocSinh = IdHocSinh;
+                HocSinhWD.RPage.Content = ThongTinTruongPage;
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -62,9 +66,6 @@ namespace StudentManagement.ViewModel.HocSinh
             });
             SwitchXemDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
-                XemDiemPage = new DiemSo();
-                StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
-                vm.IdHocSinh = IdHocSinh;
                 parameter.Content = XemDiemPage;
             });
             CapNhatThongTin = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -115,6 +116,36 @@ namespace StudentManagement.ViewModel.HocSinh
                 {
                     MessageBox.Show(ex.Message);
                 }
+            }
+        }
+        public void LoadSayHello(Border item)
+        {
+            int hour = DateTime.Now.Hour;
+            if (hour >= 0 && hour < 6)
+                SayHello = "Have a nice day";
+            else if (hour >= 6 && hour < 12)
+                SayHello = "Good morning";
+            else if (hour >= 12 && hour < 18)
+                SayHello = "Good afternoon";
+            else if (hour >= 18 && hour < 24)
+                SayHello = "Good evening";
+            try
+            {
+                HocSinhWD.UserName.Text = HocSinhHienTai.TenHocSinh;
+                ImageBrush imageBrush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                MemoryStream stream = new MemoryStream(HocSinhHienTai.Avatar);
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                imageBrush.ImageSource = bitmap;
+                imageBrush.Stretch = Stretch.UniformToFill;
+                item.Background = imageBrush;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
             }
         }
     }

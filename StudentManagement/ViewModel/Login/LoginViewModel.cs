@@ -39,6 +39,7 @@ namespace StudentManagement.ViewModel.Login
         public ICommand LoadData { get; set; }
         public ICommand TurnBackRoleForm { get; set; }
         public ICommand TurnToLoginForm { get; set; }
+        public ICommand LogOut { get; set; }
 
         // in lỗi để username trống
         public string Error { get { return null; } }
@@ -154,6 +155,14 @@ namespace StudentManagement.ViewModel.Login
                     IndexRole = 2;
                 }
 
+            });
+            LogOut = new RelayCommand<Window>((paramater) => { return true; }, (parameter) =>
+            {
+                parameter.Close();
+                LoginWindow loginWindow = new LoginWindow();
+                LoginViewModel vm = loginWindow.DataContext as LoginViewModel;
+                vm.Username = "";
+                loginWindow.ShowDialog();
             });
         }
         void Log(Window paramater)

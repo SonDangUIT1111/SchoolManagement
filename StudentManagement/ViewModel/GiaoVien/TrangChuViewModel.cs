@@ -4,15 +4,20 @@ using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using System;
 using System.Data.SqlClient;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
     public class TrangChuViewModel : BaseViewModel
     {
         //declare variable
+        private string _sayHello;
+        public string SayHello { get { return _sayHello; } set { _sayHello = value;OnPropertyChanged(); } }
         private Model.GiaoVien _currentUser;
         public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
         public GiaoVienWindow GiaoVienWD { get; set; }
@@ -22,7 +27,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public StudentManagement.Views.GiaoVien.LopHoc LopHocPage { get; set; }
         public StudentManagement.Views.GiaoVien.ThanhTichHocSinh ThanhTichHocSinhPage { get; set; }
         public StudentManagement.Views.GiaoVien.HeThongBangDiem HeThongBangDiemPage { get; set; }
-        public StudentManagement.Views.GiaoVien.ThongTinTruong ThongTinTruongPage { get; set; }
+        public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
         public StudentManagement.Views.GiaoVien.SuaThongTinCaNhan ThongTinCaNhanPage { get; set; }
 
         //declare ICommand
@@ -36,7 +41,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand SuaThongTinCaNhan { get; set; }
         public TrangChuViewModel()
         {
-            ThongTinTruongPage = new Views.GiaoVien.ThongTinTruong();
+            ThongTinTruongPage = new Views.GiamHieu.ThongTinTruong();
             LopHocPage = new Views.GiaoVien.LopHoc();
             ThanhTichHocSinhPage = new ThanhTichHocSinh();
             HeThongBangDiemPage = new HeThongBangDiem();
@@ -49,6 +54,14 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 GiaoVienWD = parameter;
                 LoadThongTinCaNhan();
+                LoadSayHello(GiaoVienWD.imageAvatar);
+                StudentManagement.ViewModel.GiaoVien.LopHocViewModel vm = LopHocPage.DataContext as StudentManagement.ViewModel.GiaoVien.LopHocViewModel;
+                vm.IdGiaoVien = CurrentUser.MaGiaoVien;
+                StudentManagement.ViewModel.GiaoVien.ThanhTichHocSinhViewModel vmThanhTich = ThanhTichHocSinhPage.DataContext as StudentManagement.ViewModel.GiaoVien.ThanhTichHocSinhViewModel;
+                vmThanhTich.IdUser = CurrentUser.MaGiaoVien;
+                StudentManagement.ViewModel.GiaoVien.HeThongBangDiemViewModel vmHeThongDiem = HeThongBangDiemPage.DataContext as StudentManagement.ViewModel.GiaoVien.HeThongBangDiemViewModel;
+                vmHeThongDiem.IdUser = CurrentUser.MaGiaoVien;
+                GiaoVienWD.RPage.Content = ThongTinTruongPage;
             });
 
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
@@ -57,13 +70,12 @@ namespace StudentManagement.ViewModel.GiaoVien
             });
             SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
-                StudentManagement.ViewModel.GiaoVien.LopHocViewModel vm = LopHocPage.DataContext as StudentManagement.ViewModel.GiaoVien.LopHocViewModel;
-                vm.IdGiaoVien = CurrentUser.MaGiaoVien;
                 parameter.Content = LopHocPage;
             });
             SwitchThanhTichHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = ThanhTichHocSinhPage;
+
             });
             SwitchQuanLiBangDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -128,6 +140,36 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     MessageBox.Show(ex.Message);
                 }
+            }
+        }
+        public void LoadSayHello(Border item)
+        {
+            int hour = DateTime.Now.Hour;
+            if (hour >= 0 && hour < 6)
+                SayHello = "Have a nice day";
+            else if (hour >= 6 && hour < 12)
+                SayHello = "Good morning";
+            else if (hour >= 12 && hour < 18)
+                SayHello = "Good afternoon";
+            else if (hour >= 18 && hour < 24)
+                SayHello = "Good evening";
+            try
+            {
+                GiaoVienWD.UserName.Text = CurrentUser.TenGiaoVien;
+                ImageBrush imageBrush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                MemoryStream stream = new MemoryStream(CurrentUser.Avatar);
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                imageBrush.ImageSource = bitmap;
+                imageBrush.Stretch = Stretch.UniformToFill;
+                item.Background = imageBrush;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
             }
         }
     }

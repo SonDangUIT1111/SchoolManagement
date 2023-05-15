@@ -26,6 +26,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
 
         //declare ICommand
+        public ICommand LoadData { get; set; }
         public ICommand SwitchThongTinHocSinh { get; set; }
         public ICommand SwitchThongTinGiaoVien { get; set; }
         public ICommand SwitchLopHoc { get; set; }
@@ -52,6 +53,10 @@ namespace StudentManagement.ViewModel.GiamHieu
             PhanCongGiangDayPage = new Views.GiamHieu.PhanCongGiangDay();
 
             //define ICommand
+            LoadData = new RelayCommand<GiamHieuWindow>((parameter) => { return true; },(parameter) => 
+            {
+                parameter.RPage.Content = ThongTinTruongPage;
+            });
             SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = ThongTinHocSinhPage;
