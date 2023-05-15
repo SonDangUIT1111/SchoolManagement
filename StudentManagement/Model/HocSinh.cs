@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagement.Model
 {
@@ -22,11 +18,11 @@ namespace StudentManagement.Model
         public string Email { get { return _email; } set { _email = value; } }
         private byte[] _avatar;
         public byte[] Avatar { get { return _avatar; } set { _avatar = value; } }
-        private string _tenLop;
-        public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
-        private float _tbhk1;
-        public float TBHK1 { get { return _tbhk1; } set { _tbhk1 = value; } }
-        private float _tbhk2;
-        public float TBHK2 { get { return _tbhk2; } set { _tbhk2 = value; } }
+        private int _maLop;
+        public int MaLop { get { return _maLop; } set { _maLop = value; } }
+        private string _diemTB1;
+        public string DiemTB1 { get { return _diemTB1; } set { _diemTB1 = value; } }
+        private string _diemTB2;
+        public string DiemTB2 { get { return _diemTB2; } set { _diemTB2 = value; } }
     }
 }

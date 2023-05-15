@@ -89,7 +89,8 @@
                         Width="150"
                         Height="150" >
                     <Grid.Background>
-                        <ImageBrush ImageSource="{Binding HocSinhHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"/>
+                        <ImageBrush ImageSource="{Binding HocSinhHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"
+                                    Stretch="UniformToFill"/>
                     </Grid.Background>
                     <Rectangle 
                                 x:Name="ChangerecImage"

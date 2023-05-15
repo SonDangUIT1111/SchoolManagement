@@ -23,7 +23,7 @@ namespace StudentManagement.Model
         private string _tenHocSinh;
         public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; } }
         private bool _xepLoai;
-        public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value;} }
+        public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value; } }
         private string _nhanXet;
         public string NhanXet { get { return _nhanXet; } set { _nhanXet = value; } }
         private float _tbhk;

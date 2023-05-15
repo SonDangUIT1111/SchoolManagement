@@ -8,8 +8,8 @@ namespace StudentManagement.Model
 {
     public class HeThongDiem
     {
-        private int _soThuTu;
-        public int SoThuTu { get { return _soThuTu; } set { _soThuTu = value; } }
+        private int _stt;
+        public int STT { get { return _stt; } set { _stt = value; } }
         private int _maDiem;
         public int MaDiem { get { return _maDiem; } set { _maDiem = value; } }
         private string _nienKhoa;
@@ -35,9 +35,9 @@ namespace StudentManagement.Model
         private decimal _diemTB;
         public decimal DiemTB { get { return _diemTB; } set { _diemTB = value; } }
         private bool _xepLoai;
-        public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value;} }
+        public bool XepLoai { get { return _xepLoai; } set { _xepLoai = value; } }
         private bool _trangThai;
-        public bool TrangThai { get { return _trangThai; } set { _trangThai = value;} }
+        public bool TrangThai { get { return _trangThai; } set { _trangThai = value; } }
 
     }
 }

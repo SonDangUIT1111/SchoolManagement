@@ -84,6 +84,8 @@
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
     <Compile Include="Converter\BooleanToScoreStateConverter.cs" />
     <Compile Include="Converter\BooleanToXepLoaiConverter.cs" />
+    <Compile Include="Converter\DateTimeToDateConverter.cs" />
+    <Compile Include="Converter\SelectedMonHocConverter.cs" />
     <Compile Include="Model\BaoCaoHocKy.cs" />
     <Compile Include="Model\BaoCaoMon.cs" />
     <Compile Include="Model\ConnectionString.cs" />
@@ -147,8 +149,10 @@
     </Compile>
     <Compile Include="Views\GiamHieu\SuaThongTinLopHoc.xaml.cs">
       <DependentUpon>SuaThongTinLopHoc.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiamHieu\QuanLiDiemSo.xaml.cs">
       <DependentUpon>QuanLiDiemSo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiamHieu\MonHoc.xaml.cs">
       <DependentUpon>MonHoc.xaml</DependentUpon>
     </Compile>
@@ -160,6 +164,7 @@
     </Compile>
     <Compile Include="Views\GiamHieu\SuaThongTinHocSinh.xaml.cs">
       <DependentUpon>SuaThongTinHocSinh.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiamHieu\SuaGiaoVien.xaml.cs">
       <DependentUpon>SuaGiaoVien.xaml</DependentUpon>
     </Compile>
@@ -168,11 +173,13 @@
     </Compile>
     <Compile Include="Views\GiamHieu\ThemLopHoc.xaml.cs">
       <DependentUpon>ThemLopHoc.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiamHieu\ThemHocSinhMoi.xaml.cs">
       <DependentUpon>ThemHocSinhMoi.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiamHieu\ThemPhanCong.xaml.cs">
       <DependentUpon>ThemPhanCong.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiamHieu\ThemGiaoVien.xaml.cs">
       <DependentUpon>ThemGiaoVien.xaml</DependentUpon>
     </Compile>
@@ -188,9 +195,6 @@
     <Compile Include="Views\GiamHieu\XepLopChoHocSinh.xaml.cs">
       <DependentUpon>XepLopChoHocSinh.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GiaoVien\BaoCao.xaml.cs">
-      <DependentUpon>BaoCao.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\GiaoVien\GiaoVienWindow.xaml.cs">
       <DependentUpon>GiaoVienWindow.xaml</DependentUpon>
     </Compile>
@@ -202,20 +206,12 @@
     </Compile>
     <Compile Include="Views\GiaoVien\ThanhTichHocSinh.xaml.cs">
       <DependentUpon>ThanhTichHocSinh.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiaoVien\SuaHocSinh.xaml.cs">
       <DependentUpon>SuaHocSinh.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GiaoVien\SuaThongTinCaNhan.xaml.cs">
       <DependentUpon>SuaThongTinCaNhan.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GiaoVien\ThongTinGiaoVien.xaml.cs">
-      <DependentUpon>ThongTinGiaoVien.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GiaoVien\ThongTinHocSinh.xaml.cs">
-      <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\GiaoVien\ThongTinTruong.xaml.cs">
-      <DependentUpon>ThongTinTruong.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HocSinh\DiemSo.xaml.cs">
       <DependentUpon>DiemSo.xaml</DependentUpon>
@@ -223,14 +219,8 @@
     <Compile Include="Views\HocSinh\HocSinhWindow.xaml.cs">
       <DependentUpon>HocSinhWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HocSinh\LopHoc.xaml.cs">
-      <DependentUpon>LopHoc.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\HocSinh\ThongTinHocSinh.xaml.cs">
       <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HocSinh\ThongTinTruong.xaml.cs">
-      <DependentUpon>ThongTinTruong.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Login\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
@@ -318,7 +308,13 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\SuaThongTinLopHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiamHieu\QuanLiDiemSo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiamHieu\MonHoc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -332,6 +328,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\SuaThongTinHocSinh.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiamHieu\SuaGiaoVien.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -341,11 +340,17 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\ThemLopHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiamHieu\ThemHocSinhMoi.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiamHieu\ThemPhanCong.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiamHieu\ThemGiaoVien.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -366,10 +371,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GiaoVien\BaoCao.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\GiaoVien\GiaoVienWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -383,23 +384,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiaoVien\ThanhTichHocSinh.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiaoVien\SuaHocSinh.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\GiaoVien\SuaThongTinCaNhan.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GiaoVien\ThongTinGiaoVien.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GiaoVien\ThongTinHocSinh.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\GiaoVien\ThongTinTruong.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -411,15 +403,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HocSinh\LopHoc.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\HocSinh\ThongTinHocSinh.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HocSinh\ThongTinTruong.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -471,6 +455,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\logo-uit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\user_image.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" />

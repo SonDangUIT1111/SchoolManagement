@@ -1,24 +1,17 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.Login;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    public class ForgotPasswordViewModel:BaseViewModel
+    public class ForgotPasswordViewModel : BaseViewModel
     {
 
         // biến flag
@@ -93,9 +86,9 @@ namespace StudentManagement.ViewModel.Login
                 login.ShowDialog();
 
             });
-            
+
             //
-            
+
             CheckCode = new RelayCommand<Window>((parameter) =>
             {
                 var window = parameter as ForgotPasswordWindow;
@@ -174,9 +167,9 @@ namespace StudentManagement.ViewModel.Login
                 parameter.ConfirmNewPassword.Password = parameter.ConfirmPassEye.Text;
                 parameter.ConfirmPassEye.Visibility = Visibility.Hidden;
             });
-         
+
         }
-     
+
         void Send(Window parameter)
         {
             if (parameter == null)
@@ -189,7 +182,7 @@ namespace StudentManagement.ViewModel.Login
             }
             else
             {
-                if (IndexRole == - 1)
+                if (IndexRole == -1)
                 {
                     MessageBox.Show("Vui lòng chọn chức vụ");
                     return;
@@ -200,11 +193,27 @@ namespace StudentManagement.ViewModel.Login
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
-                        CmdString = "Select count(*) from GiamHieu where Email = '" + EmailProtected + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return;
+                            }
+                            CmdString = "Select count(*) from GiamHieu where Email = '" + EmailProtected + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            
+                        }
+
                     }
                     if (checkUser > 0)
                     {
@@ -228,11 +237,25 @@ namespace StudentManagement.ViewModel.Login
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
-                        CmdString = "Select count(*) from GiaoVien where Email = '" + EmailProtected + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
+                        try
+                        {
+                            try 
+                            { 
+                                con.Open();
+                            } catch (Exception)
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return;
+                            }
+                            CmdString = "Select count(*) from GiaoVien where Email = '" + EmailProtected + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            
+                        }
                     }
                     if (checkUser > 0)
                     {
@@ -256,11 +279,25 @@ namespace StudentManagement.ViewModel.Login
                     string CmdString = string.Empty;
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
-                        con.Open();
-                        CmdString = "Select count(*) from HocSinh where Email = '" + EmailProtected + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
+                        try
+                        {
+                            try
+                            { 
+                                con.Open();
+                            } catch (Exception) 
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return; 
+                            }
+                            CmdString = "Select count(*) from HocSinh where Email = '" + EmailProtected + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                     }
                     if (checkUser > 0)
                     {
@@ -344,22 +381,35 @@ namespace StudentManagement.ViewModel.Login
                 string CmdString = string.Empty;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
-                    if (IndexRole == 0)
+                    try
                     {
-                        CmdString = "Update GiamHieu Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception) 
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return;
+                        }
+                        if (IndexRole == 0)
+                        {
+                            CmdString = "Update GiamHieu Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                        }
+                        else if (IndexRole == 1)
+                        {
+                            CmdString = "Update GiaoVien Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                        }
+                        else if (IndexRole == 2)
+                        {
+                            CmdString = "Update HocSinh Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                        }
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        cmd.ExecuteScalar();
+                        con.Close();
                     }
-                    else if (IndexRole == 1)
+                    catch (Exception)
                     {
-                        CmdString = "Update GiaoVien Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
                     }
-                    else if (IndexRole == 2)
-                    {
-                        CmdString = "Update HocSinh Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
-                    }
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    con.Close();
                 }
                 MessageBox.Show("Đổi mật khẩu thành công");
                 parameter.Close();

@@ -13,8 +13,8 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       FontFamily="{DynamicResource MaterialDesignFont}"
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       Title="DanhSachLop"
       x:Name="DanhSachLopWD"
@@ -68,8 +68,28 @@
                     <RowDefinition Height="160"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal"
+                            Margin="25 0 0 0"
+                            Height="50"
+                            Width="200"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                    <Button Content="{materialDesign:PackIcon Kind=ArrowBack, Size=24}"
+                            Background="Transparent"
+                            Foreground="Black"
+                            BorderBrush="Transparent"
+                            Width="30"
+                            Height="30"
+                            Padding="0"
+                            Command="{Binding Back}"/>
+                    <TextBlock Text="Danh sách lớp"
+                               FontSize="20"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="10 0 0 0"/>
+                </StackPanel>
                 <TextBlock Text="Danh sách học sinh" 
-                           Margin="25" 
+                           Margin="25 50 0 0" 
                            FontSize="30"/>
                 <Button x:Name="btnThemHocSinh" 
                         Style="{StaticResource InteractiveButton}"
@@ -86,37 +106,6 @@
                 <StackPanel Orientation="Horizontal"
                             Margin="0 100 0 0"
                             VerticalAlignment="Top">
-                    <ComboBox materialDesign:HintAssist.Hint="Niên khóa"
-                              IsEditable="False"
-                              Width="200"
-                              Height="40"
-                              Padding="10"
-                              HorizontalAlignment="Left"
-                              Margin="25 0 0 0"
-                              ItemsSource="{Binding DanhSachKhoi}"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                        
-                    </ComboBox>
-                    <ComboBox materialDesign:HintAssist.Hint="Khối"
-                              IsEditable="False"
-                              Width="200"
-                              Height="40"
-                              Padding="10"
-                              HorizontalAlignment="Left"
-                              Margin="25 0 0 0"
-                              IsEnabled="False"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                    </ComboBox>
-                    <ComboBox materialDesign:HintAssist.Hint="Lớp"
-                              IsEditable="False"
-                              Width="200"
-                              Height="40"
-                              Padding="10"
-                              HorizontalAlignment="Left"
-                              Margin="25 0 0 0"
-                              IsEnabled="False"
-                              Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                    </ComboBox>
                     <TextBox x:Name="tbSearch"
                              materialDesign:HintAssist.Hint="Search ..."
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
@@ -136,8 +125,33 @@
                                                  Kind="Magnify" />
                     </Button>
                 </StackPanel>
-                <DataGrid Margin="25,0,25,10"
-                          Width="1000"
+                <StackPanel Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical" Height="30">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Họ và tên"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="85 0 0 0"/>
+                        <TextBlock Text="Ngày sinh"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="160 0 0 0"/>
+                        <TextBlock Text="Giới tính"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="60 0 0 0"/>
+                        <TextBlock Text="Địa chỉ"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="20 0 0 0"/>
+                        <TextBlock Text="Email"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="175 0 0 0"/>
+                    </StackPanel>
+                </StackPanel>
+                <DataGrid Margin="25,30,25,10"
                           Grid.Row="1"
                           SelectionUnit="FullRow"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -151,13 +165,14 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal"
-                                                    Width="980"
-                                                    HorizontalAlignment="Left">
+                                                HorizontalAlignment="Left">
                                         <Border CornerRadius="10"
-                                                Height="40"
-                                                Width="40">
+                                                Height="35"
+                                                Width="35"
+                                                Margin="0 -10 0 0">
                                             <Border.Background>
-                                                <ImageBrush ImageSource="/Resources/Images/logo-uit.png"/>
+                                                <ImageBrush ImageSource="{Binding Avatar, Converter={StaticResource ByteToImageConverter}}"
+                                                            Stretch="UniformToFill"/>
                                             </Border.Background>
                                         </Border>
                                         <TextBlock VerticalAlignment="Center"

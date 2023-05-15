@@ -2,108 +2,110 @@
 using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
-using StudentManagement.Views.HocSinh;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
-    internal class TrangChuViewModel:BaseViewModel
+    public class TrangChuViewModel : BaseViewModel
     {
         //declare variable
-        private int _idGiaoVien;
-        public int IdGiaoVien { get { return _idGiaoVien; } set { _idGiaoVien = value; } }
-        private byte[] _avatar;
-        public byte[] Avatar { get { return _avatar; } set { _avatar = value; OnPropertyChanged(); } }
-        private string _tenGiaoVien;
-        public string TenGiaoVien { get { return _tenGiaoVien; } set { _tenGiaoVien = value; OnPropertyChanged(); } }
+        private string _sayHello;
+        public string SayHello { get { return _sayHello; } set { _sayHello = value;OnPropertyChanged(); } }
+        private Model.GiaoVien _currentUser;
+        public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
         public GiaoVienWindow GiaoVienWD { get; set; }
         //declare Pages
-        public StudentManagement.Views.GiaoVien.BaoCao BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.GiaoVien.LopHoc LopHocPage { get; set; }
-        public StudentManagement.Views.GiaoVien.ThongTinGiaoVien ThongTinGiaoVienPage { get; set; }
-        public StudentManagement.Views.GiaoVien.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
-        public StudentManagement.Views.GiaoVien.ThongTinTruong ThongTinTruongPage { get; set; }
+        public StudentManagement.Views.GiaoVien.ThanhTichHocSinh ThanhTichHocSinhPage { get; set; }
+        public StudentManagement.Views.GiaoVien.HeThongBangDiem HeThongBangDiemPage { get; set; }
+        public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
+        public StudentManagement.Views.GiaoVien.SuaThongTinCaNhan ThongTinCaNhanPage { get; set; }
 
         //declare ICommand
         public ICommand LoadWindow { get; set; }
-        public ICommand SwitchThongTinHocSinh { get; set; }
-        public ICommand SwitchThongTinGiaoVien { get; set; }
-        public ICommand SwitchLopHoc { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
-        public ICommand SwitchBaoCao { get; set; }
+        public ICommand SwitchLopHoc { get; set; }
+        public ICommand SwitchThanhTichHocSinh { get; set; }
+        public ICommand SwitchQuanLiBangDiem { get; set; }
+        public ICommand SwitchBaoCaoMonHoc { get; set; }
+        public ICommand SwitchBaoCaoHocKy { get; set; }
         public ICommand SuaThongTinCaNhan { get; set; }
         public TrangChuViewModel()
         {
-            //IdGiaoVien = 100000;
-            BaoCaoPage = new StudentManagement.Views.GiaoVien.BaoCao();
-            LopHocPage = new StudentManagement.Views.GiaoVien.LopHoc();
-            ThongTinGiaoVienPage = new StudentManagement.Views.GiaoVien.ThongTinGiaoVien();
-            ThongTinTruongPage = new StudentManagement.Views.GiaoVien.ThongTinTruong();
-
+            ThongTinTruongPage = new Views.GiamHieu.ThongTinTruong();
+            LopHocPage = new Views.GiaoVien.LopHoc();
+            ThanhTichHocSinhPage = new ThanhTichHocSinh();
+            HeThongBangDiemPage = new HeThongBangDiem();
+            BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
+            BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
+            CurrentUser = new StudentManagement.Model.GiaoVien();
+            CurrentUser.MaGiaoVien = 100000;
             //define ICommand
             LoadWindow = new RelayCommand<GiaoVienWindow>((parameter) => { return true; }, (parameter) =>
             {
                 GiaoVienWD = parameter;
                 LoadThongTinCaNhan();
+                LoadSayHello(GiaoVienWD.imageAvatar);
+                StudentManagement.ViewModel.GiaoVien.LopHocViewModel vm = LopHocPage.DataContext as StudentManagement.ViewModel.GiaoVien.LopHocViewModel;
+                vm.IdGiaoVien = CurrentUser.MaGiaoVien;
+                StudentManagement.ViewModel.GiaoVien.ThanhTichHocSinhViewModel vmThanhTich = ThanhTichHocSinhPage.DataContext as StudentManagement.ViewModel.GiaoVien.ThanhTichHocSinhViewModel;
+                vmThanhTich.IdUser = CurrentUser.MaGiaoVien;
+                StudentManagement.ViewModel.GiaoVien.HeThongBangDiemViewModel vmHeThongDiem = HeThongBangDiemPage.DataContext as StudentManagement.ViewModel.GiaoVien.HeThongBangDiemViewModel;
+                vmHeThongDiem.IdUser = CurrentUser.MaGiaoVien;
+                GiaoVienWD.RPage.Content = ThongTinTruongPage;
             });
 
-            SwitchThongTinGiaoVien = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Content = ThongTinGiaoVienPage;
-            });
-            SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                StudentManagement.ViewModel.GiaoVien.LopHocViewModel vm = LopHocPage.DataContext as StudentManagement.ViewModel.GiaoVien.LopHocViewModel;
-                vm.IdGiaoVien = IdGiaoVien;
-                parameter.Content = LopHocPage;
-            });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = ThongTinTruongPage;
             });
-            SwitchBaoCao = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = LopHocPage;
+            });
+            SwitchThanhTichHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = ThanhTichHocSinhPage;
+
+            });
+            SwitchQuanLiBangDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = HeThongBangDiemPage;
+            });
+            SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = BaoCaoPage;
+            });
+            SwitchBaoCaoHocKy = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoHocKyPage;
             });
             SuaThongTinCaNhan = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
 
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
-                    string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email from GiaoVien where MaGiaoVien = " + IdGiaoVien;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
+                    try
                     {
-                        while (reader.Read())
-                        {
-                            Model.GiaoVien teacher = new Model.GiaoVien() {
-                            MaGiaoVien = IdGiaoVien,
-                            TenGiaoVien = TenGiaoVien,
-                            NgaySinh = reader.GetDateTime(0),
-                            GioiTinh = reader.GetBoolean(1),
-                            DiaChi = reader.GetString(2),
-                            Email = reader.GetString(3),
-                            Avatar = Avatar
-                        };
                         SuaGiaoVien window = new SuaGiaoVien();
                         SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
-                        data.GiaoVienHienTai = teacher;
+                        data.GiaoVienHienTai = CurrentUser;
                         window.ShowDialog();
                         LoadThongTinCaNhan();
-                        }
-                        reader.NextResult();
                     }
-                    con.Close();
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
             });
 
@@ -112,14 +114,62 @@ namespace StudentManagement.ViewModel.GiaoVien
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select TenGiaoVien,AnhThe from GiaoVien where MaGiaoVien = " + IdGiaoVien.ToString();
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows) reader.Read();
-                TenGiaoVien= reader.GetString(0);
-                Avatar = (byte[])reader.GetValue(1);
-                con.Close();
+                try
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string CmdString = "select TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    CurrentUser.TenGiaoVien = reader.GetString(0);
+                    CurrentUser.NgaySinh = reader.GetDateTime(1);
+                    CurrentUser.GioiTinh = reader.GetBoolean(2);
+                    CurrentUser.DiaChi = reader.GetString(3);
+                    CurrentUser.Email = reader.GetString(4);
+                    CurrentUser.Avatar = (byte[])reader[5];
+                    con.Close();
+                } catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+        public void LoadSayHello(Border item)
+        {
+            int hour = DateTime.Now.Hour;
+            if (hour >= 0 && hour < 6)
+                SayHello = "Have a nice day";
+            else if (hour >= 6 && hour < 12)
+                SayHello = "Good morning";
+            else if (hour >= 12 && hour < 18)
+                SayHello = "Good afternoon";
+            else if (hour >= 18 && hour < 24)
+                SayHello = "Good evening";
+            try
+            {
+                GiaoVienWD.UserName.Text = CurrentUser.TenGiaoVien;
+                ImageBrush imageBrush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                MemoryStream stream = new MemoryStream(CurrentUser.Avatar);
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                imageBrush.ImageSource = bitmap;
+                imageBrush.Stretch = Stretch.UniformToFill;
+                item.Background = imageBrush;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
             }
         }
     }

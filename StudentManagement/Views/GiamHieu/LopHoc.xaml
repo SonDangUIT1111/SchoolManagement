@@ -7,8 +7,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Title="LopHoc"
       Background="#FFECECEC"
       x:Name="LopHocWD"
@@ -62,58 +62,44 @@
             Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="110" ></RowDefinition>
+                    <RowDefinition Height="150" ></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <DockPanel>
-                    <TextBlock 
+                    <Grid>
+                        <TextBlock 
                         Text="Danh sách lớp học" 
                         Margin="25" 
                         FontSize="30" 
                         FontWeight="SemiBold"/>
                         <TextBox
-                        x:Name="ClassName"
-                        HorizontalAlignment="Center"
-                        Height="50"
-                        Width="350"
-                        materialDesign:HintAssist.Hint="Nhập tên lớp"
-                        Margin="50 0 0 0 "
-                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="TextChanged">
-                                    <i:InvokeCommandAction Command="{Binding FilterTenLop}"
-                                   CommandParameter="{Binding ElementName=ClassName}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            x:Name="ClassName"
+                            Height="40"
+                            Padding="10"
+                            Width="400"
+                            HorizontalAlignment="Left"
+                            materialDesign:HintAssist.Hint="Nhập tên lớp"
+                            Margin="480 50 0 0 "
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}">
+                          
                         </TextBox>
-                        <Button
-                        Width="179" 
-                        Height="64" 
-                        Background="#33418C"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Top"
-                        Margin="25"
-                        Content="Thêm Lớp" 
-                        FontSize="19" 
-                        FontWeight="Bold"
-                        Foreground="White"
-                        Command="{Binding ThemLop}">
-                       </Button>
-                    </DockPanel>
-                </Grid>
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" ></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <StackPanel
+                        <Button Margin="850 50 0 0"
+                            Background="Transparent"
+                            BorderBrush="#0099FF"
+                            IsDefault="True"
+                            Command="{Binding FilterTenLop}"
+                            CommandParameter="{Binding ElementName=ClassName}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                            <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="Magnify" />
+                        </Button>
+                        <StackPanel
                         Orientation="Horizontal"
-                        VerticalAlignment="Top"
                         Grid.Row="0"
-                        HorizontalAlignment="Center">
-                        <ComboBox 
-                            materialDesign:HintAssist.Hint="Niên khoá"
+                        Margin="0 50 0 0">
+                            <ComboBox 
+                              materialDesign:HintAssist.Hint="Niên khoá"
                               x:Name="cmbNienKhoa"
                               IsEditable="False"
                               Width="200"
@@ -123,14 +109,14 @@
                               Margin="25 0 0 0"
                               ItemsSource="{Binding NienKhoaCmb}"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
                                    CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </ComboBox>
-                        <ComboBox 
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                            <ComboBox 
                               materialDesign:HintAssist.Hint="Khối"
                               x:Name="cmbKhoi"
                               IsEditable="False"
@@ -138,63 +124,121 @@
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
-                              Margin="25 0 0 0"
+                              Margin="30 0 0 0"
                               ItemsSource="{Binding KhoiCmb}"
+                              DisplayMemberPath="TenKhoi"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding FilterKhoi}"
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding FilterKhoi}"
                                    CommandParameter="{Binding ElementName=cmbKhoi}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </ComboBox>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </StackPanel>
+                        <Button
+                        Width="150" 
+                        Height="50" 
+                        Style="{StaticResource InteractiveButton}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0 15 25 0"
+                        Content="Thêm Lớp" 
+                        FontSize="19" 
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Command="{Binding ThemLop}">
+                        </Button>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3" ></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical" Height="30">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Tên lớp"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="20 0 0 0"/>
+                            <TextBlock Text="Niên khóa"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="150 0 0 0"/>
+                            <TextBlock Text="Sĩ số"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="140 0 0 0"/>
+                            <TextBlock Text="Tên GVCN"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="70 0 0 0"/>
+                        </StackPanel>
                     </StackPanel>
-                    <DataGrid Margin="20 20 20 0"
+                    <DataGrid Margin="20,20,20,0"
                               ItemsSource="{Binding DanhSachLopHoc}"
                               Style="{StaticResource DataGridStyle1}"
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"
-                              Grid.Row="1"
-                              >
+                              Grid.Row="1">
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="940">
+                            <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <DockPanel>
-                                            <TextBlock Width="100"
+                                            <TextBlock Width="200"
                                                        FontSize="14"
                                                        Text="{Binding TenLop}"
                                                        VerticalAlignment="Center"/>
-                                            <TextBlock Width="100"
+                                            <TextBlock Width="200"
                                                        FontSize="14"
                                                        Text="{Binding NienKhoa}"
                                                        VerticalAlignment="Center"/>
-                                            <TextBlock Width="50"
+                                            <TextBlock Width="100"
                                                        FontSize="14"
                                                        Text="{Binding SiSo}"
                                                        VerticalAlignment="Center"/>
-                                            <TextBlock Width="200"
+                                            <TextBlock Width="250"
                                                        FontSize="14"
                                                        Text="{Binding TenGVCN}"
                                                        VerticalAlignment="Center"/>
                                             <StackPanel HorizontalAlignment="Right"
                                                         Orientation="Horizontal">
-                                                <Button 
-                                                    Content="Xem danh sách lớp">
-                                                    
-                                                </Button>
-                                                <Button 
-                                                    Content="Sửa thông tin lớp"
+                                                <Button Content="{materialDesign:PackIcon Kind=Magnify, Size=12}"
+                                                    Background="#FF3DC0FF"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Margin="20 0 0 0"
+                                                    Command="{Binding Source={StaticResource LopHocVM}, Path=XemLop}"
+                                                    CommandParameter="{Binding}"/>
+                                                <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
+                                                    Background="#FF47D440"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Margin="10 0 0 0"
                                                     Command="{Binding Source={StaticResource LopHocVM}, Path=SuaLop}"
-                                                    CommandParameter="{Binding}">
-                                                    
-                                                </Button>
-                                                <Button
-                                                    Content="Xoá lớp học"
+                                                    CommandParameter="{Binding}"/>
+                                                <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
+                                                    Background="#FFF65D5D"
+                                                    Foreground="White"
+                                                    BorderBrush="Transparent"
+                                                    Width="30"
+                                                    Height="30"
+                                                    Padding="0"
+                                                    Margin="10,0,0,0"
                                                     Command="{Binding Source={StaticResource LopHocVM}, Path=XoaLop}"
-                                                    CommandParameter="{Binding}"
-                                                    />
+                                                    CommandParameter="{Binding}"/>
+
                                             </StackPanel>
                                         </DockPanel>
                                     </DataTemplate>

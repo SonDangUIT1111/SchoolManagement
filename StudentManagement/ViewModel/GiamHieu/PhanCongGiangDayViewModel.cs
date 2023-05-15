@@ -1,18 +1,11 @@
-﻿using Microsoft.Win32;
-using StudentManagement.Model;
+﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using PhanCongGiangDay = StudentManagement.Views.GiamHieu.PhanCongGiangDay;
 
 namespace StudentManagement.ViewModel.GiamHieu
@@ -23,7 +16,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string NienKhoaQueries { get; set; }
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
-
+        public bool everLoaded { get; set; }
         private ObservableCollection<StudentManagement.Model.PhanCongGiangDay> _danhSachPhanCong;
         public ObservableCollection<StudentManagement.Model.PhanCongGiangDay> DanhSachPhanCong { get => _danhSachPhanCong; set { _danhSachPhanCong = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
@@ -41,8 +34,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand AddPhanCong { get; set; }
         public ICommand SearchPhanCong { get; set; }
 
-        public PhanCongGiangDayViewModel() 
+        public PhanCongGiangDayViewModel()
         {
+            everLoaded = false;
             NienKhoaQueries = "";
             KhoiQueries = "";
             LopQueries = "";
@@ -50,10 +44,21 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadThongTinPhanCong();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                PhanCongGiangDayWD = parameter as PhanCongGiangDay;
-                PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
-                PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
-                PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
+                if (everLoaded == false)
+                {
+                    PhanCongGiangDayWD = parameter as PhanCongGiangDay;
+                    try
+                    {
+                        PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
+                        PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
+                        PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    everLoaded = true;
+                }
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -64,10 +69,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     if (item != null)
                     {
                         NienKhoaQueries = item.ToString();
-                        FilterLopFromSelection();
-                        if (PhanCongGiangDayWD.cmbLop.SelectedIndex >= 0)
-                            LoadThongTinPhanCong();
-                        else DanhSachPhanCong.Clear();
+                        FilterKhoiFromSelection();
                     }
                 }
             });
@@ -112,7 +114,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 SuaPhanCongViewModel data = window.DataContext as SuaPhanCongViewModel;
                 data.PhanCongHienTai = parameter;
                 window.ShowDialog();
-                LoadThongTinPhanCong(); 
+                LoadThongTinPhanCong();
             });
             RemovePhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -125,8 +127,163 @@ namespace StudentManagement.ViewModel.GiamHieu
                 DanhSachPhanCong.Clear();
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
-                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'" + LopQueries + "' and TenMon like N'%" + parameter.Text + "%'";
+                    try
+                    {
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception) 
+                        { 
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return; 
+                        }
+                        string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay pc join Lop l on pc.MaLop = l.MaLop " +
+                                            " join MonHoc mh on mh.MaMon = pc.MaMon join GiaoVien gv on gv.MaGiaoVien = pc.MaGiaoVienPhuTrach " +
+                                            " where pc.MaLop = " + LopQueries + " and TenMon like N'%" + parameter.Text + "%'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
+                                phancong.MaPhanCong = reader.GetInt32(0);
+                                phancong.NienKhoa = reader.GetString(1);
+                                phancong.TenLop = reader.GetString(2);
+                                phancong.SiSo = reader.GetInt32(3);
+                                phancong.TenMon = reader.GetString(4);
+                                phancong.TenGiaoVien = reader.GetString(5);
+                                DanhSachPhanCong.Add(phancong);
+                            }
+                            reader.NextResult();
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            });
+        }
+        public void LoadThongTinCmb()
+        {
+            NienKhoaCmb = new ObservableCollection<string>();
+            KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+            LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                try
+                {
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
+                    }
+                    string CmdString = "select distinct NienKhoa from Lop";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            NienKhoaCmb.Add(reader.GetString(0));
+                            if (String.IsNullOrEmpty(NienKhoaQueries))
+                            {
+                                NienKhoaQueries = reader.GetString(0);
+                            }
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
+                    }
+                    CmdString = "select distinct MaKhoi,Khoi from Khoi";
+                    cmd = new SqlCommand(CmdString, con);
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Khoi item = new Khoi();
+                            item.MaKhoi = reader.GetInt32(0);
+                            item.TenKhoi = reader.GetString(1);
+                            if (String.IsNullOrEmpty(KhoiQueries))
+                            {
+                                KhoiQueries = reader.GetInt32(0).ToString();
+                            }
+                            KhoiCmb.Add(item);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
+                    }
+                    CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
+                    cmd = new SqlCommand(CmdString, con);
+                    reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Lop item = new Lop();
+                            item.MaLop = reader.GetInt32(0);
+                            item.TenLop = reader.GetString(1);
+                            if (String.IsNullOrEmpty(LopQueries))
+                            {
+                                LopQueries = reader.GetInt32(0).ToString();
+                            }
+                            LopCmb.Add(item);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+        public void LoadThongTinPhanCong()
+        {
+            DanhSachPhanCong = new ObservableCollection<Model.PhanCongGiangDay>();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                try
+                {
+                    try 
+                    {
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
+                    }
+                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay " +
+                                        " pc join Lop l on pc.MaLop = l.MaLop join GiaoVien gv on gv.MaGiaoVien = pc.MaGiaoVienPhuTrach join MonHoc mh on mh.MaMon = pc.MaMon " +
+                                        " where l.MaLop = " + LopQueries + "";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -147,105 +304,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-            });
-        }
-        public void LoadThongTinCmb()
-        {
-            NienKhoaCmb = new ObservableCollection<string>();
-            KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
-            LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                con.Open();
-                string CmdString = "select distinct NienKhoa from Lop";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
+                catch (Exception ex)
                 {
-                    while (reader.Read())
-                    {
-                        NienKhoaCmb.Add(reader.GetString(0));
-                        if (String.IsNullOrEmpty(NienKhoaQueries))
-                        {
-                            NienKhoaQueries = reader.GetString(0);
-                        }
-                    }
-                    reader.NextResult();
+                    MessageBox.Show(ex.Message);
                 }
-                con.Close();
-
-                con.Open();
-                CmdString = "select distinct MaKhoi,Khoi from Khoi";
-                cmd = new SqlCommand(CmdString, con);
-                reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        Khoi item = new Khoi();
-                        item.MaKhoi = reader.GetInt32(0);
-                        item.TenKhoi = reader.GetString(1);
-                        if (String.IsNullOrEmpty(KhoiQueries))
-                        {
-                            KhoiQueries = reader.GetInt32(0).ToString();
-                        }
-                        KhoiCmb.Add(item);
-                    }
-                    reader.NextResult();
-                }
-                con.Close();
-
-                con.Open();
-                CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
-                cmd = new SqlCommand(CmdString, con);
-                reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        Lop item = new Lop();
-                        item.MaLop = reader.GetInt32(0);
-                        item.TenLop = reader.GetString(1);
-                        if (String.IsNullOrEmpty(LopQueries))
-                        {
-                            LopQueries = reader.GetInt32(0).ToString();
-                        }
-                        LopCmb.Add(item);
-                    }
-                    reader.NextResult();
-                }
-                con.Close();
-            }
-        }
-        public void LoadThongTinPhanCong()
-        {
-            DanhSachPhanCong = new ObservableCollection<Model.PhanCongGiangDay>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                con.Open();
-                string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay where MaLop = N'"+LopQueries+"'";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
-                        phancong.MaPhanCong = reader.GetInt32(0);
-                        phancong.NienKhoa = reader.GetString(1);
-                        phancong.TenLop = reader.GetString(2);
-                        phancong.SiSo = reader.GetInt32(3);
-                        phancong.TenMon = reader.GetString(4);
-                        phancong.TenGiaoVien = reader.GetString(5);
-                        DanhSachPhanCong.Add(phancong);
-                    }
-                    reader.NextResult();
-                }
-                con.Close();
             }
         }
         public void FilterLopFromSelection()
@@ -253,24 +315,37 @@ namespace StudentManagement.ViewModel.GiamHieu
             LopCmb.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select Malop, TenLop from Lop where MaKhoi = " + KhoiQueries + " and NienKhoa = '" + NienKhoaQueries + "'";
-                //MessageBox.Show(CmdString);
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
+                try
                 {
-                    while (reader.Read())
-                    {
-                        Lop item = new Lop();
-                        item.MaLop = reader.GetInt32(0);
-                        item.TenLop = reader.GetString(1);
-                        LopCmb.Add(item);
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
                     }
-                    reader.NextResult();
+                    string CmdString = "select Malop, TenLop from Lop where MaKhoi = " + KhoiQueries + " and NienKhoa = '" + NienKhoaQueries + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Lop item = new Lop();
+                            item.MaLop = reader.GetInt32(0);
+                            item.TenLop = reader.GetString(1);
+                            LopCmb.Add(item);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 if (LopCmb.Count > 0)
                 {
                     PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
@@ -281,20 +356,80 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
+        public void FilterKhoiFromSelection()
+        {
+            KhoiCmb.Clear();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                try
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string CmdString = "select MaKhoi, Khoi from Khoi ";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            Khoi item = new Khoi();
+                            item.MaKhoi = reader.GetInt32(0);
+                            item.TenKhoi = reader.GetString(1);
+                            KhoiCmb.Add(item);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                if (KhoiCmb.Count > 0)
+                {
+                    PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
+                }
+                else
+                {
+                    PhanCongGiangDayWD.cmbKhoi.SelectedIndex = -1;
+                }
+            }
+        }
         public void XoaPhanCong(Model.PhanCongGiangDay item)
         {
             MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa phân công?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
             if (ConfirmDelete == MessageBoxResult.Yes)
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
-                    con.Open();
-                    SqlCommand cmd;
-                    string CmdString = "Delete from PhanCongGiangDay where MaPhanCong = " + item.MaPhanCong;
-                    //MessageBox.Show(CmdString);
-                    cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                    MessageBox.Show("Đã xóa thành công!");
+                    try
+                    {
+                        try 
+                        { 
+                            con.Open();
+                        } catch (Exception)
+                        { 
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return; 
+                        }
+                        SqlCommand cmd;
+                        string CmdString = "Delete from PhanCongGiangDay where MaPhanCong = " + item.MaPhanCong;
+                        cmd = new SqlCommand(CmdString, con);
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Đã xóa thành công!");
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
         }
     }

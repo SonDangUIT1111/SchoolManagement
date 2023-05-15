@@ -1,23 +1,17 @@
-﻿using Microsoft.Win32;
-using StudentManagement.Model;
+﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class ThayDoiQuyDinhViewModel: BaseViewModel
+    public class ThayDoiQuyDinhViewModel : BaseViewModel
     {
+        public bool everLoaded { get; set; }
         public ThayDoiQuyDinh ThayDoiQuyDinhWD { get; set; }
         public string QuyDinhQueries { get; set; }
         private ObservableCollection<StudentManagement.Model.QuiDinh> _danhSachQuyDinh;
@@ -28,12 +22,16 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ChangeRule { get; set; }
         public ThayDoiQuyDinhViewModel()
         {
+            everLoaded = false;
             QuyDinhQueries = "";
             LoadThongTinCmb();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThayDoiQuyDinhWD = parameter as ThayDoiQuyDinh;
-                //ThayDoiQuyDinhWD.cmbQuyDinh.SelectedIndex = 0;
+                if (everLoaded == false)
+                {
+                    ThayDoiQuyDinhWD = parameter as ThayDoiQuyDinh;
+                    everLoaded = true;
+                }
 
             });
             FilterQuyDinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -61,33 +59,47 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb.SelectedItem != null)
                 {
-                    //MessageBox.Show("Co quy dinh");
                     QuiDinh rule = cmb.SelectedItem as QuiDinh;
                     string tenqd = rule.TenQuiDinh;
-                    //MessageBox.Show(tenqd);
                     string strvalue = ThayDoiQuyDinhWD.tbGiaTri.Text;
-                    //MessageBox.Show(strvalue);
                     int value;
                     bool isInt = int.TryParse(strvalue, out value);
                     if (isInt)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            con.Open();
-                            string CmdString = "update QuiDinh SET GiaTri =" + value + " where TenQuiDinh = N'" + tenqd + "'";
-                            //MessageBox.Show(CmdString);
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.ExecuteNonQuery();
-                            con.Close();
+                            try
+                            {
+                                try 
+                                { 
+                                    con.Open(); 
+                                } catch (Exception) 
+                                { 
+                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                    return; 
+                                }
+                                string CmdString = "update QuiDinh SET GiaTri =" + value + " where TenQuiDinh = N'" + tenqd + "'";
+                                SqlCommand cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteNonQuery();
+                                con.Close();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                            }
+                            
                         }
                         ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
+                        ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                         MessageBox.Show("Thay đổi thành công!");
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("Giá trị không được rỗng và phải là một số nguyên!");
                     }
 
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Hãy chọn quy định trước!");
                 }
@@ -99,23 +111,38 @@ namespace StudentManagement.ViewModel.GiamHieu
             DanhSachQuyDinh = new ObservableCollection<StudentManagement.Model.QuiDinh>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select * from QuiDinh";
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
+                try
                 {
-                    while (reader.Read())
-                    {
-                        QuiDinh item = new QuiDinh();
-                        item.MaQuiDinh = reader.GetInt32(0);
-                        item.TenQuiDinh = reader.GetString(1);
-                        item.GiaTri = reader.GetInt32(2);
-                        DanhSachQuyDinh.Add(item);
+                    try 
+                    { 
+                        con.Open(); 
+                    } 
+                    catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
                     }
-                    reader.NextResult();
+                    string CmdString = "select * from QuiDinh";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            QuiDinh item = new QuiDinh();
+                            item.MaQuiDinh = reader.GetInt32(0);
+                            item.TenQuiDinh = reader.GetString(1);
+                            item.GiaTri = reader.GetInt32(2);
+                            DanhSachQuyDinh.Add(item);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
         public void LoadQuyDinhFromSelection()
@@ -123,25 +150,40 @@ namespace StudentManagement.ViewModel.GiamHieu
             QuiDinh item = new QuiDinh();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries +"'";
-                //MessageBox.Show(CmdString);
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
+                try
                 {
-                    while (reader.Read())
-                    {
-                        item.MaQuiDinh = reader.GetInt32(0);
-                        item.TenQuiDinh = reader.GetString(1);
-                        item.GiaTri = reader.GetInt32(2);
+                    
+                    try 
+                    { 
+                        con.Open(); 
                     }
-                    reader.NextResult();
+                    catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return;
+                    }
+                    string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            item.MaQuiDinh = reader.GetInt32(0);
+                            item.TenQuiDinh = reader.GetString(1);
+                            item.GiaTri = reader.GetInt32(2);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex) 
+                { 
+                    MessageBox.Show(ex.Message); 
+                }
             }
-            ThayDoiQuyDinhWD.tbGiaTri.Text= item.GiaTri.ToString();
+            ThayDoiQuyDinhWD.tbGiaTri.Text = item.GiaTri.ToString();
         }
     }
-    
+
 }

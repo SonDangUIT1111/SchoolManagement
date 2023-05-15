@@ -3,65 +3,62 @@ using StudentManagement.ViewModel.GiaoVien;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
-    internal class TrangChuViewModel:BaseViewModel
+    internal class TrangChuViewModel : BaseViewModel
     {
         //declare variable
+        private string _sayHello;
+        public string SayHello { get { return _sayHello; } set { _sayHello = value;OnPropertyChanged(); } }
         public HocSinhWindow HocSinhWD { get; set; }
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
 
-        private byte[] _avatar;
-        public byte[] Avatar { get { return _avatar; } set { _avatar= value; OnPropertyChanged(); } }
-        private string _tenHocSinh;
-        public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh= value; OnPropertyChanged(); } }
+        private Model.HocSinh _hocSinhHienTai;
+        public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value;OnPropertyChanged(); } }
         //declare Pages
-        public StudentManagement.Views.HocSinh.LopHoc LopHocPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
-        public StudentManagement.Views.HocSinh.ThongTinTruong ThongTinTruongPage { get; set; }
+        public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
         public DiemSo XemDiemPage { get; set; }
 
 
         //declare ICommand
         public ICommand LoadWindow { get; set; }
-        public ICommand SwitchThongTinHocSinh { get; set; }
-        public ICommand SwitchLopHoc { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
         public ICommand SwitchXemDiem { get; set; }
         public ICommand CapNhatThongTin { get; set; }
+        public ICommand SwitchBaoCaoMonHoc { get; set; }
+        public ICommand SwitchBaoCaoHocKy { get; set; }
 
         public TrangChuViewModel()
         {
-            //IdHocSinh = 100000;
+            IdHocSinh = 100000;
 
-
-            LopHocPage = new StudentManagement.Views.HocSinh.LopHoc();
-            ThongTinHocSinhPage = new StudentManagement.Views.HocSinh.ThongTinHocSinh();
-            ThongTinTruongPage = new StudentManagement.Views.HocSinh.ThongTinTruong();
+            HocSinhHienTai = new Model.HocSinh();
+            ThongTinTruongPage = new StudentManagement.Views.GiamHieu.ThongTinTruong();
+            BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
+            BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
+            XemDiemPage = new DiemSo();
 
             //define ICommand
             LoadWindow = new RelayCommand<HocSinhWindow>((parameter) => { return true; }, (parameter) =>
             {
                 HocSinhWD = parameter;
                 LoadThongTinCaNhan();
-            });
-            SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Content = ThongTinHocSinhPage;
-            });
-            SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Content = LopHocPage;
+                LoadSayHello(HocSinhWD.imageAvatar);
+                StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
+                vm.IdHocSinh = IdHocSinh;
+                HocSinhWD.RPage.Content = ThongTinTruongPage;
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -69,58 +66,86 @@ namespace StudentManagement.ViewModel.HocSinh
             });
             SwitchXemDiem = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
-                XemDiemPage = new DiemSo();
-                StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
-                vm.IdHocSinh= IdHocSinh;
                 parameter.Content = XemDiemPage;
             });
             CapNhatThongTin = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    con.Open();
-                    string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh()
-                            {
-                                MaHocSinh = IdHocSinh,
-                                TenHocSinh = TenHocSinh,
-                                NgaySinh = reader.GetDateTime(0),
-                                GioiTinh = reader.GetBoolean(1),
-                                DiaChi = reader.GetString(2),
-                                Email = reader.GetString(3),
-                                Avatar = (byte[])reader.GetValue(4)
-                            };
-                            SuaHocSinh window = new SuaHocSinh();
-                            SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
-                            data.HocSinhHienTai = student;
-                            window.ShowDialog();
-                            LoadThongTinCaNhan();
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
+                SuaHocSinh window = new SuaHocSinh();
+                SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
+                data.HocSinhHienTai = HocSinhHienTai;
+                window.ShowDialog();
+                LoadThongTinCaNhan();
+            });
+            SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoPage;
+            });
+            SwitchBaoCaoHocKy = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoHocKyPage;
             });
         }
         public void LoadThongTinCaNhan()
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string CmdString = "select TenHocSinh,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows) reader.Read();
-                TenHocSinh = reader.GetString(0);
-                Avatar = (byte[])reader.GetValue(1);
-                con.Close();
+                try
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string CmdString = "select TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    HocSinhHienTai.MaHocSinh = IdHocSinh;
+                    HocSinhHienTai.TenHocSinh = reader.GetString(0);
+                    HocSinhHienTai.NgaySinh = reader.GetDateTime(1);
+                    HocSinhHienTai.GioiTinh = reader.GetBoolean(2);
+                    HocSinhHienTai.DiaChi = reader.GetString(3);
+                    HocSinhHienTai.Email = reader.GetString(4);
+                    HocSinhHienTai.Avatar = (byte[])reader[5];
+                    con.Close();
+                }catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+        public void LoadSayHello(Border item)
+        {
+            int hour = DateTime.Now.Hour;
+            if (hour >= 0 && hour < 6)
+                SayHello = "Have a nice day";
+            else if (hour >= 6 && hour < 12)
+                SayHello = "Good morning";
+            else if (hour >= 12 && hour < 18)
+                SayHello = "Good afternoon";
+            else if (hour >= 18 && hour < 24)
+                SayHello = "Good evening";
+            try
+            {
+                HocSinhWD.UserName.Text = HocSinhHienTai.TenHocSinh;
+                ImageBrush imageBrush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                MemoryStream stream = new MemoryStream(HocSinhHienTai.Avatar);
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                imageBrush.ImageSource = bitmap;
+                imageBrush.Stretch = Stretch.UniformToFill;
+                item.Background = imageBrush;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
             }
         }
     }

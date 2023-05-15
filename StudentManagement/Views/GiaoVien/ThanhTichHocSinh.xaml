@@ -7,8 +7,8 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Background="#FFECECEC"
       Title="ThanhTichHocSinh"
       DataContext="{StaticResource ThanhTichVM}"
@@ -86,6 +86,7 @@
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              DisplayMemberPath="TenKhoi"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               ItemsSource="{Binding KhoiCombobox}">
                             <i:Interaction.Triggers>
@@ -104,6 +105,7 @@
                               Padding="10"
                               HorizontalAlignment="Left"
                               Margin="25 0 0 0"
+                              DisplayMemberPath="TenLop"
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               ItemsSource="{Binding LopCombobox}">
                             <i:Interaction.Triggers>
@@ -157,12 +159,49 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1">
+                    <StackPanel Grid.Row="1"
+                            Panel.ZIndex="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Họ và tên"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="30 0 0 0"/>
+                            <TextBlock Text="Lớp"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="100 0 0 0"/>
+                            <TextBlock Text="Điểm trung bình"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="60 0 0 0"/>
+                            <TextBlock Text="Xếp loại"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="30 0 0 0"/>
+                            <TextBlock Text="Nhận xét"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="100 0 0 0"/>
+                        </StackPanel>
+                    </StackPanel>
                     <DataGrid 
                               x:Name="DanhSachThanhTichDataGrid"
                               Margin="20 20 20 0"
+                              SelectionUnit="FullRow"
+                              Background="White"
+                              BorderBrush="Transparent"
+                              CanUserAddRows="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeColumns="False"
+                              CanUserResizeRows="False"
+                              AutoGenerateColumns="False"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                               Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}"
+                              RowStyle="{StaticResource MaterialDesignDataGridRow}"
+                              CellStyle="{StaticResource MaterialDesignDataGridCell}"
                               ItemsSource="{Binding DanhSachThanhTichHocSinh}"
                               >
                         <DataGrid.Columns>
@@ -181,30 +220,25 @@
                                                         FontSize="14"
                                                         Text="{Binding TenLop}"
                                                         VerticalAlignment="Center"
-                                                        Width="150"/>
+                                                        Width="100"/>
+                                                <TextBlock 
+                                                        FontSize="14"
+                                                        Text="{Binding TBHK}"
+                                                        VerticalAlignment="Center"
+                                                        Width="120"/>
                                                 <TextBlock
                                                         FontSize="14"
                                                         Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
                                                         VerticalAlignment="Center"
                                                         Width="150"/>
-                                                <TextBlock 
-                                                        FontSize="14"
-                                                        Text="{Binding TBHK}"
-                                                        VerticalAlignment="Center"
-                                                        Width="80"/>
-                                                <!--<TextBlock 
-                                                        FontSize="14"
-                                                        Text="{Binding NhanXet}"
-                                                        VerticalAlignment="Center"/>-->
                                                 <TextBox 
                                                         x:Name="NhanXetEdit"
-                                                        Width="100"
+                                                        Width="300"
                                                         FontSize="14"
                                                         Margin="10"
                                                         Text="{Binding NhanXet,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                         VerticalAlignment="Center"
                                                         TextAlignment="Center"
-                                                        Visibility="{Binding Source={StaticResource ThanhTichVM}, Path=NhanXetTextBoxVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                         IsEnabled="{Binding Source={StaticResource ThanhTichVM}, Path=NhanXetTextBoxIsEnabled, Converter={StaticResource BooleanToIsEnabledConverter}}"/>
                                             </StackPanel>
                                         </DockPanel>

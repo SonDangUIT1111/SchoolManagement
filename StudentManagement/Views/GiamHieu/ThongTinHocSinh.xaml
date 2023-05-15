@@ -13,8 +13,8 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       FontFamily="{DynamicResource MaterialDesignFont}"
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Background="#FFECECEC"
       Title="ThongTinHocSinh"
       Name="ThongTinHocSinhWD"
@@ -100,7 +100,7 @@
                     <ComboBox x:Name="cmbKhoi"
                               materialDesign:HintAssist.Hint="Khối"
                               IsEditable="False"
-                              Width="200"
+                              Width="150"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
@@ -118,7 +118,7 @@
                     <ComboBox x:Name="cmbLop"
                               materialDesign:HintAssist.Hint="Lớp"
                               IsEditable="False"
-                              Width="200"
+                              Width="150"
                               Height="40"
                               Padding="10"
                               HorizontalAlignment="Left"
@@ -151,8 +151,50 @@
                                                  Height="20"
                                                  Kind="Magnify" />
                     </Button>
+                    <Button Margin="10 0 0 0"
+                            Background="Transparent"
+                            BorderBrush="#0099FF"
+                            IsDefault="True"
+                            ToolTip="All students"
+                            Command="{Binding StudentSearchAll}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="ListBox" />
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Họ và tên"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="80 0 0 0"/>
+                        <TextBlock Text="Ngày sinh"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="120 0 0 0"/>
+                        <TextBlock Text="Giới tính"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="38 0 0 0"/>
+                        <TextBlock Text="Trung bình học kỳ 1"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                        <TextBlock Text="Trung bình học kỳ 2"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="100 0 0 0"/>
+                    </StackPanel>
+                    <Separator Margin="0 10 0 0"
+                               Width="920"
+                               Opacity="0.6"/>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
+                          Margin="20"
+                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           RowStyle="{StaticResource DataGridRowStyle1}"
                           CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
@@ -163,10 +205,12 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <Border CornerRadius="10"
-                                                Height="40"
-                                                Width="40">
+                                                Height="35"
+                                                Width="35"
+                                                Margin="0 -10 0 0">
                                             <Border.Background>
-                                                <ImageBrush ImageSource="{Binding Avatar, Converter={StaticResource ByteToImageConverter}}"/>
+                                                <ImageBrush ImageSource="{Binding Avatar, Converter={StaticResource ByteToImageConverter}}"
+                                                            Stretch="UniformToFill"/>
                                             </Border.Background>
 
                                         </Border>
@@ -174,27 +218,33 @@
                                                    FontSize="14"
                                                    Text="{Binding TenHocSinh}"
                                                    VerticalAlignment="Center"
-                                                   Width="200"/>
+                                                   Width="160"/>
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
-                                                   Text="{Binding NgaySinh}"
+                                                   Text="{Binding NgaySinh, Converter={StaticResource DateTimeToDateConverter}}"
                                                    VerticalAlignment="Center"
-                                                   Width="100"
+                                                   Width="80"
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
+                                                   Width="50"
                                                    VerticalAlignment="Center"
                                                    Text="{Binding GioiTinh,Converter={StaticResource BooleanToGenderConverter}}"/>
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
+                                                   Width="200"
+                                                   TextAlignment="Center"
+                                                   TextTrimming="WordEllipsis"
                                                    VerticalAlignment="Center"
-                                                   Text="{Binding DiaChi}"/>
+                                                   Text="{Binding DiemTB1}"/>
                                         <TextBlock Margin="20 0 0 0"
                                                    FontSize="14"
+                                                   Width="200"
+                                                   TextAlignment="Center"
                                                    VerticalAlignment="Center"
-                                                   Text="{Binding Email}"/>
+                                                   Text="{Binding DiemTB2}"/>
                                         <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
-                                                    Background="#FF68BB08"
+                                                    Background="#FF47D440"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"
@@ -204,7 +254,7 @@
                                                     Command="{Binding Source={StaticResource ThongTinHocSinhVM}, Path=UpdateStudent}"
                                                     CommandParameter="{Binding}"/>
                                         <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
-                                                    Background="#FC8484"
+                                                    Background="#FFF65D5D"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"

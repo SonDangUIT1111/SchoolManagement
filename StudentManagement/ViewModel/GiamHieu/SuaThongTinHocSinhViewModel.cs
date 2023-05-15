@@ -1,17 +1,16 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using StudentManagement.Views.GiamHieu;
-using System.Text.RegularExpressions;
-using StudentManagement.Model;
-using System.Data.SqlClient;
 using StudentManagement.Converter;
+using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
+using System;
 using System.Data;
-using StudentManagement.Views.HocSinh;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -25,11 +24,11 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ConfirmChange { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand CancelChange { get; set; }
-        public SuaThongTinHocSinhViewModel() {
+        public SuaThongTinHocSinhViewModel()
+        {
             LoadData = new RelayCommand<SuaThongTinHocSinh>((parameter) => { return true; }, (parameter) =>
             {
                 SuaThongTinHocSinhWD = parameter;
-                //MessageBox.Show(HocSinhHienTai.GioiTinh.ToString());
                 if (HocSinhHienTai.GioiTinh.ToString() == "True")
                 {
                     SuaThongTinHocSinhWD.Male.IsChecked = true;
@@ -38,6 +37,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     SuaThongTinHocSinhWD.Female.IsChecked = true;
                 }
+                SuaThongTinHocSinhWD.DiaChi.Text = HocSinhHienTai.DiaChi;
+                SuaThongTinHocSinhWD.Email.Text = HocSinhHienTai.Email; 
             });
             CancelChange = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -92,34 +93,55 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
-                            con.Open();
-                            string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = '" + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Year + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Month + '-' + SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.Day + "', GioiTinh = ";
-                            if (SuaThongTinHocSinhWD.Male.IsChecked == true)
+                            try
                             {
-                                CmdString += "1, ";
+                                try 
+                                { 
+                                    con.Open(); 
+                                } catch (Exception) 
+                                { 
+                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                    return; 
+                                }
+                                string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = CAST(N'" 
+                                + ToShortDateTime(SuaThongTinHocSinhWD.NgaySinh) + "' AS DATE), GioiTinh = ";
+                                if (SuaThongTinHocSinhWD.Male.IsChecked == true)
+                                {
+                                    CmdString += "1, ";
+                                }
+                                else
+                                {
+                                    CmdString += "0, ";
+                                }
+                                CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
+                                // Định nghĩa @imagebinary
+                                if (ImagePath != null)
+                                {
+                                    ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                                    byte[] buffer = converter.ImageToBinary(ImagePath);
+                                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                                    cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                                    cmd.ExecuteScalar();
+                                    MessageBox.Show("Cập nhật thành công!");
+                                    con.Close();
+                                }
+                                SuaThongTinHocSinhWD.Close();
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                CmdString += "0, ";
+                                MessageBox.Show(ex.Message);
                             }
-                            CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
-                            //MessageBox.Show(CmdString);
-                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                            byte[] buffer = converter.ImageToBinary(ImagePath);
-                            // Định nghĩa @imagebinary
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                            sqlParam.DbType = DbType.Binary;
-                            cmd.ExecuteNonQuery();
-                            con.Close();
                         }
-                        MessageBox.Show("Sửa thông tin học sinh thành công!");
-                        SuaThongTinHocSinhWD.Close();
                     }
 
                 }
 
             });
+        }
+        public string ToShortDateTime(DatePicker st)
+        {
+            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+            return date;
         }
     }
 }

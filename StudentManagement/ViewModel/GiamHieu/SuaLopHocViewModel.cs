@@ -1,23 +1,14 @@
-﻿using Microsoft.Win32;
+﻿using StudentManagement.Model;
+using StudentManagement.Views.GiamHieu;
 using System;
-using System.Windows.Controls;
+using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using StudentManagement.Views.GiamHieu;
-using System.Text.RegularExpressions;
-using StudentManagement.Model;
-using System.Data.SqlClient;
-using StudentManagement.Converter;
-using System.Data;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Security.Cryptography;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    public class SuaLopHocViewModel:BaseViewModel
+    public class SuaLopHocViewModel : BaseViewModel
     {
         public string GiaoVienQueries;
         public int MaGiaoVien { get; set; }
@@ -31,53 +22,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             set { _lopHocHienTai = value; OnPropertyChanged(); }
         }
 
-        private ObservableCollection<string> _giaoVienComboBox;
-        public ObservableCollection<string> GiaoVienComboBox
+        private ObservableCollection<Model.GiaoVien> _giaoVienComboBox;
+        public ObservableCollection<Model.GiaoVien> GiaoVienComboBox
         {
             get => _giaoVienComboBox;
             set { _giaoVienComboBox = value; OnPropertyChanged(); }
         }
 
-        private string selectedGiaoVien;
 
-        public string SelectedGiaoVien
-        {
-            get { return selectedGiaoVien; }
-            set
-            {
-                if (selectedGiaoVien != value)
-                {
-                    selectedGiaoVien = value;
-                    LayMaGiaoVien();
-                }
-            }
-        }
-
-        public void LayMaGiaoVien()
-        {
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                con.Open();
-                string cmdString = "SELECT MaGiaoVien FROM GiaoVien WHERE TenGiaoVien = '" + selectedGiaoVien + "'";
-                SqlCommand cmd = new SqlCommand(cmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        //GiaoVienComboBox.Add(reader.GetString(0));
-                        //if (string.IsNullOrEmpty(GiaoVienQueries))
-                        //{
-                        //    GiaoVienQueries = reader.GetString(0);
-                        //}
-                        MaGiaoVien = reader.GetInt32(0);
-                    }
-                    reader.NextResult();
-                }
-                con.Close();
-            }
-        }
-
+       
         public ICommand LoadWindow { get; set; }
         public ICommand EditClass { get; set; }
         public ICommand CancelEditClass { get; set; }
@@ -89,80 +42,95 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 SuaLopWD = parameter;
                 LoadGVCNCombobox();
-                GiaoVienComboBox.Add(LopHocHienTai.TenGVCN);
-                SuaLopWD.EditFormTeacher.SelectedItem = LopHocHienTai.TenGVCN;
             });
 
             EditClass = new RelayCommand<SuaThongTinLopHoc>((parameter) => { return true; }, (parameter) =>
             {
-                if (String.IsNullOrEmpty(SuaLopWD.EditClassName.Text) || String.IsNullOrEmpty(SuaLopWD.EditNumberOfStudent.Text) || String.IsNullOrEmpty(SuaLopWD.EditAcademyYear.Text) || String.IsNullOrEmpty(selectedGiaoVien))
+                if (String.IsNullOrEmpty(SuaLopWD.EditClassName.Text) || 
+                    String.IsNullOrEmpty(SuaLopWD.EditAcademyYear.Text) 
+                    || String.IsNullOrEmpty(GiaoVienQueries))
                 {
                     MessageBox.Show("Nhập đầy đủ thông tin");
                 }
                 else using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    try
                     {
-                        con.Open();
-
-
-
-                        string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "' , SiSo = '" + SuaLopWD.EditNumberOfStudent.Text + "', NienKhoa = '" + SuaLopWD.EditAcademyYear.Text + "',";
-
-                        switch (SuaLopWD.EditClassName.Text.Substring(0, 2))
+                        try
                         {
-                            case "10":
-                                MaKhoi = 1;
-                                Khoi = 10;
-                                break;
-                            case "11":
-                                MaKhoi = 2;
-                                Khoi = 11;
-                                break;
-                            case "12":
-                                MaKhoi = 3;
-                                Khoi = 12;
-                                break;
+                            con.Open();
                         }
-
-                        cmdString = cmdString + " MaKhoi = '" + MaKhoi + "', Khoi = '" + Khoi + "', MaGVCN ='" + MaGiaoVien + "', TenGVCN = '" + selectedGiaoVien + "' where TenLop = '"+LopHocHienTai.TenLop+"'";
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
+                        string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "', NienKhoa = '" + SuaLopWD.EditAcademyYear.Text + "', " +
+                                    "MaGVCN = " + GiaoVienQueries + " where MaLop = " + LopHocHienTai.MaLop.ToString();
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();
                         MessageBox.Show("Sửa lớp học thành công");
                         SuaLopWD.Close();
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
 
             });
 
             CancelEditClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                SuaLopWD.Close();            
+                SuaLopWD.Close();
             });
         }
 
         public void LoadGVCNCombobox()
         {
-            GiaoVienComboBox = new ObservableCollection<string>();
+            GiaoVienComboBox = new ObservableCollection<Model.GiaoVien>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                con.Open();
-                string cmdString = "SELECT DISTINCT TenGiaoVien FROM GiaoVien WHERE TenGiaoVien NOT IN (SELECT DISTINCT TenGVCN FROM Lop)";
-                SqlCommand cmd = new SqlCommand(cmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.HasRows)
+                try
                 {
-                    while (reader.Read())
-                    {
-                        GiaoVienComboBox.Add(reader.GetString(0));
-                        if (string.IsNullOrEmpty(GiaoVienQueries))
-                        {
-                            GiaoVienQueries = reader.GetString(0);
-                        }
+                    try 
+                    { 
+                        con.Open(); 
+                    } catch (Exception) 
+                    { 
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        return; 
                     }
-                    reader.NextResult();
+                    string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE MaGiaoVien NOT IN (SELECT DISTINCT MaGVCN FROM Lop)";
+                    MessageBox.Show(cmdString);
+                    SqlCommand cmd = new SqlCommand(cmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            GiaoVienComboBox.Add(new Model.GiaoVien()
+                            {
+                                MaGiaoVien = reader.GetInt32(0),
+                                TenGiaoVien = reader.GetString(1)
+                            });
+                            if (string.IsNullOrEmpty(GiaoVienQueries))
+                            {
+                                GiaoVienQueries = reader.GetString(0);
+                            }
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
                 }
-                con.Close();
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
             }
-           
+
         }
     }
 }

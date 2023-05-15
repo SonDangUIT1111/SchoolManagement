@@ -8,8 +8,8 @@
       xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
-      d:DesignHeight="1033" 
-      d:DesignWidth="1056"
+      d:DesignHeight="750" 
+      d:DesignWidth="1000"
       Background="#FFECECEC"
       Title="BaoCao"
       DataContext="{StaticResource BaoCaoHocKyVM}"
@@ -98,19 +98,42 @@
                     <ComboBox x:Name="cmbKhoi"
                                 Width="256" 
                                 Margin="20 0 0 0"
+                                DisplayMemberPath="TenKhoi"
                                 materialDesign:HintAssist.Hint="Khối"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                                 ItemsSource="{Binding KhoiComboBox}"
                                 Style="{StaticResource MaterialDesignOutlinedComboBox}">
                     </ComboBox>
                 </StackPanel>
+                <StackPanel Grid.Row="0"
+                            Margin="0 80 0 0"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Tên lớp"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="25 0 0 0"/>
+                        <TextBlock Text="Sĩ số"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                        <TextBlock Text="Số lượng đạt"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                        <TextBlock Text="Tỉ lệ"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="50 0 0 0"/>
+                    </StackPanel>
+                </StackPanel>
                 <StackPanel
                     Grid.Row="1"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    >
-
-                    <DataGrid Margin="30 20 80 0"
+                    Margin="25 0 25 0"
+                    Orientation="Horizontal">
+                    <DataGrid Margin="0 0 0 0"
+                              Width="400"
                               x:Name="BaoCaoHocKyDataGrid"
                               ItemsSource="{Binding DanhSachBaoCaoHocKy}"
                               Style="{StaticResource DataGridStyle1}"
@@ -119,7 +142,7 @@
                               SelectedItem="{Binding GridSelectedItem}"
                               Grid.Row="2">
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="450">
+                            <DataGridTemplateColumn Width="400">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -144,16 +167,10 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding BaoCaoHocKySelectionChanged}"
-                                   CommandParameter="{Binding ElementName=BaoCaoHocKyDataGrid}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
                     </DataGrid>
                     <lvc:CartesianChart
                     Grid.Row="0"
-                    Margin="30 20 30 0"
+                    Margin="0 0 0 0"
                     Width="400"
                     Series="{Binding SoLuongDat}"
                     Visibility="{Binding CartersianChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">

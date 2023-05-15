@@ -1,20 +1,15 @@
 ﻿using Microsoft.Win32;
+using StudentManagement.Converter;
+using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using StudentManagement.Model;
-using System.Data.SqlClient;
-using System.Text.RegularExpressions;
-using StudentManagement.Converter;
-using System.Runtime.Remoting.Messaging;
+using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
@@ -34,13 +29,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
 
             GiaoVienHienTai = new StudentManagement.Model.GiaoVien { };
-            //GiaoVienHienTai.TenGiaoVien = "skajdl";
 
             LoadWindow = new RelayCommand<SuaGiaoVien>((parameter) => { return true; }, (parameter) =>
             {
                 SuaGiaoVienWD = parameter;
             });
-            
+
             CancelCommand = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 SuaGiaoVienWD.Close();
@@ -90,14 +84,13 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void CapNhatGiaoVien()
         {
-            //MessageBox.Show(Avatar);
-            // MessageBox.Show("testin end");
             if (SuaGiaoVienWD.TenGV.Text == "" |
                 SuaGiaoVienWD.NgaySinh.Text == "" |
                 SuaGiaoVienWD.DiaChi.Text == "" |
                 SuaGiaoVienWD.Email.Text == "")
             {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin");
+                return;
             }
             else
             if (!IsValidEmail(SuaGiaoVienWD.Email.Text)
@@ -112,39 +105,46 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     try
                     {
-                        con.Open();
+                        try
+                        {
+                            con.Open();
 
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
+                        string CmdString = "Update GiaoVien set TenGiaoVien = N'" + SuaGiaoVienWD.TenGV.Text +
+                            "', NgaySinh = CAST(N'" + ToShortDateTime(SuaGiaoVienWD.NgaySinh) +
+                            "' AS DATE), GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
+                            ", DiaChi = N'" + SuaGiaoVienWD.DiaChi.Text +
+                            "', Email = '" + SuaGiaoVienWD.Email.Text +
+                            "', AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+
+                        if (ImagePath != null)
+                        {
+                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                            byte[] buffer = converter.ImageToBinary(ImagePath);
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.Parameters.AddWithValue("@image", buffer);
+                            cmd.ExecuteScalar();
+                            con.Close();
+                            MessageBox.Show("Cập nhật thành công.");
+                            SuaGiaoVienWD.Close();
+                        }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi không thể truy cập cơ sở dữ liệu");
-                        return;
+                        MessageBox.Show(ex.Message);
                     }
-                    string CmdString = "Update GiaoVien set TenGiaoVien = N\'" + SuaGiaoVienWD.TenGV.Text +
-                        "\', NgaySinh = \'" + SuaGiaoVienWD.NgaySinh.DisplayDate.ToString() +
-                        "\', GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
-                        ", DiaChi = N\'" + SuaGiaoVienWD.DiaChi.Text +
-                        "\', Email = \'" + SuaGiaoVienWD.Email.Text +
-                        "\' where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                    //MessageBox.Show(CmdString);
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    con.Close();
-                    if (ImagePath != null)
-                    {
-                        //MessageBox.Show(ImagePath);
-                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                        byte[] buffer = converter.ImageToBinary(ImagePath);
-                        con.Open();
-                        string cmdstring = "update GiaoVien set AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                        cmd = new SqlCommand(cmdstring, con);
-                        cmd.Parameters.AddWithValue("@image", buffer);
-                        cmd.ExecuteScalar();
-                        con.Close();
-                    }
-                    MessageBox.Show("Cập nhật thành công!");
                 }
             }
+        }
+        public string ToShortDateTime(DatePicker st)
+        {
+            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+            return date;
         }
     }
 }
