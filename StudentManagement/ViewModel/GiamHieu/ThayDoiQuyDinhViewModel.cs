@@ -11,6 +11,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class ThayDoiQuyDinhViewModel : BaseViewModel
     {
+        public bool everLoaded { get; set; }
         public ThayDoiQuyDinh ThayDoiQuyDinhWD { get; set; }
         public string QuyDinhQueries { get; set; }
         private ObservableCollection<StudentManagement.Model.QuiDinh> _danhSachQuyDinh;
@@ -21,11 +22,16 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ChangeRule { get; set; }
         public ThayDoiQuyDinhViewModel()
         {
+            everLoaded = false;
             QuyDinhQueries = "";
             LoadThongTinCmb();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThayDoiQuyDinhWD = parameter as ThayDoiQuyDinh;
+                if (everLoaded == false)
+                {
+                    ThayDoiQuyDinhWD = parameter as ThayDoiQuyDinh;
+                    everLoaded = true;
+                }
 
             });
             FilterQuyDinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>

@@ -183,7 +183,14 @@ namespace StudentManagement.ViewModel.Login
                     {
                         try
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            try 
+                            { 
+                                con.Open();
+                            } catch (Exception) 
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                return; 
+                            }
                             CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
@@ -195,7 +202,7 @@ namespace StudentManagement.ViewModel.Login
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+
                         }
 
                     }
@@ -227,7 +234,14 @@ namespace StudentManagement.ViewModel.Login
                     {
                         try
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            try 
+                            { 
+                                con.Open(); 
+                            } catch (Exception)
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return; 
+                            }
                             CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
@@ -239,7 +253,7 @@ namespace StudentManagement.ViewModel.Login
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+
                         }
 
                     }
@@ -270,7 +284,14 @@ namespace StudentManagement.ViewModel.Login
                     {
                         try
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            try
+                            { 
+                                con.Open(); 
+                            } catch (Exception) 
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                return; 
+                            }
                             CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
@@ -283,7 +304,7 @@ namespace StudentManagement.ViewModel.Login
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+
                         }
 
                     }

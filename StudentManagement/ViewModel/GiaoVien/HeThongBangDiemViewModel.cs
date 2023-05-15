@@ -13,6 +13,7 @@ namespace StudentManagement.ViewModel.GiaoVien
     {
 
         // khai báo biến
+        public bool everLoaded { get; set; }
         private int _idUser;
         public int IdUser { get { return _idUser; } set { _idUser = value; } }
         private bool _justReadOnly;
@@ -48,6 +49,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand LuuDiem { get; set; }
         public HeThongBangDiemViewModel()
         {
+            everLoaded = false;
             IdUser = 100000;
             JustReadOnly = true;
             CanUserEdit = false;
@@ -58,10 +60,14 @@ namespace StudentManagement.ViewModel.GiaoVien
             KhoiDataCmb = new ObservableCollection<Khoi>();
             LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                HeThongBangDiemWD = parameter as HeThongBangDiem;
-                LoadDuLieuComboBox();
-                XacDinhQuyenHan();
-                LoadDanhSachBangDiem();
+                if (everLoaded == false)
+                {
+                    HeThongBangDiemWD = parameter as HeThongBangDiem;
+                    LoadDuLieuComboBox();
+                    XacDinhQuyenHan();
+                    LoadDanhSachBangDiem();
+                    everLoaded = true;
+                }
             });
             MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
             {

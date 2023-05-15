@@ -239,7 +239,7 @@
                     </Grid>
                 </Button>
                 
-                  <Button 
+            <Button 
                 Width="220"
                 Height="47" 
                 Style="{StaticResource SideButton}" 

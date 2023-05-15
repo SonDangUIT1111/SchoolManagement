@@ -11,6 +11,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class MonHocViewModel : BaseViewModel
     {
+        public bool everLoaded { get; set; }
         public MonHoc MonHocWD { get; set; }
 
         private ObservableCollection<StudentManagement.Model.MonHoc> _danhSachMonHoc;
@@ -30,11 +31,16 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public MonHocViewModel()
         {
+            everLoaded = false;
             MonHocEditting = new Model.MonHoc();
             LoadThongTinMonHoc();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                MonHocWD = parameter as MonHoc;
+                if (everLoaded == false)
+                {
+                    MonHocWD = parameter as MonHoc;
+                    everLoaded = true;
+                }
             });
             DeleteSubject = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {

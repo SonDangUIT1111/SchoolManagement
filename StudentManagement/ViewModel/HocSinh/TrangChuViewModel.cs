@@ -20,7 +20,8 @@ namespace StudentManagement.ViewModel.HocSinh
         private Model.HocSinh _hocSinhHienTai;
         public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value; } }
         //declare Pages
-        public StudentManagement.Views.HocSinh.LopHoc LopHocPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinTruong ThongTinTruongPage { get; set; }
         public DiemSo XemDiemPage { get; set; }
@@ -29,19 +30,21 @@ namespace StudentManagement.ViewModel.HocSinh
         //declare ICommand
         public ICommand LoadWindow { get; set; }
         public ICommand SwitchThongTinHocSinh { get; set; }
-        public ICommand SwitchLopHoc { get; set; }
         public ICommand SwitchThongTinTruong { get; set; }
         public ICommand SwitchXemDiem { get; set; }
         public ICommand CapNhatThongTin { get; set; }
+        public ICommand SwitchBaoCaoMonHoc { get; set; }
+        public ICommand SwitchBaoCaoHocKy { get; set; }
 
         public TrangChuViewModel()
         {
             IdHocSinh = 100033;
 
             HocSinhHienTai = new Model.HocSinh();
-            LopHocPage = new StudentManagement.Views.HocSinh.LopHoc();
             ThongTinHocSinhPage = new StudentManagement.Views.HocSinh.ThongTinHocSinh();
             ThongTinTruongPage = new StudentManagement.Views.HocSinh.ThongTinTruong();
+            BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
+            BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
 
             //define ICommand
             LoadWindow = new RelayCommand<HocSinhWindow>((parameter) => { return true; }, (parameter) =>
@@ -52,10 +55,6 @@ namespace StudentManagement.ViewModel.HocSinh
             SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.Content = ThongTinHocSinhPage;
-            });
-            SwitchLopHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Content = LopHocPage;
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -75,6 +74,14 @@ namespace StudentManagement.ViewModel.HocSinh
                 data.HocSinhHienTai = HocSinhHienTai;
                 window.ShowDialog();
                 LoadThongTinCaNhan();
+            });
+            SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoPage;
+            });
+            SwitchBaoCaoHocKy = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Content = BaoCaoHocKyPage;
             });
         }
         public void LoadThongTinCaNhan()

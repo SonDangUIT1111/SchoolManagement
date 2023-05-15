@@ -14,6 +14,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         // khai báo biến
         private int _idUser;
         public int IdUser { get { return _idUser; } set { _idUser = value; } }
+        public bool everLoaded { get; set; }
 
         public string NienKhoaQueries { get; set; }
         public int HocKyQueries { get; set; }
@@ -65,6 +66,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand KhoaDiem { get; set; }
         public QuanLiDiemSoViewModel()
         {
+            everLoaded = false;
             DanhSachDiem = new ObservableCollection<HeThongDiem>();
             DanhSachThanhTich = new ObservableCollection<ThanhTich>();
             DanhSachBaoCaoMon = new ObservableCollection<BaoCaoMon>();
@@ -78,9 +80,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             KhoiDataCmb2 = new ObservableCollection<Khoi>();
             LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                QuanLiDiemSoWD = parameter as QuanLiDiemSo;
-                LoadDuLieuComboBox();
-                LoadDanhSachBangDiem();
+                if (everLoaded == false)
+                {
+                    QuanLiDiemSoWD = parameter as QuanLiDiemSo;
+                    LoadDuLieuComboBox();
+                    LoadDanhSachBangDiem();
+                    everLoaded = true;
+                }
+
             });
             MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
             {

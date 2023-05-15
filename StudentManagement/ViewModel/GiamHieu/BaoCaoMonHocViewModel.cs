@@ -19,6 +19,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string MonHocQueries { get; set; }
         public string LopQueries { get; set; }
         public int TongSiSoLop { get; set; }
+        public bool everLoaded { get; set; }
 
         public BaoCaoMonHoc BaoCaoWD;
 
@@ -142,6 +143,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public BaoCaoMonHocViewModel()
         {
+            everLoaded = false;
             NienKhoaComboBox = new ObservableCollection<string>();
             MonHocComboBox = new ObservableCollection<Model.MonHoc>();
             DanhSachBaoCaoMon = new ObservableCollection<Model.BaoCaoMon>();
@@ -155,12 +157,16 @@ namespace StudentManagement.ViewModel.GiamHieu
          
             LoadBaoCao = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                BaoCaoWD = parameter as BaoCaoMonHoc;
-                LoadComboboxData();
-                LoadDanhSachBaoCaoMon();
-                LoadCartesianChart();
-                CartersianChartVisibility = true;
-                PieChartVisibility = false;
+                if (everLoaded == false)
+                {
+                    BaoCaoWD = parameter as BaoCaoMonHoc;
+                    LoadComboboxData();
+                    LoadDanhSachBaoCaoMon();
+                    LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
+                    everLoaded = true;
+                }
             });
 
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>

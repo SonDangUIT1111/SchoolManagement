@@ -11,7 +11,7 @@ namespace StudentManagement.ViewModel.GiaoVien
 {
     internal class LopHocViewModel : BaseViewModel
     {
-
+        public bool everLoaded { get; set; }
         private int _idGiaoVien;
         public int IdGiaoVien { get { return _idGiaoVien; } set { _idGiaoVien = value; } }
         public string NienKhoaQueries;
@@ -38,15 +38,20 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand UpdateHocSinh { get; set; }
         public LopHocViewModel()
         {
+            everLoaded = false;
             DanhSachKhoi = new ObservableCollection<Model.Khoi>();
             DanhSachhs = new ObservableCollection<Model.HocSinh>();
             DanhSachNienKhoa = new ObservableCollection<string>();
             DanhSachLop = new ObservableCollection<Model.Lop>();
             LoadWindow = new RelayCommand<LopHoc>((parameter) => { return true; }, (parameter) =>
             {
-                LopHocWD = parameter;
-                InitComboBox();
-                LoadDanhSachHocSinh();
+                if (everLoaded == false)
+                {
+                    LopHocWD = parameter;
+                    InitComboBox();
+                    LoadDanhSachHocSinh();
+                    everLoaded = true;
+                }
             });
             LocHocSinh = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
             {

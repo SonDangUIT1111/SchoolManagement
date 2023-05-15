@@ -10,6 +10,7 @@ namespace StudentManagement.ViewModel.HocSinh
 {
     public class DiemSoViewModel : BaseViewModel
     {
+        public bool everLoaded { get; set; }
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
         public DiemSo DiemSoWD { get; set; }
@@ -20,10 +21,10 @@ namespace StudentManagement.ViewModel.HocSinh
         public ICommand LoadWindow { get; set; }
         public DiemSoViewModel()
         {
+            everLoaded = false;
             LoadWindow = new RelayCommand<DiemSo>((parameter) => { return true; }, (parameter) =>
             {
                 DiemSoWD = parameter;
-                DiemSoWD.BangDiem.Visibility = System.Windows.Visibility.Hidden;
                 LoadDanhSachDiem();
             });
 
@@ -60,7 +61,6 @@ namespace StudentManagement.ViewModel.HocSinh
                 }
             }
             // load diem
-            DiemSoWD.BangDiem.Visibility = System.Windows.Visibility.Visible;
             DanhSachDiemHK1 = new ObservableCollection<Model.HeThongDiem>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {

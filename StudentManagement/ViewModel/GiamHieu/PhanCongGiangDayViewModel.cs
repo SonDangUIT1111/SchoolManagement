@@ -16,7 +16,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string NienKhoaQueries { get; set; }
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
-
+        public bool everLoaded { get; set; }
         private ObservableCollection<StudentManagement.Model.PhanCongGiangDay> _danhSachPhanCong;
         public ObservableCollection<StudentManagement.Model.PhanCongGiangDay> DanhSachPhanCong { get => _danhSachPhanCong; set { _danhSachPhanCong = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
@@ -36,6 +36,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public PhanCongGiangDayViewModel()
         {
+            everLoaded = false;
             NienKhoaQueries = "";
             KhoiQueries = "";
             LopQueries = "";
@@ -43,16 +44,20 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadThongTinPhanCong();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                PhanCongGiangDayWD = parameter as PhanCongGiangDay;
-                try
+                if (everLoaded == false)
                 {
-                    PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
-                    PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
-                    PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
-                }
-                catch (Exception)
-                {
+                    PhanCongGiangDayWD = parameter as PhanCongGiangDay;
+                    try
+                    {
+                        PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
+                        PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
+                        PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
+                    }
+                    catch (Exception)
+                    {
 
+                    }
+                    everLoaded = true;
                 }
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>

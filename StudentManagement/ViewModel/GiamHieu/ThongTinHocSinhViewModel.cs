@@ -11,6 +11,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class ThongTinHocSinhViewModel : BaseViewModel
     {
+        public bool everLoaded { get; set; }
         public ThongTinHocSinh ThongTinHocSinhWD { get; set; }
         public string NienKhoaQueries { get; set; }
         public string KhoiQueries { get; set; }
@@ -36,6 +37,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand DeleteStudent { get; set; }
         public ThongTinHocSinhViewModel()
         {
+            everLoaded = false;
             NienKhoaQueries = "";
             KhoiQueries = "";
             LopQueries = "";
@@ -43,10 +45,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadThongTinHocSinh();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThongTinHocSinhWD = parameter as ThongTinHocSinh;
-                ThongTinHocSinhWD.cmbNienKhoa.SelectedIndex = 0;
-                ThongTinHocSinhWD.cmbKhoi.SelectedIndex = 0;
-                ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                if (everLoaded == false )
+                {
+                    ThongTinHocSinhWD = parameter as ThongTinHocSinh;
+                    ThongTinHocSinhWD.cmbNienKhoa.SelectedIndex = 0;
+                    ThongTinHocSinhWD.cmbKhoi.SelectedIndex = 0;
+                    ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                    everLoaded = true;
+                }
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {

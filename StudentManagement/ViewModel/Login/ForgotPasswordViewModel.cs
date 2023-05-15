@@ -195,7 +195,15 @@ namespace StudentManagement.ViewModel.Login
                     {
                         try
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return;
+                            }
                             CmdString = "Select count(*) from GiamHieu where Email = '" + EmailProtected + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
@@ -203,7 +211,7 @@ namespace StudentManagement.ViewModel.Login
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+                            
                         }
 
                     }
@@ -231,7 +239,14 @@ namespace StudentManagement.ViewModel.Login
                     {
                         try
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            try 
+                            { 
+                                con.Open();
+                            } catch (Exception)
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return;
+                            }
                             CmdString = "Select count(*) from GiaoVien where Email = '" + EmailProtected + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
@@ -239,7 +254,7 @@ namespace StudentManagement.ViewModel.Login
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+                            
                         }
                     }
                     if (checkUser > 0)
@@ -266,7 +281,14 @@ namespace StudentManagement.ViewModel.Login
                     {
                         try
                         {
-                            try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                            try
+                            { 
+                                con.Open();
+                            } catch (Exception) 
+                            { 
+                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                return; 
+                            }
                             CmdString = "Select count(*) from HocSinh where Email = '" + EmailProtected + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
@@ -274,7 +296,7 @@ namespace StudentManagement.ViewModel.Login
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
+
                         }
                     }
                     if (checkUser > 0)
@@ -361,7 +383,14 @@ namespace StudentManagement.ViewModel.Login
                 {
                     try
                     {
-                        try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
+                        try 
+                        { 
+                            con.Open(); 
+                        } catch (Exception) 
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            return;
+                        }
                         if (IndexRole == 0)
                         {
                             CmdString = "Update GiamHieu Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
@@ -380,7 +409,6 @@ namespace StudentManagement.ViewModel.Login
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra đường truyền và thử lại");
                     }
                 }
                 MessageBox.Show("Đổi mật khẩu thành công");

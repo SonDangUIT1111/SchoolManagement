@@ -222,9 +222,6 @@
     <Compile Include="Views\HocSinh\HocSinhWindow.xaml.cs">
       <DependentUpon>HocSinhWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HocSinh\LopHoc.xaml.cs">
-      <DependentUpon>LopHoc.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\HocSinh\ThongTinHocSinh.xaml.cs">
       <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
     </Compile>
@@ -413,10 +410,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HocSinh\HocSinhWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\HocSinh\LopHoc.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
