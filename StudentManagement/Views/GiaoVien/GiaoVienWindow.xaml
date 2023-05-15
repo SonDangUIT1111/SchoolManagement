@@ -349,7 +349,8 @@
                         BorderThickness="0"
                         HorizontalAlignment="Right">
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding Avatar,Converter={StaticResource ByteToImageConverter}}"/>
+                        <ImageBrush ImageSource="{Binding Avatar,Converter={StaticResource ByteToImageConverter}}"
+                                    Stretch="UniformToFill"/>
                     </Border.Background>
                 </Border>
                 <TextBlock Grid.Column="1"
