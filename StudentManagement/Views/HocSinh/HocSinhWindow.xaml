@@ -8,7 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="HocSinhWindow" 
-        Height="800" Width="1440"
+        Height="800" Width="1300"
         WindowStartupLocation="CenterScreen"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         AllowsTransparency="True" 
@@ -36,11 +36,11 @@
         </Style>
     </Window.Resources>
     <Window.Clip>
-        <RectangleGeometry Rect="0,0,1443,790" RadiusX="25" RadiusY="25"/>
+        <RectangleGeometry Rect="0,0,1300,800" RadiusX="25" RadiusY="25"/>
     </Window.Clip>
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="282"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>

@@ -17,10 +17,8 @@ namespace StudentManagement.ViewModel.HocSinh
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
 
-        private byte[] _avatar;
-        public byte[] Avatar { get { return _avatar; } set { _avatar = value; OnPropertyChanged(); } }
-        private string _tenHocSinh;
-        public string TenHocSinh { get { return _tenHocSinh; } set { _tenHocSinh = value; OnPropertyChanged(); } }
+        private Model.HocSinh _hocSinhHienTai;
+        public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value; } }
         //declare Pages
         public StudentManagement.Views.HocSinh.LopHoc LopHocPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
@@ -38,9 +36,9 @@ namespace StudentManagement.ViewModel.HocSinh
 
         public TrangChuViewModel()
         {
-            //IdHocSinh = 100000;
+            IdHocSinh = 100033;
 
-
+            HocSinhHienTai = new Model.HocSinh();
             LopHocPage = new StudentManagement.Views.HocSinh.LopHoc();
             ThongTinHocSinhPage = new StudentManagement.Views.HocSinh.ThongTinHocSinh();
             ThongTinTruongPage = new StudentManagement.Views.HocSinh.ThongTinTruong();
@@ -72,51 +70,44 @@ namespace StudentManagement.ViewModel.HocSinh
             });
             CapNhatThongTin = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                    string CmdString = "select NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh()
-                            {
-                                MaHocSinh = IdHocSinh,
-                                TenHocSinh = TenHocSinh,
-                                NgaySinh = reader.GetDateTime(0),
-                                GioiTinh = reader.GetBoolean(1),
-                                DiaChi = reader.GetString(2),
-                                Email = reader.GetString(3),
-                                Avatar = (byte[])reader.GetValue(4)
-                            };
-                            SuaHocSinh window = new SuaHocSinh();
-                            SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
-                            data.HocSinhHienTai = student;
-                            window.ShowDialog();
-                            LoadThongTinCaNhan();
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
+                SuaHocSinh window = new SuaHocSinh();
+                SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
+                data.HocSinhHienTai = HocSinhHienTai;
+                window.ShowDialog();
+                LoadThongTinCaNhan();
             });
         }
         public void LoadThongTinCaNhan()
         {
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
-                try { con.Open(); } catch (Exception) { MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); return; }
-                string CmdString = "select TenHocSinh,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
-                SqlCommand cmd = new SqlCommand(CmdString, con);
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.HasRows) reader.Read();
-                TenHocSinh = reader.GetString(0);
-                Avatar = (byte[])reader.GetValue(1);
-                con.Close();
+                try
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string CmdString = "select TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    HocSinhHienTai.MaHocSinh = IdHocSinh;
+                    HocSinhHienTai.TenHocSinh = reader.GetString(0);
+                    HocSinhHienTai.NgaySinh = reader.GetDateTime(1);
+                    HocSinhHienTai.GioiTinh = reader.GetBoolean(2);
+                    HocSinhHienTai.DiaChi = reader.GetString(3);
+                    HocSinhHienTai.Email = reader.GetString(4);
+                    HocSinhHienTai.Avatar = (byte[])reader[5];
+                    con.Close();
+                }catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

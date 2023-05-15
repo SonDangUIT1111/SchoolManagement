@@ -172,8 +172,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     cmd.ExecuteNonQuery();
                                 }
 
-                                CmdString = "insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy) values (1,"+hocsinh.MaHocSinh.ToString()
-                                            +",NULL) insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy) values (2, "+hocsinh.MaHocSinh.ToString()+",NULL) ";
+                                CmdString = "insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy,XepLoai) values (1,"+hocsinh.MaHocSinh.ToString()
+                                            +",NULL,NULL) insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy,XepLoai) values (2, "+hocsinh.MaHocSinh.ToString()+",NULL,NULL) ";
                                 cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
 
