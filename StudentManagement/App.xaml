@@ -23,6 +23,7 @@
                 <ResourceDictionary Source="/Resources/Styles/Buttons/Tab_Button.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Buttons/Normal_Button.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Buttons/Radio_Button.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Navigation_Button.xaml"/>
                 <!--Template Resources-->
                 <ResourceDictionary Source="/Resources/Styles/Templates/DataGrid_Template.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Templates/Error_Template.xaml"/>
