@@ -14,8 +14,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         private int _maLop;
         public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
-        public string TenLop { get { return _tenLop; } set { _tenLop = value; } }
-        public bool everLoaded { get; set; }
+        public string TenLop { get { return _tenLop; } set { _tenLop = value;OnPropertyChanged(); } }
         public DanhSachLop DanhSachLopWindow { get; set; }
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachLop;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachLop { get => _danhSachLop; set { _danhSachLop = value; OnPropertyChanged(); } }
@@ -32,16 +31,11 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             MaLop = 100;
             TenLop = "10A1";
-            everLoaded = false;
             DanhSachLop = new ObservableCollection<Model.HocSinh>();
             LoadWindow = new RelayCommand<DanhSachLop>((parameter) => { return true; }, (parameter) =>
             {
-                if (everLoaded == false)
-                {
-                    DanhSachLopWindow = parameter;
-                    LoadDanhSachHocSinh();
-                    everLoaded = true;
-                }
+                DanhSachLopWindow = parameter;
+                LoadDanhSachHocSinh();
             });
             ThemHocSinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -71,7 +65,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             Back = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                DanhSachLopWindow.NavigationService.GoBack();
+                
+                try
+                {
+                    DanhSachLopWindow.NavigationService.GoBack();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             });
         }
         public void LoadDanhSachHocSinh()
