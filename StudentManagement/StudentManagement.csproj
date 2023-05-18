@@ -109,6 +109,7 @@
     <Compile Include="ViewModel\GiamHieu\LopHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\SuaLopHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModel.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThongTinTruongViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachGiaoVienViewModel.cs" />
@@ -462,6 +463,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\user_image.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\ThongTinTruong1.png" />
+    <Content Include="Resources\Images\ThongTinTruong2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" />

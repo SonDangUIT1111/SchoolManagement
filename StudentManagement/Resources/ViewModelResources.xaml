@@ -31,6 +31,7 @@
     <viewmodelGH:DanhSachGiaoVienViewModel x:Key="DanhSachGiaoVienVM"></viewmodelGH:DanhSachGiaoVienViewModel>
     <viewmodelGH:ThemGiaoVienViewModel x:Key="ThemGiaoVienVM"></viewmodelGH:ThemGiaoVienViewModel>
     <viewmodelGH:SuaGiaoVienViewModel x:Key="SuaGiaoVienVM"></viewmodelGH:SuaGiaoVienViewModel>
+    <viewmodelGH:ThongTinTruongViewModel x:Key="ThongTinTruongVM"></viewmodelGH:ThongTinTruongViewModel>
     <!--GiaoVien-->
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <viewmodelGV:LopHocViewModel x:Key="LopHocGVVM"></viewmodelGV:LopHocViewModel>
