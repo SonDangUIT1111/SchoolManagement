@@ -53,9 +53,15 @@
                           Panel.ZIndex="2"/>
         <Border Grid.RowSpan="2" 
                 x:Name="SideBar"
-                Width="300">
+                Width="300"
+                Panel.ZIndex="5">
             <Border.Background>White
             </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="5" 
+                                  ShadowDepth="1"
+                                  Opacity="0.1"/>
+            </Border.Effect>
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Border.Loaded">
                     <BeginStoryboard>
@@ -92,13 +98,23 @@
                         <Style TargetType="RadioButton"
                        BasedOn="{StaticResource NavigationButton}"></Style>
                     </StackPanel.Resources>
+                    <Line X1="30" Y1="10"
+                          X2="270" Y2="10"
+                          Stroke="Black"
+                          Opacity="0.4"
+                          Margin=" 0 10 0 0"
+                          StrokeThickness="1" />
+                    <TextBlock Text="Xem thông tin"
+                               FontSize="14"
+                               Margin="35 10 0 10"
+                               Opacity="0.6"/>
 
                     <RadioButton Command="{Binding SwitchXemDiem}"
                                  CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="Home" 
-                            Foreground="#333333"
+                            Foreground="DarkGreen"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -116,7 +132,7 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="GraduationCap" 
-                            Foreground="#333333"
+                            Foreground="#33778C"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -133,7 +149,7 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="ReportBar" 
-                            Foreground="#333333"
+                            Foreground="#FF4F67CA"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -149,8 +165,8 @@
                                  CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
-                            Kind="ReportBoxOutline" 
-                            Foreground="#333333"
+                            Kind="ReportBox" 
+                            Foreground="#FFDA4B34"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -180,10 +196,26 @@
                                FontSize="20"/>
                         </StackPanel>
                     </RadioButton>
-
+                    
                 </StackPanel>
-
+                <Ellipse Width="300"
+                         Height="300"
+                         Fill="#5CA0F2"
+                         Opacity="0.1"
+                         Stroke="Transparent"
+                         Panel.ZIndex="0"
+                         Margin="-150 200 0 0"
+                         />
+                <Ellipse Width="250"
+                         Height="250"
+                         Fill="#5CA0F2"
+                         Opacity="0.1"
+                         Stroke="Transparent"
+                         Panel.ZIndex="0"
+                         Margin="80 -240 0 0"
+                         />
             </StackPanel>
+                
         </Border>
         
         <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Background="#FFECECEC" Panel.ZIndex="-1"/>

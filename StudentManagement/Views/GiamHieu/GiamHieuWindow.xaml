@@ -51,10 +51,15 @@
                           Panel.ZIndex="3"/>
         <Border Grid.RowSpan="2" 
                 x:Name="SideBar"
-                Width="300">
+                Width="300"
+                Panel.ZIndex="2">
             <Border.Background>White
             </Border.Background>
-            
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="5" 
+                                  ShadowDepth="1"
+                                  Opacity="0.1"/>
+            </Border.Effect>
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Border.Loaded">
                     <BeginStoryboard>
@@ -87,95 +92,33 @@
                     Grid.Row="1"
                     VerticalAlignment="Top"
                     Margin="0 10 0 0"
-                    Background="White">
+                    Background="White"
+                    Panel.ZIndex="4">
                     <StackPanel.Resources>
                         <Style TargetType="RadioButton"
                        BasedOn="{StaticResource NavigationButton}"></Style>
                     </StackPanel.Resources>
-
+                    <Line X1="30" Y1="10"
+                          X2="270" Y2="10"
+                          Stroke="Black"
+                          Opacity="0.4"
+                          Margin=" 0 10 0 0"
+                          StrokeThickness="1" />
+                    <TextBlock Text="Xem thông tin"
+                               FontSize="14"
+                               Margin="35 15 0 15"
+                               Opacity="0.6"/>
                     <RadioButton>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="Home" 
-                            Foreground="#333333"
+                            Foreground="DarkGreen"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
                             Margin="2,0,0,0"
                             />
-                            <TextBlock Text="Trang chủ" 
-                               Margin="5,0,0,0" 
-                               VerticalAlignment="Center"
-                               FontSize="20"/>
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton Command="{Binding SwitchThongTinHocSinh}"
-                                 CommandParameter="{Binding ElementName=RPage}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                            Kind="PersonMultiple" 
-                            Foreground="#333333"
-                            Width="30" Height="30"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"  
-                            Margin="2,0,0,0"
-                            />
-                            <TextBlock Text="Thông tin học sinh" 
-                               Margin="5,0,0,0" 
-                               VerticalAlignment="Center"
-                               FontSize="20"/>
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton Command="{Binding SwitchThongTinGiaoVien}"
-                                 CommandParameter="{Binding ElementName=RPage}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                            Kind="PersonTie" 
-                            Foreground="#333333"
-                            Width="30" Height="30"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"  
-                            Margin="2,0,0,0"
-                            />
-                            <TextBlock Text="Thông tin giáo viên" 
-                               Margin="5,0,0,0" 
-                               VerticalAlignment="Center"
-                               FontSize="20"/>
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton Command="{Binding SwitchLopHoc}"
-                                 CommandParameter="{Binding ElementName=RPage}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                            Kind="Class" 
-                            Foreground="#333333"
-                            Width="30" Height="30"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"  
-                            Margin="2,0,0,0"
-                            />
-                            <TextBlock Text="Lớp học" 
-                               Margin="5,0,0,0" 
-                               VerticalAlignment="Center"
-                               FontSize="20"/>
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton Command="{Binding SwitchQuanLyBangDiem}"
-                                 CommandParameter="{Binding ElementName=RPage}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon
-                            Kind="TableCheck" 
-                            Foreground="#333333"
-                            Width="30" Height="30"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"  
-                            Margin="2,0,0,0"
-                            />
-                            <TextBlock Text="Quản lí bảng điểm" 
+                            <TextBlock Text="Thông tin trường" 
                                Margin="5,0,0,0" 
                                VerticalAlignment="Center"
                                FontSize="20"/>
@@ -187,7 +130,7 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="ReportBar" 
-                            Foreground="#333333"
+                            Foreground="#FF4F67CA"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -205,7 +148,7 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="ReportBox" 
-                            Foreground="#333333"
+                            Foreground="#FFDA4B34"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -217,13 +160,99 @@
                                FontSize="20"/>
                         </StackPanel>
                     </RadioButton>
+                    
+                    
+                    <Line X1="30" Y1="10"
+                          X2="270" Y2="10"
+                          Stroke="Black"
+                          Opacity="0.4"
+                          Margin=" 0 10 0 0"
+                          StrokeThickness="1" />
+                    <TextBlock Text="Cập nhật thông tin"
+                               FontSize="14"
+                               Margin="35 15 0 15"
+                               Opacity="0.6"/>
+
+                    <RadioButton Command="{Binding SwitchThongTinHocSinh}"
+                                 CommandParameter="{Binding ElementName=RPage}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                            Kind="PersonMultiple" 
+                            Foreground="#FFBB1726"
+                            Width="30" Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"  
+                            Margin="2,0,0,0"
+                            />
+                            <TextBlock Text="Thông tin học sinh" 
+                               Margin="5,0,0,0" 
+                               VerticalAlignment="Center"
+                               FontSize="20"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Command="{Binding SwitchThongTinGiaoVien}"
+                                 CommandParameter="{Binding ElementName=RPage}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                            Kind="PersonTie" 
+                            Foreground="#FF0407C1"
+                            Width="30" Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"  
+                            Margin="2,0,0,0"
+                            />
+                            <TextBlock Text="Thông tin giáo viên" 
+                               Margin="5,0,0,0" 
+                               VerticalAlignment="Center"
+                               FontSize="20"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Command="{Binding SwitchLopHoc}"
+                                 CommandParameter="{Binding ElementName=RPage}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                            Kind="Class" 
+                            Foreground="#FF08648A"
+                            Width="30" Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"  
+                            Margin="2,0,0,0"
+                            />
+                            <TextBlock Text="Lớp học" 
+                               Margin="5,0,0,0" 
+                               VerticalAlignment="Center"
+                               FontSize="20"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Command="{Binding SwitchQuanLyBangDiem}"
+                                 CommandParameter="{Binding ElementName=RPage}">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                            Kind="TableCheck" 
+                            Foreground="#FF9BA40A"
+                            Width="30" Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"  
+                            Margin="2,0,0,0"
+                            />
+                            <TextBlock Text="Quản lí bảng điểm" 
+                               Margin="5,0,0,0" 
+                               VerticalAlignment="Center"
+                               FontSize="20"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    
 
                     <RadioButton Command="{Binding SwitchThayDoiQuyDinh}"
                                  CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="FountainPenTip" 
-                            Foreground="#333333"
+                            Foreground="#338C82"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -236,12 +265,13 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton Command="{Binding SwitchPhanCongGiangDay}"
+                    <RadioButton Panel.ZIndex="5"
+                                 Command="{Binding SwitchPhanCongGiangDay}"
                                  CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="CalendarAccountOutline" 
-                            Foreground="#333333"
+                            Foreground="MediumPurple"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -254,12 +284,13 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton Command="{Binding SwitchMonHoc}"
+                    <RadioButton Panel.ZIndex="5"
+                                 Command="{Binding SwitchMonHoc}"
                                  CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="Lecture" 
-                            Foreground="#333333"
+                            Foreground="#FFBD00BF"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -272,7 +303,8 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton Command="{Binding Source={StaticResource LoginVM}, Path=LogOut}"
+                    <RadioButton Panel.ZIndex="5"
+                                 Command="{Binding Source={StaticResource LoginVM}, Path=LogOut}"
                                  CommandParameter="{Binding ElementName=GiamHieuWD}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
@@ -289,9 +321,24 @@
                                FontSize="20"/>
                         </StackPanel>
                     </RadioButton>
-
+                    <Ellipse Width="300"
+                         Height="300"
+                         Fill="#5CA0F2"
+                         Opacity="0.1"
+                         Stroke="Transparent"
+                         Panel.ZIndex="0"
+                         Margin="-150 -140 0 0"
+                         />
+                    <Ellipse Width="250"
+                         Height="250"
+                         Fill="#5CA0F2"
+                         Opacity="0.1"
+                         Stroke="Transparent"
+                         Panel.ZIndex="0"
+                         Margin="80 -240 0 0"
+                         />
                 </StackPanel>
-
+               
             </StackPanel>
             
         </Border>
