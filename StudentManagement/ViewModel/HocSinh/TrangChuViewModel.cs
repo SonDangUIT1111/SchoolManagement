@@ -3,6 +3,7 @@ using StudentManagement.ViewModel.GiaoVien;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Windows;
