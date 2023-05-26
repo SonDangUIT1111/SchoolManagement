@@ -163,20 +163,21 @@
                     </RadioButton>
                     <RadioButton Command="{Binding SwitchBaoCaoHocKy}"
                                  CommandParameter="{Binding ElementName=RPage}">
-                        <StackPanel Orientation="Horizontal">
+                        <Grid Opacity="1">
                             <materialDesign:PackIcon
                             Kind="ReportBox" 
-                            Foreground="#FFDA4B34"
+                            Foreground="Red"
+                            Panel.ZIndex="5"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
                             Margin="2,0,0,0"
                             />
                             <TextBlock Text="Báo cáo học kỳ" 
-                               Margin="5,0,0,0" 
+                               Margin="37,0,0,0" 
                                VerticalAlignment="Center"
                                FontSize="20"/>
-                        </StackPanel>
+                        </Grid>
                     </RadioButton>
 
                 </StackPanel>
@@ -273,7 +274,7 @@
         </Border>
         <!--<TextBox Grid.Row="1" Grid.Column="0" FontSize="30" VerticalAlignment="Bottom" Margin="90" Text="{Binding Tex, UpdateSourceTrigger=PropertyChanged}"/>-->
         <Border x:Name="TheWhiteBar"
-                Width="325"
+                Width="329"
                 Height="5"
                 Grid.Column="1"
                 Grid.Row="1"
@@ -282,7 +283,7 @@
                 Panel.ZIndex="10"
                 Background="White"
                 HorizontalAlignment="Right"
-                Margin="0 94 33 0"
+                Margin="-2 94 33 0"
                 />
         <Expander Grid.Column="1"
                 Grid.Row="1"

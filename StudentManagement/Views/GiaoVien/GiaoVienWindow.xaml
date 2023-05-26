@@ -216,7 +216,7 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="TableCheck" 
-                            Foreground="#FF9BA40A"
+                            Foreground="#FFC2CE0F"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -347,7 +347,7 @@
                     Background="White">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="1" 
-                                      BlurRadius="7" 
+                                      BlurRadius="7"
                                       Direction="270"/>
                 </Border.Effect>
                 <StackPanel>

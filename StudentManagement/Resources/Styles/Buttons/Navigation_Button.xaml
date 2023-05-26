@@ -2,21 +2,77 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
     <Style TargetType="RadioButton" x:Key="NavigationButton">
-        <Setter Property="Margin" Value="0,3,0,3"/>
+        <Setter Property="Margin" Value="0,1,0,1"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Height" Value="37"/>
+        <Setter Property="Height" Value="41"/>
         <Setter Property="Width" Value="260"/>
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontSize" Value="20"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
-                    <Border x:Name="RadioBorder" CornerRadius="12" BorderThickness="0" Background="{TemplateBinding Background}">
-                        <ContentPresenter Content="{Binding Path=Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type RadioButton}}}"></ContentPresenter>
+                    <Grid>
+                    <Border x:Name="RadioBorder" CornerRadius="12" BorderThickness="0" Panel.ZIndex="2">
+                        <Border.Background>
+                            <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                                <GradientStop x:Name="BlueGradient" Color="Transparent" Offset="0"/>
+                                <GradientStop Color="Transparent" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    <ContentPresenter Content="{Binding Path=Content, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type RadioButton}}}"
+                                      HorizontalAlignment="Left" 
+                                      VerticalAlignment="Center"
+                                      x:Name="ButtonName"
+                                      ></ContentPresenter>
                     </Border>
+                        <Border x:Name="RadioBorderChecked" CornerRadius="12" BorderThickness="0" Opacity="0" Panel.ZIndex="1">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                                    <GradientStop Color="#FF589FFF" Offset="0.72"/>
+                                    <GradientStop Color="Transparent" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True" >
-                            <Setter TargetName="RadioBorder" Property="Background" Value="#d1cdcd"/>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="RadioBorderChecked" Property="Opacity" Value="1"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Opacity" Value="1"/>
                         </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation  Storyboard.TargetName="BlueGradient"
+                                                     Storyboard.TargetProperty="Color"
+                                                     To="#FF589FFF"
+                                                     Duration="0:0:0.001"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="Offset" 
+                                                     To="0.75" 
+                                                     Storyboard.TargetName="BlueGradient"
+                                                     Duration="0:0:0.15" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation  Storyboard.TargetName="BlueGradient"
+                                                     Storyboard.TargetProperty="Color"
+                                                     To="Transparent"
+                                                     Duration="0:0:0.4"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="Offset" 
+                                                     To="0" 
+                                                     Storyboard.TargetName="BlueGradient"
+                                                     Duration="0:0:0.2" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -24,21 +80,15 @@
 
         <Style.Triggers>
 
-            <EventTrigger RoutedEvent="MouseEnter">
-                <BeginStoryboard>
-                    <Storyboard>
-                        <ColorAnimation To="#d1cdcd" Duration="0:0:0.1" Storyboard.TargetProperty="Background.Color"/>
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
+            
 
-            <EventTrigger RoutedEvent="MouseLeave">
+            <!--<EventTrigger RoutedEvent="MouseLeave">
                 <BeginStoryboard>
                     <Storyboard>
                         <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:0.1" />
                     </Storyboard>
                 </BeginStoryboard>
-            </EventTrigger>
+            </EventTrigger>-->
 
         </Style.Triggers>
     

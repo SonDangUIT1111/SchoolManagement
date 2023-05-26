@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
@@ -25,6 +26,10 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
         public string MonHocQueries { get; set; }
+        private Visibility _linevisibility;
+        public Visibility LineVisibility { get { return _linevisibility; } set { _linevisibility = value; OnPropertyChanged(); } }
+        private Visibility _colvisibility;
+        public Visibility ColVisibility { get { return _colvisibility; } set { _colvisibility = value; OnPropertyChanged(); } }
         public HeThongBangDiem HeThongBangDiemWD { get; set; }
         private ObservableCollection<StudentManagement.Model.HeThongDiem> _danhSachDiem;
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachDiem { get => _danhSachDiem; set { _danhSachDiem = value; OnPropertyChanged(); } }
@@ -427,6 +432,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Visible;
                         JustReadOnly = false;
                         CanUserEdit = true;
+                        LineVisibility = Visibility.Visible;
+                        ColVisibility = Visibility.Hidden;
                     }
                     else
                     {
@@ -434,6 +441,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Hidden;
                         JustReadOnly = true;
                         CanUserEdit = false;
+                        LineVisibility = Visibility.Hidden;
+                        ColVisibility = Visibility.Visible;
                     }
                     con.Close();
                 }

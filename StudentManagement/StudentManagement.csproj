@@ -79,6 +79,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Converter\BooleanToCheckIconKindConverter.cs" />
+    <Compile Include="Converter\BooleanToGreenRedConverter.cs" />
     <Compile Include="Converter\BooleanToIsEnabledConverter.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\BooleanToGenderConverter.cs" />

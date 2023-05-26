@@ -49,4 +49,6 @@
     <converter:DateTimeToDateConverter x:Name="dateTimeConverter" x:Key="DateTimeToDateConverter"/>
     <converter:BooleanToVisibilityConverter x:Name="visibilityConverter" x:Key="BooleanToVisibilityConverter"/>
     <converter:BooleanToIsEnabledConverter x:Name="enableConverter" x:Key="BooleanToIsEnabledConverter"/>
+    <converter:BooleanToGreenRedConverter x:Name="GreenRedConverter" x:Key="BooleanToGreenRedConverter"/>
+    <converter:BooleanToCheckIconKindConverter x:Name="CheckIconKindConverter" x:Key="BooleanToCheckIconKindConverter"/>
 </ResourceDictionary>
