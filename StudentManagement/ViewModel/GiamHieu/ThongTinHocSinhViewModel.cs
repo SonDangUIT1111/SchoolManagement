@@ -35,6 +35,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand AddStudent { get; set; }
         public ICommand UpdateStudent { get; set; }
         public ICommand DeleteStudent { get; set; }
+        public ICommand MouseEnterComboBox { get; set; }
+        public ICommand MouseLeaveComboBox { get; set; }
         public ThongTinHocSinhViewModel()
         {
             everLoaded = false;
@@ -330,6 +332,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                 Model.HocSinh item = parameter as Model.HocSinh;
                 XoaHocSinh(item);
                 LoadThongTinHocSinh();
+            });
+            MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Focus();
+            });
+            MouseLeaveComboBox = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ThongTinHocSinhWD.btnTrick.Focus();
             });
         }
         public void LoadThongTinHocSinh()

@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.HocSinh;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -33,6 +34,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand RemovePhanCong { get; set; }
         public ICommand AddPhanCong { get; set; }
         public ICommand SearchPhanCong { get; set; }
+        public ICommand MouseEnterComboBox { get; set; }
+        public ICommand MouseLeaveComboBox { get; set; }
 
         public PhanCongGiangDayViewModel()
         {
@@ -165,6 +168,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MessageBox.Show(ex.Message);
                     }
                 }
+            });
+            MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Focus();
+            });
+            MouseLeaveComboBox = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                PhanCongGiangDayWD.btnTrick.Focus();
             });
         }
         public void LoadThongTinCmb()

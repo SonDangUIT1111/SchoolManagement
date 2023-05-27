@@ -19,6 +19,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand LoadData { get; set; }
         public ICommand FilterQuyDinh { get; set; }
         public ICommand EnableChange { get; set; }
+        public ICommand CancelChange { get; set; }
         public ICommand ChangeRule { get; set; }
         public ThayDoiQuyDinhViewModel()
         {
@@ -52,6 +53,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = true;
                 ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = true;
+                ThayDoiQuyDinhWD.btnEnable.IsEnabled = false;
+                ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Visible;
+
+            });
+            CancelChange = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Collapsed;
+                LoadQuyDinhFromSelection();
+                ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
+                ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
 
             });
             ChangeRule = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -91,17 +102,29 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
                         ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
+                        ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
+                        ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Collapsed;
                         MessageBox.Show("Thay đổi thành công!");
                     }
                     else
                     {
                         MessageBox.Show("Giá trị không được rỗng và phải là một số nguyên!");
+                        LoadQuyDinhFromSelection();
+                        ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
+                        ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
+                        ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
+                        ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Collapsed;
                     }
 
                 }
                 else
                 {
                     MessageBox.Show("Hãy chọn quy định trước!");
+                    LoadQuyDinhFromSelection();
+                    ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
+                    ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
+                    ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
+                    ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Collapsed;
                 }
 
             });
