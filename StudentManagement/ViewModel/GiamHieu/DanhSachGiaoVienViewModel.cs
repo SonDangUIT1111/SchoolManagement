@@ -3,6 +3,7 @@ using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -14,7 +15,38 @@ namespace StudentManagement.ViewModel.GiamHieu
         private ObservableCollection<StudentManagement.Model.GiaoVien> _danhSachGiaoVien;
         public ObservableCollection<StudentManagement.Model.GiaoVien> DanhSachGiaoVien { get => _danhSachGiaoVien; set { _danhSachGiaoVien = value; OnPropertyChanged(); } }
 
+        private bool _dataGridVisibility;
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         //declare ICommand
+        public ICommand LoadGiaoVien { get; set; }
         public ICommand LocGiaoVien { get; set; }
         public ICommand ThemGiaoVien { get; set; }
         public ICommand UpdateGiaoVien { get; set; }
@@ -22,56 +54,83 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public DanhSachGiaoVienViewModel()
         {
-            LoadDanhSachGiaoVien();
-            LocGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            LoadGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
             {
-                TextBox tb = parameter;
-                LocGiaoVienTheoTen(tb.Text);
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
+
             });
-            ThemGiaoVien = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LocGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
+            {
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                TextBox tb = parameter;
+                await LocGiaoVienTheoTen(tb.Text);
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
+
+            });
+            ThemGiaoVien = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ThemGiaoVien window = new ThemGiaoVien();
                 ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
                 window.ShowDialog();
-                LoadDanhSachGiaoVien();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
             });
-            UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
+            UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
             {
                 SuaGiaoVien window = new SuaGiaoVien();
                 SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
                 data.GiaoVienHienTai = parameter;
                 window.ShowDialog();
-                LoadDanhSachGiaoVien();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
             });
-            RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, (parameter) =>
+            RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
             {
                 Model.GiaoVien item = parameter;
                 XoaGiaoVien(item);
-                LoadDanhSachGiaoVien();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
             });
         }
-        public void LoadDanhSachGiaoVien()
+        public async Task LoadDanhSachGiaoVien()
         {
             DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
                     }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien();
                             teacher.MaGiaoVien = reader.GetInt32(0);
@@ -83,7 +142,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             teacher.Avatar = (byte[])reader[6];
                             DanhSachGiaoVien.Add(teacher);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
@@ -93,28 +152,31 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
-        public void LocGiaoVienTheoTen(string value)
+
+        public async Task LocGiaoVienTheoTen(string value)
         {
             DanhSachGiaoVien.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
                     }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where TenGiaoVien is not null and TenGiaoVien like N'%" + value + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien
                             {
@@ -128,7 +190,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             };
                             DanhSachGiaoVien.Add(teacher);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
@@ -138,6 +200,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
+
         public void XoaGiaoVien(Model.GiaoVien value)
         {
             MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa giáo viên?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);

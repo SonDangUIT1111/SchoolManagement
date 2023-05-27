@@ -3,6 +3,7 @@ using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +26,37 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int HocKyQueries2 { get; set; }
         public string KhoiQueries2 { get; set; }
         public string LopQueries2 { get; set; }
+
+
+        private bool _dataGridVisibility;
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         public QuanLiDiemSo QuanLiDiemSoWD { get; set; }
         private ObservableCollection<StudentManagement.Model.HeThongDiem> _danhSachDiem;
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachDiem { get => _danhSachDiem; set { _danhSachDiem = value; OnPropertyChanged(); } }
@@ -78,13 +110,17 @@ namespace StudentManagement.ViewModel.GiamHieu
             NienKhoaCmb2 = new ObservableCollection<string>();
             LopDataCmb2 = new ObservableCollection<Lop>();
             KhoiDataCmb2 = new ObservableCollection<Khoi>();
-            LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadWindow = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
                     QuanLiDiemSoWD = parameter as QuanLiDiemSo;
                     LoadDuLieuComboBox();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                     everLoaded = true;
                 }
 
@@ -106,7 +142,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     FilterLopFromSelection();
                 }
             });
-            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -115,10 +151,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                         HocKyQueries = 1;
                     else
                         HocKyQueries = 2;
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
+                    everLoaded = true;
                 }
             });
-            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterKhoi = new RelayCommand<object>((parameter) => { return true; },  (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null &&cmb.SelectedItem != null)
@@ -128,7 +169,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     FilterLopFromSelection();
                 }
             });
-            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
@@ -137,18 +178,28 @@ namespace StudentManagement.ViewModel.GiamHieu
                     if (item != null && cmb.SelectedItem != null)
                     {
                         LopQueries = item.MaLop.ToString();
-                        LoadDanhSachBangDiem();
+                        ProgressBarVisibility = true;
+                        DataGridVisibility = false;
+                        await LoadDanhSachBangDiem();
+                        ProgressBarVisibility = false;
+                        DataGridVisibility = true;
+                        everLoaded = true;
                     }
                 }
             });
-            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
                 {
                     Model.MonHoc item = cmb.SelectedItem as Model.MonHoc;
                     MonHocQueries = item.MaMon.ToString();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
+                    everLoaded = true;
                 }
             });
             FilterNienKhoa2 = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -433,21 +484,23 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         }
 
-        public void LoadDanhSachBangDiem()
+        public async Task LoadDanhSachBangDiem()
         {
             DanhSachDiem.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
                     }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+
                     string wherecommand = "";
                     if (!String.IsNullOrEmpty(NienKhoaQueries))
                     {
@@ -457,12 +510,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         wherecommand = wherecommand + " and ht.MaMon = " + MonHocQueries;
                     }
+
                     string CmdString = "select ht.MaHocSinh,TenHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai,TrangThai from HeThongDiem ht join HocSinh hs on ht.MaHocSinh = hs.MaHocSinh " + wherecommand;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem
                             {
@@ -479,21 +534,24 @@ namespace StudentManagement.ViewModel.GiamHieu
                             }
                             catch (Exception)
                             {
-
+                                // Handle the exception if needed
                             }
                             DanhSachDiem.Add(diem);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
-                catch (Exception )
+                catch (Exception)
                 {
+                    // Handle the exception if needed
                 }
             }
+
             QuanLiDiemSoWD.cmbLop.Focus();
             QuanLiDiemSoWD.btnTrick.Focus();
         }
+
         public void FilterLopFromSelection()
         {
             LopDataCmb.Clear();

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -131,6 +132,37 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
 
+        private bool _dataGridVisibility;
+
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public ICommand LoadBaoCao { get; set; }
         public ICommand FilterNienKhoa { get; set; }
         public ICommand FilterHocKy { get; set; }
@@ -150,13 +182,17 @@ namespace StudentManagement.ViewModel.GiamHieu
             Dat = new int();
             KhongDat = new int();
             TiLeDat = new SeriesCollection();
-            LoadBaoCao = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadBaoCao = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
                     BaoCaoHocKyWD = parameter as BaoCaoTongKetHocKy;
                     LoadComboboxData();
-                    LoadDanhSachBaoCaoHocKy();
+                    await LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                     LoadCartesianChart();
                     CartersianChartVisibility = true;
                     PieChartVisibility = false;
@@ -165,20 +201,24 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
 
 
-            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
                     NienKhoaQueries = cmb.SelectedItem.ToString();
                     FilterKhoiFromNienKhoa();
-                    LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    await LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                     LoadCartesianChart();
                 }
             });
 
 
-            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
@@ -187,20 +227,28 @@ namespace StudentManagement.ViewModel.GiamHieu
                         HocKyQueries = "1";
                     else
                         HocKyQueries = "2";
-                    LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    await LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                     LoadCartesianChart();
                 }
             });
 
 
-            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
                     Model.Khoi item = cmb.SelectedItem as Model.Khoi;
                     KhoiQueries = item.MaKhoi.ToString();
-                    LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    await LoadDanhSachBaoCaoHocKy();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                     LoadCartesianChart();
                 }
             });
@@ -304,48 +352,46 @@ namespace StudentManagement.ViewModel.GiamHieu
 
 
 
-        public void LoadDanhSachBaoCaoHocKy()
+        public async Task LoadDanhSachBaoCaoHocKy()
         {
             DanhSachBaoCaoHocKy.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open();
-                    } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
                     }
                     string CmdString;
                     CmdString = "select bc.MaLop,l.TenLop,l.SiSo,bc.SoLuongDat,bc.TiLe from BaoCaoHocKy bc join Lop l on bc.MaLop = l.MaLop " +
-                                    " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = " + HocKyQueries + " " + " and MaKhoi = "+ KhoiQueries;
+                        " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = " + HocKyQueries + " " + " and MaKhoi = " + KhoiQueries;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-                    while (reader.HasRows)
+                    while (await reader.ReadAsync())
                     {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.BaoCaoHocKy baocaohocky = new StudentManagement.Model.BaoCaoHocKy();
-                            baocaohocky.MaLop = reader.GetInt32(0);
-                            baocaohocky.TenLop = reader.GetString(1);
-                            baocaohocky.SiSo = reader.GetInt32(2);
-                            baocaohocky.SoLuongDat = reader.GetInt32(3);
-                            baocaohocky.TiLe = reader.GetString(4);
-                            DanhSachBaoCaoHocKy.Add(baocaohocky);
-                        }
-                        reader.NextResult();
+                        StudentManagement.Model.BaoCaoHocKy baocaohocky = new StudentManagement.Model.BaoCaoHocKy();
+                        baocaohocky.MaLop = reader.GetInt32(0);
+                        baocaohocky.TenLop = reader.GetString(1);
+                        baocaohocky.SiSo = reader.GetInt32(2);
+                        baocaohocky.SoLuongDat = reader.GetInt32(3);
+                        baocaohocky.TiLe = reader.GetString(4);
+                        DanhSachBaoCaoHocKy.Add(baocaohocky);
                     }
                     con.Close();
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                 }
             }
         }
+
 
         public void LoadCartesianChart()
         {

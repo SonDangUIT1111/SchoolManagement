@@ -163,6 +163,10 @@
                             Panel.ZIndex="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
+                        <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 8 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Họ và tên"
                                FontSize="14"
@@ -203,7 +207,7 @@
                               RowStyle="{StaticResource MaterialDesignDataGridRow}"
                               CellStyle="{StaticResource MaterialDesignDataGridCell}"
                               ItemsSource="{Binding DanhSachThanhTichHocSinh}"
-                              >
+                              Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="940">
                                 <DataGridTemplateColumn.CellTemplate>

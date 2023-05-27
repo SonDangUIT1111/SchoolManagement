@@ -63,6 +63,7 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+
                 <StackPanel HorizontalAlignment="Stretch">
                     <TextBlock Text="Chọn quy định" 
                        FontSize="30" 
