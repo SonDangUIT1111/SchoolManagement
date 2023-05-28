@@ -30,7 +30,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FF4FCA88" 
+                Background="#3D5347" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Báo cáo học kỳ" 
@@ -69,7 +69,9 @@
                             HorizontalAlignment="Left"
                             Grid.Row="0">
                     <ComboBox x:Name="cmbNienKhoa"
-                                Width="256"
+                                Width="200"
+                                Height="40"
+                                Padding="10"
                                 materialDesign:HintAssist.Hint="Niên khoá"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                                 ItemsSource="{Binding NienKhoaComboBox}"
@@ -82,7 +84,9 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox x:Name="cmbHocKy"
-                                Width="256" 
+                                Width="200"
+                                Height="40"
+                                Padding="10"
                                 Margin="20 0 0 0"
                                 materialDesign:HintAssist.Hint="Học kỳ"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
@@ -96,7 +100,9 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox x:Name="cmbKhoi"
-                                Width="256" 
+                                Width="200"
+                                Height="40"
+                                Padding="10"
                                 Margin="20 0 0 0"
                                 DisplayMemberPath="TenKhoi"
                                 materialDesign:HintAssist.Hint="Khối"

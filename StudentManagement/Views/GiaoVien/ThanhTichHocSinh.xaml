@@ -28,7 +28,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FFBB1726" 
+                Background="#B1605B" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Thành tích học sinh" 

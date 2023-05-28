@@ -30,7 +30,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FF4FCA88" 
+                Background="#5BB182" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Báo cáo môn học" 
