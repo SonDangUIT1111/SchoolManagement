@@ -186,12 +186,11 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 if (everLoaded == false)
                 {
-                    DataGridVisibility = false;
+                    DataGridVisibility = true;
                     ProgressBarVisibility = true;
                     BaoCaoHocKyWD = parameter as BaoCaoTongKetHocKy;
                     LoadComboboxData();
                     await LoadDanhSachBaoCaoHocKy();
-                    DataGridVisibility = true;
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
                     CartersianChartVisibility = true;
@@ -208,10 +207,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     NienKhoaQueries = cmb.SelectedItem.ToString();
                     FilterKhoiFromNienKhoa();
-                    DataGridVisibility = false;
                     ProgressBarVisibility = true;
                     await LoadDanhSachBaoCaoHocKy();
-                    DataGridVisibility = true;
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
                 }
@@ -227,10 +224,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         HocKyQueries = "1";
                     else
                         HocKyQueries = "2";
-                    DataGridVisibility = false;
                     ProgressBarVisibility = true;
                     await LoadDanhSachBaoCaoHocKy();
-                    DataGridVisibility = true;
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
                 }
@@ -244,10 +239,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     Model.Khoi item = cmb.SelectedItem as Model.Khoi;
                     KhoiQueries = item.MaKhoi.ToString();
-                    DataGridVisibility = false;
                     ProgressBarVisibility = true;
                     await LoadDanhSachBaoCaoHocKy();
-                    DataGridVisibility = true;
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
                 }

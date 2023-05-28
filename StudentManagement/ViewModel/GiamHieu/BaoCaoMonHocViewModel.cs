@@ -191,13 +191,12 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 if (everLoaded == false)
                 {
+                    DataGridVisibility = true;
                     ProgressBarVisibility = true;
-                    DataGridVisibility = false;
                     BaoCaoWD = parameter as BaoCaoMonHoc;
                     LoadComboboxData();
                     await LoadDanhSachBaoCaoMon();
                     ProgressBarVisibility = false;
-                    DataGridVisibility = true;
                     LoadCartesianChart();
                     CartersianChartVisibility = true;
                     PieChartVisibility = false;
@@ -212,10 +211,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     NienKhoaQueries = cmb.SelectedItem.ToString();
                     ProgressBarVisibility = true;
-                    DataGridVisibility = false;
                     await LoadDanhSachBaoCaoMon();
                     ProgressBarVisibility = false;
-                    DataGridVisibility = true;
                 }
             });
 
@@ -234,10 +231,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         HocKyQueries= "2";
                     }
                     ProgressBarVisibility = true;
-                    DataGridVisibility = false;
                     await LoadDanhSachBaoCaoMon();
                     ProgressBarVisibility = false;
-                    DataGridVisibility = true;
                 }
             });
 
@@ -251,10 +246,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     MonHocQueries = item.MaMon.ToString();
                 }
                 ProgressBarVisibility = true;
-                DataGridVisibility = false;
                 await LoadDanhSachBaoCaoMon();
                 ProgressBarVisibility = false;
-                DataGridVisibility = true;
                 LoadCartesianChart();
                 CartersianChartVisibility = true;
                 PieChartVisibility = false;
@@ -265,20 +258,19 @@ namespace StudentManagement.ViewModel.GiamHieu
 
 
 
-        public async Task LoadComboboxData()
+        public void LoadComboboxData()
         {
             BaoCaoWD.cmbHocKy.Items.Add("Học kỳ 1");
             BaoCaoWD.cmbHocKy.Items.Add("Học kỳ 2");
             HocKyQueries = "1";
             BaoCaoWD.cmbHocKy.SelectedIndex = 0;
-
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        await con.OpenAsync();
+                        con.Open();
                     }
                     catch (Exception)
                     {
@@ -287,20 +279,24 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     string cmdString = "select distinct NienKhoa from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
-                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
-                    while (await reader.ReadAsync())
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
                     {
-                        NienKhoaComboBox.Add(reader.GetString(0));
-                        if (string.IsNullOrEmpty(NienKhoaQueries))
+                        while (reader.Read())
                         {
-                            NienKhoaQueries = reader.GetString(0);
-                            BaoCaoWD.cmbNienKhoa.SelectedIndex = 0;
-                            FilterDataMonHoc();
-                            BaoCaoWD.cmbMonHoc.SelectedIndex = 0;
+                            NienKhoaComboBox.Add(reader.GetString(0));
+                            if (string.IsNullOrEmpty(NienKhoaQueries))
+                            {
+                                NienKhoaQueries = reader.GetString(0);
+                                BaoCaoWD.cmbNienKhoa.SelectedIndex = 0;
+                                FilterDataMonHoc();
+                                BaoCaoWD.cmbMonHoc.SelectedIndex = 0;
+                            }
                         }
+                        reader.NextResult();
                     }
                     con.Close();
+
                 }
                 catch (Exception ex)
                 {
@@ -312,18 +308,17 @@ namespace StudentManagement.ViewModel.GiamHieu
 
 
 
-        public async Task FilterDataMonHoc()
+        public void FilterDataMonHoc()
         {
             MonHocComboBox.Clear();
             MonHocQueries = "";
-
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        await con.OpenAsync();
+                        con.Open();
                     }
                     catch (Exception)
                     {
@@ -333,19 +328,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                     string cmdString = "select distinct bc.MaMon,TenMon from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon" +
                                         " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = " + HocKyQueries + " ";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
-                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
-                    while (await reader.ReadAsync())
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
                     {
-                        MonHocComboBox.Add(new Model.MonHoc()
+                        while (reader.Read())
                         {
-                            MaMon = reader.GetInt32(0),
-                            TenMon = reader.GetString(1),
-                        });
-                        if (string.IsNullOrEmpty(MonHocQueries))
-                        {
-                            MonHocQueries = reader.GetInt32(0).ToString();
+                            MonHocComboBox.Add(new Model.MonHoc()
+                            {
+                                MaMon = reader.GetInt32(0),
+                                TenMon = reader.GetString(1),
+                            });
+                            if (string.IsNullOrEmpty(MonHocQueries))
+                            {
+                                MonHocQueries = reader.GetInt32(0).ToString();
+                            }
                         }
+                        reader.NextResult();
                     }
                     con.Close();
                 }
@@ -355,6 +353,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
+
 
 
 

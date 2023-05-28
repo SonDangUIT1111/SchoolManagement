@@ -147,6 +147,7 @@
                         FontSize="19" 
                         FontWeight="Bold"
                         Foreground="White"
+                        Background="#33778C"
                         Command="{Binding ThemLop}">
                         </Button>
                     </Grid>
