@@ -175,7 +175,7 @@ namespace StudentManagement.ViewModel.Login
             }
             else
             {
-                string passEncode = Password;
+                string passEncode = CreateMD5(Base64Encode(Password));
                 string username = Username;
                 if (IndexRole == -1)
                 {

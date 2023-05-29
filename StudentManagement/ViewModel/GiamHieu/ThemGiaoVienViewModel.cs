@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -221,7 +222,9 @@ namespace StudentManagement.ViewModel.GiamHieu
 
                         ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                         byte[] buffer = converter.ImageToBinary(uriImage);
-                        string CmdString = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + MatKhau + "', AnhThe = @image " +
+
+                        string passEncode = CreateMD5(Base64Encode(MatKhau));
+                        string CmdString = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode + "', AnhThe = @image " +
                                             " where MaGiaoVien =" + maSo.ToString();
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         cmd.Parameters.AddWithValue("@image", buffer);
@@ -237,6 +240,31 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MessageBox.Show(ex.Message);
                     }
                 }
+            }
+        }
+
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                //return Convert.ToHexString(hashBytes); // .NET 5 +
+
+                // Convert the byte array to hexadecimal string prior to .NET 5
+                StringBuilder sb = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
             }
         }
     }
