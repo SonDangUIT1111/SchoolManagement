@@ -99,11 +99,13 @@ namespace StudentManagement.ViewModel.HocSinh
                     if (reader.HasRows) reader.Read();
                     password = reader.GetString(0);
                     con.Close();
-                 }
+                }
                 ChangePasswordWindow window = new ChangePasswordWindow();
                 ChangePasswordViewModel data = window.DataContext as ChangePasswordViewModel;
-                //data.Id = parameter;
-                MessageBox.Show(parameter);
+                data.Id = parameter.ToString();
+                data.MatKhau = password;
+                data.IsHS = true;
+                //MessageBox.Show(parameter);
                 window.ShowDialog();
             });
             SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
