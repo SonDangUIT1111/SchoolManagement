@@ -102,8 +102,10 @@ namespace StudentManagement.ViewModel.HocSinh
                  }
                 ChangePasswordWindow window = new ChangePasswordWindow();
                 ChangePasswordViewModel data = window.DataContext as ChangePasswordViewModel;
-                //data.Id = parameter;
-                MessageBox.Show(parameter);
+                data.Id = parameter.ToString();
+                data.MatKhau = password;
+                data.IsHS = true;
+                //MessageBox.Show(parameter);
                 window.ShowDialog();
             });
             SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>

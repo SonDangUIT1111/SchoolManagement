@@ -421,7 +421,9 @@
                         </StackPanel>
                     </Button>
                     <Button Background="White"
-                            BorderThickness="0">
+                            BorderThickness="0"
+                            Command="{Binding DoiMatKhau}">
+                        
                         <StackPanel Orientation="Horizontal"
                                     Margin="-150 0 0 0">
                             <materialDesign:PackIcon
