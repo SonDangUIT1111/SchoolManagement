@@ -261,9 +261,8 @@
                     <Separator Margin="0 6 0 0"
                                Width="920"
                                Opacity="0.6"
-                           Panel.ZIndex="9"/>
+                               Panel.ZIndex="9"/>
                 </StackPanel>
-
                 <DataGrid Margin="25,0,25,25"
                           Grid.Row="1"
                           RowHeight="40"

@@ -154,9 +154,16 @@
                                FontWeight="Medium"
                                Margin="175 0 0 0"/>
                     </StackPanel>
+                    <Line X1="0" Y1="0"
+                          X2="920" Y2="0"
+                          Stroke="Gray"
+                          StrokeThickness="1"
+                          Opacity="0.3"
+                          Margin="30 10 0 0"/>
                 </StackPanel>
-                <DataGrid Margin="25,30,25,10"
+                <DataGrid Margin="25,40,25,10"
                           Grid.Row="1"
+                          AlternationCount="2"
                           CanUserAddRows="False"
                           CanUserReorderColumns="False"
                           CanUserResizeColumns="False"
@@ -166,8 +173,20 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ItemsSource="{Binding DanhSachhs}"
                           Style="{StaticResource DataGridStyle1}"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
+                          RowHeight="50"
                           CellStyle="{StaticResource DataGridCellStyle1}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="1010">
                             <DataGridTemplateColumn.CellTemplate>

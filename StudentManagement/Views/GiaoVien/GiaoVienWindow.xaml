@@ -111,7 +111,6 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="Home" 
-                            Foreground="DarkGreen"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -130,7 +129,6 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="ReportBar" 
-                            Foreground="#FF4F67CA"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -149,7 +147,6 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="ReportBox" 
-                            Foreground="#FFDA4B34"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -179,7 +176,6 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="Class" 
-                            Foreground="#FF08648A"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -197,7 +193,6 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="BookEducation" 
-                            Foreground="#FFBB1726"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -216,7 +211,6 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="TableCheck" 
-                            Foreground="#FFC2CE0F"
                             Width="30" Height="30"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"  
@@ -228,7 +222,53 @@
                                FontSize="20"/>
                         </StackPanel>
                     </RadioButton>
-
+                    <StackPanel Margin="21 -322 0 0">
+                        <materialDesign:PackIcon 
+                                             Panel.ZIndex="5" 
+                                             Kind="Home" 
+                                             Width="32" Height="32"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"  
+                                             Foreground="DarkGreen"
+                                             />
+                        <materialDesign:PackIcon Panel.ZIndex="5" 
+                                             Margin="0 11 0 0"
+                                             Kind="ReportBar" 
+                                             Width="32" Height="32"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"  
+                                             Foreground="#FF4F67CA"
+                                             />
+                        <materialDesign:PackIcon Panel.ZIndex="5" 
+                                             Margin="0 11 0 0"
+                                             Kind="ReportBox" 
+                                             Width="32" Height="32"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"  
+                                             Foreground="Red"
+                                             />
+                        <materialDesign:PackIcon Panel.ZIndex="5" 
+                                             Margin="0 81 0 0"
+                                             Kind="Class" 
+                                             Width="32" Height="32"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"  
+                                             Foreground="#FF08648A"/>
+                        <materialDesign:PackIcon Panel.ZIndex="5" 
+                                             Margin="0 10 0 0"
+                                             Foreground="#FFBB1726"
+                                             Kind="BookEducation" 
+                                             Width="32" Height="32"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"/>
+                        <materialDesign:PackIcon Panel.ZIndex="5" 
+                                             Margin="0 11 0 0"
+                                             Foreground="#FFC2CE0F"
+                                             Kind="TableCheck" 
+                                             Width="32" Height="32"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"/>
+                    </StackPanel>
                 </StackPanel>
                 <Ellipse Width="300"
                          Height="300"
