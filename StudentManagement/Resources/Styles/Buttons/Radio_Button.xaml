@@ -23,8 +23,10 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#2af598"/>
-                <Setter Property="Foreground" Value="#000000"/>
+                <!--<Setter Property="Background" Value="#2af598"/>-->
+                <!--<Setter Property="Foreground" Value="#000000"/>-->
+                <Setter Property="Background" Value="#0099FF"/>
+                <Setter Property="Foreground" Value="#ffffff"/>
                 <Setter Property="Tag" Value="Visible"/>
                 <Setter Property="Template">
                     <Setter.Value>
@@ -33,7 +35,8 @@
                                 <Border Background="{TemplateBinding Background}" CornerRadius="20" >
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 0"/>
                                 </Border>
-                                <Border Width="200" Height="40" CornerRadius="20" BorderBrush="#2af598" BorderThickness="2" Margin="0 0 0 0"></Border>
+                                <!--<Border Width="200" Height="40" CornerRadius="20" BorderBrush="#2af598" BorderThickness="2" Margin="0 0 0 0"></Border>-->
+                                <Border Width="200" Height="40" CornerRadius="20" BorderBrush="#0099FF" BorderThickness="2" Margin="0 0 0 0"></Border>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>

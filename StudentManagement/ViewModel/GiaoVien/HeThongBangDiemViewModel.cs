@@ -1,12 +1,18 @@
-﻿using StudentManagement.Model;
+﻿using Microsoft.Win32;
+using StudentManagement.Model;
 using StudentManagement.Views.GiaoVien;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
@@ -26,10 +32,35 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
         public string MonHocQueries { get; set; }
-        private Visibility _linevisibility;
-        public Visibility LineVisibility { get { return _linevisibility; } set { _linevisibility = value; OnPropertyChanged(); } }
-        private Visibility _colvisibility;
-        public Visibility ColVisibility { get { return _colvisibility; } set { _colvisibility = value; OnPropertyChanged(); } }
+
+        private bool _dataGridVisibility;
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
         public HeThongBangDiem HeThongBangDiemWD { get; set; }
         private ObservableCollection<StudentManagement.Model.HeThongDiem> _danhSachDiem;
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachDiem { get => _danhSachDiem; set { _danhSachDiem = value; OnPropertyChanged(); } }
@@ -52,6 +83,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand FilterLop { get; set; }
         public ICommand FilterMonHoc { get; set; }
         public ICommand LuuDiem { get; set; }
+        public ICommand XuatDiem { get; set; }
         public HeThongBangDiemViewModel()
         {
             everLoaded = false;
@@ -63,14 +95,18 @@ namespace StudentManagement.ViewModel.GiaoVien
             MonDataCmb = new ObservableCollection<MonHoc>();
             LopDataCmb = new ObservableCollection<Lop>();
             KhoiDataCmb = new ObservableCollection<Khoi>();
-            LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadWindow = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
                     HeThongBangDiemWD = parameter as HeThongBangDiem;
                     LoadDuLieuComboBox();
                     XacDinhQuyenHan();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                     everLoaded = true;
                 }
             });
@@ -91,7 +127,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     FilterLopFromSelection();
                 }
             });
-            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -101,7 +137,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                     else
                         HocKyQueries = 2;
                     XacDinhQuyenHan();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                 }
             });
             FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -114,7 +154,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     FilterLopFromSelection();
                 }
             });
-            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -124,11 +164,15 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         LopQueries = item.MaLop.ToString();
                         XacDinhQuyenHan();
-                        LoadDanhSachBangDiem();
+                        ProgressBarVisibility = true;
+                        DataGridVisibility = false;
+                        await LoadDanhSachBangDiem();
+                        ProgressBarVisibility = false;
+                        DataGridVisibility = true;
                     }
                 }
             });
-            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -136,10 +180,14 @@ namespace StudentManagement.ViewModel.GiaoVien
                     MonHoc item = cmb.SelectedItem as MonHoc;
                     MonHocQueries = item.MaMon.ToString();
                     XacDinhQuyenHan();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                 }
             });
-            LuuDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LuuDiem = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn lưu. (Lưu ý, những học sinh có điểm ở trạng thái chốt điểm sẽ không được lưu)", "Thông báo", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
@@ -147,7 +195,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                     if (DanhSachDiem[0].TrangThai == true)
                     {
                         MessageBox.Show("Danh sách điểm này đã được chốt, không thể sửa.");
-                        LoadDanhSachBangDiem();
+                        ProgressBarVisibility = true;
+                        DataGridVisibility = false;
+                        await LoadDanhSachBangDiem();
+                        ProgressBarVisibility = false;
+                        DataGridVisibility = true; 
                         return;
                     }
                     if (KiemTraDiemHopLe() == false)
@@ -156,6 +208,133 @@ namespace StudentManagement.ViewModel.GiaoVien
                         return;
                     }
                     LuuBangDiem();
+                }
+            });
+            XuatDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                Khoi khoi = HeThongBangDiemWD.cmbKhoi.SelectedItem as Khoi;
+                Lop lop = HeThongBangDiemWD.cmbLop.SelectedItem as Lop;
+                MonHoc monHoc = HeThongBangDiemWD.cmbMonHoc.SelectedItem as MonHoc;
+                if (HeThongBangDiemWD.cmbNienKhoa == null || HeThongBangDiemWD.cmbHocKy == null || khoi == null || lop == null || monHoc == null)
+                {
+                    MessageBox.Show("Vui lòng chọn đủ thông tin Niên Khóa, Học kỳ, Khối, Lớp và Môn Học");
+                    return;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+                // Set the file dialog properties
+                saveFileDialog.Filter = "Excel Files|*.xlsx";
+                saveFileDialog.Title = "Save Excel File";
+                saveFileDialog.FileName = "BangDiem";
+
+                // Show the SaveFileDialog and check if the user clicked the Save button
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    // Create a new Excel application
+                    Excel.Application excelApp = new Excel.Application();
+
+                    // Create a new workbook
+                    Excel.Workbook workbook = excelApp.Workbooks.Add();
+
+                    // Create a new worksheet
+                    Excel.Worksheet worksheet = workbook.ActiveSheet;
+
+                    //Set header kèm thông tin lớp
+                    worksheet.Cells[1, 1] = "BẢNG ĐIỂM LỚP " + lop.TenLop;
+                    Excel.Range headerRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, 8]];
+                    headerRange.Merge(true);
+                    worksheet.Cells[2, 1] = "Niên khóa: ";
+                    worksheet.Cells[2, 2] = HeThongBangDiemWD.cmbNienKhoa.SelectedValue;
+                    worksheet.Cells[3, 1] = "Học kỳ: ";
+                    worksheet.Cells[3, 2] = HeThongBangDiemWD.cmbHocKy.SelectedValue;
+                    worksheet.Cells[4, 1] = "Khối: ";
+                    worksheet.Cells[4, 2] = "'" + khoi.TenKhoi.ToString();
+                    worksheet.Cells[5, 1] = "Lớp: ";
+                    worksheet.Cells[5, 2] = lop.TenLop;
+                    worksheet.Cells[5, 3] = "Mã lớp: ";
+                    worksheet.Cells[5, 4] = "'" + lop.MaLop.ToString();
+                    worksheet.Cells[6, 1] = "Môn học: ";
+                    worksheet.Cells[6, 2] = monHoc.TenMon;
+                    worksheet.Cells[6, 3] = "Mã môn học: ";
+                    worksheet.Cells[6, 4] = "'" + monHoc.MaMon.ToString();
+                    
+                    // Set the column headers
+                    worksheet.Cells[7, 1] = "STT";
+                    worksheet.Cells[7, 2] = "Mã học sinh";
+                    worksheet.Cells[7, 3] = "Họ và tên";
+                    worksheet.Cells[7, 4] = "Điểm 15 phút";
+                    worksheet.Cells[7, 5] = "Điểm 1 tiết";
+                    worksheet.Cells[7, 6] = "Điểm TB";
+                    worksheet.Cells[7, 7] = "Xếp loại";
+                    worksheet.Cells[7, 8] = "Trạng thái";
+
+
+                    int row = 8;
+                    int idx = 1;
+                    Excel.Range dataRange = worksheet.Range[worksheet.Cells[row, 1], worksheet.Cells[row, 8]];
+                    // Iterate through the danhSachDiem and populate the worksheet
+                    foreach (var diem in DanhSachDiem)
+                    {
+                        worksheet.Cells[row, 1] = idx;
+                        worksheet.Cells[row, 2] = "'" + diem.MaHocSinh.ToString();
+                        worksheet.Cells[row, 3] = diem.TenHocSinh;
+                        worksheet.Cells[row, 4] = diem.Diem15Phut;
+                        worksheet.Cells[row, 5] = diem.Diem1Tiet;
+                        worksheet.Cells[row, 6] = diem.DiemTB;
+                        worksheet.Cells[row, 7] = (diem.XepLoai == true) ? "Đạt" : "Không đạt";
+                        worksheet.Cells[row, 8] = (diem.TrangThai == true) ? "Đã chốt" : "Chưa chốt";
+                        dataRange = worksheet.Range[worksheet.Cells[row, 1], worksheet.Cells[row, 8]];
+                        dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                        dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                        row++;idx++;
+                    }
+                    //Format chhung
+                    worksheet.Columns.ColumnWidth = 12;
+                    worksheet.Rows.RowHeight = 20;
+                    worksheet.Columns[3].ColumnWidth = 20;
+                    Excel.Range cellsRange = worksheet.UsedRange;
+                    cellsRange.Font.Name = "Times New Roman";
+                    cellsRange.Font.Size = 12;
+                    //Format header
+                    headerRange.Font.Bold = true;
+                    headerRange.Font.Size = 20;
+                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    worksheet.Rows[1].RowHeight = 40;
+                    //Format Bang
+                    Excel.Range classRange = worksheet.Range[worksheet.Cells[7, 1], worksheet.Cells[7, 8]];
+                    classRange.Font.Bold = true;
+                    classRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    classRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    classRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    if (File.Exists(filePath))
+                    {
+                        try {
+                            File.Delete(filePath); 
+                        } catch(Exception ex)
+                        {
+                            MessageBox.Show("File được lưu mới đang được bật, vui lòng tắt file và thử lại\n" + ex.Message);
+                            return;
+                        }
+                    }
+                    // Save the workbook at the chosen path
+                    workbook.SaveAs(filePath);
+
+                    // Close the workbook and release the resources
+                    workbook.Close();
+                    excelApp.Quit();
+
+                    // Release COM objects to avoid memory leaks
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(worksheet);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(headerRange);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(classRange);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(dataRange);
+
+                    // Display a message box indicating the export is complete
+                    MessageBox.Show("Xuất danh sách điểm thành công!");
                 }
             });
         }
@@ -300,21 +479,23 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         }
 
-        public void LoadDanhSachBangDiem()
+        public async Task LoadDanhSachBangDiem()
         {
             DanhSachDiem.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                         return;
                     }
+
                     string wherecommand = "";
                     if (!String.IsNullOrEmpty(NienKhoaQueries))
                     {
@@ -328,10 +509,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     string CmdString = "select ht.MaDiem,ht.HocKy,ht.MaLop,MaMon,ht.MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai,TrangThai,TenHocSinh " +
                                         " from HeThongDiem ht join Lop l on ht.MaLop = l.MaLop join HocSinh hs on ht.MaHocSinh = hs.MaHocSinh " + wherecommand;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem
                             {
@@ -352,20 +533,22 @@ namespace StudentManagement.ViewModel.GiaoVien
                             }
                             catch (Exception)
                             {
-                                
+
                             }
                             DanhSachDiem.Add(diem);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
-                catch (Exception )
-                {}
+                catch (Exception)
+                {
+                }
             }
             HeThongBangDiemWD.cmbLop.Focus();
             HeThongBangDiemWD.btnTrick.Focus();
         }
+
         public void FilterLopFromSelection()
         {
             LopDataCmb.Clear();

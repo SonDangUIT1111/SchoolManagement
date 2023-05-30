@@ -8,7 +8,8 @@
       d:DesignHeight="750" 
       d:DesignWidth="1000"
       Title="ThongTinTruong"
-      Background="#FFECECEC">
+      Background="#FFECECEC"
+      DataContext="{StaticResource ThongTinTruongVM}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -33,7 +34,74 @@
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button
+                            Style="{StaticResource SlideshowButton}"
+                            Width="20"
+                            Height="30"
+                            Command="{Binding Source={StaticResource ThongTinTruongVM}, Path=PreviousImage}"
+                            CommandParameter="{Binding}"
+                            Margin="20">
 
+                            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                                  Fill="#000000" 
+                                  HorizontalAlignment="Left" 
+                                  Margin="-10,0,0,5">
+                                <Path.Data>
+                                    <PathGeometry Figures="M20.2409 7.21957V16.7896C20.2409 18.7496 18.1109 19.9796 16.4109 18.9996L12.2609 16.6096L8.11094 14.2096C6.41094 13.2296 6.41094 10.7796 8.11094 9.79957L12.2609 7.39957L16.4109 5.00957C18.1109 4.02957 20.2409 5.24957 20.2409 7.21957Z"/>
+                                </Path.Data>
+                            </Path>
+                        </Button>
+
+
+                        <Image Source="{Binding ThongTinTruongImageSource}"
+                               Width="450"
+                               Height="300"
+                               x:Name="ThongTinTruongImageHolder">
+                        </Image>
+                        <Button
+                            Style="{StaticResource SlideshowButton}"
+                            Width="20"
+                            Height="30"
+                            Command="{Binding Source={StaticResource ThongTinTruongVM}, Path=NextImage}"
+                            CommandParameter="{Binding}"
+                            Margin="20">
+                            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                          Fill="#000000" 
+                          HorizontalAlignment="Left" 
+                          Margin="-10,0,0,5">
+                                <Path.Data>
+                                    <PathGeometry Figures="M3.76172 7.21957V16.7896C3.76172 18.7496 5.89172 19.9796 7.59172 18.9996L11.7417 16.6096L15.8917 14.2096C17.5917 13.2296 17.5917 10.7796 15.8917 9.79957L11.7417 7.39957L7.59172 5.00957C5.89172 4.02957 3.76172 5.24957 3.76172 7.21957Z"/>
+                                </Path.Data>
+                            </Path>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1"
+                      Margin="30 0 0 0">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <TextBlock Text="Trường THPT Thủ Đức" 
+                                   FontSize="30"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,20"
+                                   ></TextBlock>
+                        <TextBlock Text="Địa chỉ: 166/24 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố &#x0a;Hồ Chí Minh 71306"
+                                   FontSize="16"                               
+                                   HorizontalAlignment="Left"></TextBlock>
+                        <TextBlock Text="Email: thptthuduc@gmail.com"
+                                   FontSize="16"
+                                   HorizontalAlignment="Left"></TextBlock>
+                        <TextBlock Text="Điện thoại: (028) 37 224 704"
+                                   FontSize="16"
+                                   HorizontalAlignment="Left"></TextBlock>
+                    </StackPanel>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

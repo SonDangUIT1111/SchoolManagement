@@ -62,7 +62,7 @@
                            Margin="25" 
                            FontSize="30"/>
                 <StackPanel Orientation="Horizontal"
-                            Margin="0 100 0 0"
+                            Margin="0 90 0 0"
                             VerticalAlignment="Top">
                     <ComboBox materialDesign:HintAssist.Hint="Niên Khóa"
                               x:Name="ChonKhoa"
@@ -132,6 +132,10 @@
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical" Height="30">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 8 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Họ và tên"
                                FontSize="14"

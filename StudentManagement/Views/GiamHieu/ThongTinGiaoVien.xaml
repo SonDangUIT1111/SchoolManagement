@@ -5,13 +5,20 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="750" 
       d:DesignWidth="1000"
       Title="ThongTinGiaoVien"
       DataContext="{StaticResource DanhSachGiaoVienVM}"
-      Background="#FFECECEC">
-
+      Background="#FFECECEC"
+      Name="GiaoVienWD">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadGiaoVien}"
+                                   CommandParameter="{Binding ElementName=LopHocWD}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="228" ></RowDefinition>
@@ -42,6 +49,7 @@
                 <TextBlock Text="Danh sách giáo viên" 
                            Margin="25" 
                            FontSize="30"/>
+                
                 <Button x:Name="btnThemGiaoVien" 
                         Style="{StaticResource InteractiveButton}"
                         Width="160" 
@@ -81,7 +89,12 @@
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 8 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
+                        
                         <TextBlock Text="Họ và tên"
                                FontSize="14"
                                FontWeight="Medium"

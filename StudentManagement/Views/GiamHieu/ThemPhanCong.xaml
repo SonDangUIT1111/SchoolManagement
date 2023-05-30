@@ -13,7 +13,7 @@
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Thêm phân công giảng dạy" 
-        Height="600" Width="800"
+        Height="550" Width="800"
         AllowsTransparency="True" 
         Background="Transparent"
         ResizeMode="NoResize" WindowStyle="None"
@@ -36,7 +36,9 @@
         <uc:Title_Bar_Log Panel.ZIndex="2"/>
         <Border Background="White"
                 Grid.RowSpan="2"
-                CornerRadius="20"/>
+                CornerRadius="20"
+                BorderBrush="#009efd"
+                BorderThickness="3"/>
         <StackPanel Orientation="Horizontal" 
                         Width="512" 
                         Height="50"

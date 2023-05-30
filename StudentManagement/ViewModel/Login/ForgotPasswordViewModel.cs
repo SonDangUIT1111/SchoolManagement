@@ -391,17 +391,18 @@ namespace StudentManagement.ViewModel.Login
                             MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                             return;
                         }
+                        string passEncode = CreateMD5(Base64Encode(NewPassword));
                         if (IndexRole == 0)
                         {
-                            CmdString = "Update GiamHieu Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                            CmdString = "Update GiamHieu Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
                         }
                         else if (IndexRole == 1)
                         {
-                            CmdString = "Update GiaoVien Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                            CmdString = "Update GiaoVien Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
                         }
                         else if (IndexRole == 2)
                         {
-                            CmdString = "Update HocSinh Set UserPassword = '" + NewPassword + "' Where Email ='" + EmailProtected + "'";
+                            CmdString = "Update HocSinh Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
                         }
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         cmd.ExecuteScalar();

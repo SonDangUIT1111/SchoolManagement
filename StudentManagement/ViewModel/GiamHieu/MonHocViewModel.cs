@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,18 +14,52 @@ namespace StudentManagement.ViewModel.GiamHieu
     {
         public bool everLoaded { get; set; }
         public MonHoc MonHocWD { get; set; }
+        public bool IsLoadAll { get; set; } = false;
 
         private ObservableCollection<StudentManagement.Model.MonHoc> _danhSachMonHoc;
         public ObservableCollection<StudentManagement.Model.MonHoc> DanhSachMonHoc { get => _danhSachMonHoc; set { _danhSachMonHoc = value; OnPropertyChanged(); } }
 
         private Model.MonHoc _monHocEditting;
         public Model.MonHoc MonHocEditting { get => _monHocEditting; set { _monHocEditting = value; OnPropertyChanged(); } }
+
+        private bool _dataGridVisibility;
+
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand LoadData { get; set; }
         public ICommand DeleteSubject { get; set; }
         public ICommand EditSubject { get; set; }
         public ICommand SubjectSearch { get; set; }
         public ICommand AddSubject { get; set; }
         public ICommand AddConfirm { get; set; }
+        public ICommand SubjectSearchAll { get; set; }
+
         public ICommand EditEnable { get; set; }
         public ICommand LostFocusTxt { get; set; }
 
@@ -33,16 +68,20 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             everLoaded = false;
             MonHocEditting = new Model.MonHoc();
-            LoadThongTinMonHoc();
-            LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadData = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
                     MonHocWD = parameter as MonHoc;
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    await LoadThongTinMonHoc();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                     everLoaded = true;
                 }
             });
-            DeleteSubject = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            DeleteSubject = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (MessageBox.Show("Bạn có muốn xoá môn học này không?", "Xoá môn học", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
@@ -67,7 +106,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 con.Close();
                             }
                             MessageBox.Show("Môn học này sẽ không được áp dụng trong dạy học nữa");
-                            LoadThongTinMonHoc();
+                            DataGridVisibility = false;
+                            ProgressBarVisibility = true;
+                            await LoadThongTinMonHoc();
+                            DataGridVisibility = true;
+                            ProgressBarVisibility = false;
                         }
                         catch (Exception ex)
                         {
@@ -76,7 +119,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                 }
             });
-            EditEnable = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            EditEnable = new RelayCommand<object>((parameter) => { return true; },  (parameter) =>
             {
                 MonHocEditting = parameter as Model.MonHoc;
                 MonHocWD.txtTenMH.Text = "";
@@ -86,7 +129,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 MonHocWD.btnThemMonHoc.Visibility = Visibility.Hidden;
                 MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Visible;
             });
-            EditSubject = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            EditSubject = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (MonHocEditting != null )
                 {
@@ -136,13 +179,18 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 MessageBox.Show(ex.Message);
                             }
                         }
-                        LoadThongTinMonHoc();
+                        DataGridVisibility = false;
+                        ProgressBarVisibility = true;
+                        await LoadThongTinMonHoc();
+                        DataGridVisibility = true;
+                        ProgressBarVisibility = false;
                     }    
                 }
             });
-            SubjectSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            SubjectSearch = new RelayCommand<TextBox>((parameter) => { return true; },async (parameter) =>
             {
                 DanhSachMonHoc.Clear();
+                ProgressBarVisibility = true;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
@@ -155,7 +203,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                             return; 
                         }
-                        string CmdString = "select * from MonHoc where TenMon like '%" + parameter.Text + "%' and ApDung = 1";
+                        string CmdString = "select * from MonHoc where TenMon like N'%" + parameter.Text + "%' and ApDung = 1";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -176,6 +224,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         MessageBox.Show(ex.Message);
                     }
+                    ProgressBarVisibility = false;
                 }
             });
             AddSubject = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
@@ -185,7 +234,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 MonHocWD.btnXacNhan.Visibility = Visibility.Visible;
                 MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Hidden;
             });
-            AddConfirm = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            AddConfirm = new RelayCommand<TextBox>((parameter) => { return true; },async (parameter) =>
             {
                 string monhoc = parameter.Text;
                 if (string.IsNullOrEmpty(monhoc))
@@ -234,7 +283,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 MonHocWD.btnThemMonHoc.Visibility = Visibility.Visible;
                                 MonHocWD.btnXacNhan.Visibility = Visibility.Hidden;
                                 MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Hidden;
-                                LoadThongTinMonHoc();
+                                DataGridVisibility = false;
+                                ProgressBarVisibility = true;
+                                await LoadThongTinMonHoc();
+                                DataGridVisibility = true;
+                                ProgressBarVisibility = false;
                             }
                             catch (Exception ex)
                             {
@@ -244,37 +297,78 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                 }
             });
+            SubjectSearchAll = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachMonHoc.Clear();
+                IsLoadAll = true;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    try
+                    {
+                        try
+                        {
+                            con.Open();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
+                        string CmdString = "select * from MonHoc where ApDung = 1";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
+                                monhoc.MaMon = reader.GetInt32(0);
+                                monhoc.TenMon = reader.GetString(1);
+                                DanhSachMonHoc.Add(monhoc);
+                            }
+                            reader.NextResult();
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+
+            });
         }
-        public void LoadThongTinMonHoc()
+        public async Task LoadThongTinMonHoc()
         {
             DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
+
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
                     }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+
                     string CmdString = "select * from MonHoc where ApDung = 1";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-                    while (reader.HasRows)
+                    while (await reader.ReadAsync())
                     {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
-                            monhoc.MaMon = reader.GetInt32(0);
-                            monhoc.TenMon = reader.GetString(1);
-                            DanhSachMonHoc.Add(monhoc);
-                        }
-                        reader.NextResult();
+                        StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
+                        monhoc.MaMon = reader.GetInt32(0);
+                        monhoc.TenMon = reader.GetString(1);
+                        DanhSachMonHoc.Add(monhoc);
                     }
+
                     con.Close();
                 }
                 catch (Exception ex)
@@ -283,5 +377,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
+
     }
 }
