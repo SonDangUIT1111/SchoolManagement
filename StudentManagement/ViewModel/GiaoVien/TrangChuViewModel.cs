@@ -48,7 +48,6 @@ namespace StudentManagement.ViewModel.GiaoVien
             BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
             BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
             CurrentUser = new StudentManagement.Model.GiaoVien();
-            CurrentUser.MaGiaoVien = 100000;
             //define ICommand
             LoadWindow = new RelayCommand<GiaoVienWindow>((parameter) => { return true; }, (parameter) =>
             {

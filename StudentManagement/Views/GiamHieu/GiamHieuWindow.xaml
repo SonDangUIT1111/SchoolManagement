@@ -108,7 +108,8 @@
                                FontSize="14"
                                Margin="35 15 0 15"
                                Opacity="0.6"/>
-                        <RadioButton>
+                    <RadioButton Command="{Binding SwitchThongTinTruong}"
+                                 CommandParameter="{Binding ElementName=RPage}">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon
                             Kind="Home" 
@@ -310,7 +311,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="DarkGreen"
+                                             Foreground="#03cffc"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -318,7 +319,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FF4F67CA"
+                                             Foreground="#2e87e6"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -326,7 +327,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="Red"
+                                             Foreground="#e65555"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 80 0 0"
@@ -334,7 +335,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FFBB1726"
+                                             Foreground="#e69655"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -342,7 +343,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FF0407C1"
+                                             Foreground="#4ecfb7"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -350,7 +351,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FF08648A"
+                                             Foreground="#4e79cf"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 12 0 0"
@@ -358,7 +359,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FF9BA40A"
+                                             Foreground="#ecf238"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 10 0 0"
@@ -366,7 +367,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#338C82"
+                                             Foreground="#36e356"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -374,7 +375,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="MediumPurple"
+                                             Foreground="#aa6ade"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 12 0 0"
@@ -382,7 +383,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FFBD00BF"
+                                             Foreground="#d16fcc"
                                              />
                     </StackPanel>
                     <Ellipse Width="300"

@@ -46,6 +46,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                 OnPropertyChanged();
             }
         }
+        private Visibility _lineVisibility;
+        public Visibility LineVisibility { get { return _lineVisibility; } set { _lineVisibility = value; OnPropertyChanged(); } }
+        private Visibility _colVisibility;
+        public Visibility ColVisibility { get { return _colVisibility; } set { _colVisibility = value; OnPropertyChanged(); } }
 
         private bool _progressBarVisibility;
 

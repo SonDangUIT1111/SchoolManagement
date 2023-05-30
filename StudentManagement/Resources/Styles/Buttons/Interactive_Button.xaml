@@ -20,7 +20,7 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Background" Value="#FF00E57C"/>
                 <Setter Property="Foreground" Value="#000000"/>
                 <Setter Property="Tag" Value="Visible"/>
             </Trigger>

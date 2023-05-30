@@ -286,7 +286,6 @@
                                                 Style="{StaticResource InteractiveButton}"
                                                 Margin="30,20,0,0"
                                                 IsTabStop="False"
-                                                Background="#FF00E57C"
                                                 Command="{Binding GoToForgotPasswordCommand}"
                                                 CommandParameter="{Binding ElementName=LoginWD}">
                                     </Button>

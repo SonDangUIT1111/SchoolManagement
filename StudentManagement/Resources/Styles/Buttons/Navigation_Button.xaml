@@ -27,7 +27,7 @@
                         <Border x:Name="RadioBorderChecked" CornerRadius="12" BorderThickness="0" Opacity="0" Panel.ZIndex="1">
                             <Border.Background>
                                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                                    <GradientStop Color="#FF589FFF" Offset="0.72"/>
+                                    <GradientStop Color="#4abdff" Offset="0.72"/>
                                     <GradientStop Color="Transparent" Offset="1"/>
                                 </LinearGradientBrush>
                             </Border.Background>
@@ -52,7 +52,7 @@
                                 <Storyboard>
                                     <ColorAnimation  Storyboard.TargetName="BlueGradient"
                                                      Storyboard.TargetProperty="Color"
-                                                     To="#FF589FFF"
+                                                     To="#4abdff"
                                                      Duration="0:0:0.001"/>
                                     <DoubleAnimation Storyboard.TargetProperty="Offset" 
                                                      To="0.79" 
