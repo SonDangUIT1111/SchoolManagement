@@ -36,8 +36,10 @@
         </Grid.RowDefinitions>
         <uc:Title_Bar_Log Panel.ZIndex="2"/>
         <Border Background="White"
-                Grid.RowSpan="3"
-                CornerRadius="20"/>
+                Grid.RowSpan="2"
+                CornerRadius="20"
+                BorderBrush="#009efd"
+                BorderThickness="3"/>
         <StackPanel Orientation="Horizontal" 
                         Width="512" 
                         Height="50"

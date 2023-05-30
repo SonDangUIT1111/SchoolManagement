@@ -63,7 +63,10 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="180"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
                 <StackPanel HorizontalAlignment="Stretch">
                     <TextBlock Text="Chọn quy định" 
                        FontSize="30" 
@@ -102,36 +105,62 @@
                              x:Name="tbGiaTri"
                              Width="450"
                              Height="72"
-                             Padding="10"
+                             Padding="10 25 0 25"
                              HorizontalAlignment="Left"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
                              VerticalContentAlignment="Center"
                              FontSize="20" IsEnabled="False">
                     </TextBox>
+                    
+
+                </StackPanel>
+                <StackPanel Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Right">
                     <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                Margin="25">
+                                HorizontalAlignment="Right">
                         <Button Style="{StaticResource InteractiveButton}"
-                            Content="Thay đổi"
-                            Width="150"
+                            x:Name="CancelChange"
+                            Content="Hủy thay đổi"
+                            FontSize="16"
+                            Width="130"
                             Height="40"
-                            Margin="15"
+                            Margin="14"
+                            HorizontalAlignment="Right"
+                            Background="#FF00E57C"
+                            Visibility="Collapsed"
+                            Command="{Binding CancelChange}">
+                        </Button>
+                        <Button Style="{StaticResource InteractiveButton}"
+                            x:Name="btnEnable"
+                            Content="Thay đổi"
+                            FontSize="16"
+                            Width="130"
+                            Height="40"
+                            Margin="14"
                             HorizontalAlignment="Right"
                             Command="{Binding EnableChange}">
                         </Button>
                         <Button x:Name="btnXacNhan"
                             Style="{StaticResource InteractiveButton}"
                             Content="Xác nhận"
-                            Width="150"
+                            FontSize="16"
+                            Width="130"
                             Height="40"
-                            Margin="15"
+                            Margin="14"
                             HorizontalAlignment="Right"
                             Command="{Binding ChangeRule}"
                             CommandParameter="{Binding ElementName=cmbQuyDinh}"
                             IsEnabled="False"/>
                     </StackPanel>
-
                 </StackPanel>
+                <Border Grid.Row="1">
+                    <Border.Background>
+                        <ImageBrush ImageSource="/Resources/Images/rulebg.jpg"
+                            Stretch="Uniform"/>
+                    </Border.Background>
+                </Border>
             </Grid>
         </Border>
     </Grid>

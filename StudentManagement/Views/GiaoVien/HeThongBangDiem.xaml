@@ -347,6 +347,12 @@
                             Grid.Row="2"
                             Margin="0 0 20 0">
                     <Button Style="{StaticResource InteractiveButton}"
+                            Content="Xuất bảng điểm"
+                            Command="{Binding XuatDiem}"
+                            Width="100"
+                            Margin="0 0 20 0"
+                            Height="40"/>
+                    <Button Style="{StaticResource InteractiveButton}"
                             Content="Lưu"
                             IsEnabled="{Binding CanUserEdit}"
                             Command="{Binding LuuDiem}"

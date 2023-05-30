@@ -44,6 +44,10 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
                            Margin="20"/>
+                <Button x:Name="btnTrick"
+                        Content=""
+                        Width="1"
+                        Height="0"/>
                 <Border BorderBrush="#FF000000" 
                         BorderThickness="0" 
                         CornerRadius="30" 
@@ -75,6 +79,7 @@
                         Content="Thêm Phân Công" 
                         FontSize="18" 
                         FontWeight="Bold"
+                        Background="MediumPurple"
                         Command="{Binding AddPhanCong}">
                 </Button>
                 <StackPanel Orientation="Horizontal" 
@@ -90,6 +95,13 @@
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               ItemsSource="{Binding NienKhoaCmb}">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnterComboBox}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
                                    CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
@@ -109,6 +121,13 @@
                               ItemsSource="{Binding KhoiCmb}"
                               DisplayMemberPath="TenKhoi">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnterComboBox}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterKhoi}"
                                    CommandParameter="{Binding ElementName=cmbKhoi}"/>
@@ -127,6 +146,13 @@
                               ItemsSource="{Binding LopCmb}"
                               DisplayMemberPath="TenLop">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnterComboBox}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterLop}"
                                    CommandParameter="{Binding ElementName=cmbLop}"/>

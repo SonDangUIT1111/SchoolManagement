@@ -14,6 +14,7 @@ namespace StudentManagement.ViewModel.GiamHieu
     {
         public bool everLoaded { get; set; }
         public MonHoc MonHocWD { get; set; }
+        public bool IsLoadAll { get; set; } = false;
 
         private ObservableCollection<StudentManagement.Model.MonHoc> _danhSachMonHoc;
         public ObservableCollection<StudentManagement.Model.MonHoc> DanhSachMonHoc { get => _danhSachMonHoc; set { _danhSachMonHoc = value; OnPropertyChanged(); } }
@@ -57,6 +58,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand SubjectSearch { get; set; }
         public ICommand AddSubject { get; set; }
         public ICommand AddConfirm { get; set; }
+        public ICommand SubjectSearchAll { get; set; }
+
         public ICommand EditEnable { get; set; }
         public ICommand LostFocusTxt { get; set; }
 
@@ -200,7 +203,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                             return; 
                         }
-                        string CmdString = "select * from MonHoc where TenMon like '%" + parameter.Text + "%' and ApDung = 1";
+                        string CmdString = "select * from MonHoc where TenMon like N'%" + parameter.Text + "%' and ApDung = 1";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -293,6 +296,47 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                     }
                 }
+            });
+            SubjectSearchAll = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachMonHoc.Clear();
+                IsLoadAll = true;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    try
+                    {
+                        try
+                        {
+                            con.Open();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            return;
+                        }
+                        string CmdString = "select * from MonHoc where ApDung = 1";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        SqlDataReader reader = cmd.ExecuteReader();
+
+                        while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
+                                monhoc.MaMon = reader.GetInt32(0);
+                                monhoc.TenMon = reader.GetString(1);
+                                DanhSachMonHoc.Add(monhoc);
+                            }
+                            reader.NextResult();
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+
             });
         }
         public async Task LoadThongTinMonHoc()
