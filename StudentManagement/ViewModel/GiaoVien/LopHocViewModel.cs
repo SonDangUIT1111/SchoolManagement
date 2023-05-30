@@ -3,6 +3,7 @@ using StudentManagement.Views.GiaoVien;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +20,35 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string LopQueries;
         public StudentManagement.Model.Lop LopDaChon { get; set; }
         public LopHoc LopHocWD { get; set; }
+
+        private bool _dataGridVisibility;
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
 
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachhs;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachhs { get => _danhSachhs; set { _danhSachhs = value; OnPropertyChanged(); } }
@@ -43,13 +73,17 @@ namespace StudentManagement.ViewModel.GiaoVien
             DanhSachhs = new ObservableCollection<Model.HocSinh>();
             DanhSachNienKhoa = new ObservableCollection<string>();
             DanhSachLop = new ObservableCollection<Model.Lop>();
-            LoadWindow = new RelayCommand<LopHoc>((parameter) => { return true; }, (parameter) =>
+            LoadWindow = new RelayCommand<LopHoc>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
                     LopHocWD = parameter;
                     InitComboBox();
-                    LoadDanhSachHocSinh();
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    await LoadDanhSachHocSinh();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                     everLoaded = true;
                 }
             });
@@ -75,16 +109,20 @@ namespace StudentManagement.ViewModel.GiaoVien
                     LoadDanhSachLop();
                 }
             });
-            LoadHocSinh = new RelayCommand<String>((parameter) => { return true; }, (parameter) =>
+            LoadHocSinh = new RelayCommand<String>((parameter) => { return true; }, async (parameter) =>
             {
                 if (LopHocWD.ChonLop != null && LopHocWD.ChonLop.SelectedItem != null)
                 {
                     Lop item = LopHocWD.ChonLop.SelectedItem as Lop;
                     LopQueries = item.MaLop.ToString(); 
                 }
-                LoadDanhSachHocSinh();
+                DataGridVisibility = false;
+                ProgressBarVisibility = true;
+                await LoadDanhSachHocSinh();
+                DataGridVisibility = true;
+                ProgressBarVisibility = false;
             });
-            UpdateHocSinh = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, (parameter) =>
+            UpdateHocSinh = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, async (parameter) =>
              {
                  if (!IsGiaoVienChuNhiem(parameter.MaHocSinh.ToString()))
                  {
@@ -95,7 +133,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                  SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
                  data.HocSinhHienTai = parameter;
                  window.ShowDialog();
-                 LoadDanhSachHocSinh();
+                 DataGridVisibility = false;
+                 ProgressBarVisibility = true;
+                 await LoadDanhSachHocSinh();
+                 DataGridVisibility = true;
+                 ProgressBarVisibility = false;
              });
         }
         public bool IsGiaoVienChuNhiem(string ID)
@@ -130,28 +172,29 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
             }
         }
-        public void LoadDanhSachHocSinh()
+        public async Task LoadDanhSachHocSinh()
         {
             DanhSachhs.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    { 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
                         MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                        return; 
+                        return;
                     }
                     string CmdString = "select MaHocSinh,TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaLop = \'" + LopQueries + "\'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
                             student.MaHocSinh = reader.GetInt32(0);
@@ -163,15 +206,17 @@ namespace StudentManagement.ViewModel.GiaoVien
                             student.Avatar = (byte[])reader.GetValue(6);
                             DanhSachhs.Add(student);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
             }
         }
+
         public void InitComboBox()
         {
             DanhSachNienKhoa.Clear();

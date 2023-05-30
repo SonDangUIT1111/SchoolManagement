@@ -73,6 +73,7 @@
                 <TextBlock Text="Bảng điểm" 
                            Margin="25 10 0 0" 
                            FontSize="26"/>
+
                 <StackPanel Orientation="Horizontal"
                             Margin="0 50 0 0"
                             VerticalAlignment="Top">
@@ -216,10 +217,15 @@
                            Foreground="#1ED760"
                            FontWeight="Medium"
                            Margin="25 100 0 0"/>
+                
                 <StackPanel Grid.Row="1"
                             Panel.ZIndex="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 8 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mã học sinh"
                                FontSize="14"
@@ -266,7 +272,8 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           Style="{StaticResource MaterialDesignDataGrid}"
                           RowStyle="{StaticResource MaterialDesignDataGridRow}"
-                          CellStyle="{StaticResource MaterialDesignDataGridCell}">
+                          CellStyle="{StaticResource MaterialDesignDataGridCell}"
+                          Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>

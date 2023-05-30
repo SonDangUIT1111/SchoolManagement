@@ -146,7 +146,10 @@
                                                  Kind="PencilRulerOutline" />
                     </Button>
                 </StackPanel>
-                
+                <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin=" 20 0 20 0" 
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <DataGrid Grid.Row="1"
                           Margin="25 0 50 0"
                           Width="450"
@@ -156,7 +159,8 @@
                           RowStyle="{StaticResource DataGridRowStyle1}"
                           CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
-                          ItemsSource="{Binding DanhSachMonHoc}">
+                          ItemsSource="{Binding DanhSachMonHoc}"
+                          Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="450">
                             <DataGridTemplateColumn.CellTemplate>

@@ -181,7 +181,12 @@
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="20 0 0 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0 10 0 0">
                         <TextBlock Text="Tên lớp"
                                FontSize="14"
                                FontWeight="Medium"
@@ -202,7 +207,8 @@
                           CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
                           ItemsSource="{Binding DanhSachPhanCong}"
-                          HorizontalScrollBarVisibility="Hidden">
+                          HorizontalScrollBarVisibility="Hidden"
+                          Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
