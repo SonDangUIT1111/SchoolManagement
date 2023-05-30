@@ -33,8 +33,14 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string LopQueries { get; set; }
         public string MonHocQueries { get; set; }
 
+        private Visibility _linevisibility;
+        public Visibility LineVisibility { get { return _linevisibility; } set { _linevisibility = value; OnPropertyChanged(); } }
+        private Visibility _colvisibility;
+        public Visibility ColVisibility { get { return _colvisibility; } set { _colvisibility = value; OnPropertyChanged(); } }
+
         private bool _dataGridVisibility;
         public bool DataGridVisibility
+
         {
             get
             {
