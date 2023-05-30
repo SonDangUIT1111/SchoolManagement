@@ -82,6 +82,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Converter\BooleanToCheckIconKindConverter.cs" />
+    <Compile Include="Converter\BooleanToGreenRedConverter.cs" />
     <Compile Include="Converter\BooleanToIsEnabledConverter.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
@@ -136,6 +138,7 @@
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\Login\ChangePasswordViewModel.cs" />
     <Compile Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml.cs">
       <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
     </Compile>
@@ -226,6 +229,9 @@
     <Compile Include="Views\HocSinh\ThongTinHocSinh.xaml.cs">
       <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Login\ChangePasswordWindow.xaml.cs">
+      <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
     </Compile>
@@ -256,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\Buttons\Interactive_Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Buttons\Navigation_Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -415,6 +425,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Login\ChangePasswordWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Login\ForgotPasswordWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -468,6 +482,7 @@
     <Resource Include="Resources\Images\user_image.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\ChangePassword.png" />
     <Resource Include="Resources\Images\EducationBg.jpg" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,8 @@
     <!--Login-->
     <viewmodel:LoginViewModel x:Key="LoginVM"></viewmodel:LoginViewModel>
     <viewmodel:ForgotPasswordViewModel x:Key="ForgotPasswordVM"></viewmodel:ForgotPasswordViewModel>
-    
+    <viewmodel:ChangePasswordViewModel x:Key="ChangePasswordVM"></viewmodel:ChangePasswordViewModel>
+
     <!--GiamHieu-->
     <viewmodelGH:TrangChuViewModel x:Key="TrangChuVM"></viewmodelGH:TrangChuViewModel>
     <viewmodelGH:DanhSachLopViewModel x:Key="DanhSachLopVM"></viewmodelGH:DanhSachLopViewModel>
@@ -50,4 +51,6 @@
     <converter:DateTimeToDateConverter x:Name="dateTimeConverter" x:Key="DateTimeToDateConverter"/>
     <converter:BooleanToVisibilityConverter x:Name="visibilityConverter" x:Key="BooleanToVisibilityConverter"/>
     <converter:BooleanToIsEnabledConverter x:Name="enableConverter" x:Key="BooleanToIsEnabledConverter"/>
+    <converter:BooleanToGreenRedConverter x:Name="GreenRedConverter" x:Key="BooleanToGreenRedConverter"/>
+    <converter:BooleanToCheckIconKindConverter x:Name="CheckIconKindConverter" x:Key="BooleanToCheckIconKindConverter"/>
 </ResourceDictionary>

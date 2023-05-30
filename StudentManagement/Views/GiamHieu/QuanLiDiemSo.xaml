@@ -45,18 +45,9 @@
                            VerticalAlignment="Bottom"
                            Margin="20"/>
                 <Button x:Name="btnTrick"
+                        Margin="1100 0 0 0"
                         Content="Make ComboBox lost focus"
                         Width="250"/>
-                <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="21"
-                        Background="White">
-                </Border>
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  
@@ -243,21 +234,51 @@
                                FontWeight="Medium"
                                Margin="50 0 0 0"/>
                     </StackPanel>
+
+                    <Separator Margin="0 6 0 0"
+                               Width="920"
+                               Opacity="0.6"
+                               Panel.ZIndex="9"/>
                 </StackPanel>
                 <DataGrid Margin="25,0,25,10"
                           Grid.Row="1"
                           SelectionUnit="Cell"
                           Background="White"
+                          AlternationCount="2"
                           BorderBrush="Transparent"
                           CanUserAddRows="False"
+                          RowHeight="40"
+                          VerticalAlignment="Center"
                           AutoGenerateColumns="False"
                           ItemsSource="{Binding DanhSachDiem}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          Style="{StaticResource MaterialDesignDataGrid}"
-                          RowStyle="{StaticResource MaterialDesignDataGridRow}"
-                          CellStyle="{StaticResource MaterialDesignDataGridCell}"
-                          Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                          Style="{StaticResource MaterialDesignDataGrid}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        
+                    </DataGrid.CellStyle>
+                    
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
@@ -282,38 +303,54 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Width="100"
+                        <DataGridTemplateColumn Width="360"
                                             IsReadOnly="True"
                                             CanUserReorder="False"
                                             CanUserResize="False"
-                                            CanUserSort="False"
-                                            Binding="{Binding Path=Diem15Phut}"/>
-                        <DataGridTextColumn Width="100"
-                                            IsReadOnly="True"
-                                            CanUserReorder="False"
-                                            CanUserResize="False"
-                                            CanUserSort="False"
-                                            Binding="{Binding Path=Diem1Tiet}"/>
-                        <DataGridTextColumn Width="140"
-                                            IsReadOnly="True"
-                                            CanUserReorder="False"
-                                            CanUserResize="False"
-                                            CanUserSort="False"
-                                            Binding="{Binding Path=DiemTB}"/>
+                                            CanUserSort="False">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
+                                          Margin="0 0 0 0">
+                                        <TextBlock  Visibility="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=ColVisibility}"
+                                                    Text="{Binding Path=Diem15Phut}"
+                                                    VerticalAlignment="Center"
+                                                    Width="100"
+                                                    Margin="20 0 0 0"/>
+                                        <TextBlock  Visibility="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=ColVisibility}"
+                                                    Text="{Binding Path=Diem1Tiet}"
+                                                    Margin="0 0 0 0"
+                                                    Width="100"
+                                                    VerticalAlignment="Center"/>
+                                        <TextBlock  Visibility="{Binding Source={StaticResource HeThongBangDiemGVVM}, Path=ColVisibility}"
+                                                    Text="{Binding Path=DiemTB}"
+                                                    Margin="0 0 0 0"
+                                                    Width="140"
+                                                    VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Left">
+                                        <materialDesign:PackIcon Kind="{Binding XepLoai, Converter={StaticResource BooleanToCheckIconKindConverter}}"
+                                                                 Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                                 VerticalAlignment="Center"
+                                                                 Width="18"
+                                                                 Margin="25 0 0 0"
+                                                                 Height="18"/>
                                         <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
+                                                   Margin="2 0 0 0"
                                                    Width="80"
                                                    FontSize="14"
-                                                   Foreground="#000000"
+                                                   Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
                                                    Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
                                                    TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
-                                                   Margin="20 0 0 0"
+                                                   Margin="0 0 0 0"
                                                    Width="200"
                                                    FontSize="14"
                                                    Foreground="#000000"

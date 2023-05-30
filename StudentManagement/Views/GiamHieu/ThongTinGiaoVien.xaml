@@ -38,16 +38,6 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
                            Margin="20"/>
-                <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="21"
-                        Background="White">
-                </Border>
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="30" Grid.Row="1" Background="White" Margin="12">
@@ -128,16 +118,44 @@
                     </StackPanel>
                     <Separator Margin="0 10 0 0"
                                Width="920"
-                               Opacity="0.7"/>
+                               Opacity="1"/>
+                    <Line X1="0" Y1="0"
+                          X2="920" Y2="0"
+                          Stroke="Gray"
+                          StrokeThickness="1"
+                          Opacity="0.3"
+                          Margin="30 0 0 0"/>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
-                          Margin="25,20,25,10"
+                          Margin="25,40,25,10"
+                          AlternationCount="2"
                           ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           ItemsSource="{Binding DanhSachGiaoVien}"
                           Style="{StaticResource DataGridStyle1}"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}"
-                          Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                          RowHeight="50">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="1010">
                             <DataGridTemplateColumn.CellTemplate>

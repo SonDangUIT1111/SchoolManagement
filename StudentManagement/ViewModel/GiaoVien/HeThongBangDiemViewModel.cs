@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -614,6 +615,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Visible;
                         JustReadOnly = false;
                         CanUserEdit = true;
+                        LineVisibility = Visibility.Visible;
+                        ColVisibility = Visibility.Hidden;
                     }
                     else
                     {
@@ -621,6 +624,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Hidden;
                         JustReadOnly = true;
                         CanUserEdit = false;
+                        LineVisibility = Visibility.Hidden;
+                        ColVisibility = Visibility.Visible;
                     }
                     con.Close();
                 }

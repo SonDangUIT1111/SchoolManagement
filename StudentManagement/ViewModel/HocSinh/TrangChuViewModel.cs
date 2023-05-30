@@ -1,10 +1,14 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.GiaoVien;
+using StudentManagement.ViewModel.Login;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
+using StudentManagement.Views.Login;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,6 +26,10 @@ namespace StudentManagement.ViewModel.HocSinh
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
 
+        private string _idHocSinhstring;
+        public string IdHocSinhstring { get { return _idHocSinhstring; } set { _idHocSinhstring = value; } }
+
+
         private Model.HocSinh _hocSinhHienTai;
         public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value;OnPropertyChanged(); } }
         //declare Pages
@@ -37,12 +45,14 @@ namespace StudentManagement.ViewModel.HocSinh
         public ICommand SwitchThongTinTruong { get; set; }
         public ICommand SwitchXemDiem { get; set; }
         public ICommand CapNhatThongTin { get; set; }
+        public ICommand DoiMatKhau { get; set; }
         public ICommand SwitchBaoCaoMonHoc { get; set; }
         public ICommand SwitchBaoCaoHocKy { get; set; }
 
         public TrangChuViewModel()
         {
             IdHocSinh = 100000;
+            IdHocSinhstring = IdHocSinh.ToString();
 
             HocSinhHienTai = new Model.HocSinh();
             ThongTinTruongPage = new StudentManagement.Views.GiamHieu.ThongTinTruong();
@@ -59,6 +69,7 @@ namespace StudentManagement.ViewModel.HocSinh
                 StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
                 vm.IdHocSinh = IdHocSinh;
                 HocSinhWD.RPage.Content = ThongTinTruongPage;
+                
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -75,6 +86,25 @@ namespace StudentManagement.ViewModel.HocSinh
                 data.HocSinhHienTai = HocSinhHienTai;
                 window.ShowDialog();
                 LoadThongTinCaNhan();
+            });
+            DoiMatKhau = new RelayCommand<string>((parameter) => { return true; }, (parameter) =>
+            {
+                string password;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select UserPassword from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    password = reader.GetString(0);
+                    con.Close();
+                 }
+                ChangePasswordWindow window = new ChangePasswordWindow();
+                ChangePasswordViewModel data = window.DataContext as ChangePasswordViewModel;
+                //data.Id = parameter;
+                MessageBox.Show(parameter);
+                window.ShowDialog();
             });
             SwitchBaoCaoMonHoc = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
