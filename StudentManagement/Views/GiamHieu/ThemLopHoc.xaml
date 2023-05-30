@@ -13,7 +13,7 @@
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
         AllowsTransparency="True"
-        Background="White"
+        Background="Transparent"
         ResizeMode="NoResize" WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
@@ -31,14 +31,27 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="70"></RowDefinition>
             <RowDefinition></RowDefinition>
-            <RowDefinition Height="80"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock  Grid.Row="0"
-                    Text="Thêm lớp học mới"
-                    FontSize="32"
-                    FontWeight="Bold"
-                    Padding="20">
-        </TextBlock>
+        <uc:Title_Bar_Log Panel.ZIndex="2"/>
+        <Border Background="#FFFFFF"
+                BorderBrush="#0099FF"
+                BorderThickness="2"
+                CornerRadius="20"
+                Grid.RowSpan="2"/>
+        <StackPanel Orientation="Horizontal" 
+                        Width="512" 
+                        Height="50"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+            <Path Margin="25,20,0,0" Width="30" Height="30" Data="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18 12.75H12.75V18C12.75 18.41 12.41 18.75 12 18.75C11.59 18.75 11.25 18.41 11.25 18V12.75H6C5.59 12.75 5.25 12.41 5.25 12C5.25 11.59 5.59 11.25 6 11.25H11.25V6C11.25 5.59 11.59 5.25 12 5.25C12.41 5.25 12.75 5.59 12.75 6V11.25H18C18.41 11.25 18.75 11.59 18.75 12C18.75 12.41 18.41 12.75 18 12.75Z" Fill="Black" Stretch="Fill" />
+            <TextBlock Text="Thêm lớp học"
+                       FontSize="24"
+                       Margin="25 20 0 0"
+                       Width="300"
+                       Height="50"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"/>
+        </StackPanel>
         <StackPanel Grid.Row="1"
                     Margin="0 50 0 0">
             <TextBox    materialDesign:HintAssist.Hint="Nhập tên lớp"
@@ -58,24 +71,36 @@
             <ComboBox   materialDesign:HintAssist.Hint="Khối"
                         x:Name="KhoiCmb"
                         HorizontalAlignment="Center"
-                        Margin="10"    
+                        Margin="10 20 10 0"    
                         Width="350"
                         ItemsSource="{Binding KhoiCmb}"
                         DisplayMemberPath="TenKhoi"
                         Style="{StaticResource MaterialDesignOutlinedComboBox}">
             </ComboBox>
+            <StackPanel 
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="0 20 0 0">
+                <Button 
+                        Content="Xác nhận"
+                        Command="{Binding EditClass}"
+                        Style="{StaticResource InteractiveButton}"
+                        Width="100"
+                        Height="40">
+
+                </Button>
+                <Button 
+                        Content="Huỷ"
+                        Margin="10 0 0 0"
+                        Command="{Binding CancelEditClass}"
+                        Style="{StaticResource InteractiveButton}"
+                        Width="100"
+                        Height="40">
+
+                </Button>
+            </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Row="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top">
-            <Button Content="Xác nhận"
-                    Command="{Binding AddClass}">
-            </Button>
-            <Button Content="Huỷ"
-                    Margin="10 0 0 0"
-				    Command="{Binding CancelAddClass}">
-            </Button>
-        </StackPanel>
+
     </Grid>
 </Window>

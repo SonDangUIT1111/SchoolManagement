@@ -70,6 +70,7 @@
                 <TextBlock Text="Bảng điểm" 
                            Margin="25 10 0 0" 
                            FontSize="26"/>
+
                 <StackPanel Orientation="Horizontal"
                             Margin="0 50 0 0"
                             VerticalAlignment="Top">
@@ -228,6 +229,10 @@
                             Panel.ZIndex="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 8 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mã học sinh"
                                FontSize="14"
@@ -426,6 +431,12 @@
                             HorizontalAlignment="Right"
                             Grid.Row="2"
                             Margin="0 0 20 0">
+                    <Button Style="{StaticResource InteractiveButton}"
+                            Content="Xuất bảng điểm"
+                            Command="{Binding XuatDiem}"
+                            Width="100"
+                            Margin="0 0 20 0"
+                            Height="40"/>
                     <Button Style="{StaticResource InteractiveButton}"
                             Content="Lưu"
                             IsEnabled="{Binding CanUserEdit}"
