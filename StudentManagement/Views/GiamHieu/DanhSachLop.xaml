@@ -137,7 +137,12 @@
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical" Height="30">
-                    <StackPanel Orientation="Horizontal">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin=" 20 0 20 0" 
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0 10 0 0">
                         <TextBlock Text="Họ và tên"
                                FontSize="14"
                                FontWeight="Medium"

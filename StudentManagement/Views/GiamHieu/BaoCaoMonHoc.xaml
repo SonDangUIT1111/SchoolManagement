@@ -30,7 +30,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FF4FCA88" 
+                Background="#5BB182" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Báo cáo môn học" 
@@ -60,16 +60,20 @@
                 Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="100"></RowDefinition>
+                    <RowDefinition Height="120"></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Top"
                             Margin="20 10 0 0"
                             HorizontalAlignment="Left"
-                            Grid.Row="0">
+                            Grid.Row="0"
+                            >
+
                     <ComboBox x:Name="cmbNienKhoa"
-                                Width="256"
+                                Width="200"
+                                Height="40"
+                                Padding="10"
                                 materialDesign:HintAssist.Hint="Niên khoá"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                                 ItemsSource="{Binding NienKhoaComboBox}"
@@ -82,7 +86,9 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox x:Name="cmbHocKy"
-                                Width="256" 
+                                Width="200"
+                                Height="40"
+                                Padding="10"
                                 Margin="20 0 0 0"
                                 materialDesign:HintAssist.Hint="Học kỳ"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
@@ -96,8 +102,10 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                     <ComboBox x:Name="cmbMonHoc"
-                                Width="256" 
+                                Width="200"
+                                Height="40"
                                 Margin="20 0 0 0"
+                                Padding="10"
                                 DisplayMemberPath="TenMon"
                                 materialDesign:HintAssist.Hint="Môn học"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
@@ -115,7 +123,12 @@
                             Margin="0 80 0 0"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin=" 20 0 20 0" 
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0 10 0 0">
                         <TextBlock Text="Tên lớp"
                                FontSize="14"
                                FontWeight="Medium"
@@ -146,7 +159,8 @@
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"
-                              Grid.Row="2">
+                              Grid.Row="2"
+                              Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="400">
                                 <DataGridTemplateColumn.CellTemplate>

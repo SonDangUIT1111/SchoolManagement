@@ -3,6 +3,7 @@ using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +18,38 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
         public bool everLoaded { get; set; }
+
+        private bool _dataGridVisibility;
+
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         private ObservableCollection<StudentManagement.Model.PhanCongGiangDay> _danhSachPhanCong;
         public ObservableCollection<StudentManagement.Model.PhanCongGiangDay> DanhSachPhanCong { get => _danhSachPhanCong; set { _danhSachPhanCong = value; OnPropertyChanged(); } }
         private ObservableCollection<string> _nienKhoaCmb;
@@ -41,8 +74,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             KhoiQueries = "";
             LopQueries = "";
             LoadThongTinCmb();
-            LoadThongTinPhanCong();
-            LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadData = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
@@ -52,6 +84,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                         PhanCongGiangDayWD.cmbNienKhoa.SelectedIndex = 0;
                         PhanCongGiangDayWD.cmbKhoi.SelectedIndex = 0;
                         PhanCongGiangDayWD.cmbLop.SelectedIndex = 0;
+                        
+                        ProgressBarVisibility = true;
+                        DataGridVisibility = false;
+                        await LoadThongTinPhanCong();
+                        ProgressBarVisibility = false;
+                        DataGridVisibility = true;
+
                     }
                     catch (Exception)
                     {
@@ -86,7 +125,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                 }
             });
-            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
@@ -96,35 +135,55 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         LopQueries = item.MaLop.ToString();
                         if (PhanCongGiangDayWD.cmbLop.SelectedIndex >= 0)
-                            LoadThongTinPhanCong();
+                        {
+                            ProgressBarVisibility = true;
+                            DataGridVisibility = false;
+                            await LoadThongTinPhanCong();
+                            ProgressBarVisibility = false;
+                            DataGridVisibility = true;
+                        }
                         else DanhSachPhanCong.Clear();
                     }
                 }
             });
-            AddPhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            AddPhanCong = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ThemPhanCong window = new ThemPhanCong();
                 ThemPhanCongViewModel data = window.DataContext as ThemPhanCongViewModel;
                 window.ShowDialog();
-                LoadThongTinPhanCong();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadThongTinPhanCong();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
             });
-            UpdatePhanCong = new RelayCommand<Model.PhanCongGiangDay>((parameter) => { return true; }, (parameter) =>
+            UpdatePhanCong = new RelayCommand<Model.PhanCongGiangDay>((parameter) => { return true; }, async (parameter) =>
             {
                 SuaPhanCong window = new SuaPhanCong();
                 SuaPhanCongViewModel data = window.DataContext as SuaPhanCongViewModel;
                 data.PhanCongHienTai = parameter;
                 window.ShowDialog();
-                LoadThongTinPhanCong();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadThongTinPhanCong();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
             });
-            RemovePhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            RemovePhanCong = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 Model.PhanCongGiangDay item = parameter as Model.PhanCongGiangDay;
                 XoaPhanCong(item);
-                LoadThongTinPhanCong();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                await LoadThongTinPhanCong();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
             });
-            SearchPhanCong = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            SearchPhanCong = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
             {
                 DanhSachPhanCong.Clear();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
@@ -164,6 +223,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         MessageBox.Show(ex.Message);
                     }
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                 }
             });
         }
@@ -266,42 +327,42 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
-        public void LoadThongTinPhanCong()
+        public async Task LoadThongTinPhanCong()
         {
             DanhSachPhanCong = new ObservableCollection<Model.PhanCongGiangDay>();
+
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
+                    try
                     {
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                        await con.OpenAsync();
                     }
-                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay " +
-                                        " pc join Lop l on pc.MaLop = l.MaLop join GiaoVien gv on gv.MaGiaoVien = pc.MaGiaoVienPhuTrach join MonHoc mh on mh.MaMon = pc.MaMon " +
-                                        " where l.MaLop = " + LopQueries + "";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
 
-                    while (reader.HasRows)
+                    string CmdString = "select MaPhanCong, NienKhoa, TenLop, SiSo, TenMon, TenGiaoVien from PhanCongGiangDay " +
+                                       " pc join Lop l on pc.MaLop = l.MaLop join GiaoVien gv on gv.MaGiaoVien = pc.MaGiaoVienPhuTrach join MonHoc mh on mh.MaMon = pc.MaMon " +
+                                       " where l.MaLop = " + LopQueries + "";
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                    while (await reader.ReadAsync())
                     {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
-                            phancong.MaPhanCong = reader.GetInt32(0);
-                            phancong.NienKhoa = reader.GetString(1);
-                            phancong.TenLop = reader.GetString(2);
-                            phancong.SiSo = reader.GetInt32(3);
-                            phancong.TenMon = reader.GetString(4);
-                            phancong.TenGiaoVien = reader.GetString(5);
-                            DanhSachPhanCong.Add(phancong);
-                        }
-                        reader.NextResult();
+                        StudentManagement.Model.PhanCongGiangDay phancong = new StudentManagement.Model.PhanCongGiangDay();
+                        phancong.MaPhanCong = reader.GetInt32(0);
+                        phancong.NienKhoa = reader.GetString(1);
+                        phancong.TenLop = reader.GetString(2);
+                        phancong.SiSo = reader.GetInt32(3);
+                        phancong.TenMon = reader.GetString(4);
+                        phancong.TenGiaoVien = reader.GetString(5);
+                        DanhSachPhanCong.Add(phancong);
                     }
+
                     con.Close();
                 }
                 catch (Exception ex)
@@ -310,6 +371,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
+
         public void FilterLopFromSelection()
         {
             LopCmb.Clear();

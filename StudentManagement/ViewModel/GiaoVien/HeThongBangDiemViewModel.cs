@@ -3,6 +3,7 @@ using StudentManagement.Views.GiaoVien;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +26,35 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
         public string MonHocQueries { get; set; }
+
+        private bool _dataGridVisibility;
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
         public HeThongBangDiem HeThongBangDiemWD { get; set; }
         private ObservableCollection<StudentManagement.Model.HeThongDiem> _danhSachDiem;
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachDiem { get => _danhSachDiem; set { _danhSachDiem = value; OnPropertyChanged(); } }
@@ -58,14 +88,18 @@ namespace StudentManagement.ViewModel.GiaoVien
             MonDataCmb = new ObservableCollection<MonHoc>();
             LopDataCmb = new ObservableCollection<Lop>();
             KhoiDataCmb = new ObservableCollection<Khoi>();
-            LoadWindow = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadWindow = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 if (everLoaded == false)
                 {
                     HeThongBangDiemWD = parameter as HeThongBangDiem;
                     LoadDuLieuComboBox();
                     XacDinhQuyenHan();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                     everLoaded = true;
                 }
             });
@@ -86,7 +120,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     FilterLopFromSelection();
                 }
             });
-            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -96,7 +130,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                     else
                         HocKyQueries = 2;
                     XacDinhQuyenHan();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                 }
             });
             FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -109,7 +147,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     FilterLopFromSelection();
                 }
             });
-            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -119,11 +157,15 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         LopQueries = item.MaLop.ToString();
                         XacDinhQuyenHan();
-                        LoadDanhSachBangDiem();
+                        ProgressBarVisibility = true;
+                        DataGridVisibility = false;
+                        await LoadDanhSachBangDiem();
+                        ProgressBarVisibility = false;
+                        DataGridVisibility = true;
                     }
                 }
             });
-            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterMonHoc = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null && cmb.SelectedItem != null)
@@ -131,10 +173,14 @@ namespace StudentManagement.ViewModel.GiaoVien
                     MonHoc item = cmb.SelectedItem as MonHoc;
                     MonHocQueries = item.MaMon.ToString();
                     XacDinhQuyenHan();
-                    LoadDanhSachBangDiem();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
                 }
             });
-            LuuDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LuuDiem = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn lưu. (Lưu ý, những học sinh có điểm ở trạng thái chốt điểm sẽ không được lưu)", "Thông báo", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
@@ -142,7 +188,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                     if (DanhSachDiem[0].TrangThai == true)
                     {
                         MessageBox.Show("Danh sách điểm này đã được chốt, không thể sửa.");
-                        LoadDanhSachBangDiem();
+                        ProgressBarVisibility = true;
+                        DataGridVisibility = false;
+                        await LoadDanhSachBangDiem();
+                        ProgressBarVisibility = false;
+                        DataGridVisibility = true; 
                         return;
                     }
                     if (KiemTraDiemHopLe() == false)
@@ -295,21 +345,23 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         }
 
-        public void LoadDanhSachBangDiem()
+        public async Task LoadDanhSachBangDiem()
         {
             DanhSachDiem.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                         return;
                     }
+
                     string wherecommand = "";
                     if (!String.IsNullOrEmpty(NienKhoaQueries))
                     {
@@ -323,10 +375,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     string CmdString = "select ht.MaDiem,ht.HocKy,ht.MaLop,MaMon,ht.MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai,TrangThai,TenHocSinh " +
                                         " from HeThongDiem ht join Lop l on ht.MaLop = l.MaLop join HocSinh hs on ht.MaHocSinh = hs.MaHocSinh " + wherecommand;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem
                             {
@@ -347,20 +399,22 @@ namespace StudentManagement.ViewModel.GiaoVien
                             }
                             catch (Exception)
                             {
-                                
+
                             }
                             DanhSachDiem.Add(diem);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
-                catch (Exception )
-                {}
+                catch (Exception)
+                {
+                }
             }
             HeThongBangDiemWD.cmbLop.Focus();
             HeThongBangDiemWD.btnTrick.Focus();
         }
+
         public void FilterLopFromSelection()
         {
             LopDataCmb.Clear();

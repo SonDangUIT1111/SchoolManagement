@@ -147,18 +147,23 @@
                         FontSize="19" 
                         FontWeight="Bold"
                         Foreground="White"
+                        Background="#33778C"
                         Command="{Binding ThemLop}">
                         </Button>
                     </Grid>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="3" ></RowDefinition>
+                        <RowDefinition Height="8" ></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
+                    <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin=" 20 0 20 0" 
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
-                            Orientation="Vertical" Height="30">
+                            Orientation="Vertical" Height="30" Margin="0 10 0 0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Tên lớp"
                                FontSize="14"
@@ -184,7 +189,8 @@
                               RowStyle="{StaticResource DataGridRowStyle1}"
                               CellStyle="{StaticResource DataGridCellStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"
-                              Grid.Row="1">
+                              Grid.Row="1"
+                              Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>

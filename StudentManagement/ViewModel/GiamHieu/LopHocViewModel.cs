@@ -3,6 +3,7 @@ using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -58,6 +59,36 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
 
+        private bool _dataGridVisibility;
+
+        public bool DataGridVisibility
+        {
+            get
+            {
+                return _dataGridVisibility;
+            }
+            set
+            {
+                _dataGridVisibility = value;
+                OnPropertyChanged();
+            }    
+        }
+
+        private bool _progressBarVisibility;
+
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public ICommand SwitchDanhSachLop { get; set; }
         public ICommand ThemLop { get; set; }
@@ -71,33 +102,38 @@ namespace StudentManagement.ViewModel.GiamHieu
         public LopHocViewModel()
         {
 
+
             DanhSachLopHoc = new ObservableCollection<Lop>();
             NienKhoaCmb = new ObservableCollection<string>();
             KhoiCmb = new ObservableCollection<Model.Khoi>();
             DanhSachLopHoc = new ObservableCollection<Model.Lop>();
 
-            LoadLopHoc = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            LoadLopHoc = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
+                DataGridVisibility = false;
+                ProgressBarVisibility = true;
                 LopHocWD = parameter as LopHoc;
-                LoadComboBox();
-                LoadDanhSachLopHoc();
+                await LoadComboBox();
+                await LoadDanhSachLopHoc();
+                DataGridVisibility = true;
+                ProgressBarVisibility = false;
             });
 
-            ThemLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            ThemLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ThemLopHoc window = new ThemLopHoc();
                 ThemLopHocViewModel data = window.DataContext as ThemLopHocViewModel;
                 window.ShowDialog();
-                LoadDanhSachLopHoc();
+                await LoadDanhSachLopHoc();
             });
 
-            SuaLop = new RelayCommand<Model.Lop>((parameter) => { return true; }, (parameter) =>
+            SuaLop = new RelayCommand<Model.Lop>((parameter) => { return true; }, async (parameter) =>
             {
                 SuaThongTinLopHoc window = new SuaThongTinLopHoc();
                 SuaLopHocViewModel data = window.DataContext as SuaLopHocViewModel;
                 data.LopHocHienTai = parameter;
                 window.ShowDialog();
-                LoadDanhSachLopHoc();
+                await LoadDanhSachLopHoc();
             });
             XemLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
              {
@@ -109,11 +145,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                  LopHocWD.NavigationService.Navigate(danhSachLopWd);
              });
 
-            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
                     if (cmb.SelectedIndex >= 0)
                     {
                         NienKhoaQueries = cmb.SelectedItem.ToString();
@@ -122,20 +160,26 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         LopHocWD.cmbKhoi.SelectedIndex = 0;
                     }
-                    LoadDanhSachLopHoc();
+                    await LoadDanhSachLopHoc();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
                 }
             });
 
-            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 ComboBox cmb = parameter as ComboBox;
                 if (cmb != null)
                 {
                     if (cmb.SelectedIndex >= 0)
                     {
+                        DataGridVisibility = false;
+                        ProgressBarVisibility = true;
                         Model.Khoi item = cmb.SelectedItem as Model.Khoi;
                         KhoiQueries = item.MaKhoi.ToString();
-                        LoadDanhSachLopHoc();
+                        await LoadDanhSachLopHoc();
+                        DataGridVisibility = true;
+                        ProgressBarVisibility = false;
                     }
                 }
             });
@@ -150,7 +194,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             });
 
-            XoaLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            XoaLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 Model.Lop item = parameter as Model.Lop;
                 if (MessageBox.Show("Bạn có muốn xoá lớp không?", "Xoá lớp", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
@@ -172,7 +216,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                             SqlCommand cmd = new SqlCommand(cmdString, con);
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Xóa thành công");
-                            LoadDanhSachLopHoc();
+                            DataGridVisibility = false;
+                            ProgressBarVisibility = true;
+                            await LoadDanhSachLopHoc();
+                            DataGridVisibility = true;
+                            ProgressBarVisibility = false;
                             con.Close();
                         }
                         catch (Exception ex)
@@ -186,7 +234,8 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         }
 
-        public void LoadComboBox()
+
+        public async Task LoadComboBox()
         {
             NienKhoaCmb.Clear();
             KhoiCmb.Clear();
@@ -256,7 +305,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         LopHocWD.cmbKhoi.SelectedIndex = 0;
                         KhoiQueries = KhoiCmb[0].MaKhoi.ToString();
                     }
-                    LoadDanhSachLopHoc();
+                    await LoadDanhSachLopHoc();
                 }
                 catch (Exception ex)
                 {
@@ -264,20 +313,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
-        public void LoadDanhSachLopHoc()
+        public async Task LoadDanhSachLopHoc()
         {
             DanhSachLopHoc.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
                     }
 
                     string WhereCmdString = "";
@@ -299,34 +349,29 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                     }
 
-                    string CmdString = "SELECT l.MaLop,TenLop,SiSo,NienKhoa,TenGiaoVien " +
-                                        " FROM Lop l join Khoi k on l.MaKhoi = k.MaKhoi " +
-                                        " left join GiaoVien gv on l.MaGVCN = gv.MaGiaoVien " + WhereCmdString;
+                    string CmdString = "SELECT l.MaLop, TenLop, SiSo, NienKhoa, TenGiaoVien " +
+                        " FROM Lop l join Khoi k on l.MaKhoi = k.MaKhoi " +
+                        " left join GiaoVien gv on l.MaGVCN = gv.MaGiaoVien " + WhereCmdString;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-                    while (reader.HasRows)
+                    while (await reader.ReadAsync())
                     {
-                        while (reader.Read())
+                        StudentManagement.Model.Lop lophoc = new StudentManagement.Model.Lop();
+                        lophoc.MaLop = reader.GetInt32(0);
+                        lophoc.TenLop = reader.GetString(1);
+                        lophoc.SiSo = reader.GetInt32(2);
+                        lophoc.NienKhoa = reader.GetString(3);
+                        try
                         {
-                            StudentManagement.Model.Lop lophoc = new StudentManagement.Model.Lop();
-                            lophoc.MaLop = reader.GetInt32(0);
-                            lophoc.TenLop = reader.GetString(1);
-                            lophoc.SiSo = reader.GetInt32(2);
-                            lophoc.NienKhoa = reader.GetString(3);
-                            try
-                            {
-                                lophoc.TenGVCN = reader.GetString(4);
-                            }
-                            catch (Exception)
-                            {
-                                lophoc.TenGVCN = "Chưa có GVCN";
-                            }
-                            DanhSachLopHoc.Add(lophoc);
+                            lophoc.TenGVCN = reader.GetString(4);
                         }
-                        reader.NextResult();
+                        catch (Exception)
+                        {
+                            lophoc.TenGVCN = "Chưa có GVCN";
+                        }
+                        DanhSachLopHoc.Add(lophoc);
                     }
-                    con.Close();
                 }
                 catch (Exception ex)
                 {
