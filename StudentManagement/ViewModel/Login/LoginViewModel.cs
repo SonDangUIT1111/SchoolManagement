@@ -200,11 +200,11 @@ namespace StudentManagement.ViewModel.Login
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                                 return; 
                             }
-                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
                             // select id
-                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -251,11 +251,11 @@ namespace StudentManagement.ViewModel.Login
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                                 return; 
                             }
-                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
-                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -301,12 +301,12 @@ namespace StudentManagement.ViewModel.Login
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                                 return; 
                             }
-                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
 
-                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
