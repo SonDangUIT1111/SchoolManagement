@@ -17,7 +17,7 @@ namespace StudentManagement.ViewModel.Login
     internal class ChangePasswordViewModel : BaseViewModel
     {
         private string _id;
-        public string Id{ get { return _id; } set { _id = value; OnPropertyChanged(); } }
+        public string Id { get { return _id; } set { _id = value; OnPropertyChanged(); } }
 
         private bool _ishs;
         public bool IsHS { get { return _ishs; } set { _ishs = value; OnPropertyChanged(); } }
@@ -49,7 +49,7 @@ namespace StudentManagement.ViewModel.Login
         }
         public void CapNhatMatKhau()
         {
-            if (ChangePasswordWD.PasswordOld.Password == "" | ChangePasswordWD.PasswordNew.Password == "" | ChangePasswordWD.PasswordNewConfirm.Password == "" )
+            if (ChangePasswordWD.PasswordOld.Password == "" || ChangePasswordWD.PasswordNew.Password == "" || ChangePasswordWD.PasswordNewConfirm.Password == "")
             {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin");
                 return;

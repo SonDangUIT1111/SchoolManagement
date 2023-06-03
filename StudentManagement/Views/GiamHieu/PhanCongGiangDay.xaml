@@ -180,6 +180,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
+                            Height="40"
                             Orientation="Vertical">
                     <ProgressBar Grid.Row="0" 
                                  IsIndeterminate="True"
@@ -200,15 +201,43 @@
                                FontWeight="Medium"
                                Margin="215 0 0 0"/>
                     </StackPanel>
+
+                    <Separator Margin="0 6 0 0"
+                               Width="920"
+                               Opacity="0.6"
+                               Panel.ZIndex="9"/>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
-                          Margin="25 10 25 0"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}"
+                          Margin="25 40 25 0"
+                          AlternationCount="2"
+                          RowHeight="50"
                           Style="{StaticResource DataGridStyle1}"
                           ItemsSource="{Binding DanhSachPhanCong}"
                           HorizontalScrollBarVisibility="Hidden"
                           Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>

@@ -99,7 +99,7 @@ namespace StudentManagement.ViewModel.HocSinh
                     if (reader.HasRows) reader.Read();
                     password = reader.GetString(0);
                     con.Close();
-                 }
+                }
                 ChangePasswordWindow window = new ChangePasswordWindow();
                 ChangePasswordViewModel data = window.DataContext as ChangePasswordViewModel;
                 data.Id = parameter.ToString();

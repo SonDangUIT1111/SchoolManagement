@@ -24,11 +24,11 @@
             <RowDefinition Height="228" ></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#110357" 
+        <Border BorderBrush="#4e79cf" 
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#33778C" 
+                Background="#4e79cf" 
                 Margin="12" >
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" BlurRadius="7"/>
@@ -137,7 +137,7 @@
                         FontSize="19" 
                         FontWeight="Bold"
                         Foreground="White"
-                        Background="#33778C"
+                        Background="#4e79cf"
                         Command="{Binding ThemLop}">
                         </Button>
                     </Grid>
@@ -152,8 +152,9 @@
                                  Margin=" 20 0 20 0" 
                                  Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Grid.Row="1"
-                            VerticalAlignment="Top"
-                            Orientation="Vertical" Height="30" Margin="0 10 0 0">
+                                VerticalAlignment="Top"
+                                Orientation="Vertical" Height="30" 
+                                Margin="0 -10 0 0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Tên lớp"
                                FontSize="14"
@@ -172,15 +173,41 @@
                                FontWeight="Medium"
                                Margin="70 0 0 0"/>
                         </StackPanel>
+                        <Separator Margin="0 10 0 0"
+                               Width="920"
+                               Opacity="0.6"/>
                     </StackPanel>
-                    <DataGrid Margin="20,20,20,0"
+                    <DataGrid Margin="20,30,20,0"
+                              AlternationCount="2"
+                              RowHeight="50"
                               ItemsSource="{Binding DanhSachLopHoc}"
                               Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"
                               Grid.Row="1"
                               Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <Trigger Property="AlternationIndex" Value="1">
+                                        <Setter Property="Background" Value="White" />
+                                    </Trigger>
+                                    <Trigger Property="AlternationIndex" Value="0">
+                                        <Setter Property="Background" Value="WhiteSmoke" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Style.Triggers>
+                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>

@@ -219,10 +219,12 @@ namespace StudentManagement.ViewModel.Login
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
-                        paramater.Hide();
+                        LoginWindow loginWD = paramater as LoginWindow;
+                        loginWD.LoadBorder.Visibility = Visibility.Visible;
                         GiamHieuWindow window = new GiamHieuWindow();
                         StudentManagement.ViewModel.GiamHieu.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiamHieu.TrangChuViewModel;
                         vm.IdGiamHieu = id;
+                        loginWD.Hide();
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -270,10 +272,12 @@ namespace StudentManagement.ViewModel.Login
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
-                        paramater.Hide();
+                        LoginWindow loginWD = paramater as LoginWindow;
+                        loginWD.LoadBorder.Visibility = Visibility.Visible;
                         GiaoVienWindow window = new GiaoVienWindow();
                         StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
                         vm.CurrentUser.MaGiaoVien = id;
+                        loginWD.Hide();
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -321,10 +325,12 @@ namespace StudentManagement.ViewModel.Login
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
-                        paramater.Hide();
+                        LoginWindow loginWD = paramater as LoginWindow;
+                        loginWD.LoadBorder.Visibility = Visibility.Visible;
                         HocSinhWindow window = new HocSinhWindow();
                         StudentManagement.ViewModel.HocSinh.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.HocSinh.TrangChuViewModel;
                         vm.IdHocSinh = id;
+                        loginWD.Hide();
                         window.ShowDialog();
                         paramater.Close();
                     }
