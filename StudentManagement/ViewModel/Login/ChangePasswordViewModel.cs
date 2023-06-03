@@ -49,7 +49,7 @@ namespace StudentManagement.ViewModel.Login
         }
         public void CapNhatMatKhau()
         {
-            if (ChangePasswordWD.PasswordOld.Password == "" | ChangePasswordWD.PasswordNew.Password == "" | ChangePasswordWD.PasswordNewConfirm.Password == "")
+            if (ChangePasswordWD.PasswordOld.Password == "" || ChangePasswordWD.PasswordNew.Password == "" || ChangePasswordWD.PasswordNewConfirm.Password == "")
             {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin");
                 return;
