@@ -35,7 +35,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#338C82" 
+                Background="#71f5a8" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Thay đổi quy định" 

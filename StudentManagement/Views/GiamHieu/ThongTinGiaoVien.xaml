@@ -24,11 +24,11 @@
             <RowDefinition Height="228" ></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#110357" 
+        <Border BorderBrush="#13eda4" 
                 BorderThickness="1" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FF2503A4" 
+                Background="#13eda4" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Thông tin giáo viên" 
@@ -60,7 +60,7 @@
                         Content="Thêm Giáo viên" 
                         FontSize="18" 
                         FontWeight="Bold"
-                        Background="#FF0033FF"
+                        Background="#13eda4"
                         Command="{Binding ThemGiaoVien}">
                 </Button>
                 <StackPanel Orientation="Horizontal"
@@ -129,10 +129,10 @@
                 <DataGrid Grid.Row="1"
                           Margin="25,40,25,10"
                           AlternationCount="2"
+                          RowHeight="50"
                           ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                           ItemsSource="{Binding DanhSachGiaoVien}"
-                          Style="{StaticResource DataGridStyle1}"
-                          RowHeight="50">
+                          Style="{StaticResource DataGridStyle1}">
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
                             <Style.Triggers>

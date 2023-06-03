@@ -34,7 +34,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#FFBB1726" 
+                Background="#e69655" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Thông tin học sinh" 
@@ -79,7 +79,7 @@
                         Content="Thêm Học sinh" 
                         FontSize="18" 
                         FontWeight="Bold"
-                        Background="#FFBB1726"
+                        Background="#e69655"
                         Command="{Binding AddStudent}">
                 </Button>
                 <StackPanel Orientation="Horizontal" 
@@ -190,6 +190,7 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Grid.Row="1"
+                            Height="30"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
                     <ProgressBar Grid.Row="0" 
@@ -223,13 +224,36 @@
                                Opacity="0.6"/>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
-                          Margin="20"
+                          Margin="20 30 20 20"
+                          AlternationCount="2"
+                          RowHeight="50"
                           ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
                           ItemsSource="{Binding DanhSachHocSinh}"
                           Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="1010">
                             <DataGridTemplateColumn.CellTemplate>

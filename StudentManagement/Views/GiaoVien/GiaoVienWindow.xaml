@@ -229,7 +229,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="DarkGreen"
+                                             Foreground="#03cffc"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -237,7 +237,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FF4F67CA"
+                                             Foreground="#2e87e6"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
@@ -245,7 +245,7 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="Red"
+                                             Foreground="#e65555"
                                              />
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 81 0 0"
@@ -253,17 +253,17 @@
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"  
-                                             Foreground="#FF08648A"/>
+                                             Foreground="#4e79cf"/>
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 10 0 0"
-                                             Foreground="#FFBB1726"
+                                             Foreground="#36e356"
                                              Kind="BookEducation" 
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Center"/>
                         <materialDesign:PackIcon Panel.ZIndex="5" 
                                              Margin="0 11 0 0"
-                                             Foreground="#FFC2CE0F"
+                                             Foreground="#ed7913"
                                              Kind="TableCheck" 
                                              Width="32" Height="32"
                                              HorizontalAlignment="Left"

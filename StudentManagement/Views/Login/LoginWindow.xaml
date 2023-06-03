@@ -372,8 +372,33 @@
                             Stretch="UniformToFill">
                 </ImageBrush>
             </Border.Background>
-            
-            
+
+            <Border x:Name="LoadBorder"
+                    Visibility="Hidden"
+                    CornerRadius="20"
+                    Background="#FFFFFF"
+                    BorderBrush="#2af598"
+                    BorderThickness="2"
+                    Height="50"
+                    Width="250"
+                    HorizontalAlignment="Left"
+                    Margin="0 0 0 0">
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar  IsIndeterminate="True"
+                                  Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                  Value="0" 
+                                  Margin="20 0 0 0"/>
+                    <TextBlock Text="Đang kết nối cơ sở dữ liệu ..."
+                               Width="180"
+                               Height="20"
+                               Margin="10 0 0 0"
+                               FontSize="14"
+                               FontWeight="DemiBold"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
         </Border>
 
     </Grid>

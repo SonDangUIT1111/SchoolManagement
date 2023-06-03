@@ -34,7 +34,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#3590E1" 
+                Background="#ed7913" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Quản lí điểm số" 
@@ -203,6 +203,7 @@
                 <StackPanel Grid.Row="1"
                             Panel.ZIndex="1"
                             VerticalAlignment="Top"
+                            Height="30"
                             Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mã học sinh"
@@ -248,7 +249,6 @@
                           BorderBrush="Transparent"
                           CanUserAddRows="False"
                           RowHeight="40"
-                          VerticalAlignment="Center"
                           AutoGenerateColumns="False"
                           ItemsSource="{Binding DanhSachDiem}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"

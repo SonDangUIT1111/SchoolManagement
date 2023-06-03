@@ -16,11 +16,11 @@
             <RowDefinition Height="228" ></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#110357" 
+        <Border BorderBrush="#03cffc" 
                 BorderThickness="1" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#3A8C33" 
+                Background="#03cffc" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Thông tin trường" 
