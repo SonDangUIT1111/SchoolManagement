@@ -30,7 +30,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#3D5347" 
+                Background="#e65555" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Báo cáo học kỳ" 
@@ -40,16 +40,6 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
                            Margin="20"/>
-                <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="21"
-                        Background="White">
-                </Border>
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  
@@ -138,6 +128,11 @@
                                FontWeight="Medium"
                                Margin="50 0 0 0"/>
                     </StackPanel>
+                    <Separator Margin="25 6 0 0"
+                               Width="400"
+                               HorizontalAlignment="Left"
+                               Opacity="0.6"
+                               Panel.ZIndex="9"/>
                 </StackPanel>
                 <StackPanel
                     Grid.Row="1"
@@ -145,14 +140,37 @@
                     Orientation="Horizontal">
                     <DataGrid Margin="0 0 0 0"
                               Width="400"
+                              AlternationCount="2"
+                              RowHeight="50"
                               x:Name="BaoCaoHocKyDataGrid"
                               ItemsSource="{Binding DanhSachBaoCaoHocKy}"
                               Style="{StaticResource DataGridStyle1}"
-                              RowStyle="{StaticResource DataGridRowStyle1}"
-                              CellStyle="{StaticResource DataGridCellStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"
                               Grid.Row="2"
                               Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <Trigger Property="AlternationIndex" Value="1">
+                                        <Setter Property="Background" Value="White" />
+                                    </Trigger>
+                                    <Trigger Property="AlternationIndex" Value="0">
+                                        <Setter Property="Background" Value="WhiteSmoke" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Style.Triggers>
+                                    <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="400">
                                 <DataGridTemplateColumn.CellTemplate>

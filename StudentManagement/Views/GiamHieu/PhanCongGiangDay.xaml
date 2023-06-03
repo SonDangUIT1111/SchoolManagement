@@ -44,6 +44,10 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
                            Margin="20"/>
+                <Button x:Name="btnTrick"
+                        Content=""
+                        Width="1"
+                        Height="0"/>
                 <Border BorderBrush="#FF000000" 
                         BorderThickness="0" 
                         CornerRadius="30" 
@@ -75,6 +79,7 @@
                         Content="Thêm Phân Công" 
                         FontSize="18" 
                         FontWeight="Bold"
+                        Background="MediumPurple"
                         Command="{Binding AddPhanCong}">
                 </Button>
                 <StackPanel Orientation="Horizontal" 
@@ -90,6 +95,13 @@
                               Style="{StaticResource MaterialDesignOutlinedComboBox}"
                               ItemsSource="{Binding NienKhoaCmb}">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnterComboBox}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
                                    CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
@@ -109,6 +121,13 @@
                               ItemsSource="{Binding KhoiCmb}"
                               DisplayMemberPath="TenKhoi">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnterComboBox}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterKhoi}"
                                    CommandParameter="{Binding ElementName=cmbKhoi}"/>
@@ -127,6 +146,13 @@
                               ItemsSource="{Binding LopCmb}"
                               DisplayMemberPath="TenLop">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseEnter">
+                                <i:InvokeCommandAction Command="{Binding MouseEnterComboBox}"
+                                   CommandParameter="{Binding ElementName=cmbNienKhoa}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <i:InvokeCommandAction Command="{Binding MouseLeaveComboBox}"/>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterLop}"
                                    CommandParameter="{Binding ElementName=cmbLop}"/>
@@ -154,6 +180,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
+                            Height="40"
                             Orientation="Vertical">
                     <ProgressBar Grid.Row="0" 
                                  IsIndeterminate="True"
@@ -174,15 +201,43 @@
                                FontWeight="Medium"
                                Margin="215 0 0 0"/>
                     </StackPanel>
+
+                    <Separator Margin="0 6 0 0"
+                               Width="920"
+                               Opacity="0.6"
+                               Panel.ZIndex="9"/>
                 </StackPanel>
                 <DataGrid Grid.Row="1"
-                          Margin="25 10 25 0"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}"
+                          Margin="25 40 25 0"
+                          AlternationCount="2"
+                          RowHeight="50"
                           Style="{StaticResource DataGridStyle1}"
                           ItemsSource="{Binding DanhSachPhanCong}"
                           HorizontalScrollBarVisibility="Hidden"
                           Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>

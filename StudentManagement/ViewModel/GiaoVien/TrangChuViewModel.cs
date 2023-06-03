@@ -1,7 +1,9 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.GiamHieu;
+using StudentManagement.ViewModel.Login;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
+using StudentManagement.Views.Login;
 using System;
 using System.Data.SqlClient;
 using System.IO;
@@ -38,7 +40,9 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand SwitchQuanLiBangDiem { get; set; }
         public ICommand SwitchBaoCaoMonHoc { get; set; }
         public ICommand SwitchBaoCaoHocKy { get; set; }
+        public ICommand DoiMatKhau { get; set; }
         public ICommand SuaThongTinCaNhan { get; set; }
+        public ICommand DoiMatKhau{ get; set; }
         public TrangChuViewModel()
         {
             ThongTinTruongPage = new Views.GiamHieu.ThongTinTruong();
@@ -48,7 +52,6 @@ namespace StudentManagement.ViewModel.GiaoVien
             BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
             BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
             CurrentUser = new StudentManagement.Model.GiaoVien();
-            CurrentUser.MaGiaoVien = 100000;
             //define ICommand
             LoadWindow = new RelayCommand<GiaoVienWindow>((parameter) => { return true; }, (parameter) =>
             {
@@ -89,6 +92,29 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 parameter.Content = BaoCaoHocKyPage;
             });
+
+            DoiMatKhau = new RelayCommand<string>((parameter) => { return true; }, (parameter) =>
+            {
+                string password;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select UserPassword from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    password = reader.GetString(0);
+                    con.Close();
+                }
+                ChangePasswordWindow window = new ChangePasswordWindow();
+                ChangePasswordViewModel data = window.DataContext as ChangePasswordViewModel;
+                data.Id = CurrentUser.MaGiaoVien.ToString();
+                data.MatKhau = password;
+                data.IsHS = false;
+                //MessageBox.Show(parameter);
+                window.ShowDialog();
+            });
+
             SuaThongTinCaNhan = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
 
@@ -108,7 +134,27 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                 }
             });
-
+            DoiMatKhau = new RelayCommand<string>((parameter) => { return true; }, (parameter) =>
+            {
+                string password;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    con.Open();
+                    string CmdString = "select UserPassword from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    password = reader.GetString(0);
+                    con.Close();
+                }
+                ChangePasswordWindow window = new ChangePasswordWindow();
+                ChangePasswordViewModel data = window.DataContext as ChangePasswordViewModel;
+                data.Id = CurrentUser.MaGiaoVien.ToString();
+                data.MatKhau = password;
+                data.IsHS = false;
+                //MessageBox.Show(parameter);
+                window.ShowDialog();
+            });
         }
         public void LoadThongTinCaNhan()
         {

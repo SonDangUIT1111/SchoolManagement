@@ -5,6 +5,7 @@ using StudentManagement.Views.GiamHieu;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -113,14 +114,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 {
                                     CmdString += "0, ";
                                 }
-                                CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
+                                CmdString = CmdString + "DiaChi = N'" + SuaThongTinHocSinhWD.DiaChi.Text + "', Email = '" + SuaThongTinHocSinhWD.Email.Text;
                                 // Định nghĩa @imagebinary
                                 if (ImagePath != null)
                                 {
+                                    CmdString = CmdString + "', AnhThe = @imagebinary where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
                                     ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                                     byte[] buffer = converter.ImageToBinary(ImagePath);
                                     SqlCommand cmd = new SqlCommand(CmdString, con);
                                     cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                                    cmd.ExecuteScalar();
+                                    MessageBox.Show("Cập nhật thành công!");
+                                    con.Close();
+                                } else
+                                {
+                                    CmdString = CmdString + "' where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
+                                    SqlCommand cmd = new SqlCommand(CmdString, con);
                                     cmd.ExecuteScalar();
                                     MessageBox.Show("Cập nhật thành công!");
                                     con.Close();

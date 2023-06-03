@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:StudentManagement"
-             StartupUri="/Views/GiamHieu/DanhSachLop.xaml">
+             StartupUri="/Views/Login/LoginWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,6 +24,7 @@
                 <ResourceDictionary Source="/Resources/Styles/Buttons/Normal_Button.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Buttons/Radio_Button.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Buttons/Slideshow_Button.xaml"/>
+                <ResourceDictionary Source="/Resources/Styles/Buttons/Navigation_Button.xaml"/>
                 <!--Template Resources-->
                 <ResourceDictionary Source="/Resources/Styles/Templates/DataGrid_Template.xaml"/>
                 <ResourceDictionary Source="/Resources/Styles/Templates/Error_Template.xaml"/>

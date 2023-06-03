@@ -36,7 +36,9 @@
         <uc:Title_Bar_Log Panel.ZIndex="2"/>
         <Border Background="White"
                 Grid.RowSpan="2"
-                CornerRadius="20"/>
+                CornerRadius="20"
+                BorderBrush="#009efd"
+                BorderThickness="3"/>
         <StackPanel Orientation="Horizontal" 
                         Width="512" 
                         Height="50"
@@ -57,14 +59,20 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
-            <Grid
+            <Image Source="/Resources/Images/NewLogo.jpg"
+                   Height="400"
+                   Width="400"
+                   Grid.ColumnSpan="2"
+                   Panel.ZIndex="0"
+                   Margin="10"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Left"/>
+            <Grid       VerticalAlignment="Top"
+                        Margin="0 100 0 0"
+                        Background="#ffffff"
                         x:Name="ChangegrdSelectImg"
-                        VerticalAlignment="Center"
                         Width="150"
                         Height="150" >
-                <Grid.Background>
-                    <ImageBrush ImageSource="{Binding HocSinhHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"/>
-                </Grid.Background>
                 <Rectangle 
                                 x:Name="ChangerecImage"
                                 StrokeDashArray="4 2" 
@@ -107,16 +115,25 @@
                 <TextBox Margin="20 20 20 0"
                          materialDesign:HintAssist.Hint="Họ tên"
                          x:Name="HoTen"
+                         Background="#ffffff"
+                         Width="450"
+                         HorizontalAlignment="Left"
                          Text="{Binding HocSinhHienTai.TenHocSinh}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
                 <DatePicker Margin="20 20 20 0"
                             Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                             x:Name="NgaySinh"
+                            Background="#ffffff"
+                            Width="450"
+                            HorizontalAlignment="Left"
                             materialDesign:HintAssist.Hint="Ngày sinh"
                             SelectedDate ="{Binding HocSinhHienTai.NgaySinh}">
                 </DatePicker>
                 <StackPanel Orientation="Horizontal"
-                            Margin="20 20 20 0">
+                            Margin="20 20 20 0"
+                            Background="#ffffff"
+                            Width="450"
+                            HorizontalAlignment="Left">
                     <TextBlock Text="Giới tính: "></TextBlock>
                     <RadioButton Content="Nam"
                                  Margin="20 0 20 0"
@@ -131,11 +148,17 @@
                 </StackPanel>
                 <TextBox Margin="20 20 20 0"
                          x:Name="DiaChi"
+                         Background="#ffffff"
+                         Width="450"
+                         HorizontalAlignment="Left"
                          materialDesign:HintAssist.Hint="Địa chỉ"
                          Text="{Binding HocSinhHienTai.DiaChi}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
                 <TextBox Margin="20 20 20 0"
                          x:Name="Email"
+                         Background="#ffffff"
+                         Width="450"
+                         HorizontalAlignment="Left"
                          materialDesign:HintAssist.Hint="Email"
                          Text="{Binding HocSinhHienTai.Email}"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"/>

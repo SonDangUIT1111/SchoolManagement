@@ -44,19 +44,13 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
                            Margin="20"/>
-                <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="21"
-                        Background="White">
-                </Border>
             </Grid>
         </Border>
-        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="30" Grid.Row="1" Margin="12">
+            <Border.Background>
+                <ImageBrush ImageSource="/Resources/Images/monhocbg.png"
+                            Stretch="UniformToFill"/>
+            </Border.Background>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="160"/>
@@ -75,7 +69,7 @@
                              Height="40"
                              Padding="10"
                              Margin="25 0 0 0"/>
-                    <Button Margin="10 0 0 0"
+                    <Button Margin="20 0 0 0"
                             Background="Transparent"
                             BorderBrush="#0099FF"
                             IsDefault="True"
@@ -86,20 +80,29 @@
                                                  Height="20"
                                                  Kind="Magnify" />
                     </Button>
+                    <Button Margin="20 0 0 0"
+                            Background="Transparent"
+                            BorderBrush="#0099FF"
+                            ToolTip="All students"
+                            Command="{Binding SubjectSearchAll}"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon Width="20"
+                                                 Height="20"
+                                                 Kind="ListBox" />
+                    </Button>
                     <TextBox x:Name="txtTenMH"
                              materialDesign:HintAssist.Hint="Nhập tên môn học"
                              Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             Width="400"
+                             Width="350"
                              Height="40"
                              Padding="10"
-                             Margin="50 0 0 0"
+                             Margin="20 0 0 0"
                              IsEnabled="False">
                     </TextBox>
                     <Button x:Name="btnThemMonHoc"
                             Margin="25 0 0 0"
                             Background="Transparent"
                             BorderBrush="#0099FF"
-                            IsDefault="True"
                             Command="{Binding  AddSubject}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon Width="20"
@@ -139,15 +142,38 @@
                                  Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <DataGrid Grid.Row="1"
                           Margin="25 0 50 0"
-                          Width="450"
+                          Width="420"
+                          AlternationCount="2"
+                          RowHeight="50"
                           HorizontalAlignment="Right"
                           BorderThickness="0"
                           ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}"
                           Style="{StaticResource DataGridStyle1}"
                           ItemsSource="{Binding DanhSachMonHoc}"
                           Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Width="450">
                             <DataGridTemplateColumn.CellTemplate>
@@ -156,7 +182,7 @@
                                         <TextBlock 
                                                 x:Name="tbMonHoc"
                                                 Margin="20 0 0 0"
-                                                FontSize="14"
+                                                FontSize="18"
                                                 Text="{Binding TenMon}"
                                                 Style="{StaticResource MaterialDesignCaptionTextBlock}"
                                                 VerticalAlignment="Center"

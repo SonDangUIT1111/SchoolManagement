@@ -52,6 +52,9 @@
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
@@ -79,6 +82,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter\BinaryToBitmapImageConverter.cs" />
+    <Compile Include="Converter\BooleanToCheckIconKindConverter.cs" />
+    <Compile Include="Converter\BooleanToGreenRedConverter.cs" />
     <Compile Include="Converter\BooleanToIsEnabledConverter.cs" />
     <Compile Include="Converter\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converter\BooleanToGenderConverter.cs" />
@@ -133,6 +138,7 @@
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\Login\ChangePasswordViewModel.cs" />
     <Compile Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml.cs">
       <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
     </Compile>
@@ -223,6 +229,9 @@
     <Compile Include="Views\HocSinh\ThongTinHocSinh.xaml.cs">
       <DependentUpon>ThongTinHocSinh.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Login\ChangePasswordWindow.xaml.cs">
+      <DependentUpon>ChangePasswordWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Login\ForgotPasswordWindow.xaml.cs">
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
     </Compile>
@@ -253,6 +262,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Styles\Buttons\Interactive_Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\Buttons\Navigation_Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -412,6 +425,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Login\ChangePasswordWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Login\ForgotPasswordWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -465,6 +482,20 @@
     <Resource Include="Resources\Images\user_image.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\ChangePassword.png" />
+    <Resource Include="Resources\Images\EducationBg.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\NewLogo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\forgotpassbg.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\monhocbg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\rulebg.jpg" />
     <Resource Include="Resources\Images\ThongTinTruong1.png" />
     <Content Include="Resources\Images\ThongTinTruong2.png" />
   </ItemGroup>

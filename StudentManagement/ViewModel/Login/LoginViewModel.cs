@@ -175,7 +175,7 @@ namespace StudentManagement.ViewModel.Login
             }
             else
             {
-                string passEncode = Password;
+                string passEncode = CreateMD5(Base64Encode(Password));
                 string username = Username;
                 if (IndexRole == -1)
                 {
@@ -200,11 +200,11 @@ namespace StudentManagement.ViewModel.Login
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                                 return; 
                             }
-                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
                             // select id
-                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -219,10 +219,12 @@ namespace StudentManagement.ViewModel.Login
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
-                        paramater.Hide();
+                        LoginWindow loginWD = paramater as LoginWindow;
+                        loginWD.LoadBorder.Visibility = Visibility.Visible;
                         GiamHieuWindow window = new GiamHieuWindow();
                         StudentManagement.ViewModel.GiamHieu.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiamHieu.TrangChuViewModel;
                         vm.IdGiamHieu = id;
+                        loginWD.Hide();
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -251,11 +253,11 @@ namespace StudentManagement.ViewModel.Login
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
                                 return; 
                             }
-                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
-                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -270,10 +272,12 @@ namespace StudentManagement.ViewModel.Login
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
-                        paramater.Hide();
+                        LoginWindow loginWD = paramater as LoginWindow;
+                        loginWD.LoadBorder.Visibility = Visibility.Visible;
                         GiaoVienWindow window = new GiaoVienWindow();
                         StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
                         vm.CurrentUser.MaGiaoVien = id;
+                        loginWD.Hide();
                         window.ShowDialog();
                         paramater.Close();
                     }
@@ -301,12 +305,12 @@ namespace StudentManagement.ViewModel.Login
                                 MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
                                 return; 
                             }
-                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
 
-                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
+                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -321,10 +325,12 @@ namespace StudentManagement.ViewModel.Login
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
-                        paramater.Hide();
+                        LoginWindow loginWD = paramater as LoginWindow;
+                        loginWD.LoadBorder.Visibility = Visibility.Visible;
                         HocSinhWindow window = new HocSinhWindow();
                         StudentManagement.ViewModel.HocSinh.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.HocSinh.TrangChuViewModel;
                         vm.IdHocSinh = id;
+                        loginWD.Hide();
                         window.ShowDialog();
                         paramater.Close();
                     }

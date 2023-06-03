@@ -1,12 +1,18 @@
-﻿using StudentManagement.Model;
+﻿using Microsoft.Win32;
+using StudentManagement.Model;
 using StudentManagement.Views.GiaoVien;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
@@ -27,8 +33,14 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string LopQueries { get; set; }
         public string MonHocQueries { get; set; }
 
+        private Visibility _linevisibility;
+        public Visibility LineVisibility { get { return _linevisibility; } set { _linevisibility = value; OnPropertyChanged(); } }
+        private Visibility _colvisibility;
+        public Visibility ColVisibility { get { return _colvisibility; } set { _colvisibility = value; OnPropertyChanged(); } }
+
         private bool _dataGridVisibility;
         public bool DataGridVisibility
+
         {
             get
             {
@@ -77,6 +89,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand FilterLop { get; set; }
         public ICommand FilterMonHoc { get; set; }
         public ICommand LuuDiem { get; set; }
+        public ICommand XuatDiem { get; set; }
         public HeThongBangDiemViewModel()
         {
             everLoaded = false;
@@ -201,6 +214,133 @@ namespace StudentManagement.ViewModel.GiaoVien
                         return;
                     }
                     LuuBangDiem();
+                }
+            });
+            XuatDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                Khoi khoi = HeThongBangDiemWD.cmbKhoi.SelectedItem as Khoi;
+                Lop lop = HeThongBangDiemWD.cmbLop.SelectedItem as Lop;
+                MonHoc monHoc = HeThongBangDiemWD.cmbMonHoc.SelectedItem as MonHoc;
+                if (HeThongBangDiemWD.cmbNienKhoa == null || HeThongBangDiemWD.cmbHocKy == null || khoi == null || lop == null || monHoc == null)
+                {
+                    MessageBox.Show("Vui lòng chọn đủ thông tin Niên Khóa, Học kỳ, Khối, Lớp và Môn Học");
+                    return;
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+                // Set the file dialog properties
+                saveFileDialog.Filter = "Excel Files|*.xlsx";
+                saveFileDialog.Title = "Save Excel File";
+                saveFileDialog.FileName = "BangDiem";
+
+                // Show the SaveFileDialog and check if the user clicked the Save button
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    // Create a new Excel application
+                    Excel.Application excelApp = new Excel.Application();
+
+                    // Create a new workbook
+                    Excel.Workbook workbook = excelApp.Workbooks.Add();
+
+                    // Create a new worksheet
+                    Excel.Worksheet worksheet = workbook.ActiveSheet;
+
+                    //Set header kèm thông tin lớp
+                    worksheet.Cells[1, 1] = "BẢNG ĐIỂM LỚP " + lop.TenLop;
+                    Excel.Range headerRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, 8]];
+                    headerRange.Merge(true);
+                    worksheet.Cells[2, 1] = "Niên khóa: ";
+                    worksheet.Cells[2, 2] = HeThongBangDiemWD.cmbNienKhoa.SelectedValue;
+                    worksheet.Cells[3, 1] = "Học kỳ: ";
+                    worksheet.Cells[3, 2] = HeThongBangDiemWD.cmbHocKy.SelectedValue;
+                    worksheet.Cells[4, 1] = "Khối: ";
+                    worksheet.Cells[4, 2] = "'" + khoi.TenKhoi.ToString();
+                    worksheet.Cells[5, 1] = "Lớp: ";
+                    worksheet.Cells[5, 2] = lop.TenLop;
+                    worksheet.Cells[5, 3] = "Mã lớp: ";
+                    worksheet.Cells[5, 4] = "'" + lop.MaLop.ToString();
+                    worksheet.Cells[6, 1] = "Môn học: ";
+                    worksheet.Cells[6, 2] = monHoc.TenMon;
+                    worksheet.Cells[6, 3] = "Mã môn học: ";
+                    worksheet.Cells[6, 4] = "'" + monHoc.MaMon.ToString();
+                    
+                    // Set the column headers
+                    worksheet.Cells[7, 1] = "STT";
+                    worksheet.Cells[7, 2] = "Mã học sinh";
+                    worksheet.Cells[7, 3] = "Họ và tên";
+                    worksheet.Cells[7, 4] = "Điểm 15 phút";
+                    worksheet.Cells[7, 5] = "Điểm 1 tiết";
+                    worksheet.Cells[7, 6] = "Điểm TB";
+                    worksheet.Cells[7, 7] = "Xếp loại";
+                    worksheet.Cells[7, 8] = "Trạng thái";
+
+
+                    int row = 8;
+                    int idx = 1;
+                    Excel.Range dataRange = worksheet.Range[worksheet.Cells[row, 1], worksheet.Cells[row, 8]];
+                    // Iterate through the danhSachDiem and populate the worksheet
+                    foreach (var diem in DanhSachDiem)
+                    {
+                        worksheet.Cells[row, 1] = idx;
+                        worksheet.Cells[row, 2] = "'" + diem.MaHocSinh.ToString();
+                        worksheet.Cells[row, 3] = diem.TenHocSinh;
+                        worksheet.Cells[row, 4] = diem.Diem15Phut;
+                        worksheet.Cells[row, 5] = diem.Diem1Tiet;
+                        worksheet.Cells[row, 6] = diem.DiemTB;
+                        worksheet.Cells[row, 7] = (diem.XepLoai == true) ? "Đạt" : "Không đạt";
+                        worksheet.Cells[row, 8] = (diem.TrangThai == true) ? "Đã chốt" : "Chưa chốt";
+                        dataRange = worksheet.Range[worksheet.Cells[row, 1], worksheet.Cells[row, 8]];
+                        dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                        dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                        row++;idx++;
+                    }
+                    //Format chhung
+                    worksheet.Columns.ColumnWidth = 12;
+                    worksheet.Rows.RowHeight = 20;
+                    worksheet.Columns[3].ColumnWidth = 20;
+                    Excel.Range cellsRange = worksheet.UsedRange;
+                    cellsRange.Font.Name = "Times New Roman";
+                    cellsRange.Font.Size = 12;
+                    //Format header
+                    headerRange.Font.Bold = true;
+                    headerRange.Font.Size = 20;
+                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    worksheet.Rows[1].RowHeight = 40;
+                    //Format Bang
+                    Excel.Range classRange = worksheet.Range[worksheet.Cells[7, 1], worksheet.Cells[7, 8]];
+                    classRange.Font.Bold = true;
+                    classRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    classRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                    classRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
+                    if (File.Exists(filePath))
+                    {
+                        try {
+                            File.Delete(filePath); 
+                        } catch(Exception ex)
+                        {
+                            MessageBox.Show("File được lưu mới đang được bật, vui lòng tắt file và thử lại\n" + ex.Message);
+                            return;
+                        }
+                    }
+                    // Save the workbook at the chosen path
+                    workbook.SaveAs(filePath);
+
+                    // Close the workbook and release the resources
+                    workbook.Close();
+                    excelApp.Quit();
+
+                    // Release COM objects to avoid memory leaks
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(worksheet);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(headerRange);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(classRange);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(dataRange);
+
+                    // Display a message box indicating the export is complete
+                    MessageBox.Show("Xuất danh sách điểm thành công!");
                 }
             });
         }
@@ -481,6 +621,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Visible;
                         JustReadOnly = false;
                         CanUserEdit = true;
+                        LineVisibility = Visibility.Visible;
+                        ColVisibility = Visibility.Hidden;
                     }
                     else
                     {
@@ -488,6 +630,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         HeThongBangDiemWD.tbThongBaoQuyen.Visibility = Visibility.Hidden;
                         JustReadOnly = true;
                         CanUserEdit = false;
+                        LineVisibility = Visibility.Hidden;
+                        ColVisibility = Visibility.Visible;
                     }
                     con.Close();
                 }
