@@ -47,13 +47,19 @@
                        Margin="0 0 0 -2"/>
         </Grid>
         <Grid Grid.Row="1">
-            <TextBlock Text="Danh sách học sinh"
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Top">
+                <Path  Margin="25 -10 0 0"  Width="30" Height="30" Data="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" Fill="#3F3F3F" Stretch="Fill" />
+                <TextBlock Text="Thêm học sinh vào lớp"
                        FontSize="24"
-                       Margin="25 10 0 0"
+                       FontWeight="Bold"
+                       Margin="10 10 0 0"
                        Width="250"
                        Height="50"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
+            </StackPanel>
+
             <StackPanel Orientation="Horizontal"
                         Margin="0 50 0 0"
                         VerticalAlignment="Top">
@@ -75,7 +81,7 @@
                     </i:Interaction.Triggers>
                 </ComboBox>
                 <TextBox x:Name="tbSearch"
-                         materialDesign:HintAssist.Hint="Search ... "
+                         materialDesign:HintAssist.Hint="Tìm kiếm "
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="640"
                          Height="40"
@@ -93,6 +99,37 @@
                                                  Kind="Magnify" />
                 </Button>
             </StackPanel>
+            <StackPanel Grid.Row="1"
+                            VerticalAlignment="Top"
+                            Orientation="Vertical" Height="30" Margin="0 100 0 0">
+                <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin=" 20 0 20 0" 
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <StackPanel Orientation="Horizontal"
+                                Margin="0 10 0 0">
+                    <TextBlock Text="Họ và tên"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="135 0 0 0"/>
+                    <TextBlock Text="Ngày sinh"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="160 0 0 0"/>
+                    <TextBlock Text="Giới tính"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="60 0 0 0"/>
+                    <TextBlock Text="Địa chỉ"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="20 0 0 0"/>
+                    <TextBlock Text="Email"
+                               FontSize="14"
+                               FontWeight="Medium"
+                               Margin="175 0 0 0"/>
+                </StackPanel>
+            </StackPanel>
             <DataGrid x:Name="ListHocSinh"
                       Height="480"
                       Width="920"
@@ -105,6 +142,7 @@
                       RowStyle="{StaticResource MaterialDesignDataGridRow}"
                       CellStyle="{StaticResource MaterialDesignDataGridCell}"
                       Style="{StaticResource ResourceKey=MaterialDesignDataGrid}"
+                      Background="Transparent"
                       SelectionMode="Single"
                       SelectionUnit="FullRow"
                       ItemsSource="{Binding DanhSachHocSinh}">
@@ -172,9 +210,10 @@
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right">
                 <Button Style="{StaticResource InteractiveButton}"
-                        Background="#2af598"
-                        Foreground="#000000"
+                        Background="#7AA781"
+                        Foreground="White"
                         Width="150"
+                        Height="40"
                         Content="Thêm"
                         Margin="0 0 20 10"
                         Command="{Binding XepLop}"/>
@@ -182,6 +221,7 @@
                         Background="#CFCDCB"
                         Foreground="#000000"
                         Width="150"
+                        Height="40"
                         Content="Hủy"
                         Margin="0 0 20 10"
                         Command="{Binding CancelCommand}"/>

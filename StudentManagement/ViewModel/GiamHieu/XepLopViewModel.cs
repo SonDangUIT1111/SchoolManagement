@@ -3,6 +3,7 @@ using StudentManagement.Views.GiamHieu;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,6 +24,20 @@ namespace StudentManagement.ViewModel.GiamHieu
         private bool[] _selectCheckBox;
         public bool[] SelectCheckBox { get => _selectCheckBox; set { _selectCheckBox = value; OnPropertyChanged(); } }
 
+        private bool _progressBarVisibility;
+        public bool ProgressBarVisibility
+        {
+            get
+            {
+                return _progressBarVisibility;
+            }
+            set
+            {
+                _progressBarVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
         // khai báo ICommand
         public ICommand FindTheoNamSinh { get; set; }
         public ICommand Filter { get; set; }
@@ -35,25 +50,31 @@ namespace StudentManagement.ViewModel.GiamHieu
             LopHocDangChon = new Lop();
             LoadNamSinh();
             // define command
-            LoadWindow = new RelayCommand<XepLopChoHocSinh>((parameter) => { return true; }, (parameter) =>
+            LoadWindow = new RelayCommand<XepLopChoHocSinh>((parameter) => { return true; }, async (parameter) =>
             {
                 XepLopWD = parameter;
-                LoadDanhSachHocSinh();
+                ProgressBarVisibility = true;
+                await LoadDanhSachHocSinh();
+                ProgressBarVisibility = false;
                 SelectCheckBox = new bool[DanhSachHocSinh.Count];
             });
-            FindTheoNamSinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            FindTheoNamSinh = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
              {
                  ComboBox cmb = parameter as ComboBox;
                  string value = cmb.SelectedItem as string;
-                 LoadDanhSachTheoNamSinh(value);
+                 ProgressBarVisibility = true;
+                 await LoadDanhSachTheoNamSinh(value);
+                 ProgressBarVisibility = false;
                  ClearSelectArray();
              });
-            Filter = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            Filter = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
              {
                  TextBox textBox = parameter as TextBox;
                  string text = textBox.Text;
-                 LocDanhSach(text);
+                 ProgressBarVisibility = true;
+                 await LocDanhSach(text);
                  ClearSelectArray();
+                 ProgressBarVisibility = false;
              });
             DanhDau = new RelayCommand<DataGrid>((parameter) => { return true; }, (parameter) =>
             {
@@ -107,29 +128,30 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
-        public void LoadDanhSachHocSinh()
+        public async Task LoadDanhSachHocSinh()
         {
             DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and (MaLop <> " + LopHocDangChon.MaLop.ToString()
                                     + " or MaLop is null)";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh
                             {
@@ -143,7 +165,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             };
                             DanhSachHocSinh.Add(student);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
@@ -155,7 +177,8 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
 
-        public void LoadDanhSachTheoNamSinh(string value)
+
+        public async Task LoadDanhSachTheoNamSinh(string value)
         {
             DanhSachHocSinh.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -163,21 +186,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                 try
                 {
                     try
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    {
+                        await con.OpenAsync();
                     }
-                    string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) =" + value + " and (MaLop <> " + LopHocDangChon.MaLop.ToString()
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
+                    }
+                    string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) = " + value + " and (MaLop <> " + LopHocDangChon.MaLop.ToString()
                                     + " or MaLop is null)" + " and TenHocSinh like '%" + XepLopWD.tbSearch.Text + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh
                             {
@@ -191,7 +215,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             };
                             DanhSachHocSinh.Add(student);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
@@ -202,20 +226,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
-        public void LocDanhSach(string value)
+        public async Task LocDanhSach(string value)
         {
             DanhSachHocSinh.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
-                        return; 
+                    try
+                    {
+                        await con.OpenAsync();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
                                     + " or MaLop is null)";
@@ -226,11 +251,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         + " or MaLop is null) and Year(NgaySinh) = " + XepLopWD.cmbNamSinh.SelectedItem.ToString();
                     }
                     SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while (await reader.ReadAsync())
                         {
                             StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh
                             {
@@ -244,7 +269,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             };
                             DanhSachHocSinh.Add(student);
                         }
-                        reader.NextResult();
+                        await reader.NextResultAsync();
                     }
                     con.Close();
                 }
@@ -255,6 +280,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             }
         }
+
         public void ThemHocSinhVaoLop()
         {
             MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn thêm những học sinh này vào lớp "
