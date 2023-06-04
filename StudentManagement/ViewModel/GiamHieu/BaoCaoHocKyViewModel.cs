@@ -2,6 +2,7 @@
 using LiveCharts.Wpf;
 using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -263,8 +264,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct NienKhoa from Lop";
@@ -286,9 +288,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -310,7 +313,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open(); 
                     } catch (Exception) 
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string cmdString = "select k.MaKhoi,Khoi from BaoCaoHocKy bc join Lop l on bc.MaLop = l.MaLop join Khoi k on k.MaKhoi = l.MaKhoi " +
@@ -358,7 +362,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString;
@@ -406,9 +411,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         Values = new ChartValues<int>(SoLuongDatChartVal)
                     });
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -444,9 +450,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                 };
                     }
-                } catch (Exception ex)
+                } catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }

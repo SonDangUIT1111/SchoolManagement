@@ -4,6 +4,7 @@ using StudentManagement.ViewModel.Login;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.Login;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -129,7 +130,8 @@ namespace StudentManagement.ViewModel.HocSinh
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
@@ -144,9 +146,10 @@ namespace StudentManagement.ViewModel.HocSinh
                     HocSinhHienTai.Email = reader.GetString(4);
                     HocSinhHienTai.Avatar = (byte[])reader[5];
                     con.Close();
-                }catch (Exception ex)
+                }catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail msgBoxFail = new MessageBoxFail();   
+                    msgBoxFail.ShowDialog();
                 }
             }
         }
@@ -177,7 +180,8 @@ namespace StudentManagement.ViewModel.HocSinh
             }
             catch (Exception)
             {
-                MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                messageBoxFail.ShowDialog();
             }
         }
     }

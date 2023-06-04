@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -163,8 +164,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         { 
                             con.Open(); 
                         } catch (Exception) 
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
@@ -249,9 +251,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                 }
@@ -270,7 +273,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return;
                         }
                         string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
@@ -353,9 +357,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                 }
@@ -415,7 +420,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -503,9 +509,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
             }
@@ -526,7 +533,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     //đọc niên khóa
@@ -589,9 +597,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         reader.NextResult();
                     }
                     con.Close();
-                } catch (Exception ex)
+                } catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -606,8 +615,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select Malop, TenLop from Lop where MaKhoi = " + KhoiQueries + " and NienKhoa = '" + NienKhoaQueries + "'";
@@ -627,9 +637,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
                 
@@ -655,8 +666,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         { 
                             con.Open();
                         } catch (Exception)
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         SqlCommand cmd;
@@ -672,11 +684,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                         cmd = new SqlCommand(CmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();
-                        MessageBox.Show("Đã xóa thành công!");
+                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                        messageBoxSuccessful.ShowDialog();
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                 }

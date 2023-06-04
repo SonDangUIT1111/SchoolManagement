@@ -75,6 +75,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="XamlAnimatedGif, Version=2.0.0.0, Culture=neutral, PublicKeyToken=20a987d8023d9690, processorArchitecture=MSIL">
+      <HintPath>..\packages\XamlAnimatedGif.2.1.0\lib\net45\XamlAnimatedGif.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -139,6 +142,9 @@
     <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\Login\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\MessageBox\MessageBoxOKViewModel.cs" />
+    <Compile Include="ViewModel\MessageBox\MessageBoxViewModel.cs" />
+    <Compile Include="ViewModel\MessageBox\MessageBoxYesNoViewModel.cs" />
     <Compile Include="Views\GiamHieu\BaoCaoTongKetHocKy.xaml.cs">
       <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
     </Compile>
@@ -240,6 +246,18 @@
     <Compile Include="ViewModel\Title_Bar_ViewModels\Title_Bar_Log_ViewModel.cs" />
     <Compile Include="Views\Login\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageBox\MessageBoxFail.xaml.cs">
+      <DependentUpon>MessageBoxFail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageBox\MessageBoxOK.xaml.cs">
+      <DependentUpon>MessageBoxOK.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageBox\MessageBoxSuccessful.xaml.cs">
+      <DependentUpon>MessageBoxSuccessful.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageBox\MessageBoxYesNo.xaml.cs">
+      <DependentUpon>MessageBoxYesNo.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -437,6 +455,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\MessageBox\MessageBoxFail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MessageBox\MessageBoxOK.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MessageBox\MessageBoxSuccessful.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MessageBox\MessageBoxYesNo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -495,12 +529,21 @@
     <Resource Include="Resources\Images\monhocbg.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Views\MessageBox\ThongTinTruong1.ico" />
+    <Resource Include="Views\Login\ThongTinTruong1.ico" />
+    <Resource Include="Views\HocSinh\ThongTinTruong1.ico" />
+    <Resource Include="Views\GiaoVien\ThongTinTruong1.ico" />
+    <Resource Include="ThongTinTruong1.ico" />
+    <Resource Include="Resources\Images\warningicon1.jpg" />
     <Resource Include="Resources\Images\THPTThucDuc4.jpg" />
     <Resource Include="Resources\Images\THPTThucDuc3.jpg" />
     <Resource Include="Resources\Images\THPTThuDuc2.jpg" />
     <Resource Include="Resources\Images\THPTThuDuc1.jpg" />
     <Resource Include="Resources\Images\rulebg.jpg" />
     <Resource Include="Resources\Images\ThongTinTruong1.png" />
+    <Resource Include="Resources\Images\error.gif" />
+    <Resource Include="Resources\Images\successful2.gif" />
+    <Resource Include="Views\GiamHieu\ThongTinTruong1.ico" />
     <Content Include="Resources\Images\ThongTinTruong2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

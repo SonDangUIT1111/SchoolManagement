@@ -21,6 +21,7 @@
         Background="Transparent" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" WindowStyle="None"
         Name="XepLopWD"
+        Icon="ThongTinTruong1.ico"
         DataContext="{StaticResource XepLopVM}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

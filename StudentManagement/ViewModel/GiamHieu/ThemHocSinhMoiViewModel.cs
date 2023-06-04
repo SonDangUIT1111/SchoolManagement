@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using StudentManagement.Converter;
 using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -70,7 +72,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             });
@@ -79,16 +82,29 @@ namespace StudentManagement.ViewModel.GiamHieu
                 if (String.IsNullOrEmpty(ThemHocSinhWD.Hoten.Text) || String.IsNullOrEmpty(ThemHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) ||
                     String.IsNullOrEmpty(ThemHocSinhWD.DiaChi.Text) || String.IsNullOrEmpty(ThemHocSinhWD.Email.Text))
                 {
-                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập đầy đủ thông tin!";
+                    MB.ShowDialog();
                 }
                 else if (!Regex.IsMatch(ThemHocSinhWD.Email.Text, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
                 {
-                    MessageBox.Show("Email không hợp lệ, vui lòng nhập lại!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Email không hợp lệ, vui lòng nhập lại!";
+                    MB.ShowDialog();
                 }
                 else
                 {
-                    MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn thêm học sinh này không?", "Add Confirmation", System.Windows.MessageBoxButton.YesNo);
-                    if (ConfirmAdd == MessageBoxResult.Yes)
+                    MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                    var data = wd.DataContext as MessageBoxYesNoViewModel;
+                    data.Title = "Xác nhận!";
+                    data.Question = "Bạn có muốn thêm học sinh này không?";
+                    wd.ShowDialog();
+
+                    var result = wd.DataContext as MessageBoxYesNoViewModel;
+                    if (result.IsYes == true)
                     {
                         ListCommand.Clear();
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -100,7 +116,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     con.Open(); 
                                 } catch (Exception) 
                                 {
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return; 
                                 }
                                 string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'" 
@@ -190,9 +207,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 SendAccountByEmail(TaiKhoan, MatKhau, hocsinh.Email);
                                 ThemHocSinhWD.Close();
                             }
-                            catch (Exception ex)
+                            catch (Exception )
                             {
-                                MessageBox.Show(ex.Message);
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return;
                             }
                             
@@ -224,11 +242,16 @@ namespace StudentManagement.ViewModel.GiamHieu
             try
             {
                 client.Send(message);
-                MessageBox.Show("Tạo tài khoản học sinh thành công! Tài khoản học sinh đã được gửi đến email " + to);
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Tạo tài khoản học sinh thành công! Tài khoản học sinh đã được gửi đến email " + to;
+                MB.ShowDialog();
+                
             }
             catch (Exception)
             {
-                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                messageBoxFail.ShowDialog();
             }
         }
 

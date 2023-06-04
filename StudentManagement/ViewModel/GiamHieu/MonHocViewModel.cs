@@ -1,4 +1,6 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -83,7 +85,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             DeleteSubject = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
-                if (MessageBox.Show("Bạn có muốn xoá môn học này không?", "Xoá môn học", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có muốn xóa môn học này không?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
                 {
                     Model.MonHoc mh = parameter as Model.MonHoc;
                     if (mh != null)
@@ -97,7 +107,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     con.Open(); 
                                 } catch (Exception) 
                                 { 
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return; 
                                 }
                                 string CmdString = "update MonHoc set ApDung = 0 where MaMon = " + mh.MaMon.ToString();
@@ -105,16 +116,20 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 cmd.ExecuteNonQuery();
                                 con.Close();
                             }
-                            MessageBox.Show("Môn học này sẽ không được áp dụng trong dạy học nữa");
+                            MessageBoxOK MB = new MessageBoxOK();
+                            var datamb = MB.DataContext as MessageBoxOKViewModel;
+                            datamb.Content = "Môn học này sẽ không được áp dụng trong dạy học nữa";
+                            MB.ShowDialog();
                             DataGridVisibility = false;
                             ProgressBarVisibility = true;
                             await LoadThongTinMonHoc();
                             DataGridVisibility = true;
                             ProgressBarVisibility = false;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            MessageBox.Show(ex.Message);
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                         }
                     }
                 }
@@ -133,8 +148,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 if (MonHocEditting != null )
                 {
-                    MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn đổi tên", "Thông báo", MessageBoxButton.YesNo); 
-                    if (result == MessageBoxResult.Yes)
+                    MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                    var data = wd.DataContext as MessageBoxYesNoViewModel;
+                    data.Title = "Xác nhận!";
+                    data.Question = "Bạn có chắc chắn muốn đổi tên";
+                    wd.ShowDialog();
+
+                    var result = wd.DataContext as MessageBoxYesNoViewModel;
+                    if (result.IsYes == true)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
@@ -144,8 +166,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 { 
                                     con.Open(); 
                                 } catch (Exception) 
-                                { 
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                {
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return; 
                                 }
                                 string CmdString1 = "select * from MonHoc where TenMon = N'" + MonHocEditting.TenMon + "'";
@@ -153,7 +176,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 int count = Convert.ToInt32(cmd1.ExecuteScalar());
                                 if (count > 0)
                                 {
-                                    MessageBox.Show("Tên môn học đã tồn tại, vui lòng chọn tên khác");
+                                    MessageBoxOK MB = new MessageBoxOK();
+                                    var datamb = MB.DataContext as MessageBoxOKViewModel;
+                                    datamb.Content = "Tên môn học đã tồn tại, vui lòng chọn tên khác";
+                                    MB.ShowDialog();
                                     con.Close();
                                     MonHocWD.txtTenMH.Text = "";
                                     MonHocWD.txtTenMH.IsEnabled = false;
@@ -167,16 +193,18 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 SqlCommand cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
                                 con.Close();
-                                MessageBox.Show("Đổi tên môn học thành công");
+                                MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                                messageBoxSuccessful.ShowDialog();
                                 MonHocWD.txtTenMH.Text = "";
                                 MonHocWD.txtTenMH.IsEnabled = false;
                                 MonHocWD.btnThemMonHoc.Visibility = Visibility.Visible;
                                 MonHocWD.btnXacNhan.Visibility = Visibility.Hidden;
                                 MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Hidden;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                MessageBox.Show(ex.Message);
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                             }
                         }
                         DataGridVisibility = false;
@@ -200,7 +228,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                             con.Open(); 
                         } catch (Exception) 
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         string CmdString = "select * from MonHoc where TenMon like N'%" + parameter.Text + "%' and ApDung = 1";
@@ -220,9 +249,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                     ProgressBarVisibility = false;
                 }
@@ -239,12 +269,23 @@ namespace StudentManagement.ViewModel.GiamHieu
                 string monhoc = parameter.Text;
                 if (string.IsNullOrEmpty(monhoc))
                 {
-                    MessageBox.Show("Vui lòng nhập tên môn học!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var datamb = MB.DataContext as MessageBoxOKViewModel;
+                    datamb.Content = "Vui lòng nhập tên môn học.";
+                    MB.ShowDialog();
                     return;
                 }
                 else
                 {
-                    if (MessageBox.Show("Bạn có muốn thêm môn học này không?", "Thêm môn học", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                    var data = wd.DataContext as MessageBoxYesNoViewModel;
+                    data.Title = "Xác nhận!";
+                    data.Question = "Bạn có muốn thêm môn học này không?";
+                    wd.ShowDialog();
+
+                    var result = wd.DataContext as MessageBoxYesNoViewModel;
+                    if (result.IsYes == true)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
@@ -255,7 +296,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     con.Open(); 
                                 } catch (Exception) 
                                 { 
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return;
                                 }
                                 string CmdString = "select * from MonHoc where TenMon = N'" + monhoc+"'";
@@ -263,7 +305,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 int count = Convert.ToInt32(cmd.ExecuteScalar());   
                                 if (count > 0 )
                                 {
-                                    MessageBox.Show("Tên môn học đã tồn tại, vui lòng chọn tên khác");
+                                    MessageBoxOK MB = new MessageBoxOK();
+                                    var datamb = MB.DataContext as MessageBoxOKViewModel;
+                                    datamb.Content = "Tên môn học đã tồn tại, vui lòng chọn tên khác";
+                                    MB.ShowDialog();
                                     con.Close();
                                     MonHocWD.txtTenMH.Text = "";
                                     MonHocWD.txtTenMH.IsEnabled = false;
@@ -276,7 +321,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 CmdString = "insert into MonHoc (TenMon, MaTruong, ApDung) values (N'" + monhoc + "', 1, 1)";
                                 cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
-                                MessageBox.Show("Thêm môn học thành công!");
+                                MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                                messageBoxSuccessful.ShowDialog();
                                 con.Close();
                                 MonHocWD.txtTenMH.Text = "";
                                 MonHocWD.txtTenMH.IsEnabled = false;
@@ -289,9 +335,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 DataGridVisibility = true;
                                 ProgressBarVisibility = false;
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                MessageBox.Show(ex.Message);
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                             }
                         }
                     }
@@ -311,7 +358,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return;
                         }
                         string CmdString = "select * from MonHoc where ApDung = 1";
@@ -331,9 +379,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
 
@@ -353,7 +402,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -371,9 +421,10 @@ namespace StudentManagement.ViewModel.GiamHieu
 
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiaoVien;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -195,12 +197,22 @@ namespace StudentManagement.ViewModel.GiaoVien
             });
             LuuDiem = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
-                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn lưu. (Lưu ý, những học sinh có điểm ở trạng thái chốt điểm sẽ không được lưu)", "Thông báo", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn lưu. (Lưu ý, những học sinh có điểm ở trạng thái chốt điểm sẽ không được lưu?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
                 {
                     if (DanhSachDiem[0].TrangThai == true)
                     {
-                        MessageBox.Show("Danh sách điểm này đã được chốt, không thể sửa.");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var datamb = MB.DataContext as MessageBoxOKViewModel;
+                        datamb.Content = "Danh sách điểm này đã được chốt, không thể sửa.";
+                        MB.ShowDialog();
                         ProgressBarVisibility = true;
                         DataGridVisibility = false;
                         await LoadDanhSachBangDiem();
@@ -210,7 +222,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     if (KiemTraDiemHopLe() == false)
                     {
-                        MessageBox.Show("Điểm nhập không hợp lệ, vui lòng kiểm tra lại.");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var datamb = MB.DataContext as MessageBoxOKViewModel;
+                        datamb.Content = "Điểm nhập không hợp lệ, vui lòng kiểm tra lại.";
+                        MB.ShowDialog();
                         return;
                     }
                     LuuBangDiem();
@@ -223,7 +238,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                 MonHoc monHoc = HeThongBangDiemWD.cmbMonHoc.SelectedItem as MonHoc;
                 if (HeThongBangDiemWD.cmbNienKhoa == null || HeThongBangDiemWD.cmbHocKy == null || khoi == null || lop == null || monHoc == null)
                 {
-                    MessageBox.Show("Vui lòng chọn đủ thông tin Niên Khóa, Học kỳ, Khối, Lớp và Môn Học");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng chọn đủ thông tin Niên khóa, Học kỳ, Khối, Lớp và Môn học";
+                    MB.ShowDialog();
                     return;
                 }
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -318,9 +336,12 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         try {
                             File.Delete(filePath); 
-                        } catch(Exception ex)
+                        } catch(Exception)
                         {
-                            MessageBox.Show("File được lưu mới đang được bật, vui lòng tắt file và thử lại\n" + ex.Message);
+                            MessageBoxOK MB1 = new MessageBoxOK();
+                            var datamb = MB1.DataContext as MessageBoxOKViewModel;
+                            datamb.Content = "File được lưu mới đang được bật, vui lòng tắt file và thử lại";
+                            MB1.ShowDialog();
                             return;
                         }
                     }
@@ -340,7 +361,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(dataRange);
 
                     // Display a message box indicating the export is complete
-                    MessageBox.Show("Xuất danh sách điểm thành công!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Xuất danh sách điểm thành công!";
+                    MB.ShowDialog();
                 }
             });
         }
@@ -363,8 +387,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                     { 
                         con.Open();
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select distinct NienKhoa from Lop";
@@ -390,8 +415,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                     { 
                         con.Open(); 
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     CmdString = "select distinct MaKhoi,Khoi from Khoi";
@@ -422,8 +448,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                         {
                             con.Open();
                         } catch (Exception) 
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
@@ -453,8 +480,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                     { 
                         con.Open();
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     CmdString = "select MaMon,TenMon from MonHoc";
@@ -498,7 +526,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -566,8 +595,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         con.Open();
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
@@ -606,8 +636,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                     {
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     CmdString = "Select count(*) from PhanCongGiangDay where MaGiaoVienPhuTrach = " + IdUser.ToString()
@@ -658,7 +689,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     for (int i = 0; i < DanhSachDiem.Count; i++)
@@ -685,12 +717,14 @@ namespace StudentManagement.ViewModel.GiaoVien
                         {
                         }
                     }
-                    MessageBox.Show("Lưu thành công");
+                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                    messageBoxSuccessful.ShowDialog();
                     LoadDanhSachBangDiem();
                     con.Close();
-                }catch (Exception ex)
+                }catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
 
             }

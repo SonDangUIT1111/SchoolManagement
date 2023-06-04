@@ -1,0 +1,72 @@
+﻿<Window x:Class="StudentManagement.Views.MessageBox.MessageBoxOK"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManagement.Views.MessageBox"
+        mc:Ignorable="d"
+        Title="Thông báo" 
+        Height="200" 
+        Width="400"   
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"        
+        AllowsTransparency="True"
+        Background="Transparent"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        x:Name="MBOK"
+        Icon="ThongTinTruong1.ico"
+        DataContext="{StaticResource MBOK}"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+    <Border CornerRadius="20" 
+            Background="White"
+            BorderThickness="3"
+            BorderBrush="#0099FF">
+        <Grid>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Height="40"
+                            Margin="0 15 0 0">
+                    <Border Width="40"
+                            Margin="15 0 0 0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="\Resources\Images\warningicon1.jpg">
+                            </ImageBrush>
+                        </Border.Background>
+                    </Border>
+                    <TextBlock Text="Notification"
+                               FontSize="20"
+                               Margin="10,10,0,0" 
+                               FontFamily="Arial"
+                               FontWeight="DemiBold"
+                               Foreground="#FF2AC2F5"/>
+                </StackPanel>
+                <TextBlock Text="{Binding Content}"
+                           VerticalAlignment="Center"
+                           Margin="5 30 0 20"
+                           Foreground="Black"
+                           FontFamily="Bahnschrift SemiBold" 
+                           FontWeight="SemiBold"
+                           FontSize="16"
+                           Height="50"
+                           Width="350"
+                           TextWrapping="Wrap">
+                </TextBlock>
+                <Button Content="OK"
+                        Style="{StaticResource InteractiveButton}"
+                        Margin="0 -20 50 0"
+                        Width="100"
+                        Height="30"
+                        Command="{Binding OK}"
+                        CommandParameter="{Binding ElementName=MBOK}"
+                        HorizontalAlignment="Right">
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

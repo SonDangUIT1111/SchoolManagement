@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.GiaoVien;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -254,7 +255,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct NienKhoa from ThanhTich tt join Lop l on tt.MaLop = l.MaLop";
@@ -282,9 +284,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail msgBoxFail = new MessageBoxFail();
+                    msgBoxFail.ShowDialog();
                 }
             }
         }
@@ -303,7 +306,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct k.MaKhoi,Khoi from ThanhTich tt join Lop l on tt.MaLop = l.MaLop join Khoi k on k.MaKhoi = l.MaKhoi where NienKhoa = '" + NienKhoaQueries + "'";
@@ -327,9 +331,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                         reader.NextResult();
                     }
                     con.Close();
-                } catch (Exception ex)
+                } catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -347,7 +352,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct tt.MaLop,TenLop from ThanhTich tt join Lop l on tt.MaLop = l.MaLop " +
@@ -373,9 +379,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -394,7 +401,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         con.Open();
                     } catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct HocKy from ThanhTich tt join Lop l on tt.MaLop = l.MaLop " +
@@ -416,9 +424,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -438,7 +447,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select tt.MaThanhTich,TenHocSinh,l.TenLop,tt.XepLoai,tt.TrungBinhHocKy,tt.NhanXet,MaGVCN from ThanhTich tt join Lop l on tt.MaLop = l.MaLop join HocSinh hs on tt.MaHocSinh = hs.MaHocSinh " +
@@ -503,9 +513,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -523,7 +534,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                                 con.Open();
                             } catch (Exception)
                             {
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return;
                             }
                             string CmdString = "update ThanhTich Set NhanXet=N'" + item.NhanXet + "' where MaThanhTich = '" + item.MaThanhTich + "'";
@@ -531,10 +543,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                             cmd.ExecuteNonQuery();
                             con.Close();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            MessageBox.Show(ex.Message);
-                        }
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
+                    }
                     }
                 }
             }

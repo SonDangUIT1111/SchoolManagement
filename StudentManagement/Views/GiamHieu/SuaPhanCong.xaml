@@ -21,7 +21,8 @@
         DataContext="{StaticResource SuaPhanCongVM}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
-        Name="SuaPhanCongWD">
+        Name="SuaPhanCongWD"
+        Icon="ThongTinTruong1.ico">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadData}"

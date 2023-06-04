@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -120,7 +122,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog(); 
                         return;
                     }
 
@@ -146,9 +149,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -166,7 +170,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -194,9 +199,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail commandBoxFail = new MessageBoxFail();
+                    commandBoxFail.ShowDialog();
                 }
             }
         }
@@ -214,19 +220,24 @@ namespace StudentManagement.ViewModel.GiamHieu
                             con.Open(); 
                         } catch (Exception) 
                         { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         SqlCommand cmd;
                         string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
                         cmd = new SqlCommand(CmdString, con);
                         cmd.ExecuteScalar();
-                        MessageBox.Show("Đã xóa " + value.TenGiaoVien);
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Đã xóa " + value.TenGiaoVien;
+                        MB.ShowDialog();
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
         }

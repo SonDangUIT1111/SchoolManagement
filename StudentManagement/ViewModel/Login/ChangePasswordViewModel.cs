@@ -1,7 +1,9 @@
 ﻿using StudentManagement.Converter;
 using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.Login;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,18 +53,27 @@ namespace StudentManagement.ViewModel.Login
         {
             if (ChangePasswordWD.PasswordOld.Password == "" || ChangePasswordWD.PasswordNew.Password == "" || ChangePasswordWD.PasswordNewConfirm.Password == "")
             {
-                MessageBox.Show("Vui lòng điền đầy đủ thông tin");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng nhập đầy đủ thông tin";
+                MB.ShowDialog();
                 return;
             }
 
             if (ChangePasswordWD.PasswordOld.Password != MatKhau)
             {
-                MessageBox.Show("Sai mật khẩu cũ");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Sai mật khẩu cũ";
+                MB.ShowDialog();
                 return;
             }
             if (ChangePasswordWD.PasswordNew.Password != ChangePasswordWD.PasswordNewConfirm.Password)
             {
-                MessageBox.Show("Sai mật khẩu xác nhận");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Sai mật khẩu xác nhận";
+                MB.ShowDialog();
                 return;
             }
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
@@ -75,7 +86,8 @@ namespace StudentManagement.ViewModel.Login
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail MB = new MessageBoxFail();
+                        MB.ShowDialog();
                         return;
                     }
                     string CmdString;
@@ -92,14 +104,16 @@ namespace StudentManagement.ViewModel.Login
                     {
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         cmd.ExecuteScalar();
-                        MessageBox.Show("Cập nhật thành công!");
+                        MessageBoxSuccessful MB = new MessageBoxSuccessful();
+                        MB.ShowDialog();
                         con.Close();
                     }
                     ChangePasswordWD.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
             }

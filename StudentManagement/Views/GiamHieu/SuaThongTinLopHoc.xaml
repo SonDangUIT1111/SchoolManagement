@@ -20,7 +20,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Sửa thông tin lớp học" Height="450" Width="600"
         DataContext="{StaticResource SuaLopVM}"
-        Name="SuaLopWD">
+        Name="SuaLopWD"
+        Icon="ThongTinTruong1.ico">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"

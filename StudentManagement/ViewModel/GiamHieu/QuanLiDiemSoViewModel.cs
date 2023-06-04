@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -246,8 +248,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             MoKhoaDiem = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn mở khóa bảng điểm lớp này.", "Thông báo", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn mở khóa bảng điểm lớp này?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
                 {
                     MoKhoaBangDiem();
                 }
@@ -262,8 +271,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                 else return false;
             }, (parameter) =>
             {
-                MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn khóa bảng điểm lớp này.", "Thông báo", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn khóa bảng điểm lớp này?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
                 {
                     KhoaBangDiem();
                 }
@@ -299,8 +315,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select distinct NienKhoa from Lop";
@@ -332,8 +349,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     CmdString = "select distinct MaKhoi,Khoi from Khoi";
@@ -376,8 +394,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         { 
                             con.Open(); 
                         } catch (Exception)
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
@@ -415,7 +434,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                             con.Open();
                         } catch (Exception) 
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
@@ -451,8 +471,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open();
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select MaMon,TenMon from MonHoc where ApDung = 1";
@@ -497,7 +518,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -563,8 +585,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
@@ -602,8 +625,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
@@ -641,7 +665,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open(); 
                     } catch (Exception) 
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string hocky = "";
@@ -655,12 +680,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                                       + "where MaLop = " + LopQueries2 + " and HocKy = " + hocky;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     cmd.ExecuteScalar();
-                    MessageBox.Show("Mở khóa thành công.");
+                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                    messageBoxSuccessful.ShowDialog();
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -679,8 +706,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     // khóa trạng thái
@@ -694,8 +722,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open();
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     // cập nhật database thành tích
@@ -726,8 +755,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception)
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     for (int i = 0; i < DanhSachThanhTich.Count; i++)
@@ -760,8 +790,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     CmdString = "select MaLop,MaMon,HocKy,count(MaDiem) SLD,SiSo = (select SiSo from Lop l where l.MaLop = htd.MaLop) " +
@@ -793,7 +824,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open(); 
                     } catch (Exception) 
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     for (int i = 0; i < DanhSachBaoCaoMon.Count; i++)
@@ -822,8 +854,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     CmdString = "select MaLop, SiSo = (select SiSo from Lop l where l.MaLop = tt.MaLop), HocKy,count(MaThanhTich) SLD " +
@@ -855,7 +888,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open(); 
                     } catch (Exception) 
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     for (int i = 0; i < DanhSachBaoCaoHocKy.Count; i++)
@@ -878,11 +912,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                         cmd.ExecuteScalar();
                     }
                     con.Close();
-                    MessageBox.Show("Khóa điểm thành công, các báo cáo tổng kết đã được cập nhật.");
+                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                    messageBoxSuccessful.ShowDialog();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }

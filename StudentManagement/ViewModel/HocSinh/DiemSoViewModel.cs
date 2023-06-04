@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.Views.HocSinh;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -47,7 +48,8 @@ namespace StudentManagement.ViewModel.HocSinh
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenHocSinh,TenLop from HocSinh hs join Lop l on hs.MaLop = l.MaLop where MaHocSinh = " + IdHocSinh.ToString();
@@ -59,9 +61,10 @@ namespace StudentManagement.ViewModel.HocSinh
                     DiemSoWD.Ten2.Text = TenHs;
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
             // load diem
@@ -74,8 +77,9 @@ namespace StudentManagement.ViewModel.HocSinh
                     { 
                         con.Open();
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem ht join MonHoc mh on ht.MaMon = mh.MaMon where HocKy = 1 and MaHocSinh = " + IdHocSinh.ToString();
@@ -96,9 +100,10 @@ namespace StudentManagement.ViewModel.HocSinh
                         reader.NextResult();
                     }
                     con.Close();
-                } catch (Exception ex)
+                } catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
             DanhSachDiemHK2 = new ObservableCollection<Model.HeThongDiem>();
@@ -110,8 +115,9 @@ namespace StudentManagement.ViewModel.HocSinh
                     { 
                         con.Open();
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem ht join MonHoc mh on ht.MaMon = mh.MaMon where HocKy = 2 and MaHocSinh = " + IdHocSinh.ToString();
@@ -133,9 +139,10 @@ namespace StudentManagement.ViewModel.HocSinh
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
             //load xep loai
@@ -147,8 +154,9 @@ namespace StudentManagement.ViewModel.HocSinh
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select XepLoai,NhanXet,TrungBinhHocky from ThanhTich where MaHocSinh = " + IdHocSinh.ToString();
@@ -204,9 +212,10 @@ namespace StudentManagement.ViewModel.HocSinh
                         reader.NextResult();
                     }
                     con.Close();
-                } catch (Exception ex)
+                } catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }

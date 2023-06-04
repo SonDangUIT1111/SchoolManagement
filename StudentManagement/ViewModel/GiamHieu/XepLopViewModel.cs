@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -101,8 +103,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog(); 
                         return; 
                     }
                     string CmdString = "select distinct Year(NgaySinh) from HocSinh where TenHocSinh is not null and (MaLop <> " + LopHocDangChon.MaLop.ToString()
@@ -121,9 +124,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     con.Close();
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail msgBoxFail = new MessageBoxFail();
+                    msgBoxFail.ShowDialog();
                     return;
                 }
             }
@@ -141,7 +145,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and (MaLop <> " + LopHocDangChon.MaLop.ToString()
@@ -169,9 +174,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
             }
@@ -191,7 +197,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and Year(NgaySinh) = " + value + " and (MaLop <> " + LopHocDangChon.MaLop.ToString()
@@ -219,9 +226,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
             }
@@ -239,7 +247,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
@@ -273,9 +282,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
             }
@@ -283,9 +293,17 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public void ThemHocSinhVaoLop()
         {
-            MessageBoxResult result = MessageBox.Show("Bạn có chắc chắn muốn thêm những học sinh này vào lớp "
-                                                        + LopHocDangChon.TenLop, "Thông báo", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.Yes)
+            MessageBoxYesNo wd = new MessageBoxYesNo();
+
+            var data = wd.DataContext as MessageBoxYesNoViewModel;
+            data.Title = "Xác nhận!";
+            data.Question = "Bạn có chắc chắn muốn thêm những học sinh này vào lớp "
+                                                        + LopHocDangChon.TenLop;
+            wd.ShowDialog();
+
+            var result = wd.DataContext as MessageBoxYesNoViewModel;
+
+            if (result.IsYes == true)
             {
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
@@ -295,8 +313,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         { 
                             con.Open(); 
                         } catch (Exception) 
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return;
                         }
                         string CmdString = "";
@@ -323,14 +342,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                 }
             }
-            MessageBox.Show("Thêm thành công");
+            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+            messageBoxSuccessful.ShowDialog();
             XepLopWD.Close();
 
         }

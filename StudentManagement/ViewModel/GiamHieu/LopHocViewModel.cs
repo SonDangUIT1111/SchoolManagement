@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -197,7 +199,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             XoaLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
                 Model.Lop item = parameter as Model.Lop;
-                if (MessageBox.Show("Bạn có muốn xoá lớp không?", "Xoá lớp", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có muốn xóa lớp không?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
                 {
                     using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                     {
@@ -208,13 +218,17 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 con.Open(); 
                             } catch (Exception) 
                             { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return; 
                             }
                             string cmdString = "DELETE FROM Lop WHERE MaLop = " + item.MaLop.ToString() + "";
                             SqlCommand cmd = new SqlCommand(cmdString, con);
                             cmd.ExecuteNonQuery();
-                            MessageBox.Show("Xóa thành công");
+                            MessageBoxOK MB = new MessageBoxOK();
+                            var datamb = MB.DataContext as MessageBoxOKViewModel;
+                            datamb.Content = "Xóa thành công";
+                            MB.ShowDialog();
                             DataGridVisibility = false;
                             ProgressBarVisibility = true;
                             await LoadDanhSachLopHoc();
@@ -222,9 +236,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                             ProgressBarVisibility = false;
                             con.Close();
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
-                            MessageBox.Show(ex.Message);
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                         }
                     }
                 }
@@ -247,7 +262,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open();
                     } catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "SELECT DISTINCT NienKhoa from Lop";
@@ -271,7 +287,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open();
                     } catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     cmdString = "select MaKhoi,Khoi from Khoi";
@@ -306,9 +323,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     await LoadDanhSachLopHoc();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -325,7 +343,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -372,9 +391,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         DanhSachLopHoc.Add(lophoc);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -389,8 +409,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open();
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
 
@@ -454,9 +475,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }

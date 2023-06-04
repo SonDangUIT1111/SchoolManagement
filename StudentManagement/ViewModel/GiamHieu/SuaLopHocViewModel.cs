@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -50,7 +52,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     String.IsNullOrEmpty(SuaLopWD.EditAcademyYear.Text) 
                     || String.IsNullOrEmpty(GiaoVienQueries))
                 {
-                    MessageBox.Show("Nhập đầy đủ thông tin");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập đầy đủ thông tin";
+                    MB.ShowDialog();
                 }
                 else using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
@@ -62,20 +67,23 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
-                            return;
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
                         }
                         string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "', NienKhoa = '" + SuaLopWD.EditAcademyYear.Text + "', " +
                                     "MaGVCN = " + GiaoVienQueries + " where MaLop = " + LopHocHienTai.MaLop.ToString();
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();
-                        MessageBox.Show("Sửa lớp học thành công");
+                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                        messageBoxSuccessful.ShowDialog();
                         SuaLopWD.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception )
                     {
-                        MessageBox.Show(ex.Message);
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                     }
                 }
 
@@ -98,12 +106,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE MaGiaoVien NOT IN (SELECT DISTINCT MaGVCN FROM Lop)";
-                    MessageBox.Show(cmdString);
                     SqlCommand cmd = new SqlCommand(cmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -124,9 +132,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                     return;
                 }
             }

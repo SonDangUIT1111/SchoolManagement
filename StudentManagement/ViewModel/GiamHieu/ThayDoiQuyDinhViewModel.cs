@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -85,8 +87,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 { 
                                     con.Open(); 
                                 } catch (Exception) 
-                                { 
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                                {
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return; 
                                 }
                                 string CmdString = "update QuiDinh SET GiaTri =" + value + " where TenQuiDinh = N'" + tenqd + "'";
@@ -94,9 +97,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 cmd.ExecuteNonQuery();
                                 con.Close();
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                MessageBox.Show(ex.Message);
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                             }
                             
                         }
@@ -104,11 +108,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                         ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                         ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
                         ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Collapsed;
-                        MessageBox.Show("Thay đổi thành công!");
+                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                        messageBoxSuccessful.ShowDialog();
                     }
                     else
                     {
-                        MessageBox.Show("Giá trị không được rỗng và phải là một số nguyên!");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Giá trị không được rỗng và phải là một số nguyên!";
+                        MB.ShowDialog();
                         LoadQuyDinhFromSelection();
                         ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                         ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
@@ -119,7 +127,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 else
                 {
-                    MessageBox.Show("Hãy chọn quy định trước!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Hãy chọn quy định trước";
+                    MB.ShowDialog();
                     LoadQuyDinhFromSelection();
                     ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                     ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
@@ -141,8 +152,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open(); 
                     } 
                     catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select * from QuiDinh";
@@ -162,9 +174,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -181,8 +194,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Open(); 
                     }
                     catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries + "'";
@@ -200,9 +214,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex) 
-                { 
-                    MessageBox.Show(ex.Message); 
+                catch (Exception) 
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
             ThayDoiQuyDinhWD.tbGiaTri.Text = item.GiaTri.ToString();

@@ -4,6 +4,7 @@ using StudentManagement.ViewModel.Login;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.Login;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Data.SqlClient;
 using System.IO;
@@ -127,9 +128,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                         window.ShowDialog();
                         LoadThongTinCaNhan();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             });
@@ -167,7 +169,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
@@ -181,9 +184,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                     CurrentUser.Email = reader.GetString(4);
                     CurrentUser.Avatar = (byte[])reader[5];
                     con.Close();
-                } catch (Exception ex)
+                } catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail msgBoxFail = new MessageBoxFail();   
+                    msgBoxFail.ShowDialog();
                 }
             }
         }
@@ -214,7 +218,8 @@ namespace StudentManagement.ViewModel.GiaoVien
             }
             catch (Exception)
             {
-                MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                messageBoxFail.ShowDialog();    
             }
         }
     }

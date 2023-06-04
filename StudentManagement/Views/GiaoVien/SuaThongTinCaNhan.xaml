@@ -20,7 +20,8 @@
         AllowsTransparency="True" 
         Background="Transparent" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" WindowStyle="None"
-        Title="SuaThongTinCaNhan"
+        Title="THPT Thủ Đức"
+        Icon="ThongTinTruong1.ico"
         Name="SuaThongTinCaNhanGVWD"
         DataContext="{StaticResource SuaHocSinhVM}">
     <i:Interaction.Triggers>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using StudentManagement.Converter;
 using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiaoVien;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
@@ -61,7 +63,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             });
@@ -85,13 +88,19 @@ namespace StudentManagement.ViewModel.GiaoVien
                 SuaHocSinhWD.DiaChi.Text == "" |
                 SuaHocSinhWD.Email.Text == "")
             {
-                MessageBox.Show("Vui lòng điền đầy đủ thông tin");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng điền đầy đủ thông tin";
+                MB.ShowDialog();
             }
             else
             if (!IsValidEmail(SuaHocSinhWD.Email.Text)
                 )
             {
-                MessageBox.Show("Email không đúng cú pháp!");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Email không đúng cú pháp";
+                MB.ShowDialog();
                 SuaHocSinhWD.Email.Focus();
             }
             else
@@ -105,7 +114,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                             con.Open();
                         } catch (Exception) 
                         { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return;
                         }
                         string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
@@ -122,14 +132,16 @@ namespace StudentManagement.ViewModel.GiaoVien
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             cmd.Parameters.AddWithValue("@imagebinary", buffer);
                             cmd.ExecuteScalar();
-                            MessageBox.Show("Cập nhật thành công!");
+                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            messageBoxSuccessful.ShowDialog();
                             con.Close();
                         }
                         SuaHocSinhWD.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                 }

@@ -4,6 +4,7 @@
                     xmlns:viewmodelGH="clr-namespace:StudentManagement.ViewModel.GiamHieu"
                     xmlns:viewmodelGV="clr-namespace:StudentManagement.ViewModel.GiaoVien"
                     xmlns:viewmodelHS="clr-namespace:StudentManagement.ViewModel.HocSinh"
+                    xmlns:viewmodelMB="clr-namespace:StudentManagement.ViewModel.MessageBox"
                     xmlns:converter="clr-namespace:StudentManagement.Converter">
     
     <!--Login-->
@@ -42,6 +43,10 @@
     <!--HocSinh-->
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <viewmodelHS:DiemSoViewModel x:Key="DiemSoVM"></viewmodelHS:DiemSoViewModel>
+    <!--MessageBox-->
+    <viewmodelMB:MessageBoxOKViewModel x:Key="MBOK"></viewmodelMB:MessageBoxOKViewModel>
+    <viewmodelMB:MessageBoxViewModel x:Key="MB"></viewmodelMB:MessageBoxViewModel>
+    <viewmodelMB:MessageBoxYesNoViewModel x:Key="YesNoMB"></viewmodelMB:MessageBoxYesNoViewModel>
     <!--Converter-->
     <converter:ByteArrayToBitmapImageConverter x:Name="binaryConverter" x:Key="ByteToImageConverter"/>
     <converter:BooleanToGenderConverter x:Name="genderConverter" x:Key="BooleanToGenderConverter"/>

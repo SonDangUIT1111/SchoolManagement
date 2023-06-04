@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using StudentManagement.Converter;
 using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Data.SqlClient;
 using System.IO;
@@ -57,7 +59,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             });
@@ -109,11 +112,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             try
             {
                 client.Send(message);
-                MessageBox.Show("Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to);
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to;
+                MB.ShowDialog();
             }
             catch (Exception)
             {
-                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                messageBoxFail.ShowDialog();
             }
         }
 
@@ -124,13 +131,19 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ThemGiaoVienWD.DiaChi.Text == "" |
                 ThemGiaoVienWD.Email.Text == "")
             {
-                MessageBox.Show("Vui lòng điền đầy đủ thông tin");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng điền đầy đủ thông tin";
+                MB.ShowDialog();
             }
             else
             if (!IsValidEmail(ThemGiaoVienWD.Email.Text)
                 )
             {
-                MessageBox.Show("Email không đúng cú pháp!");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Email không đúng cú pháp!";
+                MB.ShowDialog();
                 ThemGiaoVienWD.Email.Focus();
             }
             else
@@ -144,7 +157,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                             con.Open(); 
                         } catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         string CmdString1 = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (N'" +
@@ -155,9 +169,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         cmd1.ExecuteScalar();
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
 
@@ -175,8 +190,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         { 
                             con.Open(); 
                         } catch (Exception) 
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
                         string CmdString = "select top 1 MaGiaoVien,Email from GiaoVien order by MaGiaoVien desc";
@@ -193,9 +209,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         TaiKhoan += maSo.ToString();
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                     
 
@@ -206,8 +223,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                         { 
                             con.Open(); 
                         } catch (Exception) 
-                        { 
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return; 
                         }
 
@@ -235,9 +253,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         con.Close();
                         ThemGiaoVienWD.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             }

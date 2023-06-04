@@ -2,6 +2,7 @@
 using LiveCharts.Wpf;
 using StudentManagement.Model;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -274,7 +275,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct NienKhoa from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop";
@@ -298,9 +300,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     con.Close();
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -322,7 +325,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct bc.MaMon,TenMon from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon" +
@@ -347,9 +351,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -373,7 +378,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return;
                         }
                         string CmdString = "select bc.MaLop,TenLop,SiSo,TenMon,SoLuongDat,TiLe from BaoCaoMon bc join Lop l on bc.MaLop = l.MaLop join MonHoc mh on mh.MaMon = bc.MaMon " +
@@ -394,9 +400,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             }
@@ -422,9 +429,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         Values = new ChartValues<int>(SoLuongDatChartVal)
                     });
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -459,9 +467,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     } };
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
         }

@@ -20,7 +20,8 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Thêm lớp học mới" Height="400" Width="600"
         DataContext="{StaticResource ThemLopVM}"
-        Name="ThemLopWD">
+        Name="ThemLopWD"
+        Icon="ThongTinTruong1.ico">
     <Grid>
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Loaded">

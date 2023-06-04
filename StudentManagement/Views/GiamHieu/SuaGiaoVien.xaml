@@ -14,13 +14,14 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="ThemGiaoVien" 
+        Title="Sửa thông tin giáo viên" 
         Height="500" 
         Width="800"
         AllowsTransparency="True" 
         Background="Transparent" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" WindowStyle="None"
         Name="SuaGiaoVienWD"
+        Icon="ThongTinTruong1.ico"
         DataContext="{StaticResource SuaGiaoVienVM}">
 
     <i:Interaction.Triggers>

@@ -8,12 +8,13 @@
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="GiaoVienWindow" Height="800" Width="1300"
+        Title="THPT Thủ Đức" Height="800" Width="1300"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" 
         WindowStyle="None"
         Background="Transparent"
         Name="GiaoVienWD"
+        Icon="ThongTinTruong1.ico"
         DataContext="{StaticResource TrangChuGVVM}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

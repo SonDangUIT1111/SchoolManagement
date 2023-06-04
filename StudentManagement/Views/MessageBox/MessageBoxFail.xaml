@@ -1,0 +1,93 @@
+﻿<Window x:Class="StudentManagement.Views.MessageBox.MessageBoxFail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StudentManagement.Views.MessageBox"
+        mc:Ignorable="d"
+        Title="Thất bại" 
+        Height="250" 
+        Width="500"
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None" 
+        AllowsTransparency="True"
+        Background="Transparent"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        DataContext="{StaticResource MB}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        x:Name="FailMB"
+        Icon="ThongTinTruong1.ico">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Loaded}"
+                                   CommandParameter="{Binding ElementName=SuccessfulMB}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.5}">
+        <Grid>
+            <Border Background="Transparent"
+                CornerRadius="20"
+                BorderBrush="Transparent"
+                BorderThickness="3">
+                <Border CornerRadius="10"
+                        Background="Transparent"
+                        Opacity="0.08">
+                </Border>
+            </Border>
+            <Border
+            Height="250"
+            Width="500" 
+            CornerRadius="20"
+            Margin="0,0,0,0" 
+            BorderBrush="#FF07AEFF"
+            BorderThickness="3"
+            Background="#ffffff">
+                <Grid>
+                    <Image gif:AnimationBehavior.SourceUri="\Resources\Images\error.gif"
+                       Stretch="Uniform" 
+                       Margin="-150,-60,0,0"
+                       Width="100"
+                       Height="100">
+                    </Image>
+                    <TextBlock Text="Thất bại"
+                    Foreground="#FFF65880"
+                    FontFamily="Arial" 
+                    FontWeight="SemiBold" 
+                    FontSize="32"
+                    TextAlignment="Center"
+                    VerticalAlignment="Top" 
+                    Width="250"
+                    Margin="80,77,22,0">
+                    </TextBlock>
+                    <TextBlock Text="Thao tác thực hiện không thành công."
+                    Foreground="#000000"
+                    FontFamily="Arial" 
+                    FontSize="16"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top" 
+                    Width="300"
+                    Margin="0,125,0,0">
+                    </TextBlock>
+                    <TextBlock Text="Vui lòng kiểm tra các ràng buộc hoặc Internet."
+                    Foreground="#FF7B7B7B"
+                    FontFamily="Arial" 
+                    FontSize="12"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top" 
+                    Width="300"
+                    Margin="0,150,0,0">
+                    </TextBlock>
+                </Grid>
+            </Border>
+        </Grid>
+    </materialDesign:TransitioningContent>
+</Window>

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Win32;
 using StudentManagement.Converter;
 using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -72,7 +74,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("Lỗi, không cập nhật được hình ảnh.");
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
                 }
             });
@@ -81,16 +84,29 @@ namespace StudentManagement.ViewModel.GiamHieu
                 if (String.IsNullOrEmpty(SuaThongTinHocSinhWD.HoTen.Text) || String.IsNullOrEmpty(SuaThongTinHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) ||
                     String.IsNullOrEmpty(SuaThongTinHocSinhWD.DiaChi.Text) || String.IsNullOrEmpty(SuaThongTinHocSinhWD.Email.Text))
                 {
-                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập đầy đủ thông tin";
+                    MB.ShowDialog();
                 }
                 else if (!Regex.IsMatch(SuaThongTinHocSinhWD.Email.Text, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
                 {
-                    MessageBox.Show("Email không hợp lệ, vui lòng nhập lại!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Email không hợp lệ, vui lòng nhập lại!";
+                    MB.ShowDialog();
                 }
                 else
                 {
-                    MessageBoxResult ConfirmAdd = System.Windows.MessageBox.Show("Bạn có muốn sửa thông tin học sinh này không?", "Change Confirmation", System.Windows.MessageBoxButton.YesNo);
-                    if (ConfirmAdd == MessageBoxResult.Yes)
+                    MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                    var data = wd.DataContext as MessageBoxYesNoViewModel;
+                    data.Title = "Xác nhận!";
+                    data.Question = "Bạn có muốn sửa thông tin học sinh này không?";
+                    wd.ShowDialog();
+
+                    var result = wd.DataContext as MessageBoxYesNoViewModel;
+                    if (result.IsYes == true)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
@@ -101,7 +117,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     con.Open(); 
                                 } catch (Exception) 
                                 { 
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return; 
                                 }
                                 string CmdString = @"update HocSinh set TenHocSinh = N'" + SuaThongTinHocSinhWD.HoTen.Text + "', NgaySinh = CAST(N'" 
@@ -124,21 +141,24 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     SqlCommand cmd = new SqlCommand(CmdString, con);
                                     cmd.Parameters.AddWithValue("@imagebinary", buffer);
                                     cmd.ExecuteScalar();
-                                    MessageBox.Show("Cập nhật thành công!");
+                                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                                    messageBoxSuccessful.ShowDialog();
                                     con.Close();
                                 } else
                                 {
                                     CmdString = CmdString + "' where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
                                     SqlCommand cmd = new SqlCommand(CmdString, con);
                                     cmd.ExecuteScalar();
-                                    MessageBox.Show("Cập nhật thành công!");
+                                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                                    messageBoxSuccessful.ShowDialog();
                                     con.Close();
                                 }
                                 SuaThongTinHocSinhWD.Close();
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show(ex.Message);
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                             }
                         }
                     }

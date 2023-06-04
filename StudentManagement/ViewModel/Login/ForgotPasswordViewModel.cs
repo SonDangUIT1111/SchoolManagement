@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.Login;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Data.SqlClient;
 using System.Net;
@@ -177,14 +179,20 @@ namespace StudentManagement.ViewModel.Login
             //check fully information
             if (String.IsNullOrEmpty(EmailProtected))
             {
-                MessageBox.Show("Vui lòng điền email bảo vệ tài khoản.");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng điền email bảo vệ tài khoản";
+                MB.ShowDialog();
                 return;
             }
             else
             {
                 if (IndexRole == -1)
                 {
-                    MessageBox.Show("Vui lòng chọn chức vụ");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng chọn chức vụ";
+                    MB.ShowDialog();
                     return;
                 }
                 else if (IndexRole == 0)
@@ -201,7 +209,8 @@ namespace StudentManagement.ViewModel.Login
                             }
                             catch (Exception)
                             {
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return;
                             }
                             CmdString = "Select count(*) from GiamHieu where Email = '" + EmailProtected + "'";
@@ -227,7 +236,10 @@ namespace StudentManagement.ViewModel.Login
                     else
                     {
                         IsSend = false;
-                        MessageBox.Show("Email chưa được đăng ký.");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Email chưa được đăng ký";
+                        MB.ShowDialog();
                         return;
                     }
                 }
@@ -244,7 +256,8 @@ namespace StudentManagement.ViewModel.Login
                                 con.Open();
                             } catch (Exception)
                             { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return;
                             }
                             CmdString = "Select count(*) from GiaoVien where Email = '" + EmailProtected + "'";
@@ -269,7 +282,10 @@ namespace StudentManagement.ViewModel.Login
                     else
                     {
                         IsSend = false;
-                        MessageBox.Show("Email chưa được đăng ký.");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Email chưa được đăng ký";
+                        MB.ShowDialog();
                         return;
                     }
                 }
@@ -286,7 +302,8 @@ namespace StudentManagement.ViewModel.Login
                                 con.Open();
                             } catch (Exception) 
                             { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return; 
                             }
                             CmdString = "Select count(*) from HocSinh where Email = '" + EmailProtected + "'";
@@ -311,7 +328,10 @@ namespace StudentManagement.ViewModel.Login
                     else
                     {
                         IsSend = false;
-                        MessageBox.Show("Email chưa được đăng ký.");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Email chưa được đăng ký";
+                        MB.ShowDialog();
                         return;
                     }
                 }
@@ -327,12 +347,18 @@ namespace StudentManagement.ViewModel.Login
                 if (Int32.Parse(window.CodeVerified.Text) == RandomCode)
                 {
                     IsVerified = true;
-                    MessageBox.Show("Xác thực thành công, vui lòng nhập mật khẩu mới");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Xác thực thành công, vui lòng nhập mật khẩu mới.";
+                    MB.ShowDialog();
                     return;
                 }
                 else
                 {
-                    MessageBox.Show("Mã xác thực không chính xác, vui lòng nhập lại");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Mã xác thực không chính xác, vui lòng kiểm tra lại.";
+                    MB.ShowDialog();
                     IsVerified = false;
                     return;
                 }
@@ -340,7 +366,10 @@ namespace StudentManagement.ViewModel.Login
             catch (Exception)
             {
                 IsVerified = false;
-                MessageBox.Show("Định dạng mã xác thực không hợp lệ, vui lòng nhập 6 chữ số để xác thực");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Định dạng mã xác thực không hợp lệ, vui lòng nhập 6 chữ số để xác thực";
+                MB.ShowDialog();
             }
         }
         void Change(Window parameter)
@@ -349,12 +378,18 @@ namespace StudentManagement.ViewModel.Login
                 return;
             if (String.IsNullOrEmpty(NewPassword))
             {
-                MessageBox.Show("Vui lòng nhập mật khẩu mới");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng nhập mật khẩu mới";
+                MB.ShowDialog();
                 return;
             }
             if (String.IsNullOrEmpty(ConfirmNewPassword))
             {
-                MessageBox.Show("Vui lòng xác nhận lại mật khẩu mới");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng xác nhận mật khẩu mới";
+                MB.ShowDialog();
                 return;
             }
             //check validation of password
@@ -368,12 +403,18 @@ namespace StudentManagement.ViewModel.Login
             }
             if (countNum == 0 || countUpcase == 0)
             {
-                MessageBox.Show("Mật khẩu phải có ít nhất một kí tự in hoa và một kí tự số");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Mật khẩu phải có ít nhất một chữ số và một kí tự in hoa.";
+                MB.ShowDialog();
                 return;
             }
             if (ConfirmNewPassword != NewPassword)
             {
-                MessageBox.Show("Mật khẩu xác nhận không chính xác");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Mật khẩu xác nhận không chính xác";
+                MB.ShowDialog();
                 return;
             }
             else
@@ -388,7 +429,8 @@ namespace StudentManagement.ViewModel.Login
                             con.Open(); 
                         } catch (Exception) 
                         {
-                            MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
                             return;
                         }
                         string passEncode = CreateMD5(Base64Encode(NewPassword));
@@ -412,7 +454,10 @@ namespace StudentManagement.ViewModel.Login
                     {
                     }
                 }
-                MessageBox.Show("Đổi mật khẩu thành công");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Đổi mật khẩu thành công";
+                MB.ShowDialog();
                 parameter.Close();
                 LoginWindow login = new LoginWindow();
                 login.ShowDialog();
@@ -457,11 +502,15 @@ namespace StudentManagement.ViewModel.Login
             try
             {
                 client.Send(message);
-                MessageBox.Show("Mã xác thực đã được gửi đến email bảo vệ của bạn");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Mã xác thực đã được gửi đến email bảo vệ của bạn";
+                MB.ShowDialog();
             }
             catch (Exception)
             {
-                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                MessageBoxFail messageBoxFail = new MessageBoxFail();   
+                messageBoxFail.ShowDialog();
             }
         }
 

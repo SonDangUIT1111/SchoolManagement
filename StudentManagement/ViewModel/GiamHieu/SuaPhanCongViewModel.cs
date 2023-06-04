@@ -1,5 +1,7 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -37,12 +39,23 @@ namespace StudentManagement.ViewModel.GiamHieu
                 Model.GiaoVien giaovien = SuaPhanCongWD.cmbGiaoVien.SelectedItem as Model.GiaoVien;
                 if (giaovien == null)
                 {
-                    MessageBox.Show("Vui lòng chọn giáo viên giảng dạy!");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng chọn giáo viên giảng dạy";
+                    MB.ShowDialog();
                 }
                 else
                 {
-                    MessageBoxResult ConfirmChange = System.Windows.MessageBox.Show("Bạn có chắc chắn muốn thay đổi không?", "Change Confirmation", System.Windows.MessageBoxButton.YesNo);
-                    if (ConfirmChange == MessageBoxResult.Yes)
+                    MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                    var data = wd.DataContext as MessageBoxYesNoViewModel;
+                    data.Title = "Xác nhận!";
+                    data.Question = "Bạn có chắc chắn muốn thay đổi không?";
+                    wd.ShowDialog();
+
+                    var result = wd.DataContext as MessageBoxYesNoViewModel;
+
+                    if (result.IsYes == true)
                     {
                         using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                         {
@@ -54,19 +67,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 }
                                 catch (Exception)
                                 {
-                                    MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
                                     return;
                                 }
                                 string CmdString = "update PhanCongGiangDay set  MaGiaoVienPhuTrach=" + giaovien.MaGiaoVien + " where MaPhanCong = " + PhanCongHienTai.MaPhanCong + "";
                                 SqlCommand cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
                                 con.Close();
-                                MessageBox.Show("Sửa phân công giảng dạy thành công!");
+                                MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                                messageBoxSuccessful.ShowDialog();
                                 SuaPhanCongWD.Close();
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
-                                MessageBox.Show(ex.Message);
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                             }
                         }
                     }
@@ -89,8 +105,9 @@ namespace StudentManagement.ViewModel.GiamHieu
                     { 
                         con.Open(); 
                     } catch (Exception) 
-                    { 
-                        MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select MaGiaoVien, TenGiaoVien from GiaoVien";
@@ -109,9 +126,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                     }
                     con.Close();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
             }
             SuaPhanCongWD.cmbGiaoVien.SelectedIndex = GiaoVienCmb.ToList().FindIndex(x => x.TenGiaoVien == PhanCongHienTai.TenGiaoVien); ;

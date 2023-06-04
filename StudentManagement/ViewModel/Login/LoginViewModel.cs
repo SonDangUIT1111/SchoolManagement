@@ -1,8 +1,10 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.Login;
+using StudentManagement.Views.MessageBox;
 using System;
 using System.ComponentModel;
 using System.Data.SqlClient;
@@ -171,7 +173,10 @@ namespace StudentManagement.ViewModel.Login
                 return;
             if (Username == "" || Password == "")
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin");
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng nhập đầy đủ thông tin";
+                MB.ShowDialog();
             }
             else
             {
@@ -179,7 +184,10 @@ namespace StudentManagement.ViewModel.Login
                 string username = Username;
                 if (IndexRole == -1)
                 {
-                    MessageBox.Show("Vui lòng chọn chức vụ");
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng chọn chức vụ";
+                    MB.ShowDialog();
                     return;
                 }
                 else if (IndexRole == 0)
@@ -196,8 +204,9 @@ namespace StudentManagement.ViewModel.Login
                             { 
                                 con.Open();
                             } catch (Exception) 
-                            { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return; 
                             }
                             CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
@@ -231,7 +240,10 @@ namespace StudentManagement.ViewModel.Login
                     else
                     {
                         IsLoggedIn = false;
-                        MessageBox.Show("Sai tài khoản hoặc mật khẩu");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Sai tài khoản hoặc mật khẩu";
+                        MB.ShowDialog();
                         return;
                     }
                 }
@@ -249,8 +261,9 @@ namespace StudentManagement.ViewModel.Login
                             { 
                                 con.Open(); 
                             } catch (Exception)
-                            { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền");
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return; 
                             }
                             CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
@@ -284,7 +297,10 @@ namespace StudentManagement.ViewModel.Login
                     else
                     {
                         IsLoggedIn = false;
-                        MessageBox.Show("Sai tài khoản hoặc mật khẩu");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Sai tài khoản hoặc mật khẩu";
+                        MB.ShowDialog();
                         return;
                     }
                 }
@@ -301,8 +317,9 @@ namespace StudentManagement.ViewModel.Login
                             { 
                                 con.Open(); 
                             } catch (Exception) 
-                            { 
-                                MessageBox.Show("Lỗi mạng, vui lòng kiểm tra lại đường truyền"); 
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
                                 return; 
                             }
                             CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
@@ -337,7 +354,10 @@ namespace StudentManagement.ViewModel.Login
                     else
                     {
                         IsLoggedIn = false;
-                        MessageBox.Show("Sai tài khoản hoặc mật khẩu");
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Sai tài khoản hoặc mật khẩu";
+                        MB.ShowDialog();
                         return;
                     }
                 }
