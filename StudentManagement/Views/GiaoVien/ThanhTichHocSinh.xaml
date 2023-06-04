@@ -145,7 +145,7 @@
                                                     CommandParameter="{Binding}"
                                                     Visibility="{Binding Source={StaticResource ThanhTichVM}, Path=EditNhanXetVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <Button Content="{materialDesign:PackIcon Kind=Tick, Size=12}"
-                                                    Background="#FF68BB08"
+                                                    Background="#FF47D440"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"

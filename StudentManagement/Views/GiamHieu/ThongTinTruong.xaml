@@ -8,12 +8,22 @@
       d:DesignHeight="750" 
       d:DesignWidth="1000"
       Title="ThongTinTruong"
-      Background="#FFECECEC"
-      DataContext="{StaticResource ThongTinTruongVM}">
+      Background="#FFECECEC">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary/>
+            </ResourceDictionary.MergedDictionaries>
 
+            <BitmapImage x:Key="Image1" UriSource="/Resources/Images/THPTThuDuc1.jpg"/>
+            <BitmapImage x:Key="Image2" UriSource="/Resources/Images/THPTThuDuc2.jpg"/>
+            <BitmapImage x:Key="Image3" UriSource="/Resources/Images/THPTThucDuc4.jpg"/>
+            <BitmapImage x:Key="Image4" UriSource="/Resources/Images/THPTThucDuc3.jpg"/>
+        </ResourceDictionary>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="228" ></RowDefinition>
+            <RowDefinition Height="230" ></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Border BorderBrush="#03cffc" 
@@ -32,75 +42,77 @@
                            Margin="20"/>
             </Grid>
         </Border>
-        <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
+        <Border BorderBrush="#FF000000"  
+                BorderThickness="0" 
+                CornerRadius="10" 
+                Grid.Row="1" 
+                Background="White" 
+                Margin="12">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button
-                            Style="{StaticResource SlideshowButton}"
-                            Width="20"
-                            Height="30"
-                            Command="{Binding Source={StaticResource ThongTinTruongVM}, Path=PreviousImage}"
-                            CommandParameter="{Binding}"
-                            Margin="20">
-
-                            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-                                  Fill="#000000" 
-                                  HorizontalAlignment="Left" 
-                                  Margin="-10,0,0,5">
-                                <Path.Data>
-                                    <PathGeometry Figures="M20.2409 7.21957V16.7896C20.2409 18.7496 18.1109 19.9796 16.4109 18.9996L12.2609 16.6096L8.11094 14.2096C6.41094 13.2296 6.41094 10.7796 8.11094 9.79957L12.2609 7.39957L16.4109 5.00957C18.1109 4.02957 20.2409 5.24957 20.2409 7.21957Z"/>
-                                </Path.Data>
-                            </Path>
-                        </Button>
-
-
-                        <Image Source="{Binding ThongTinTruongImageSource}"
-                               Width="450"
-                               Height="300"
-                               x:Name="ThongTinTruongImageHolder">
-                        </Image>
-                        <Button
-                            Style="{StaticResource SlideshowButton}"
-                            Width="20"
-                            Height="30"
-                            Command="{Binding Source={StaticResource ThongTinTruongVM}, Path=NextImage}"
-                            CommandParameter="{Binding}"
-                            Margin="20">
-                            <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-                          Fill="#000000" 
-                          HorizontalAlignment="Left" 
-                          Margin="-10,0,0,5">
-                                <Path.Data>
-                                    <PathGeometry Figures="M3.76172 7.21957V16.7896C3.76172 18.7496 5.89172 19.9796 7.59172 18.9996L11.7417 16.6096L15.8917 14.2096C17.5917 13.2296 17.5917 10.7796 15.8917 9.79957L11.7417 7.39957L7.59172 5.00957C5.89172 4.02957 3.76172 5.24957 3.76172 7.21957Z"/>
-                                </Path.Data>
-                            </Path>
-                        </Button>
-                    </StackPanel>
-                </Grid>
-
-                <Grid Grid.Column="1"
-                      Margin="30 0 0 0">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
-                        <TextBlock Text="Trường THPT Thủ Đức" 
+                <Image Source="{StaticResource Image1}"
+                       Grid.Row="1"
+                       Panel.ZIndex="0"
+                       Stretch="UniformToFill">
+                    <Image.Triggers>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                            SpeedRatio=".5"
+                                            From="1"
+                                            To=".5"
+                                            RepeatBehavior="Forever"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                            SpeedRatio=".5"
+                                            From=".5"
+                                            To="1"
+                                            RepeatBehavior="Forever"/>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source"
+                                                            Duration="0:0:8"
+                                                            RepeatBehavior="Forever">
+                                        <DiscreteObjectKeyFrame Value="{StaticResource Image2}"
+                                                                    KeyTime="0:0:2"/>
+                                        <DiscreteObjectKeyFrame Value="{StaticResource Image3}"
+                                                                    KeyTime="0:0:4"/>
+                                        <DiscreteObjectKeyFrame Value="{StaticResource Image4}"
+                                                                    KeyTime="0:0:6"/>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Grid>
+                    <Grid Margin="30 0 20 20"
+                          Panel.ZIndex="3">
+                        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                                    Background="Transparent"
+                                    Width="600">
+                            <TextBlock Text="Trường THPT Thủ Đức" 
                                    FontSize="30"
                                    FontWeight="Bold"
+                                   Foreground="#ffffff"
+                                   TextAlignment="Right"
                                    Margin="0,0,0,20"
-                                   ></TextBlock>
-                        <TextBlock Text="Địa chỉ: 166/24 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố &#x0a;Hồ Chí Minh 71306"
-                                   FontSize="16"                               
-                                   HorizontalAlignment="Left"></TextBlock>
-                        <TextBlock Text="Email: thptthuduc@gmail.com"
+                                   >
+                            </TextBlock>
+                            <TextBlock Text="Địa chỉ: 166/24 Đặng Văn Bi, Bình Thọ, Thủ Đức, Thành phố &#x0a;Hồ Chí Minh 71306"
+                                   FontSize="16"  
+                                   Foreground="#ffffff"
+                                   TextAlignment="Right"
+                                   HorizontalAlignment="Right"></TextBlock>
+                            <TextBlock Text="Email: thptthuduc@gmail.com"
                                    FontSize="16"
-                                   HorizontalAlignment="Left"></TextBlock>
-                        <TextBlock Text="Điện thoại: (028) 37 224 704"
+                                   Foreground="#ffffff"
+                                   TextAlignment="Right"
+                                   HorizontalAlignment="Right"></TextBlock>
+                            <TextBlock Text="Điện thoại: (028) 37 224 704"
                                    FontSize="16"
-                                   HorizontalAlignment="Left"></TextBlock>
-                    </StackPanel>
+                                   Foreground="#ffffff"
+                                   TextAlignment="Right"
+                                   HorizontalAlignment="Right"></TextBlock>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </Grid>
         </Border>

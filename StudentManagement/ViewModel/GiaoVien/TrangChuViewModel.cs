@@ -42,7 +42,6 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand SwitchBaoCaoHocKy { get; set; }
         public ICommand DoiMatKhau { get; set; }
         public ICommand SuaThongTinCaNhan { get; set; }
-        public ICommand DoiMatKhau{ get; set; }
         public TrangChuViewModel()
         {
             ThongTinTruongPage = new Views.GiamHieu.ThongTinTruong();

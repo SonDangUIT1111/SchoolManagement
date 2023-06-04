@@ -48,16 +48,6 @@
                         Content=""
                         Width="1"
                         Height="0"/>
-                <Border BorderBrush="#FF000000" 
-                        BorderThickness="0" 
-                        CornerRadius="30" 
-                        VerticalAlignment="Top" 
-                        HorizontalAlignment="Right"
-                        Width="325"
-                        Height="78"
-                        Margin="21"
-                        Background="White">
-                </Border>
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="30" Grid.Row="1" Background="White" Margin="12">

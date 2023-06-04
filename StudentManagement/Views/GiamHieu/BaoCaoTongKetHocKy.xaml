@@ -55,7 +55,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Top"
-                            Margin="20 10 0 0"
+                            Margin="20 30 0 0"
                             HorizontalAlignment="Left"
                             Grid.Row="0">
                     <ComboBox x:Name="cmbNienKhoa"

@@ -35,7 +35,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#7AA781" 
+                Background="#2fd6c5" 
                 Margin="12" >
             <Grid>
                 <StackPanel Orientation="Horizontal"
@@ -100,7 +100,7 @@
                         Margin="25"
                         Content="Thêm Học Sinh" 
                         FontSize="18" 
-                        Background="#7AA781"
+                        Background="#2fd6c5"
                         Command="{Binding ThemHocSinh}"
                         FontWeight="Bold">
                 </Button>
@@ -142,11 +142,11 @@
                         <TextBlock Text="Ngày sinh"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="160 0 0 0"/>
+                               Margin="150 0 0 0"/>
                         <TextBlock Text="Giới tính"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="60 0 0 0"/>
+                               Margin="50 0 0 0"/>
                         <TextBlock Text="Địa chỉ"
                                FontSize="14"
                                FontWeight="Medium"
@@ -154,7 +154,7 @@
                         <TextBlock Text="Email"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="175 0 0 0"/>
+                               Margin="165 0 0 0"/>
                     </StackPanel>
                 </StackPanel>
                 <DataGrid Margin="25,30,25,10"
@@ -164,8 +164,19 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ItemsSource="{Binding DanhSachLop}"
                           Style="{StaticResource DataGridStyle1}"
-                          RowStyle="{StaticResource DataGridRowStyle1}"
-                          CellStyle="{StaticResource DataGridCellStyle1}">
+                          >
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
@@ -175,28 +186,28 @@
                                         <Border CornerRadius="10"
                                                 Height="35"
                                                 Width="35"
-                                                Margin="10 -3 0 0">
+                                                Margin="0 0 0 0">
                                             <Border.Background>
                                                 <ImageBrush ImageSource="{Binding Avatar, Converter={StaticResource ByteToImageConverter}}"
                                                             Stretch="UniformToFill"/>
                                             </Border.Background>
                                         </Border>
                                         <TextBlock VerticalAlignment="Center"
-                                                       Margin="20 0 0 0"
+                                                       Margin="10 0 0 0"
                                                        Width="200"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding TenHocSinh}"
                                                        TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
-                                                       Margin="20 0 0 0"
+                                                       Margin="10 0 0 0"
                                                        Width="100"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding NgaySinh}"
                                                        TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
-                                                       Margin="20 0 0 0"
+                                                       Margin="10 0 0 0"
                                                        Width="50"
                                                        FontSize="14"
                                                        Foreground="#000000"
@@ -210,14 +221,14 @@
                                                        Text="{Binding DiaChi}"
                                                        TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
-                                                       Margin="20 0 0 0"
+                                                       Margin="10 0 0 0"
                                                        Width="200"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding Email}"
                                                        TextTrimming="WordEllipsis"/>
                                         <Button Content="{materialDesign:PackIcon Kind=AccountRemove, Size=12}"
-                                                    Background="#FC8484"
+                                                    Background="#FFF65D5D"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"

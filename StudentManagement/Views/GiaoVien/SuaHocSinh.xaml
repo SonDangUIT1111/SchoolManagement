@@ -14,8 +14,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Height="750" 
-        Width="960"
+        Height="500" 
+        Width="800"
         AllowsTransparency="True" 
         Background="Transparent" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" WindowStyle="None"
@@ -40,6 +40,35 @@
                 CornerRadius="20"
                 Grid.RowSpan="2">
         </Border>
+        <StackPanel Orientation="Horizontal" 
+                        Width="512" 
+                        Height="50"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+            <materialDesign:PackIcon
+                            x:Name="iconImage" 
+                            Kind="Pencil" 
+                            Width="34" Height="34"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"  
+                            Margin="20,0,0,0">
+                <materialDesign:PackIcon.Foreground>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#2af598" Offset="1"/>
+                        <GradientStop Color="#009efd" Offset="0.3"/>
+                    </LinearGradientBrush>
+                </materialDesign:PackIcon.Foreground>
+            </materialDesign:PackIcon>
+            <TextBlock Text="Sửa thông tin học sinh"
+                       FontSize="24"
+                       Margin="0 15 0 0"
+                       Width="250"
+                       Height="50"
+                       FontWeight="DemiBold"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top">
+            </TextBlock>
+        </StackPanel>
         <Grid Grid.Row="0">
             <uc:Title_Bar_Log/>
             <Separator VerticalAlignment="Bottom"
@@ -47,47 +76,26 @@
                        Margin="0 0 0 -2"/>
         </Grid>
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Horizontal" 
-                        Width="512" 
-                        Height="50"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-               <materialDesign:PackIcon
-                            x:Name="iconImage" 
-                            Kind="Pencil" 
-                            Foreground="#333333"
-                            Width="64" Height="54"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"  
-                            Margin="0,0,0,0"/>
-                <TextBlock Text="Sửa thông tin học sinh"
-                       FontSize="24"
-                       Margin="25 15 0 0"
-                       Width="250"
-                       Height="50"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
-            </StackPanel>
-            <Grid Height="518">
+            
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="600"/>
+                    <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-
-                <!--<Image Grid.Column="0" 
-                       Source="{Binding Avatar}"
-                       Width="200"
-                       Height="200"
-                       Margin="0 70 0 0"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Stretch="Fill">
-                </Image>-->
+                <Image Source="/Resources/Images/NewLogo.jpg"
+                   Height="300"
+                   Width="300"
+                   Grid.ColumnSpan="2"
+                   Panel.ZIndex="0"
+                   Margin="10"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Left"/>
                 <Grid
                         x:Name="ChangegrdSelectImg"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Top"
                         Width="150"
-                        Height="150" >
+                        Height="150"
+                        Margin="0 20 0 0">
                     <Grid.Background>
                         <ImageBrush ImageSource="{Binding HocSinhHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"
                                     Stretch="UniformToFill"/>
@@ -121,108 +129,47 @@
                             VerticalAlignment="Bottom"
                             FocusVisualStyle="{x:Null}"
                             Padding="0"/>
-                    <!--<materialDesign:PackIcon 
-                            x:Name="iconImage" 
-                            Kind="FileImageOutline" 
-                            Foreground="#333333"
-                            Width="64" Height="54"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"  
-                            Margin="0,25,0,0"/>-->
                 </Grid>
                 <StackPanel Orientation="Vertical"
-                        Margin="0,50,0,0"
+                        Margin="0,20,0,0"
                         VerticalAlignment="Top" 
                         Height="518"
                         Grid.Column="1">
-
-                    <TextBlock Text="Tên Học Sinh"
-                       FontSize="17"
-                       Margin="25 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
                     <TextBox x:Name="TenHS"
                          materialDesign:HintAssist.Hint="Tên Học Sinh"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="540"
-                         Height="40"
-                         Padding="10"
+                         Width="450"
                          Margin="25 0 0 0"
                          HorizontalAlignment="Left"
                          Text="{Binding HocSinhHienTai.TenHocSinh}"/>
-                    <TextBlock Text="Ngày sinh"
-                       FontSize="17"
-                       Margin="25 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
-                    <DatePicker
-                    x:Name="NgaySinh"
-                    Width="250"
-                    HorizontalAlignment="Left"
-                    Margin="25 10 0 0"
-                    SelectedDate="{Binding HocSinhHienTai.NgaySinh}"/>
-
-                    <!--<TextBox x:Name="NgaySinh"
-                         materialDesign:HintAssist.Hint="Search ... "
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="640"
-                         Height="40"
-                         Padding="10"
-                         Margin="25 0 0 0"
-                         HorizontalAlignment="Left"/>-->
-                    <TextBlock Text="Giới Tính"
-                       FontSize="17"
-                       Margin="25 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
+                    <DatePicker Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                x:Name="NgaySinh"
+                                Width="450"
+                                HorizontalAlignment="Left"
+                                Margin="25 20 0 0"
+                                SelectedDate="{Binding HocSinhHienTai.NgaySinh}"/>
                     <ComboBox x:Name="GioiTinh"
                           materialDesign:HintAssist.Hint="Giới tính"
                           IsEditable="False"
-                          Width="200"
-                          Height="40"
-                          Padding="10"
+                          Width="450"
                           HorizontalAlignment="Left"
-                          Margin="25 0 0 0"
+                          Margin="25 20 0 0"
                           Style="{StaticResource MaterialDesignOutlinedComboBox}">
                         <ComboBoxItem IsSelected="True">Nữ</ComboBoxItem>
                         <ComboBoxItem IsSelected="{Binding HocSinhHienTai.GioiTinh}">Nam</ComboBoxItem>
                     </ComboBox>
-                    <TextBlock Text="Địa chỉ"
-                       FontSize="17"
-                       Margin="25 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
                     <TextBox x:Name="DiaChi"
                          materialDesign:HintAssist.Hint="Địa chỉ"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="540"
-                         Height="40"
-                         Padding="10"
-                         Margin="25 0 0 0"
+                         Width="450"
+                         Margin="25 20 0 0"
                          HorizontalAlignment="Left"
                          Text="{Binding HocSinhHienTai.DiaChi}"/>
-                    <TextBlock Text="Email"
-                       FontSize="17"
-                       Margin="25 10 0 0"
-                       Width="250"
-                       Height="29"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"/>
                     <TextBox x:Name="Email"
                          materialDesign:HintAssist.Hint="Email"
                          Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                         Width="540"
-                         Height="40"
-                         Padding="10"
-                         Margin="25 0 0 0"
+                         Width="450"
+                         Margin="25 20 0 0"
                          HorizontalAlignment="Left"
                          Text="{Binding HocSinhHienTai.Email}"/>
                     <StackPanel Orientation="Horizontal"/>
@@ -233,20 +180,19 @@
 
             <StackPanel Orientation="Horizontal"
                         VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right">
+                        HorizontalAlignment="Right"
+                        Margin="0 0 35 20">
                 <Button Style="{StaticResource InteractiveButton}"
-                        Background="#2af598"
-                        Foreground="#000000"
-                        Width="150"
-                        Content="Cập Nhật"
-                        Margin="0 0 20 10"
+                        Content="Thêm"
+                        Width="100"
+                        Height="40"
+                        Margin="0 0 20 0"
                         Command="{Binding ChangeHocSinh}"/>
                 <Button Style="{StaticResource InteractiveButton}"
-                        Background="#CFCDCB"
-                        Foreground="#000000"
-                        Width="150"
-                        Content="Hủy"
-                        Margin="0 0 20 10"
+                        Content="Thêm"
+                        Width="100"
+                        Height="40"
+                        Margin="0 0 20 0"
                         Command="{Binding CancelCommand}"/>
             </StackPanel>
         </Grid>

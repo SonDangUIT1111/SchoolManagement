@@ -18,7 +18,7 @@
         WindowStartupLocation="CenterScreen"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        Title="Thêm lớp học mới" Height="500" Width="800"
+        Title="Thêm lớp học mới" Height="400" Width="600"
         DataContext="{StaticResource ThemLopVM}"
         Name="ThemLopWD">
     <Grid>
@@ -41,22 +41,38 @@
                 BorderThickness="2"
                 CornerRadius="20"
                 Grid.RowSpan="2"/>
+        <Image Source="/Resources/Images/EducationBg.jpg"
+                Height="180"
+                Width="180"
+                Grid.Row="1"
+                Panel.ZIndex="0"
+                Margin="10"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Left"/>
         <StackPanel Orientation="Horizontal" 
-                        Width="512" 
-                        Height="50"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-            <Path Margin="25,20,0,0" Width="30" Height="30" Data="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" Fill="Black" Stretch="Fill" />
+                    Width="512" 
+                    Height="50"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top">
+            <Path Margin="25,20,0,0" Width="30" Height="30" Data="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z" Stretch="Fill" >
+                <Path.Fill>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#2af598" Offset="1"/>
+                        <GradientStop Color="#009efd" Offset="0.3"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
             <TextBlock Text="Thêm lớp học"
                        FontSize="24"
                        Margin="15 20 0 0"
                        Width="300"
                        Height="50"
+                       FontWeight="DemiBold"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Top"/>
         </StackPanel>
         <StackPanel Grid.Row="1"
-                    Margin="0 50 0 0">
+                    Margin="0 20 0 0">
             <TextBox    materialDesign:HintAssist.Hint="Nhập tên lớp"
                         x:Name="ClassName"
                         HorizontalAlignment="Center"

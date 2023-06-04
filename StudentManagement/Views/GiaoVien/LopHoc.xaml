@@ -26,11 +26,11 @@
             <RowDefinition Height="228" ></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#110357" 
+        <Border BorderBrush="#4e79cf" 
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#33778C" 
+                Background="#4e79cf" 
                 Margin="12" >
             <Grid>
                 <TextBlock Text="Lớp Học" 
@@ -177,8 +177,7 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ItemsSource="{Binding DanhSachhs}"
                           Style="{StaticResource DataGridStyle1}"
-                          RowHeight="50"
-                          CellStyle="{StaticResource DataGridCellStyle1}">
+                          RowHeight="50">
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
                             <Style.Triggers>
@@ -236,13 +235,13 @@
                                                        TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                        Margin="20 0 0 0"
-                                                       Width="200"
+                                                       Width="160"
                                                        FontSize="14"
                                                        Foreground="#000000"
                                                        Text="{Binding Email}"
                                                        TextTrimming="WordEllipsis"/>
                                         <Button Content="{materialDesign:PackIcon Kind=Pencil, Size=12}"
-                                                    Background="#FF68BB08"
+                                                    Background="#FF47D440"
                                                     Foreground="White"
                                                     BorderBrush="Transparent"
                                                     Width="30"

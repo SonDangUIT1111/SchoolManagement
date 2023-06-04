@@ -495,6 +495,10 @@
     <Resource Include="Resources\Images\monhocbg.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\THPTThucDuc4.jpg" />
+    <Resource Include="Resources\Images\THPTThucDuc3.jpg" />
+    <Resource Include="Resources\Images\THPTThuDuc2.jpg" />
+    <Resource Include="Resources\Images\THPTThuDuc1.jpg" />
     <Resource Include="Resources\Images\rulebg.jpg" />
     <Resource Include="Resources\Images\ThongTinTruong1.png" />
     <Content Include="Resources\Images\ThongTinTruong2.png" />

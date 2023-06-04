@@ -212,7 +212,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 return; 
                             }
                             string cmdString = "DELETE FROM Lop WHERE MaLop = " + item.MaLop.ToString() + "";
-                            MessageBox.Show(cmdString);
                             SqlCommand cmd = new SqlCommand(cmdString, con);
                             cmd.ExecuteNonQuery();
                             MessageBox.Show("Xóa thành công");
