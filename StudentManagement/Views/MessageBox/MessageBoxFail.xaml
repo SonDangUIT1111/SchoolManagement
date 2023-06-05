@@ -27,7 +27,7 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding Loaded}"
-                                   CommandParameter="{Binding ElementName=SuccessfulMB}"/>
+                                   CommandParameter="{Binding ElementName=FailMB}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <materialDesign:TransitioningContent OpeningEffect="{materialDesign:TransitionEffect Kind=SlideInFromLeft, Duration=0:0:0.5}">
