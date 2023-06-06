@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:StudentManagement.Views.MessageBox"
         mc:Ignorable="d"
         Title="Xác nhận"
-        Height="150" 
-        Width="350"
+        Height="180" 
+        Width="400"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"        
         AllowsTransparency="True"
@@ -54,11 +54,13 @@
                        VerticalAlignment="Top" 
                        Margin="20 10 0 0">
             </TextBlock>
+        </StackPanel>
 
-            <StackPanel Orientation="Horizontal"
-                        VerticalAlignment="Bottom"
-                        Margin="20 30 0 0">
-                <Button Content="Yes"
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0 0 15 15">
+            <Button Content="Yes"
                         Style="{StaticResource InteractiveButton}"
                         Margin="110 0 0 0"
                         Width="90"
@@ -68,8 +70,8 @@
                         Command="{Binding Yes}"
                         CommandParameter="{Binding ElementName=MessageBoxYN}" 
                         Background="#FF1ED760">
-                </Button>
-                <Button Content="No"
+            </Button>
+            <Button Content="No"
                         Margin="10 0 0 0"
                         Style="{StaticResource InteractiveButton}"
                         Width="90"
@@ -79,8 +81,7 @@
                         Command="{Binding No}"
                         CommandParameter="{Binding ElementName=MessageBoxYN}" 
                         Background="#FFEE4949">
-                </Button>
-            </StackPanel>
+            </Button>
         </StackPanel>
     </Grid>
 </Window>

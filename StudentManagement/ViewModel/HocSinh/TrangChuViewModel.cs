@@ -70,6 +70,7 @@ namespace StudentManagement.ViewModel.HocSinh
                 StudentManagement.ViewModel.HocSinh.DiemSoViewModel vm = XemDiemPage.DataContext as StudentManagement.ViewModel.HocSinh.DiemSoViewModel;
                 vm.IdHocSinh = IdHocSinh;
                 HocSinhWD.RPage.Content = ThongTinTruongPage;
+                HocSinhWD.TrangChuRadiobtn.IsChecked = true;
                 
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>

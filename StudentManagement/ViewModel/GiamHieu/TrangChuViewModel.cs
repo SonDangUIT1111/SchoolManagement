@@ -56,6 +56,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<GiamHieuWindow>((parameter) => { return true; },(parameter) => 
             {
                 parameter.RPage.Content = ThongTinTruongPage;
+                parameter.TrangChuRadioBtn.IsChecked = true;
             });
             SwitchThongTinHocSinh = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {

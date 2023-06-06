@@ -209,8 +209,15 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public void XoaGiaoVien(Model.GiaoVien value)
         {
-            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa giáo viên?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-            if (ConfirmDelete == MessageBoxResult.Yes)
+            MessageBoxYesNo wd = new MessageBoxYesNo();
+
+            var data = wd.DataContext as MessageBoxYesNoViewModel;
+            data.Title = "Xác nhận!";
+            data.Question = "Bạn có chắc chắn muốn xóa giáo viên này?";
+            wd.ShowDialog();
+
+            var result = wd.DataContext as MessageBoxYesNoViewModel;
+            if (result.IsYes == true)
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
@@ -229,8 +236,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                         cmd = new SqlCommand(CmdString, con);
                         cmd.ExecuteScalar();
                         MessageBoxOK MB = new MessageBoxOK();
-                        var data = MB.DataContext as MessageBoxOKViewModel;
-                        data.Content = "Đã xóa " + value.TenGiaoVien;
+                        var datamb = MB.DataContext as MessageBoxOKViewModel;
+                        datamb.Content = "Đã xóa " + value.TenGiaoVien;
                         MB.ShowDialog();
                         con.Close();
                     }

@@ -76,6 +76,14 @@ namespace StudentManagement.ViewModel.Login
                 MB.ShowDialog();
                 return;
             }
+            if (ChangePasswordWD.PasswordNew.Password == MatKhau)
+            {
+                MessageBoxOK MB = new MessageBoxOK();
+                var data = MB.DataContext as MessageBoxOKViewModel;
+                data.Content = "Vui lòng nhập mật khẩu mới khác mật khẩu hiện tại.";
+                MB.ShowDialog();
+                return;
+            }
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try

@@ -124,9 +124,9 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton 
-                Command="{Binding SwitchBaoCaoMonHoc}"
-                CommandParameter="{Binding ElementName=RPage}">
+                    <RadioButton    x:Name="TrangChuRadiobtn"
+                                    Command="{Binding SwitchBaoCaoMonHoc}"
+                                    CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="ReportBar" 

@@ -184,7 +184,7 @@
                         HorizontalAlignment="Right"
                         Margin="0 0 55 40">
                 <Button Style="{StaticResource InteractiveButton}"
-                        Content="Thêm"
+                        Content="Sửa"
                         Width="100"
                         Height="40"
                         Margin="0 0 20 0"

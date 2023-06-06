@@ -48,12 +48,12 @@
                 </StackPanel>
                 <TextBlock Text="{Binding Content}"
                            VerticalAlignment="Center"
-                           Margin="5 30 0 20"
+                           Margin="5 10 0 20"
                            Foreground="Black"
                            FontFamily="Bahnschrift SemiBold" 
                            FontWeight="SemiBold"
                            FontSize="16"
-                           Height="50"
+                           Height="80"
                            Width="350"
                            TextWrapping="Wrap">
                 </TextBlock>

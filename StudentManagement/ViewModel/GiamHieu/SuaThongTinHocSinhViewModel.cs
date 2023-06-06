@@ -29,10 +29,11 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand CancelChange { get; set; }
         public SuaThongTinHocSinhViewModel()
         {
+            HocSinhHienTai = new StudentManagement.Model.HocSinh(); 
             LoadData = new RelayCommand<SuaThongTinHocSinh>((parameter) => { return true; }, (parameter) =>
             {
                 SuaThongTinHocSinhWD = parameter;
-                if (HocSinhHienTai.GioiTinh.ToString() == "True")
+                if (HocSinhHienTai.GioiTinh == true)
                 {
                     SuaThongTinHocSinhWD.Male.IsChecked = true;
                 }
@@ -40,8 +41,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     SuaThongTinHocSinhWD.Female.IsChecked = true;
                 }
-                SuaThongTinHocSinhWD.DiaChi.Text = HocSinhHienTai.DiaChi;
-                SuaThongTinHocSinhWD.Email.Text = HocSinhHienTai.Email; 
             });
             CancelChange = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -153,9 +152,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     messageBoxSuccessful.ShowDialog();
                                     con.Close();
                                 }
+                                ImagePath = null;
                                 SuaThongTinHocSinhWD.Close();
                             }
-                            catch (Exception ex)
+                            catch (Exception)
                             {
                                 MessageBoxFail messageBoxFail = new MessageBoxFail();
                                 messageBoxFail.ShowDialog();

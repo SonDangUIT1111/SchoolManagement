@@ -35,10 +35,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ThemHocSinhWD = parameter as ThemHocSinhMoi;
-                // set default day
-                int defaultYear = DateTime.Now.Year - 15;
-                DateTime defaultTime = new DateTime(defaultYear, 1, 1);
-                ThemHocSinhWD.NgaySinh.SelectedDate = defaultTime;
 
             });
             CancelAdd = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -79,7 +75,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             CreateStudent = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if (String.IsNullOrEmpty(ThemHocSinhWD.Hoten.Text) || String.IsNullOrEmpty(ThemHocSinhWD.NgaySinh.SelectedDate.Value.ToString()) ||
+                if (String.IsNullOrEmpty(ThemHocSinhWD.Hoten.Text) || String.IsNullOrEmpty(ThemHocSinhWD.NgaySinh.Text) ||
                     String.IsNullOrEmpty(ThemHocSinhWD.DiaChi.Text) || String.IsNullOrEmpty(ThemHocSinhWD.Email.Text))
                 {
                     MessageBoxOK MB = new MessageBoxOK();

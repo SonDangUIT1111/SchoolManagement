@@ -109,12 +109,12 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     HeThongBangDiemWD = parameter as HeThongBangDiem;
                     LoadDuLieuComboBox();
-                    XacDinhQuyenHan();
                     ProgressBarVisibility = true;
                     DataGridVisibility = false;
                     await LoadDanhSachBangDiem();
                     ProgressBarVisibility = false;
                     DataGridVisibility = true;
+                    XacDinhQuyenHan();
                     everLoaded = true;
                 }
             });

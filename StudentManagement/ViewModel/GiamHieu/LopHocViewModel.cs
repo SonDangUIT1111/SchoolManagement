@@ -200,7 +200,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 Model.Lop item = parameter as Model.Lop;
                 MessageBoxYesNo wd = new MessageBoxYesNo();
-
+               
                 var data = wd.DataContext as MessageBoxYesNoViewModel;
                 data.Title = "Xác nhận!";
                 data.Question = "Bạn có muốn xóa lớp không?";

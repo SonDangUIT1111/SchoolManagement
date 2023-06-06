@@ -227,7 +227,7 @@
                         Margin="0 0 20 0"
                         Command="{Binding XepLop}"/>
                 <Button Style="{StaticResource InteractiveButton}"
-                        Content="Xác nhận"
+                        Content="Hủy"
                         Width="100"
                         Height="40"
                         Margin="0 0 20 0"

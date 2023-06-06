@@ -77,10 +77,13 @@
                    HorizontalAlignment="Left"/>
             <Grid       VerticalAlignment="Top"
                         Margin="0 20 0 0"
-                        Background="#ffffff"
                         x:Name="ChangegrdSelectImg"
                         Width="150"
                         Height="150" >
+                <Grid.Background>
+                    <ImageBrush ImageSource="{Binding HocSinhHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"
+                                    Stretch="UniformToFill"/>
+                </Grid.Background>
                 <Rectangle 
                                 x:Name="ChangerecImage"
                                 StrokeDashArray="4 2" 
@@ -98,7 +101,7 @@
                             CommandParameter="{Binding ElementName=ChangegrdSelectImg}"
                             Height="35" 
                             Width="100" 
-                            Content="Thêm hình ảnh" 
+                            Content="Chọn hình ảnh" 
                             FontSize="14"
                             Foreground="#FFFFFF"
                             Background="#0099FF"
@@ -110,14 +113,6 @@
                             VerticalAlignment="Bottom"
                             FocusVisualStyle="{x:Null}"
                             Padding="0"/>
-                <materialDesign:PackIcon 
-                            x:Name="iconImage" 
-                            Kind="FileImageOutline" 
-                            Foreground="#333333"
-                            Width="64" Height="54"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"  
-                            Margin="0,25,0,0"/>
             </Grid>
             <StackPanel Grid.Column="1">
                 <TextBox Margin="20 20 20 0"
@@ -174,7 +169,7 @@
                             HorizontalAlignment="Right"
                             Margin="20 20 60 0">
                     <Button Style="{StaticResource InteractiveButton}"
-                            Content="Xác nhận"
+                            Content="Cập nhật"
                             Width="100"
                             Height="40"
                             Margin="0 0 20 0"

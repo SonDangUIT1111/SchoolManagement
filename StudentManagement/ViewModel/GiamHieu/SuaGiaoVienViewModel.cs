@@ -130,10 +130,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                             "' AS DATE), GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
                             ", DiaChi = N'" + SuaGiaoVienWD.DiaChi.Text +
                             "', Email = '" + SuaGiaoVienWD.Email.Text +
-                            "', AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+                            "'";
 
                         if (ImagePath != null)
                         {
+                            CmdString = CmdString + " , AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
                             ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                             byte[] buffer = converter.ImageToBinary(ImagePath);
                             SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -142,8 +143,18 @@ namespace StudentManagement.ViewModel.GiamHieu
                             con.Close();
                             MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
                             messageBoxSuccessful.ShowDialog();
-                            SuaGiaoVienWD.Close();
                         }
+                        else
+                        {
+                            CmdString = CmdString + " where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            messageBoxSuccessful.ShowDialog();
+                            con.Close();
+                        }
+                        ImagePath = null;
+                        SuaGiaoVienWD.Close();
                     }
                     catch (Exception)
                     {

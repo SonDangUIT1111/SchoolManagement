@@ -1,4 +1,5 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -155,7 +156,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
             {
                 DanhSachHocSinh.Clear();
-                IsLoadAll = false;
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
@@ -169,11 +169,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                             messageBoxFail.ShowDialog();
                             return; 
                         }
-                        string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
+                        string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe, DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
                                             " where hs.MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
                         if (IsLoadAll)
                         {
-                            CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
+                            CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi, Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
                                             " where TenHocSinh like N'%" + parameter.Text + "%'";
                         }
                         SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -219,6 +219,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     student.NgaySinh = reader.GetDateTime(2);
                                     student.GioiTinh = reader.GetBoolean(3);
                                     student.Avatar = (byte[])reader[6];
+                                    student.DiaChi = reader.GetString(7);
+                                    student.Email = reader.GetString(8);
                                     if (reader.GetInt32(5) == 1)
                                     {
                                         try
@@ -277,7 +279,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             messageBoxFail.ShowDialog();
                             return;
                         }
-                        string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
+                        string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
                         SqlCommand cmd = new SqlCommand(CmdString, con);
                         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -323,6 +325,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     student.NgaySinh = reader.GetDateTime(2);
                                     student.GioiTinh = reader.GetBoolean(3);
                                     student.Avatar = (byte[])reader[6];
+                                    student.DiaChi = reader.GetString(7);
+                                    student.Email = reader.GetString(8);
                                     if (reader.GetInt32(5) == 1)
                                     {
                                         try
@@ -425,10 +429,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                         return;
                     }
 
-                    string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh where hs.MaLop = " + LopQueries;
+                    string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh where hs.MaLop = " + LopQueries;
                     if (IsLoadAll)
                     {
-                        CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
+                        CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
                     }
                     SqlCommand cmd = new SqlCommand(CmdString, con);
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
@@ -475,6 +479,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 student.NgaySinh = reader.GetDateTime(2);
                                 student.GioiTinh = reader.GetBoolean(3);
                                 student.Avatar = (byte[])reader[6];
+                                student.DiaChi = reader.GetString(7);
+                                student.Email = reader.GetString(8);
                                 if (reader.GetInt32(5) == 1)
                                 {
                                     try
@@ -656,8 +662,15 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void XoaHocSinh(Model.HocSinh item)
         {
-            MessageBoxResult ConfirmDelete = System.Windows.MessageBox.Show("Bạn có chắc chắn xóa học sinh này không?", "Delete Confirmation", System.Windows.MessageBoxButton.YesNo);
-            if (ConfirmDelete == MessageBoxResult.Yes)
+            MessageBoxYesNo wd = new MessageBoxYesNo();
+
+            var data = wd.DataContext as MessageBoxYesNoViewModel;
+            data.Title = "Xác nhận!";
+            data.Question = "Bạn có chắc chắn muốn xóa học sinh này?";
+            wd.ShowDialog();
+
+            var result = wd.DataContext as MessageBoxYesNoViewModel;
+            if (result.IsYes == true)
                 using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try

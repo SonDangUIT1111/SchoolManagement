@@ -65,6 +65,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 StudentManagement.ViewModel.GiaoVien.HeThongBangDiemViewModel vmHeThongDiem = HeThongBangDiemPage.DataContext as StudentManagement.ViewModel.GiaoVien.HeThongBangDiemViewModel;
                 vmHeThongDiem.IdUser = CurrentUser.MaGiaoVien;
                 GiaoVienWD.RPage.Content = ThongTinTruongPage;
+                GiaoVienWD.TrangChuRadiobtn.IsChecked = true;
             });
 
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
