@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
 using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiaoVien;
@@ -34,6 +35,8 @@ namespace StudentManagement.ViewModel.GiaoVien
         public string KhoiQueries { get; set; }
         public string LopQueries { get; set; }
         public string MonHocQueries { get; set; }
+
+        public int DiemDat { get; set; }
 
         private Visibility _linevisibility;
         public Visibility LineVisibility { get { return _linevisibility; } set { _linevisibility = value; OnPropertyChanged(); } }
@@ -217,7 +220,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         DataGridVisibility = false;
                         await LoadDanhSachBangDiem();
                         ProgressBarVisibility = false;
-                        DataGridVisibility = true; 
+                        DataGridVisibility = true;
                         return;
                     }
                     if (KiemTraDiemHopLe() == false)
@@ -283,7 +286,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     worksheet.Cells[6, 2] = monHoc.TenMon;
                     worksheet.Cells[6, 3] = "Mã môn học: ";
                     worksheet.Cells[6, 4] = "'" + monHoc.MaMon.ToString();
-                    
+
                     // Set the column headers
                     worksheet.Cells[7, 1] = "STT";
                     worksheet.Cells[7, 2] = "Mã học sinh";
@@ -312,7 +315,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         dataRange = worksheet.Range[worksheet.Cells[row, 1], worksheet.Cells[row, 8]];
                         dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
                         dataRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
-                        row++;idx++;
+                        row++; idx++;
                     }
                     //Format chhung
                     worksheet.Columns.ColumnWidth = 12;
@@ -334,9 +337,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                     classRange.Borders.Weight = Excel.XlBorderWeight.xlThin;
                     if (File.Exists(filePath))
                     {
-                        try {
-                            File.Delete(filePath); 
-                        } catch(Exception)
+                        try
+                        {
+                            File.Delete(filePath);
+                        }
+                        catch (Exception)
                         {
                             MessageBoxOK MB1 = new MessageBoxOK();
                             var datamb = MB1.DataContext as MessageBoxOKViewModel;
@@ -383,10 +388,11 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 try
                 {
-                    try 
-                    { 
+                    try
+                    {
                         con.Open();
-                    } catch (Exception)
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
@@ -411,14 +417,15 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     con.Close();
 
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
-                        return; 
+                        return;
                     }
                     CmdString = "select distinct MaKhoi,Khoi from Khoi";
                     cmd = new SqlCommand(CmdString, con);
@@ -444,14 +451,15 @@ namespace StudentManagement.ViewModel.GiaoVien
 
                     if (!String.IsNullOrEmpty(NienKhoaQueries))
                     {
-                        try 
+                        try
                         {
                             con.Open();
-                        } catch (Exception) 
+                        }
+                        catch (Exception)
                         {
                             MessageBoxFail messageBoxFail = new MessageBoxFail();
                             messageBoxFail.ShowDialog();
-                            return; 
+                            return;
                         }
                         CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
                         cmd = new SqlCommand(CmdString, con);
@@ -476,14 +484,15 @@ namespace StudentManagement.ViewModel.GiaoVien
                         con.Close();
                     }
 
-                    try 
-                    { 
+                    try
+                    {
                         con.Open();
-                    } catch (Exception)
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
-                        return; 
+                        return;
                     }
                     CmdString = "select MaMon,TenMon from MonHoc";
                     cmd = new SqlCommand(CmdString, con);
@@ -506,7 +515,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         reader.NextResult();
                     }
                     con.Close();
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
                 }
             }
@@ -591,14 +601,15 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 try
                 {
-                    try 
+                    try
                     {
                         con.Open();
-                    } catch (Exception) 
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
-                        return; 
+                        return;
                     }
                     string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
                     SqlCommand cmd = new SqlCommand(CmdString, con);
@@ -619,7 +630,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     con.Close();
                     HeThongBangDiemWD.cmbLop.SelectedIndex = 0;
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                 }
             }
@@ -632,10 +643,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     string CmdString = "";
                     int checkUser = 0;
-                    try 
+                    try
                     {
-                        con.Open(); 
-                    } catch (Exception) 
+                        con.Open();
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
@@ -666,7 +678,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     con.Close();
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                 }
             }
@@ -674,8 +686,43 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void LuuBangDiem()
         {
+
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
+            {   //Lay diem dat tu Qui Dinh
+                try
+                {
+                    string CmdString = "select GiaTri from QuiDinh where MaQuiDinh = 4";
+                    SqlCommand cmd;
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
+                        return;
+                    }
+                    cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            DiemDat = reader.GetInt32(0);
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+
+                }
+                catch (Exception)
+                {
+                    MessageBoxFail messageboxfail = new MessageBoxFail();
+                    messageboxfail.ShowDialog();
+                }
+
+                //Update diem tren HeThongDiem
                 try
                 {
                     string CmdString = "";
@@ -699,7 +746,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         diem15phut = (decimal)DanhSachDiem[i].Diem15Phut;
                         diem1tiet = (decimal)DanhSachDiem[i].Diem1Tiet;
                         dtb = (diem15phut + diem1tiet) / 2;
-                        if (dtb >= 5)
+                        if (dtb >= DiemDat)
                         {
                             xeploai = 1;
                         }
@@ -717,19 +764,108 @@ namespace StudentManagement.ViewModel.GiaoVien
                         {
                         }
                     }
-                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                    messageBoxSuccessful.ShowDialog();
-                    LoadDanhSachBangDiem();
+                    //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                    //messageBoxSuccessful.ShowDialog();
+                    //LoadDanhSachBangDiem();
                     con.Close();
-                }catch (Exception)
+                }
+                catch (Exception)
                 {
                     MessageBoxFail messageBoxFail = new MessageBoxFail();
                     messageBoxFail.ShowDialog();
                 }
 
+
+                //Tinh dtb hoc sinh de Update ThanhTich
+                for (int i = 0; i < DanhSachDiem.Count; i++)
+                {
+                    try
+                    {
+                    string CmdString = "select DiemTrungBinh from HeThongDiem where MaHocSinh = " + DanhSachDiem[i].MaHocSinh.ToString();
+                    SqlCommand cmd;
+                    
+                    int madiem = 0, xeploai = 0, soluong = 0;
+                    decimal dtbhk = 0;
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
+                        return;
+                    }
+
+                    cmd = new SqlCommand(CmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                try
+                                {
+                                    dtbhk += reader.GetDecimal(0);
+                                    soluong += 1;
+                                }
+                                catch (Exception)
+                                { }
+                            }
+                            reader.NextResult();
+                        }
+                        dtbhk /= soluong;
+                        if (dtbhk > DiemDat) xeploai = 1; else xeploai = 0;
+                        con.Close();
+                //Update thanh tich
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+
+                            CmdString = "Update ThanhTich set TrungBinhHocKy = "+ Math.Round(dtbhk,2).ToString()+", XepLoai = "+xeploai.ToString() 
+                                + " where MaHocSinh = " + DanhSachDiem[i].MaHocSinh.ToString() + " and MaLop = " + DanhSachDiem[i].MaLop.ToString()
+                                + " and HocKy = " + DanhSachDiem[i].HocKy.ToString();
+                            cmd = new SqlCommand(CmdString, con);
+                            try
+                            {
+                                cmd.ExecuteScalar();
+                            }
+                            catch (Exception)
+                            { }
+
+                            con.Close() ;
+                        }
+                        catch (Exception)
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
+                            return;
+                        }
+
+                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                        messageBoxSuccessful.ShowDialog();
+                        LoadDanhSachBangDiem();
+                        //con.Close();
+                    }
+                    catch (Exception)
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
+                }
             }
 
-        }
+
+            }
+
+    }
         public bool KiemTraDiemHopLe()
         {
             for (int i = 0; i < DanhSachDiem.Count; i++)
