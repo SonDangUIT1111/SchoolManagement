@@ -108,7 +108,9 @@
                                FontSize="14"
                                Margin="35 15 0 15"
                                Opacity="0.6"/>
-                    <RadioButton>
+                    <RadioButton x:Name="TrangChuRadiobtn"
+                                        Command="{Binding SwitchThongTinTruong}"
+                                        CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon
                             Kind="Home" 
@@ -124,7 +126,7 @@
                         </StackPanel>
                     </RadioButton>
 
-                    <RadioButton    x:Name="TrangChuRadiobtn"
+                    <RadioButton    
                                     Command="{Binding SwitchBaoCaoMonHoc}"
                                     CommandParameter="{Binding ElementName=RPage}">
                         <StackPanel Orientation="Horizontal">

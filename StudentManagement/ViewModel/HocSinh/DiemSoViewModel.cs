@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Markup;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
@@ -89,6 +90,8 @@ namespace StudentManagement.ViewModel.HocSinh
                     {
                         while (reader.Read())
                         {
+                            try
+                            {
                             StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem();
                             diem.TenMon = reader.GetString(0);
                             diem.Diem15Phut = reader.GetDecimal(1);
@@ -96,6 +99,12 @@ namespace StudentManagement.ViewModel.HocSinh
                             diem.DiemTB = reader.GetDecimal(3);
                             diem.XepLoai = reader.GetBoolean(4);
                             DanhSachDiemHK1.Add(diem);
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                            
                         }
                         reader.NextResult();
                     }
@@ -127,14 +136,18 @@ namespace StudentManagement.ViewModel.HocSinh
                     {
                         while (reader.Read())
                         {
-                            StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem();
-                            diem.TenMon = reader.GetString(0);
-                            diem.Diem15Phut = reader.GetDecimal(1);
-                            diem.Diem1Tiet = reader.GetDecimal(2);
-                            diem.DiemTB = reader.GetDecimal(3);
-                            diem.XepLoai = reader.GetBoolean(4);
-                            DanhSachDiemHK2.Add(diem);
-                        }
+                            try
+                            {
+                                StudentManagement.Model.HeThongDiem diem = new StudentManagement.Model.HeThongDiem();
+                                diem.TenMon = reader.GetString(0);
+                                diem.Diem15Phut = reader.GetDecimal(1);
+                                diem.Diem1Tiet = reader.GetDecimal(2);
+                                diem.DiemTB = reader.GetDecimal(3);
+                                diem.XepLoai = reader.GetBoolean(4);
+                                DanhSachDiemHK2.Add(diem);
+                            }
+                            catch (Exception) { }
+                            }
                         reader.NextResult();
                     }
                     con.Close();
@@ -169,7 +182,19 @@ namespace StudentManagement.ViewModel.HocSinh
                         {
                             if (stt == 0)
                             {
-                                if (reader.GetBoolean(0)) DiemSoWD.XepLoai.Text = "Đạt"; else DiemSoWD.XepLoai.Text = "Không đạt";
+                                //if (reader.GetBoolean(0)) DiemSoWD.XepLoai.Text = "Đạt"; else DiemSoWD.XepLoai.Text = "Không đạt";
+                                
+                                try
+                                {
+                                    bool XepLoai = reader.GetBoolean(0); 
+                                    if (XepLoai) DiemSoWD.XepLoai.Text = "Đạt"; else DiemSoWD.XepLoai.Text = "Không đạt";
+                                }
+                                catch (Exception)
+                                {
+                                    DiemSoWD.XepLoai.Text = "Chưa có dữ liệu";
+                                }
+                                
+                                
                                 try
                                 {
                                     DiemSoWD.NhanXet.Text = reader.GetString(1);
@@ -189,8 +214,19 @@ namespace StudentManagement.ViewModel.HocSinh
                                 stt++;
                             }
                             else
-                            {
-                                if (reader.GetBoolean(0)) DiemSoWD.XepLoai2.Text = "Đạt"; else DiemSoWD.XepLoai2.Text = "Không đạt";
+                                {
+                                //if (reader.GetBoolean(0)) DiemSoWD.XepLoai2.Text = "Đạt"; else DiemSoWD.XepLoai2.Text = "Không đạt";
+                                
+                                try
+                                {
+                                    bool XepLoai = reader.GetBoolean(0); 
+                                    if (XepLoai) DiemSoWD.XepLoai2.Text = "Đạt"; else DiemSoWD.XepLoai.Text = "Không đạt";
+                                }
+                                catch (Exception)
+                                {
+                                    DiemSoWD.XepLoai2.Text = "Chưa có dữ liệu";
+                                }
+                            
                                 try
                                 {
                                     DiemSoWD.NhanXet2.Text = reader.GetString(1);
@@ -214,6 +250,7 @@ namespace StudentManagement.ViewModel.HocSinh
                     con.Close();
                 } catch (Exception)
                 {
+                    System.Windows.MessageBox.Show("l2");
                     MessageBoxFail messageBoxFail = new MessageBoxFail();
                     messageBoxFail.ShowDialog();
                 }

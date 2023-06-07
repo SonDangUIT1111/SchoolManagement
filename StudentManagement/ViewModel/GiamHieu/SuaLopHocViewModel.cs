@@ -1,6 +1,7 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.ObjectModel;
@@ -48,6 +49,12 @@ namespace StudentManagement.ViewModel.GiamHieu
 
             EditClass = new RelayCommand<SuaThongTinLopHoc>((parameter) => { return true; }, (parameter) =>
             {
+                if (SuaLopWD.EditFormTeacher != null && SuaLopWD.EditFormTeacher.SelectedItem != null)
+                {
+
+                    Model.GiaoVien item = SuaLopWD.EditFormTeacher.SelectedItem as Model.GiaoVien;
+                    GiaoVienQueries = item.MaGiaoVien.ToString();
+                }
                 if (String.IsNullOrEmpty(SuaLopWD.EditClassName.Text) || 
                     String.IsNullOrEmpty(SuaLopWD.EditAcademyYear.Text) 
                     || String.IsNullOrEmpty(GiaoVienQueries))
@@ -111,7 +118,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         messageBoxFail.ShowDialog();
                         return; 
                     }
-                    string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE MaGiaoVien NOT IN (SELECT DISTINCT MaGVCN FROM Lop)";
+                    string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE NOT EXISTS (Select DISTINCT MAGVCN from LOP where MaGiaoVien = MAGVCN)";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -123,10 +130,10 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 MaGiaoVien = reader.GetInt32(0),
                                 TenGiaoVien = reader.GetString(1)
                             });
-                            if (string.IsNullOrEmpty(GiaoVienQueries))
-                            {
-                                GiaoVienQueries = reader.GetString(0);
-                            }
+                            //if (string.IsNullOrEmpty(GiaoVienQueries))
+                            //{
+                            //    GiaoVienQueries = reader.GetString(0);
+                            //}
                         }
                         reader.NextResult();
                     }

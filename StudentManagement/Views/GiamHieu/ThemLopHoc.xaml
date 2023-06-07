@@ -104,7 +104,7 @@
             Margin="0 20 0 0">
                 <Button 
                         Content="Xác nhận"
-                        Command="{Binding EditClass}"
+                        Command="{Binding AddClass}"
                         Style="{StaticResource InteractiveButton}"
                         Width="100"
                         Height="40">
@@ -113,7 +113,7 @@
                 <Button 
                         Content="Huỷ"
                         Margin="10 0 0 0"
-                        Command="{Binding CancelEditClass}"
+                        Command="{Binding CancelAddClass}"
                         Style="{StaticResource InteractiveButton}"
                         Width="100"
                         Height="40">
