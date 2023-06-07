@@ -250,7 +250,6 @@ namespace StudentManagement.ViewModel.HocSinh
                     con.Close();
                 } catch (Exception)
                 {
-                    System.Windows.MessageBox.Show("l2");
                     MessageBoxFail messageBoxFail = new MessageBoxFail();
                     messageBoxFail.ShowDialog();
                 }
