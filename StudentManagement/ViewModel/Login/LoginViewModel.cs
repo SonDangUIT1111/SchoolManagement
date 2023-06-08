@@ -209,11 +209,11 @@ namespace StudentManagement.ViewModel.Login
                                 messageBoxFail.ShowDialog();
                                 return; 
                             }
-                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
+                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
                             // select id
-                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + Password + "'";
+                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -266,11 +266,11 @@ namespace StudentManagement.ViewModel.Login
                                 messageBoxFail.ShowDialog();
                                 return; 
                             }
-                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
+                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
-                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + Password + "'";
+                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
@@ -322,12 +322,12 @@ namespace StudentManagement.ViewModel.Login
                                 messageBoxFail.ShowDialog();
                                 return; 
                             }
-                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
+                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             checkUser = Convert.ToInt32(cmd.ExecuteScalar());
 
 
-                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + Password + "'";
+                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
                             cmd = new SqlCommand(CmdString, con);
                             id = Convert.ToInt32(cmd.ExecuteScalar());
                             con.Close();
