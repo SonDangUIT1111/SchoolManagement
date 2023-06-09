@@ -149,8 +149,9 @@
                     </Grid.RowDefinitions>
                     <ProgressBar Grid.Row="0" 
                                  IsIndeterminate="True"
-                                 Margin=" 20 0 20 0" 
+                                 Margin=" 20 -30 20 0" 
                                  Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    
                     <StackPanel Grid.Row="1"
                                 VerticalAlignment="Top"
                                 Orientation="Vertical" Height="30" 

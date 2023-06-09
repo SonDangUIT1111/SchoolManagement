@@ -43,7 +43,7 @@
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="30" Grid.Row="1" Background="White" Margin="12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="140"/>
+                    <RowDefinition Height="150"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Danh sách giáo viên" 
@@ -64,7 +64,7 @@
                         Command="{Binding ThemGiaoVien}">
                 </Button>
                 <StackPanel Orientation="Horizontal"
-                            Margin="0 80 0 0"
+                            Margin="0 70 0 0"
                             VerticalAlignment="Top">
                     <TextBox materialDesign:HintAssist.Hint="Search ..."
                              x:Name="tbSearch"
@@ -86,13 +86,14 @@
                                                  Kind="Magnify" />
                     </Button>
                 </StackPanel>
+                <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 126 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
                 <StackPanel Grid.Row="1"
                             VerticalAlignment="Top"
                             Orientation="Vertical">
-                    <ProgressBar Grid.Row="0" 
-                                 IsIndeterminate="True"
-                                 Margin="25 8 20 20"
-                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
                         
                         <TextBlock Text="Họ và tên"

@@ -323,15 +323,7 @@
                 Height="78"
                 CornerRadius="14"
                 Margin="33">
-            <Border.Triggers>
-                <EventTrigger RoutedEvent="Button.Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:1" BeginTime="0:0:0.2" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Border.Triggers>
+            
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" BlurRadius="7"/>
             </Border.Effect>

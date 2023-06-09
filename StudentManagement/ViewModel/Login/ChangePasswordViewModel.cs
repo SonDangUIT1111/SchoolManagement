@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,7 +61,7 @@ namespace StudentManagement.ViewModel.Login
                 return;
             }
 
-            if (ChangePasswordWD.PasswordOld.Password != MatKhau)
+            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordOld.Password)) != MatKhau)
             {
                 MessageBoxOK MB = new MessageBoxOK();
                 var data = MB.DataContext as MessageBoxOKViewModel;
@@ -76,7 +77,7 @@ namespace StudentManagement.ViewModel.Login
                 MB.ShowDialog();
                 return;
             }
-            if (ChangePasswordWD.PasswordNew.Password == MatKhau)
+            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password)) == MatKhau)
             {
                 MessageBoxOK MB = new MessageBoxOK();
                 var data = MB.DataContext as MessageBoxOKViewModel;
