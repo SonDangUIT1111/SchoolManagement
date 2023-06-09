@@ -777,29 +777,30 @@ namespace StudentManagement.ViewModel.GiaoVien
 
 
                 //Tinh dtb hoc sinh de Update ThanhTich
-                for (int i = 0; i < DanhSachDiem.Count; i++)
+                try
                 {
-                    try
+                    for (int i = 0; i < DanhSachDiem.Count; i++)
                     {
-                    string CmdString = "select DiemTrungBinh from HeThongDiem where MaHocSinh = " + DanhSachDiem[i].MaHocSinh.ToString();
-                    SqlCommand cmd;
-                    
-                    int madiem = 0, xeploai = 0, soluong = 0;
-                    decimal dtbhk = 0;
-                    try
-                    {
-                        con.Open();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
 
-                    cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
+                        string CmdString = "select DiemTrungBinh from HeThongDiem where MaHocSinh = " + DanhSachDiem[i].MaHocSinh.ToString();
+                        SqlCommand cmd;
+
+                        int madiem = 0, xeploai = 0, soluong = 0;
+                        decimal dtbhk = 0;
+                        try
+                        {
+                            con.Open();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
+                            return;
+                        }
+
+                        cmd = new SqlCommand(CmdString, con);
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.HasRows)
                         {
                             while (reader.Read())
                             {
@@ -816,7 +817,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         dtbhk /= soluong;
                         if (dtbhk > DiemDat) xeploai = 1; else xeploai = 0;
                         con.Close();
-                //Update thanh tich
+                        //Update thanh tich
                         try
                         {
                             try
@@ -830,7 +831,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                                 return;
                             }
 
-                            CmdString = "Update ThanhTich set TrungBinhHocKy = "+ Math.Round(dtbhk,2).ToString()+", XepLoai = "+xeploai.ToString() 
+                            CmdString = "Update ThanhTich set TrungBinhHocKy = " + Math.Round(dtbhk, 2).ToString() + ", XepLoai = " + xeploai.ToString()
                                 + " where MaHocSinh = " + DanhSachDiem[i].MaHocSinh.ToString() + " and MaLop = " + DanhSachDiem[i].MaLop.ToString()
                                 + " and HocKy = " + DanhSachDiem[i].HocKy.ToString();
                             cmd = new SqlCommand(CmdString, con);
@@ -841,7 +842,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                             catch (Exception)
                             { }
 
-                            con.Close() ;
+                            con.Close();
                         }
                         catch (Exception)
                         {
@@ -849,23 +850,19 @@ namespace StudentManagement.ViewModel.GiaoVien
                             messageBoxFail.ShowDialog();
                             return;
                         }
-
-                        
                         //con.Close();
                     }
-                    catch (Exception)
+                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                    messageBoxSuccessful.ShowDialog();
+                    LoadDanhSachBangDiem();
+                }
+                catch (Exception)
                 {
                     MessageBoxFail messageBoxFail = new MessageBoxFail();
                     messageBoxFail.ShowDialog();
                 }
             }
-                MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                messageBoxSuccessful.ShowDialog();
-                LoadDanhSachBangDiem();
-
-            }
-
-    }
+        }
         public bool KiemTraDiemHopLe()
         {
             for (int i = 0; i < DanhSachDiem.Count; i++)
