@@ -850,9 +850,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                             return;
                         }
 
-                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                        messageBoxSuccessful.ShowDialog();
-                        LoadDanhSachBangDiem();
+                        
                         //con.Close();
                     }
                     catch (Exception)
@@ -861,7 +859,9 @@ namespace StudentManagement.ViewModel.GiaoVien
                     messageBoxFail.ShowDialog();
                 }
             }
-
+                MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                messageBoxSuccessful.ShowDialog();
+                LoadDanhSachBangDiem();
 
             }
 
