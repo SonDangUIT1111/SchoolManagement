@@ -120,6 +120,15 @@ namespace StudentManagement.ViewModel.GiaoVien
                     XacDinhQuyenHan();
                     everLoaded = true;
                 }
+                else
+                {
+                    XacDinhQuyenHan();
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachBangDiem();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
+                }
             });
             MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
             {

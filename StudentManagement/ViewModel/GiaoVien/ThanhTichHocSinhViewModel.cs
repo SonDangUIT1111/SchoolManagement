@@ -165,8 +165,8 @@ namespace StudentManagement.ViewModel.GiaoVien
             LopCombobox = new ObservableCollection<Lop>();
             LoadThanhTich = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
-                if (everLoaded == false)
-                {
+                //if (everLoaded == false)
+                //{
                     ThanhTichWD = parameter as ThanhTichHocSinh;
                     LoadComboBox();
                     DataGridVisibility = false;
@@ -174,8 +174,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     await LoadDanhSachThanhTichHocSinh();
                     DataGridVisibility = true;
                     ProgressBarVisibility = false;
-                    everLoaded = true;
-                }
+                //    everLoaded = true;
+                //}
             });
 
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>

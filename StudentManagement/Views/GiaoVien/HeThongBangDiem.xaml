@@ -205,34 +205,35 @@
                 <Grid x:Name="tbThongBaoChan">
                     <materialDesign:PackIcon
                            Kind="AlertCircleOutline"
-                           Margin="25 100 0 0"
+                           Margin="25 105 0 0"
                            Foreground="Red"/>
                     <TextBlock 
                            Grid.Row="0" 
                            Text="Bạn không có quyền sửa điểm."
                            Foreground="Red"
                            FontWeight="Medium"
-                           Margin="45 100 0 0"/>
+                           Margin="45 105 0 0"/>
                 </Grid>
                 <Grid x:Name="tbThongBaoQuyen">
                     <materialDesign:PackIcon
                            Kind="CheckCircleOutline"
-                           Margin="25 100 0 0"
+                           Margin="25 105 0 0"
                            Foreground="#1ED760"/>
                     <TextBlock Grid.Row="0" 
                            Text="Bạn có quyền sửa điểm danh sách này."
                            Foreground="#1ED760"
                            FontWeight="Medium"
-                           Margin="45 100 0 0"/>
+                           Margin="45 105 0 0"/>
                 </Grid>
+                <ProgressBar Grid.Row="0" 
+                                 IsIndeterminate="True"
+                                 Margin="25 97 20 20"
+                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <StackPanel Grid.Row="1"
                             Panel.ZIndex="1"
                             VerticalAlignment="Top"
+                            Margin="0 20 0 0"
                             Orientation="Vertical">
-                    <ProgressBar Grid.Row="0" 
-                                 IsIndeterminate="True"
-                                 Margin="25 8 20 20"
-                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mã học sinh"
                                FontSize="14"
@@ -268,7 +269,7 @@
                                Opacity="0.6"
                                Panel.ZIndex="9"/>
                 </StackPanel>
-                <DataGrid Margin="25,0,25,25"
+                <DataGrid Margin="25,14,25,25"
                           Grid.Row="1"
                           RowHeight="40"
                           AlternationCount="2"

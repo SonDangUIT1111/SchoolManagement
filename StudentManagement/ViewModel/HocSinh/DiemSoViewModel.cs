@@ -26,12 +26,12 @@ namespace StudentManagement.ViewModel.HocSinh
             everLoaded = false;
             LoadWindow = new RelayCommand<DiemSo>((parameter) => { return true; }, (parameter) =>
             {
-                if (everLoaded == false)
-                {
+                //if (everLoaded == false)
+                //{
                     DiemSoWD = parameter;
                     LoadDanhSachDiem();
-                    everLoaded = true;
-                }
+                    //everLoaded = true;
+                //}
             });
 
         }
