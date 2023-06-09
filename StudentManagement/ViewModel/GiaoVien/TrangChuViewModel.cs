@@ -128,6 +128,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         data.GiaoVienHienTai = CurrentUser;
                         window.ShowDialog();
                         LoadThongTinCaNhan();
+                        LoadSayHello(GiaoVienWD.imageAvatar);
                     }
                     catch (Exception)
                     {

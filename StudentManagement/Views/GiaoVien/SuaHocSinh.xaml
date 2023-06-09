@@ -184,13 +184,13 @@
                         HorizontalAlignment="Right"
                         Margin="0 0 35 20">
                 <Button Style="{StaticResource InteractiveButton}"
-                        Content="Thêm"
+                        Content="Cập nhật"
                         Width="100"
                         Height="40"
                         Margin="0 0 20 0"
                         Command="{Binding ChangeHocSinh}"/>
                 <Button Style="{StaticResource InteractiveButton}"
-                        Content="Thêm"
+                        Content="Hủy"
                         Width="100"
                         Height="40"
                         Margin="0 0 20 0"

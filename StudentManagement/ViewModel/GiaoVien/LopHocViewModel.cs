@@ -134,8 +134,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                      MB.ShowDialog();
                      return;
                  }
-                 SuaHocSinh window = new SuaHocSinh();
-                 SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
+                 StudentManagement.Views.GiamHieu.SuaThongTinHocSinh window = new StudentManagement.Views.GiamHieu.SuaThongTinHocSinh();
+                 StudentManagement.ViewModel.GiamHieu.SuaThongTinHocSinhViewModel data = window.DataContext as StudentManagement.ViewModel.GiamHieu.SuaThongTinHocSinhViewModel;
                  data.HocSinhHienTai = parameter;
                  window.ShowDialog();
                  DataGridVisibility = false;

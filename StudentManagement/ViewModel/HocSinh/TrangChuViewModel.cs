@@ -1,6 +1,8 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.ViewModel.GiaoVien;
 using StudentManagement.ViewModel.Login;
+using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.Login;
@@ -83,11 +85,12 @@ namespace StudentManagement.ViewModel.HocSinh
             });
             CapNhatThongTin = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                SuaHocSinh window = new SuaHocSinh();
-                SuaHocSinhViewModel data = window.DataContext as SuaHocSinhViewModel;
+                SuaThongTinHocSinh window = new SuaThongTinHocSinh();
+                SuaThongTinHocSinhViewModel data = window.DataContext as SuaThongTinHocSinhViewModel;
                 data.HocSinhHienTai = HocSinhHienTai;
                 window.ShowDialog();
                 LoadThongTinCaNhan();
+                LoadSayHello(HocSinhWD.imageAvatar);
             });
             DoiMatKhau = new RelayCommand<string>((parameter) => { return true; }, (parameter) =>
             {
