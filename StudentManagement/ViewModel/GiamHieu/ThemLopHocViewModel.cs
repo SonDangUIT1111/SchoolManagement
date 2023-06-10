@@ -15,12 +15,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ThemLopHoc ThemLopHocWD { get; set; }
         private string _maKhoi;
         public string MaKhoi { get { return _maKhoi; } set { _maKhoi = value;} }
+        public string NienKhoa;
         private ObservableCollection<Khoi> _khoiCmb;
         public ObservableCollection<Khoi> KhoiCmb { get { return _khoiCmb;}  set { _khoiCmb = value;OnPropertyChanged(); } }
-
-        public ObservableCollection<String> _nienKhoaCmB;
-
-        public ObservableCollection<String> NienKhoaCmB { get { return _nienKhoaCmB;} set { _nienKhoaCmB = value; OnPropertyChanged(); } }
 
         public ICommand AddClass { get; set; }
         public ICommand LoadData { get; set; }
@@ -29,20 +26,16 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ThemLopHocViewModel()
         {
             KhoiCmb = new ObservableCollection<Khoi>();
-            NienKhoaCmB = new ObservableCollection<string>();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ThemLopHocWD = parameter as ThemLopHoc;
                 LoadKhoiCmb();
-                NienKhoaCmB.Add("2021-2022");
-                NienKhoaCmB.Add("2022-2023");
-                NienKhoaCmB.Add("2023-2024");
+                LoadNienKhoa();
             });
 
             AddClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.NienKhoaCmB.Text) 
-                    || ThemLopHocWD.KhoiCmb.SelectedIndex == -1)
+                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || ThemLopHocWD.KhoiCmb.SelectedIndex == -1)
                 {
                     MessageBoxOK MB = new MessageBoxOK();
                     var data = MB.DataContext as MessageBoxOKViewModel;
@@ -66,7 +59,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MaKhoi = item.MaKhoi.ToString();
                         string cmdString = "INSERT INTO Lop(TenLop, MaKhoi,NienKhoa) VALUES ('" 
                                             + ThemLopHocWD.ClassName.Text + "', " + MaKhoi + ", '" 
-                                            + ThemLopHocWD.NienKhoaCmB.Text + "')";
+                                            + NienKhoa + "')";
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();
@@ -135,6 +128,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                     messageBoxFail.ShowDialog();
                     return;
                 };
+            }
+        }
+        public void LoadNienKhoa()
+        {
+            DateTime dateTime = DateTime.Today;
+            int Month = dateTime.Month;
+            int Year = dateTime.Year;
+
+            if (Month < 6)
+            {
+                int PreviousYear = Year - 1;
+                NienKhoa = PreviousYear + "-" + Year;
+            } else
+            {
+                int NextYear = Year + 1;
+                NienKhoa = Year + "-" + NextYear;
             }
         }
     }

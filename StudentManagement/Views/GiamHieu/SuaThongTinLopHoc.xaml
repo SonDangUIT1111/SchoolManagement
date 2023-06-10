@@ -86,7 +86,7 @@
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding LopHocHienTai.TenLop}">
             </TextBox>
-            <TextBox
+            <!--<TextBox
                 materialDesign:HintAssist.Hint="Nhập năm học"
                 x:Name="EditAcademyYear"
                 HorizontalAlignment="Center"
@@ -94,7 +94,16 @@
                 Width="350"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding LopHocHienTai.NienKhoa}">
-            </TextBox>
+            </TextBox>-->
+            <ComboBox 
+                materialDesign:HintAssist.Hint="Niên khoá"
+                x:Name="NienKhoaCmB"
+                IsEditable="False"
+                Margin="10 20 10 0"    
+                Width="350"
+                ItemsSource="{Binding NienKhoaComboBox}"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+            </ComboBox>
             <TextBox
                 materialDesign:HintAssist.Hint="Số lượng học sinh"
                 x:Name="EditNumberOfStudent"

@@ -32,6 +32,12 @@ namespace StudentManagement.ViewModel.GiamHieu
             set { _giaoVienComboBox = value; OnPropertyChanged(); }
         }
 
+        private ObservableCollection<string> _nienKhoaComboBox;
+        public ObservableCollection<string> NienKhoaComboBox
+        {
+            get => _nienKhoaComboBox;
+            set { _nienKhoaComboBox = value; OnPropertyChanged(); }
+        }
 
        
         public ICommand LoadWindow { get; set; }
@@ -45,6 +51,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 SuaLopWD = parameter;
                 LoadGVCNCombobox();
+                LoadNienKhoaComboBox();
             });
 
             EditClass = new RelayCommand<SuaThongTinLopHoc>((parameter) => { return true; }, (parameter) =>
@@ -55,9 +62,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     Model.GiaoVien item = SuaLopWD.EditFormTeacher.SelectedItem as Model.GiaoVien;
                     GiaoVienQueries = item.MaGiaoVien.ToString();
                 }
-                if (String.IsNullOrEmpty(SuaLopWD.EditClassName.Text) || 
-                    String.IsNullOrEmpty(SuaLopWD.EditAcademyYear.Text) 
-                    || String.IsNullOrEmpty(GiaoVienQueries))
+                if (String.IsNullOrEmpty(SuaLopWD.EditClassName.Text) || String.IsNullOrEmpty(GiaoVienQueries))
                 {
                     MessageBoxOK MB = new MessageBoxOK();
                     var data = MB.DataContext as MessageBoxOKViewModel;
@@ -78,7 +83,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 messageBoxFail.ShowDialog();
                                 return;
                         }
-                        string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "', NienKhoa = '" + SuaLopWD.EditAcademyYear.Text + "', " +
+                        string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "', NienKhoa = '" + SuaLopWD.NienKhoaCmB.Text + "', " +
                                     "MaGVCN = " + GiaoVienQueries + " where MaLop = " + LopHocHienTai.MaLop.ToString();
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
@@ -109,14 +114,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
-                        return; 
+                        return;
                     }
                     string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE NOT EXISTS (Select DISTINCT MAGVCN from LOP where MaGiaoVien = MAGVCN)";
                     SqlCommand cmd = new SqlCommand(cmdString, con);
@@ -148,5 +154,49 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
 
         }
+
+
+        public void LoadNienKhoaComboBox()
+        {
+            NienKhoaComboBox = new ObservableCollection<string>();
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                try
+                {
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
+                        return;
+                    }
+                    string cmdString = "SELECT DISTINCT NienKhoa FROM Lop";
+                    SqlCommand cmd = new SqlCommand(cmdString, con);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+
+                            NienKhoaComboBox.Add(reader.GetString(0));
+                        }
+                        reader.NextResult();
+                    }
+                    con.Close();
+                } catch (Exception)
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
+                    return;
+                }
+            }
+        }
+
+
+
     }
 }

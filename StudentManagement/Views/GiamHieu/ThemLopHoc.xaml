@@ -73,7 +73,7 @@
                        VerticalAlignment="Top"/>
         </StackPanel>
         <StackPanel Grid.Row="1"
-                    Margin="0 20 0 0">
+                    Margin="0 50 0 0">
             <TextBox    materialDesign:HintAssist.Hint="Nhập tên lớp"
                         x:Name="ClassName"
                         HorizontalAlignment="Center"
@@ -81,14 +81,6 @@
                         Width="350"
                         Style="{StaticResource MaterialDesignOutlinedTextBox}">
             </TextBox>
-            <ComboBox   materialDesign:HintAssist.Hint="Niên khoá"
-                        x:Name="NienKhoaCmB"
-                        HorizontalAlignment="Center"
-                        Margin="10 20 10 0"    
-                        Width="350"
-                        ItemsSource="{Binding NienKhoaCmB}"
-                        Style="{StaticResource MaterialDesignOutlinedComboBox}">
-            </ComboBox>
             <ComboBox   materialDesign:HintAssist.Hint="Khối"
                         x:Name="KhoiCmb"
                         HorizontalAlignment="Center"
