@@ -17,6 +17,11 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string MaKhoi { get { return _maKhoi; } set { _maKhoi = value;} }
         private ObservableCollection<Khoi> _khoiCmb;
         public ObservableCollection<Khoi> KhoiCmb { get { return _khoiCmb;}  set { _khoiCmb = value;OnPropertyChanged(); } }
+
+        public ObservableCollection<String> _nienKhoaCmB;
+
+        public ObservableCollection<String> NienKhoaCmB { get { return _nienKhoaCmB;} set { _nienKhoaCmB = value; OnPropertyChanged(); } }
+
         public ICommand AddClass { get; set; }
         public ICommand LoadData { get; set; }
         public ICommand CancelAddClass { get; set; }
@@ -24,15 +29,19 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ThemLopHocViewModel()
         {
             KhoiCmb = new ObservableCollection<Khoi>();
+            NienKhoaCmB = new ObservableCollection<string>();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ThemLopHocWD = parameter as ThemLopHoc;
                 LoadKhoiCmb();
+                NienKhoaCmB.Add("2021-2022");
+                NienKhoaCmB.Add("2022-2023");
+                NienKhoaCmB.Add("2023-2024");
             });
 
             AddClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.AcademyYear.Text) 
+                if (String.IsNullOrEmpty(ThemLopHocWD.ClassName.Text) || String.IsNullOrEmpty(ThemLopHocWD.NienKhoaCmB.Text) 
                     || ThemLopHocWD.KhoiCmb.SelectedIndex == -1)
                 {
                     MessageBoxOK MB = new MessageBoxOK();
@@ -57,7 +66,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MaKhoi = item.MaKhoi.ToString();
                         string cmdString = "INSERT INTO Lop(TenLop, MaKhoi,NienKhoa) VALUES ('" 
                                             + ThemLopHocWD.ClassName.Text + "', " + MaKhoi + ", '" 
-                                            + ThemLopHocWD.AcademyYear.Text + "')";
+                                            + ThemLopHocWD.NienKhoaCmB.Text + "')";
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();

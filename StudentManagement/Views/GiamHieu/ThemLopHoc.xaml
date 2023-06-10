@@ -81,13 +81,14 @@
                         Width="350"
                         Style="{StaticResource MaterialDesignOutlinedTextBox}">
             </TextBox>
-            <TextBox    materialDesign:HintAssist.Hint="Nhập năm học"
-                        x:Name="AcademyYear"
+            <ComboBox   materialDesign:HintAssist.Hint="Niên khoá"
+                        x:Name="NienKhoaCmB"
                         HorizontalAlignment="Center"
                         Margin="10 20 10 0"    
                         Width="350"
-                        Style="{StaticResource MaterialDesignOutlinedTextBox}">
-            </TextBox>
+                        ItemsSource="{Binding NienKhoaCmB}"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}">
+            </ComboBox>
             <ComboBox   materialDesign:HintAssist.Hint="Khối"
                         x:Name="KhoiCmb"
                         HorizontalAlignment="Center"
