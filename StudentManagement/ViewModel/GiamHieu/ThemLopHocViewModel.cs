@@ -55,6 +55,20 @@ namespace StudentManagement.ViewModel.GiamHieu
                             messageBoxFail.ShowDialog();
                             return; 
                         }
+
+
+                        string cmdText = "Select * from Lop where TenLop = '" + ThemLopHocWD.ClassName.Text + "' and NienKhoa = '" + NienKhoa + "' and MaKhoi = "+MaKhoi;
+                        SqlCommand cmdTest = new SqlCommand(cmdText, con);
+                        int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
+                        if (checkExists > 0)
+                        {
+                            MessageBoxOK messageBoxOK = new MessageBoxOK();
+                            MessageBoxOKViewModel data = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                            data.Content = "Đã tồn tại tên lớp và niên khóa lớp này, vui lòng xem xét lại";
+                            messageBoxOK.ShowDialog();
+                            return;
+                        }
+
                         Khoi item = ThemLopHocWD.KhoiCmb.SelectedItem as Khoi;
                         MaKhoi = item.MaKhoi.ToString();
                         string cmdString = "INSERT INTO Lop(TenLop, MaKhoi,NienKhoa) VALUES ('" 

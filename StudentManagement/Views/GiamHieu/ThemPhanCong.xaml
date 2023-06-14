@@ -13,7 +13,7 @@
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Thêm phân công giảng dạy" 
-        Height="600" Width="720"
+        Height="500" Width="720"
         AllowsTransparency="True" 
         Background="Transparent"
         ResizeMode="NoResize" WindowStyle="None"
@@ -116,13 +116,7 @@
             </ComboBox>
             
             
-            <TextBox Margin="20 20 20 0"
-                     x:Name="tbSiSo"
-                     Width="450"
-                     materialDesign:HintAssist.Hint="Sĩ số"
-                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                     IsEnabled="False"
-                     Text="{Binding ElementName=cmbLop, Path=SelectedValue}"/>
+            
             <ComboBox x:Name="cmbMonHoc"
                       Margin="20 20 20 0"
                       Width="450"

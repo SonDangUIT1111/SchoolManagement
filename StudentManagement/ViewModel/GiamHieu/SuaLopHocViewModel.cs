@@ -68,6 +68,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     var data = MB.DataContext as MessageBoxOKViewModel;
                     data.Content = "Vui lòng nhập đầy đủ thông tin";
                     MB.ShowDialog();
+                    return;
                 }
                 else using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
@@ -83,8 +84,22 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 messageBoxFail.ShowDialog();
                                 return;
                         }
-                        string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "', NienKhoa = '" + SuaLopWD.NienKhoaCmB.Text + "', " +
-                                    "MaGVCN = " + GiaoVienQueries + " where MaLop = " + LopHocHienTai.MaLop.ToString();
+
+                            string cmdText = "Select * from Lop where TenLop = '" + SuaLopWD.EditClassName.Text + "' and NienKhoa = '" + SuaLopWD.NienKhoaCmB.Text + "' and MaLop <>  "+LopHocHienTai.MaLop.ToString();
+                            SqlCommand cmdTest = new SqlCommand(cmdText, con);
+                            int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
+                            if (checkExists > 0)
+                            {
+                                MessageBoxOK messageBoxOK = new MessageBoxOK();
+                                MessageBoxOKViewModel data = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                                data.Content = "Đã tồn tại tên lớp và niên khóa lớp này, vui lòng xem xét lại";
+                                messageBoxOK.ShowDialog();
+                                return;
+                            }
+
+
+                            string cmdString = "UPDATE Lop Set TenLop = '" + SuaLopWD.EditClassName.Text + "', NienKhoa = '" + SuaLopWD.NienKhoaCmB.Text + "', " +
+                                "MaGVCN = " + GiaoVienQueries + " where MaLop = " + LopHocHienTai.MaLop.ToString();
                         SqlCommand cmd = new SqlCommand(cmdString, con);
                         cmd.ExecuteNonQuery();
                         con.Close();

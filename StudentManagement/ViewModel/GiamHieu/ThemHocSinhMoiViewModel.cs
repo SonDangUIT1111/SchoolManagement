@@ -201,6 +201,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
                                 con.Close();
                                 SendAccountByEmail(TaiKhoan, MatKhau, hocsinh.Email);
+                                ImagePath = null;
                                 ThemHocSinhWD.Close();
                             }
                             catch (Exception )

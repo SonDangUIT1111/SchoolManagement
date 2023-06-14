@@ -115,6 +115,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
                 LopHocWD = parameter as LopHoc;
+                DanhSachLopHoc.Clear();
                 await LoadComboBox();
                 await LoadDanhSachLopHoc();
                 DataGridVisibility = true;

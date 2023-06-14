@@ -251,12 +251,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                         messageBoxFail.ShowDialog();
                         return;
                     }
-                    string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
+                    string CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like N'%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
                                     + " or MaLop is null)";
 
                     if (XepLopWD.cmbNamSinh.SelectedItem != null)
                     {
-                        CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like '%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
+                        CmdString = "select * from HocSinh where TenHocSinh is not null and TenHocSinh like N'%" + value + "%' and (MaLop <>" + LopHocDangChon.MaLop.ToString()
                                         + " or MaLop is null) and Year(NgaySinh) = " + XepLopWD.cmbNamSinh.SelectedItem.ToString();
                     }
                     SqlCommand cmd = new SqlCommand(CmdString, con);

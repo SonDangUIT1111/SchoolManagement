@@ -99,6 +99,12 @@
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
                                 ItemsSource="{Binding KhoiComboBox}"
                                 Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding FilterKhoi}"
+                                   CommandParameter="{Binding ElementName=cmbKhoi}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Grid.Row="0"
@@ -143,6 +149,7 @@
                               AlternationCount="2"
                               RowHeight="50"
                               x:Name="BaoCaoHocKyDataGrid"
+                              HorizontalScrollBarVisibility="Hidden"
                               ItemsSource="{Binding DanhSachBaoCaoHocKy}"
                               Style="{StaticResource DataGridStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"

@@ -119,6 +119,8 @@
     <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\ThongTinTruongViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\GiaoVien\BaoCaoHocKyViewModel.cs" />
+    <Compile Include="ViewModel\GiaoVien\BaoCaoMonHocViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachGiaoVienViewModel.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModel.cs" />
@@ -139,6 +141,8 @@
     <Compile Include="ViewModel\GiaoVien\LopHocViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\SuaHocSinhViewModel.cs" />
     <Compile Include="ViewModel\GiaoVien\TrangChuViewModel.cs" />
+    <Compile Include="ViewModel\HocSinh\BaoCaoHocKyViewModel.cs" />
+    <Compile Include="ViewModel\HocSinh\BaoCaoMonHocViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\Login\ChangePasswordViewModel.cs" />
@@ -208,6 +212,12 @@
     <Compile Include="Views\GiamHieu\XepLopChoHocSinh.xaml.cs">
       <DependentUpon>XepLopChoHocSinh.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GiaoVien\BaoCaoMonHoc.xaml.cs">
+      <DependentUpon>BaoCaoMonHoc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GiaoVien\BaoCaoTongKetHocKy.xaml.cs">
+      <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GiaoVien\GiaoVienWindow.xaml.cs">
       <DependentUpon>GiaoVienWindow.xaml</DependentUpon>
     </Compile>
@@ -225,6 +235,12 @@
     </Compile>
     <Compile Include="Views\GiaoVien\SuaThongTinCaNhan.xaml.cs">
       <DependentUpon>SuaThongTinCaNhan.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HocSinh\BaoCaoMonHoc.xaml.cs">
+      <DependentUpon>BaoCaoMonHoc.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HocSinh\BaoCaoTongKetHocKy.xaml.cs">
+      <DependentUpon>BaoCaoTongKetHocKy.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HocSinh\DiemSo.xaml.cs">
       <DependentUpon>DiemSo.xaml</DependentUpon>
@@ -407,6 +423,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\GiaoVien\BaoCaoMonHoc.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GiaoVien\BaoCaoTongKetHocKy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GiaoVien\GiaoVienWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -430,6 +454,14 @@
     <Page Include="Views\GiaoVien\SuaThongTinCaNhan.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HocSinh\BaoCaoMonHoc.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\HocSinh\BaoCaoTongKetHocKy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\HocSinh\DiemSo.xaml">
       <SubType>Designer</SubType>

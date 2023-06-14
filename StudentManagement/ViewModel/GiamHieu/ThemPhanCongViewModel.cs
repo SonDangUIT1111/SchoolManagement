@@ -39,14 +39,16 @@ namespace StudentManagement.ViewModel.GiamHieu
         {
             MonHocCmb = new ObservableCollection<StudentManagement.Model.MonHoc>();
             GiaoVienCmb = new ObservableCollection<StudentManagement.Model.GiaoVien>();
-            LoadThongTinCmb();
-            LoadOptionFromSelection();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 ThemPhanCongWD = parameter as ThemPhanCong;
+                LoadThongTinCmb();
+                FilterLopFromSelection();
+                LoadOptionFromSelection();
                 ThemPhanCongWD.cmbNienKhoa.SelectedIndex = 0;
                 ThemPhanCongWD.cmbKhoi.SelectedIndex = 0;
                 ThemPhanCongWD.cmbLop.SelectedIndex = 0;
+
             });
             FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
@@ -123,6 +125,20 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 messageBoxFail.ShowDialog();
                                 return; 
                             }
+
+                            string cmdText = "Select * from PhanCongGiangDay where MaLop = "+lop.MaLop.ToString()+" and MaMon = "+monhoc.MaMon.ToString()+" ";
+                            SqlCommand cmdTest = new SqlCommand(cmdText, con);
+                            int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
+                            if (checkExists > 0)
+                            {
+                                MessageBoxOK messageBoxOK = new MessageBoxOK();
+                                MessageBoxOKViewModel data = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                                data.Content = "Đã tồn tại phân công này, vui lòng xem xét lại";
+                                messageBoxOK.ShowDialog();
+                                return;
+                            }
+
+
                             string CmdString = "insert into PhanCongGiangDay(MaLop,MaMon,MaGiaoVienPhuTrach) values (" + lop.MaLop.ToString() + "," + monhoc.MaMon.ToString() + "," + giaovien.MaGiaoVien + ")";
                             SqlCommand cmd = new SqlCommand(CmdString, con);
                             cmd.ExecuteNonQuery();
@@ -148,6 +164,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void LoadThongTinCmb()
         {
+            NienKhoaQueries = null;
+            KhoiQueries = null;
+            LopQueries = null;
             NienKhoaCmb = new ObservableCollection<string>();
             KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
             LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
@@ -274,6 +293,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public void LoadOptionFromSelection()
         {
             MonHocCmb.Clear();
+            GiaoVienCmb.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try

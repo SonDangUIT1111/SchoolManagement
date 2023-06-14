@@ -480,33 +480,45 @@ namespace StudentManagement.ViewModel.GiaoVien
                             {
 
                             }
-
-                            if (reader.IsDBNull(5))
-                            {
-                                thanhtich.NhanXet = " ";
-                            }
-                            else
+                            try
                             {
                                 thanhtich.NhanXet = reader.GetString(5);
                             }
+                            catch (Exception)
+                            {
+                                thanhtich.NhanXet = "Chưa có nhận xét";
+                            }
+
+                           
 
                             DanhSachThanhTichHocSinh.Add(thanhtich);
                             if (verify == false)
                             {
-                                if (IdUser == reader.GetInt32(6))
+                                try
                                 {
-                                    EditNhanXetVisibility = true;
-                                    CompleteNhanXetVisibility = false;
-                                    NhanXetTextBoxIsEnabled = false;
-                                    verify = true;
+                                    if (IdUser == reader.GetInt32(6))
+                                    {
+                                        EditNhanXetVisibility = true;
+                                        CompleteNhanXetVisibility = false;
+                                        NhanXetTextBoxIsEnabled = false;
+                                        verify = true;
+                                    }
+                                    else
+                                    {
+                                        EditNhanXetVisibility = false;
+                                        CompleteNhanXetVisibility = false;
+                                        NhanXetTextBoxIsEnabled = false;
+                                        verify = true;
+                                    }
                                 }
-                                else
+                                catch (Exception)
                                 {
                                     EditNhanXetVisibility = false;
                                     CompleteNhanXetVisibility = false;
                                     NhanXetTextBoxIsEnabled = false;
                                     verify = true;
                                 }
+                                
                             }
                         }
                         await reader.NextResultAsync();

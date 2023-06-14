@@ -35,12 +35,16 @@
     <viewmodelGH:SuaGiaoVienViewModel x:Key="SuaGiaoVienVM"></viewmodelGH:SuaGiaoVienViewModel>
     <viewmodelGH:ThongTinTruongViewModel x:Key="ThongTinTruongVM"></viewmodelGH:ThongTinTruongViewModel>
     <!--GiaoVien-->
+    <viewmodelGV:BaoCaoMonHocViewModel x:Key="BaoCaoMonHocVMGV"></viewmodelGV:BaoCaoMonHocViewModel>
+    <viewmodelGV:BaoCaoHocKyViewModel x:Key="BaoCaoHocKyVMGV"></viewmodelGV:BaoCaoHocKyViewModel>
     <viewmodelGV:TrangChuViewModel x:Key="TrangChuGVVM"></viewmodelGV:TrangChuViewModel>
     <viewmodelGV:LopHocViewModel x:Key="LopHocGVVM"></viewmodelGV:LopHocViewModel>
     <viewmodelGV:SuaHocSinhViewModel x:Key="SuaHocSinhVM"></viewmodelGV:SuaHocSinhViewModel>
     <viewmodelGV:HeThongBangDiemViewModel x:Key="HeThongBangDiemGVVM"></viewmodelGV:HeThongBangDiemViewModel>
     <viewmodelGV:ThanhTichHocSinhViewModel x:Key="ThanhTichVM"></viewmodelGV:ThanhTichHocSinhViewModel>
     <!--HocSinh-->
+    <viewmodelHS:BaoCaoMonHocViewModel x:Key="BaoCaoMonHocVMHS"></viewmodelHS:BaoCaoMonHocViewModel>
+    <viewmodelHS:BaoCaoHocKyViewModel x:Key="BaoCaoHocKyVMHS"></viewmodelHS:BaoCaoHocKyViewModel>
     <viewmodelHS:TrangChuViewModel x:Key="TrangChuHSVM"></viewmodelHS:TrangChuViewModel>
     <viewmodelHS:DiemSoViewModel x:Key="DiemSoVM"></viewmodelHS:DiemSoViewModel>
     <!--MessageBox-->

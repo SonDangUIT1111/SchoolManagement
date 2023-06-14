@@ -83,7 +83,7 @@
                     <Button Margin="20 0 0 0"
                             Background="Transparent"
                             BorderBrush="#0099FF"
-                            ToolTip="All students"
+                            ToolTip="All subject"
                             Command="{Binding SubjectSearchAll}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon Width="20"

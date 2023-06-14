@@ -115,7 +115,7 @@
                         <TextBlock Text="Email"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="180 0 0 0"/>
+                               Margin="150 0 0 0"/>
                     </StackPanel>
                     <Separator Margin="0 10 0 0"
                                Width="920"

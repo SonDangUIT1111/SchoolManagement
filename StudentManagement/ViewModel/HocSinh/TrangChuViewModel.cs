@@ -36,8 +36,8 @@ namespace StudentManagement.ViewModel.HocSinh
         private Model.HocSinh _hocSinhHienTai;
         public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value;OnPropertyChanged(); } }
         //declare Pages
-        public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
-        public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
+        public StudentManagement.Views.HocSinh.BaoCaoMonHoc BaoCaoPage { get; set; }
+        public StudentManagement.Views.HocSinh.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.HocSinh.ThongTinHocSinh ThongTinHocSinhPage { get; set; }
         public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
         public DiemSo XemDiemPage { get; set; }
@@ -59,8 +59,8 @@ namespace StudentManagement.ViewModel.HocSinh
 
             HocSinhHienTai = new Model.HocSinh();
             ThongTinTruongPage = new StudentManagement.Views.GiamHieu.ThongTinTruong();
-            BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
-            BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
+            BaoCaoPage = new Views.HocSinh.BaoCaoMonHoc();
+            BaoCaoHocKyPage = new Views.HocSinh.BaoCaoTongKetHocKy();
             XemDiemPage = new DiemSo();
 
             //define ICommand

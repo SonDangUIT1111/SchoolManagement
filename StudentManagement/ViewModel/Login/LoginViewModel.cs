@@ -6,6 +6,7 @@ using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.Login;
 using StudentManagement.Views.MessageBox;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Text;
@@ -90,11 +91,14 @@ namespace StudentManagement.ViewModel.Login
             LoadData = new RelayCommand<LoginWindow>((parameter) => { return true; }, (parameter) =>
             {
                 LoginWindow = parameter;
+                
+                
             });
 
             // navigate
             LoginSuccess = new RelayCommand<Window>((paramater) => { return true; }, (paramater) =>
             {
+                
                 Log(paramater);
             });
             GoToForgotPasswordCommand = new RelayCommand<LoginWindow>((paramater) => { return true; }, (paramater) =>

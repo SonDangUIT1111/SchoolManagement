@@ -12,7 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace StudentManagement.ViewModel.GiamHieu
+namespace StudentManagement.ViewModel.GiaoVien
 {
     internal class BaoCaoHocKyViewModel : BaseViewModel
     {
@@ -24,7 +24,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int TongSiSoLop { get; set; }
         public bool everLoaded { get; set; }
 
-        public BaoCaoTongKetHocKy BaoCaoHocKyWD;
+        public Views.GiaoVien.BaoCaoTongKetHocKy BaoCaoHocKyWD;
 
         private ObservableCollection<StudentManagement.Model.BaoCaoHocKy> _danhSachBaoCaoHocKy;
         public ObservableCollection<StudentManagement.Model.BaoCaoHocKy> DanhSachBaoCaoHocKy
@@ -189,7 +189,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     DataGridVisibility = true;
                     ProgressBarVisibility = true;
-                    BaoCaoHocKyWD = parameter as BaoCaoTongKetHocKy;
+                    BaoCaoHocKyWD = parameter as Views.GiaoVien.BaoCaoTongKetHocKy;
                     LoadComboboxData();
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
@@ -256,7 +256,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             BaoCaoHocKyWD.cmbHocKy.Items.Add("Học kỳ 2");
             HocKyQueries = "1";
             BaoCaoHocKyWD.cmbHocKy.SelectedIndex = 0;
-           
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try

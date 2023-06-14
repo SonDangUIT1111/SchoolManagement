@@ -25,8 +25,8 @@ namespace StudentManagement.ViewModel.GiaoVien
         public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
         public GiaoVienWindow GiaoVienWD { get; set; }
         //declare Pages
-        public StudentManagement.Views.GiamHieu.BaoCaoMonHoc BaoCaoPage { get; set; }
-        public StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
+        public StudentManagement.Views.GiaoVien.BaoCaoMonHoc BaoCaoPage { get; set; }
+        public StudentManagement.Views.GiaoVien.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
         public StudentManagement.Views.GiaoVien.LopHoc LopHocPage { get; set; }
         public StudentManagement.Views.GiaoVien.ThanhTichHocSinh ThanhTichHocSinhPage { get; set; }
         public StudentManagement.Views.GiaoVien.HeThongBangDiem HeThongBangDiemPage { get; set; }
@@ -49,8 +49,8 @@ namespace StudentManagement.ViewModel.GiaoVien
             LopHocPage = new Views.GiaoVien.LopHoc();
             ThanhTichHocSinhPage = new ThanhTichHocSinh();
             HeThongBangDiemPage = new HeThongBangDiem();
-            BaoCaoPage = new Views.GiamHieu.BaoCaoMonHoc();
-            BaoCaoHocKyPage = new Views.GiamHieu.BaoCaoTongKetHocKy();
+            BaoCaoPage = new Views.GiaoVien.BaoCaoMonHoc();
+            BaoCaoHocKyPage = new Views.GiaoVien.BaoCaoTongKetHocKy();
             CurrentUser = new StudentManagement.Model.GiaoVien();
             //define ICommand
             LoadWindow = new RelayCommand<GiaoVienWindow>((parameter) => { return true; }, (parameter) =>

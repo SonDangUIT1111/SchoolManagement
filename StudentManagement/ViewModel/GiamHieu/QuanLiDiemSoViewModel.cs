@@ -811,7 +811,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 MaMon = reader.GetInt32(1),
                                 HocKy = reader.GetInt32(2),
                                 SoLuongDat = reader.GetInt32(3),
-                                TiLe = ((double)reader.GetInt32(3) / reader.GetInt32(4) * 100).ToString() + "%",
+                                TiLe = (Math.Round((double)reader.GetInt32(3) / reader.GetInt32(4) * 100)).ToString() + "%",
                             };
                             DanhSachBaoCaoMon.Add(baocaomon);
                         }
@@ -875,7 +875,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                 SiSo = reader.GetInt32(1),
                                 HocKy = reader.GetInt32(2),
                                 SoLuongDat = reader.GetInt32(3),
-                                TiLe = ((double)reader.GetInt32(3) / reader.GetInt32(1) * 100).ToString() + "%",
+                                TiLe = (Math.Round((double)reader.GetInt32(3) / reader.GetInt32(1) * 100)).ToString() + "%",
                             };
                             DanhSachBaoCaoHocKy.Add(baocaohocky);
                         }
@@ -915,10 +915,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
                     messageBoxSuccessful.ShowDialog();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //    messageBoxFail.ShowDialog();
+                    MessageBoxOK messageBoxOK = new MessageBoxOK();
+                    MessageBoxOKViewModel data = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                    data.Content = ex.Message;
+                    messageBoxOK.ShowDialog();
                 }
             }
         }

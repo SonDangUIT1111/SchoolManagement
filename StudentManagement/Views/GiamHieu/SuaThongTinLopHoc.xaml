@@ -95,21 +95,25 @@
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding LopHocHienTai.NienKhoa}">
             </TextBox>-->
-            <ComboBox 
+            <TextBox 
                 materialDesign:HintAssist.Hint="Niên khoá"
                 x:Name="NienKhoaCmB"
-                IsEditable="False"
+                IsEnabled="False"
                 Margin="10 20 10 0"    
                 Width="350"
-                ItemsSource="{Binding NienKhoaComboBox}"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}">
-            </ComboBox>
+                Foreground="#000000"
+                BorderBrush="#000000"
+                Text="{Binding LopHocHienTai.NienKhoa}"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}">
+            </TextBox>
             <TextBox
                 materialDesign:HintAssist.Hint="Số lượng học sinh"
                 x:Name="EditNumberOfStudent"
                 HorizontalAlignment="Center"
                 Margin="10 20 10 0"    
                 Width="350"
+                Foreground="#000000"
+                BorderBrush="#000000"
                 IsEnabled="False"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 Text="{Binding LopHocHienTai.SiSo}">

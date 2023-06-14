@@ -138,7 +138,7 @@
                         <TextBlock Text="Họ và tên"
                                FontSize="14"
                                FontWeight="Medium"
-                               Margin="85 0 0 0"/>
+                               Margin="70 0 0 0"/>
                         <TextBlock Text="Ngày sinh"
                                FontSize="14"
                                FontWeight="Medium"
@@ -159,12 +159,12 @@
                 </StackPanel>
                 <DataGrid Margin="25,30,25,10"
                           Grid.Row="1"
-                          SelectionUnit="FullRow"
+                          AlternationCount="2"
+                          RowHeight="50"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ItemsSource="{Binding DanhSachLop}"
-                          Style="{StaticResource DataGridStyle1}"
-                          >
+                          Style="{StaticResource DataGridStyle1}">
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
                             <Style.Triggers>
@@ -177,6 +177,17 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Style.Triggers>
+                                <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
@@ -204,7 +215,7 @@
                                                        Width="100"
                                                        FontSize="14"
                                                        Foreground="#000000"
-                                                       Text="{Binding NgaySinh}"
+                                                       Text="{Binding NgaySinh, Converter={StaticResource DateTimeToDateConverter}}"
                                                        TextTrimming="WordEllipsis"/>
                                         <TextBlock VerticalAlignment="Center"
                                                        Margin="10 0 0 0"
