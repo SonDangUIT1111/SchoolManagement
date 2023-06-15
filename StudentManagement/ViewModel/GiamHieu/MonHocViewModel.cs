@@ -171,14 +171,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     messageBoxFail.ShowDialog();
                                     return; 
                                 }
-                                string CmdString1 = "select * from MonHoc where TenMon = N'" + MonHocEditting.TenMon + "'";
+                                string CmdString1 = "select * from MonHoc where TenMon = N'" + MonHocWD.txtTenMH.Text + "'";
                                 SqlCommand cmd1 = new SqlCommand(CmdString1, con);
                                 int count = Convert.ToInt32(cmd1.ExecuteScalar());
                                 if (count > 0)
                                 {
                                     MessageBoxOK MB = new MessageBoxOK();
                                     var datamb = MB.DataContext as MessageBoxOKViewModel;
-                                    datamb.Content = "Tên môn học đã tồn tại, vui lòng chọn tên khác";
+                                    datamb.Content = "Tên môn học đã tồn tại, vui lòng chọn tên khác ";
                                     MB.ShowDialog();
                                     con.Close();
                                     MonHocWD.txtTenMH.Text = "";
@@ -189,7 +189,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     return;
                                 }
 
-                                string CmdString = "update MonHoc set TenMon = N'"+MonHocEditting.TenMon + "' where MaMon = "+MonHocEditting.MaMon.ToString();
+                                string CmdString = "update MonHoc set TenMon = N'"+ MonHocWD.txtTenMH.Text + "' where MaMon = "+MonHocEditting.MaMon.ToString();
                                 SqlCommand cmd = new SqlCommand(CmdString, con);
                                 cmd.ExecuteNonQuery();
                                 con.Close();

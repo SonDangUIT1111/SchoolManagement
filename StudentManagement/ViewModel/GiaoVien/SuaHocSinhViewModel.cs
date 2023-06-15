@@ -5,6 +5,7 @@ using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.MessageBox;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -118,6 +119,29 @@ namespace StudentManagement.ViewModel.GiaoVien
                             messageBoxFail.ShowDialog();
                             return;
                         }
+                        List<int> quiDinh = new List<int>();
+                        string cmdTest = "select GiaTri from QuiDinh";
+                        SqlCommand cmd1 = new SqlCommand(cmdTest, con);
+                        SqlDataReader readerTest = cmd1.ExecuteReader();
+                        while (readerTest.HasRows)
+                        {
+                            while (readerTest.Read())
+                            {
+                                quiDinh.Add(readerTest.GetInt32(0));
+                            }
+                            readerTest.NextResult();
+                        }
+                        readerTest.Close();
+                        if (DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
+                        {
+                            MessageBoxOK messageBoxOK = new MessageBoxOK();
+                            MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                            datamb.Content = "Tuổi của học sinh phải từ " + quiDinh[1].ToString() + " đến " + quiDinh[2].ToString();
+                            messageBoxOK.ShowDialog();
+                            return;
+                        }
+
+
                         string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
                                             "', NgaySinh = '" + ToShortDateTime(SuaHocSinhWD.NgaySinh) +
                                             "', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +

@@ -212,6 +212,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
                 }
             });
 
@@ -229,6 +231,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
                 }
             });
 
@@ -244,6 +248,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
                 }
             });
         }

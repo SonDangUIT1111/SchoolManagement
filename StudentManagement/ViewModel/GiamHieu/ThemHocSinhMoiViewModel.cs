@@ -5,6 +5,7 @@ using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
@@ -116,6 +117,29 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     messageBoxFail.ShowDialog();
                                     return; 
                                 }
+                                List<int> quiDinh = new List<int>();
+                                string cmdTest = "select GiaTri from QuiDinh";
+                                SqlCommand cmd1 = new SqlCommand(cmdTest,con);
+                                SqlDataReader readerTest = cmd1.ExecuteReader();
+                                while (readerTest.HasRows)
+                                {
+                                    while (readerTest.Read())
+                                    {
+                                        quiDinh.Add(readerTest.GetInt32(0));
+                                    }
+                                    readerTest.NextResult();
+                                }
+                                readerTest.Close();
+                                if (DateTime.Now.Year - ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
+                                {
+                                    MessageBoxOK messageBoxOK = new MessageBoxOK();
+                                    MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                                    datamb.Content = "Tuổi của học sinh phải từ " + quiDinh[1].ToString() + " đến " + quiDinh[2].ToString();
+                                    messageBoxOK.ShowDialog();
+                                    return;
+                                }
+
+
                                 string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'" 
                                 + ThemHocSinhWD.Hoten.Text + "', CAST(N'" +ToShortDateTime(ThemHocSinhWD.NgaySinh) + "' AS DATE), ";
                                 if (ThemHocSinhWD.Male.IsChecked == true)

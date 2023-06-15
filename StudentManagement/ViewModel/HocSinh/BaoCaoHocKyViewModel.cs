@@ -1,7 +1,7 @@
 ﻿using LiveCharts;
 using LiveCharts.Wpf;
 using StudentManagement.Model;
-using StudentManagement.Views.GiamHieu;
+using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
@@ -212,6 +212,8 @@ namespace StudentManagement.ViewModel.HocSinh
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
                 }
             });
 
@@ -229,6 +231,8 @@ namespace StudentManagement.ViewModel.HocSinh
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
                 }
             });
 
@@ -244,6 +248,8 @@ namespace StudentManagement.ViewModel.HocSinh
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
+                    CartersianChartVisibility = true;
+                    PieChartVisibility = false;
                 }
             });
         }

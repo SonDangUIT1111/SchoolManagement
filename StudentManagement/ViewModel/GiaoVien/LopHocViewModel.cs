@@ -342,6 +342,8 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void LoadDanhSachLop()
         {
+            LopQueries = null;
+            DanhSachhs.Clear();
             DanhSachLop.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
@@ -380,7 +382,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                     if (LopHocWD.ChonLop != null && LopHocWD.ChonLop.Items.Count > 0 && LopHocWD.ChonLop.SelectedIndex != 0)
                     {
                         LopHocWD.ChonLop.SelectedIndex = 0;
-                        LoadDanhSachHocSinh();
                     }
                 }
                 catch (Exception )

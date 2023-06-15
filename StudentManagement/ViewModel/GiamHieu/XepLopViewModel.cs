@@ -3,6 +3,7 @@ using StudentManagement.ViewModel.MessageBox;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -318,6 +319,31 @@ namespace StudentManagement.ViewModel.GiamHieu
                             messageBoxFail.ShowDialog();
                             return;
                         }
+                        int numberOfStudents = 0;
+                        for (int i = 0; i<SelectCheckBox.Length; i++)
+                        {
+                            if (SelectCheckBox[i] == true)
+                            {
+                                numberOfStudents++;
+                            }
+                        }    
+                        List<int> quiDinh = new List<int>();
+                        string cmdTest = "select GiaTri,SiSo from QuiDinh,Lop where MaQuiDinh = 1 and MaLop = "+LopHocDangChon.MaLop;
+                        SqlCommand cmd1 = new SqlCommand(cmdTest, con);
+                        SqlDataReader readerTest = cmd1.ExecuteReader();
+                        readerTest.Read();
+                        quiDinh.Add(readerTest.GetInt32(0));
+                        quiDinh.Add(readerTest.GetInt32(1));
+                        if (numberOfStudents+quiDinh[1] > quiDinh[0])
+                        {
+                            MessageBoxOK messageBoxOK = new MessageBoxOK();
+                            MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                            datamb.Content = "Bị vượt quá sĩ số tối đa của 1 lớp, mỗi lớp chỉ có tối đa " + quiDinh[0].ToString() + " học sinh";
+                            messageBoxOK.ShowDialog();
+                            return;
+                        }
+                        readerTest.Close();
+
                         string CmdString = "";
                         SqlCommand cmd;
                         for (int i = 0; i < SelectCheckBox.Length; i++)
@@ -342,10 +368,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         con.Close();
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        MessageBoxOK messageBoxOK = new MessageBoxOK();
+                        MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                        datamb.Content = ex.Message;
+                        messageBoxOK.ShowDialog();
+                        return;
                         return;
                     }
                 }

@@ -60,8 +60,43 @@ namespace StudentManagement.ViewModel.Login
                 MB.ShowDialog();
                 return;
             }
+            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            {
+                try
+                {
+                    con.Open();
+                }
+                catch (Exception)
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
+                }
+                try
+                {
+                    string cmdText = "";
+                    if (IsHS)
+                    {
+                        cmdText = "select UserPassword from HocSinh where MaHocSinh = " + Id;
+                    }
+                    else
+                    {
+                        cmdText = "select UserPassword from GiaoVien where MaGiaoVien = " + Id;
+                    }
+                    SqlCommand sqlCommand = new SqlCommand(cmdText, con);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+                    MatKhau = reader.GetString(0);
+                    con.Close();
+                }
+                catch (Exception)
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
+                }
+            }
+                
 
-            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordOld.Password)) != MatKhau)
+            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordOld.Password)).ToLower() != MatKhau)
             {
                 MessageBoxOK MB = new MessageBoxOK();
                 var data = MB.DataContext as MessageBoxOKViewModel;
@@ -77,7 +112,7 @@ namespace StudentManagement.ViewModel.Login
                 MB.ShowDialog();
                 return;
             }
-            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password)) == MatKhau)
+            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password)).ToLower() == MatKhau)
             {
                 MessageBoxOK MB = new MessageBoxOK();
                 var data = MB.DataContext as MessageBoxOKViewModel;

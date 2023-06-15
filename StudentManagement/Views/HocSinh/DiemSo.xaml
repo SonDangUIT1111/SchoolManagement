@@ -29,7 +29,7 @@
                 BorderThickness="0" 
                 CornerRadius="30" 
                 Grid.Row="0" 
-                Background="#33778C" 
+                Background="#009efd" 
                 Margin="12" >
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1" BlurRadius="7"/>
@@ -45,368 +45,476 @@
             </Grid>
         </Border>
         <Border BorderBrush="#FF000000"  BorderThickness="0" CornerRadius="10" Grid.Row="1" Background="White" Margin="12">
-            <StackPanel Orientation="Vertical">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"
+            <Grid>
+                <Image Source="/Resources/Images/EducationBg.jpg"
+                        Height="300"
+                        Width="300"
+                        Opacity="0.8"
+                        Grid.Row="1"
+                        Panel.ZIndex="0"
+                        Margin="10"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Right"/>
+                <Image Source="/Resources/Images/NewLogo.jpg"
+                        Height="250"
+                        Width="250"
+                        Opacity="0.8"
+                        Grid.Row="1"
+                        Panel.ZIndex="0"
+                        Margin="10"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"/>
+                <StackPanel Orientation="Vertical">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled"
                               x:Name="BangDiem"
                               Style="{StaticResource FavsScrollViewer}" 
                               Height="480">
-                    <StackPanel Orientation="Vertical" >
-                        <TextBlock Text="Học kì I"
+                        <StackPanel Orientation="Vertical" >
+                            <TextBlock Text="Học kì I"
                                    FontSize="20"
-                                   FontWeight="DemiBold"
+                                   FontWeight="Bold"
                                    Margin="0 20 0 0"
-                                   HorizontalAlignment="Center"/>
-                        <Grid Width="500"
+                                   HorizontalAlignment="Center">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush>
+                                        <GradientStop Color="#FF00ACC9" Offset="1"/>
+                                        <GradientStop Color="#009efd" Offset="0.3"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                            <Grid Width="500"
                               Margin="0 10 0 0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="49" ></RowDefinition>
-                                <RowDefinition Height="49"></RowDefinition>
-                                <RowDefinition Height="49"></RowDefinition>
-                                <RowDefinition Height="49"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="160"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Border BorderThickness="1"
-                                    BorderBrush="Black">
-                                <TextBlock Text="Họ Tên" 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="49" ></RowDefinition>
+                                    <RowDefinition Height="49"></RowDefinition>
+                                    <RowDefinition Height="49"></RowDefinition>
+                                    <RowDefinition Height="49"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderThickness="1 1 1 0"
+                                    BorderBrush="#2af598"
+                                    CornerRadius="10 0 0 0">
+                                    <TextBlock Text="Họ Tên" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="1 0 1 0"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black"
+                                    BorderBrush="#2af598"
                                     Grid.Row="1">
-                                <TextBlock Text="Trung bình" 
+                                    <TextBlock Text="Trung bình" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
-                                    BorderBrush="Black"
+                                </Border>
+                                <Border BorderThickness="1 0 1 0"
+                                    BorderBrush="#2af598"
                                     Margin="0 -1 0 0"
                                     Grid.Row="2">
-                                <TextBlock Text="Xếp loại" 
+                                    <TextBlock Text="Xếp loại" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
-                                    BorderBrush="Black"
+                                </Border>
+                                <Border BorderThickness="1 0 1 1"
+                                    BorderBrush="#2af598"
                                     Margin="0 -1 0 0"
+                                    CornerRadius="0 0 0 10"
                                     Grid.Row="3">
-                                <TextBlock Text="Nhận xét" 
+                                    <TextBlock Text="Nhận xét" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="0 1 1 0"
                                     Grid.Column="1"
                                     Grid.Row="0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                    CornerRadius="0 10 0 0"
+                                    BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="Ten"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="0 0 1 0"
                                     Grid.Column="1"
                                     Grid.Row="1"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                    BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="DiemTbHK1"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="0 0 1 0"
                                     Grid.Column="1"
                                     Grid.Row="2"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                    BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="XepLoai"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="0 0 1 1"
                                     Grid.Column="1"
                                     Grid.Row="3"
+                                    CornerRadius="0 0 10 0"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                    BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="NhanXet"
+                                           TextTrimming="WordEllipsis"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                        </Grid>
-                        <DockPanel Height="50"
-                                   Margin="40,10,25,10"
+                                </Border>
+                            </Grid>
+                            <DockPanel Height="50"
+                                   Margin="30,10,25,10"
                                    VerticalAlignment="Top">
-                            <TextBlock Text="Môn"
+                                <TextBlock Text="Môn"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="200"
                                Margin="50 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="15 phút"
+                                <TextBlock Text="15 phút"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="150"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="1 tiết"
+                                <TextBlock Text="1 tiết"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="150"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="Trung Bình"
+                                <TextBlock Text="Trung Bình"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="150"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="Xếp loại"
+                                <TextBlock Text="Xếp loại"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="160"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DataGrid Margin="25,0,25,10"
+                            <DataGrid Margin="25,0,25,10"
                                   Width="auto"
                                   Height="auto"
+                                  AlternationCount="2"
+                                  RowHeight="40"
                                   IsEnabled="False"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                   ItemsSource="{Binding DanhSachDiemHK1}"
-                                  Style="{StaticResource DataGridStyle1}"
-                                  RowStyle="{StaticResource MaterialDesignDataGridRow}"
-                                  CellStyle="{StaticResource MaterialDesignDataGridCell}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="1010">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="50 0 0 0"
+                                  Style="{StaticResource DataGridStyle1}">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="{x:Type DataGridRow}">
+                                        <Style.Triggers>
+                                            <Trigger Property="AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="White" />
+                                            </Trigger>
+                                            <Trigger Property="AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="WhiteSmoke" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Style.Triggers>
+                                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                                <Setter Property="Background" Value="Transparent"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.CellStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="1010">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="50 0 0 0"
                                                            FontSize="18"
                                                            Foreground="#000000"
                                                            Width="200"
                                                            Text="{Binding TenMon}"/>
-                                                <TextBlock Margin="20 0 0 0"
+                                                    <TextBlock Margin="20 0 0 0"
                                                            FontSize="18"
                                                            Width="150"
                                                            Foreground="#000000"
                                                            Text="{Binding Diem15Phut}"/>
-                                                <TextBlock Margin="20 0 0 0"
+                                                    <TextBlock Margin="20 0 0 0"
                                                            FontSize="18"
                                                            Width="150"
                                                            Foreground="#000000"
                                                            Text="{Binding Diem1Tiet}"/>
-                                                <TextBlock Margin="20 0 0 0"
+                                                    <TextBlock Margin="20 0 0 0"
                                                            FontSize="18"
                                                            Width="150"
-                                                           Foreground="#000000"
+                                                           FontWeight="DemiBold"
+                                                           Foreground="#009efd"
                                                            Text="{Binding DiemTB}"/>
-                                                <TextBlock Margin="20 0 0 0"
-                                                           FontSize="18"
-                                                           Width="160"
-                                                           Foreground="#000000"
-                                                           Text="{Binding XepLoai,Converter={StaticResource BooleanToXepLoaiConverter}}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                                    <materialDesign:PackIcon Kind="{Binding XepLoai, Converter={StaticResource BooleanToCheckIconKindConverter}}"
+                                                                             Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                                             VerticalAlignment="Center"
+                                                                             Width="18"
+                                                                             Margin="25 0 0 0"
+                                                                             Height="18"/>
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               Margin="2 0 0 0"
+                                                               Width="80"
+                                                               FontSize="18"
+                                                               Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                               Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
+                                                               TextTrimming="WordEllipsis"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
 
-                        <TextBlock Text="Học kì II"
+                            <TextBlock Text="Học kì II"
                                FontSize="20"
-                               FontWeight="DemiBold"
-                               HorizontalAlignment="Center"/>
-                        <Grid Width="500"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center">
+                                <TextBlock.Foreground>
+                                    <LinearGradientBrush>
+                                        <GradientStop Color="#FF00ACC9" Offset="1"/>
+                                        <GradientStop Color="#009efd" Offset="0.3"/>
+                                    </LinearGradientBrush>
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                            <Grid Width="500"
                                   Margin="0 10 0 0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="49" ></RowDefinition>
-                                <RowDefinition Height="49"></RowDefinition>
-                                <RowDefinition Height="49"></RowDefinition>
-                                <RowDefinition Height="49"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="160"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Border BorderThickness="1"
-                                    BorderBrush="Black">
-                                <TextBlock Text="Họ Tên" 
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="49" ></RowDefinition>
+                                    <RowDefinition Height="49"></RowDefinition>
+                                    <RowDefinition Height="49"></RowDefinition>
+                                    <RowDefinition Height="49"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderThickness="1 1 1 0"
+                                        CornerRadius="10 0 0 0"
+                                    BorderBrush="#2af598">
+                                    <TextBlock Text="Họ Tên" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="1 0 1 0"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black"
+                                    BorderBrush="#2af598"
                                     Grid.Row="1">
-                                <TextBlock Text="Trung bình" 
+                                    <TextBlock Text="Trung bình" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
-                                    BorderBrush="Black"
+                                </Border>
+                                <Border BorderThickness="1 0 1 0"
+                                    BorderBrush="#2af598"
                                     Margin="0 -1 0 0"
                                     Grid.Row="2">
-                                <TextBlock Text="Xếp loại" 
+                                    <TextBlock Text="Xếp loại" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
-                                    BorderBrush="Black"
-                                    Margin="0 -1 0 0"
-                                    Grid.Row="3">
-                                <TextBlock Text="Nhận xét" 
+                                </Border>
+                                <Border BorderThickness="1 0 1 1"
+                                        BorderBrush="#2af598"
+                                        CornerRadius="0 0 0 10"
+                                        Margin="0 -1 0 0"
+                                        Grid.Row="3">
+                                    <TextBlock Text="Nhận xét" 
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
-                                    Grid.Column="1"
-                                    Grid.Row="0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                </Border>
+                                <Border BorderThickness="0 1 1 0"
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        CornerRadius="0 10 0 0"
+                                        BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="Ten2"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="0 0 1 0"
                                     Grid.Column="1"
                                     Grid.Row="1"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                    BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="DiemTbHK2"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
+                                </Border>
+                                <Border BorderThickness="0 0 1 0"
                                     Grid.Column="1"
                                     Grid.Row="2"
                                     Margin="0 -1 0 0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                    BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="XepLoai2"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                            <Border BorderThickness="1"
-                                    Grid.Column="1"
-                                    Grid.Row="3"
-                                    Margin="0 -1 0 0"
-                                    BorderBrush="Black">
-                                <TextBlock FontSize="20"
+                                </Border>
+                                <Border BorderThickness="0 0 1 1"
+                                        Grid.Column="1"
+                                        Grid.Row="3"
+                                        CornerRadius="0 0 10 0"
+                                        Margin="0 -1 0 0"
+                                        BorderBrush="#2af598">
+                                    <TextBlock FontSize="20"
                                            x:Name="NhanXet2"
+                                           TextTrimming="WordEllipsis"
                                            HorizontalAlignment="Center"
                                            VerticalAlignment="Center"/>
-                            </Border>
-                        </Grid>
-                        <DockPanel Height="50"
-                                   Margin="40,10,25,10"
+                                </Border>
+                            </Grid>
+                            <DockPanel Height="50"
+                                   Margin="30,10,25,10"
                                    VerticalAlignment="Top">
-                            <TextBlock Text="Môn"
+                                <TextBlock Text="Môn"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="200"
                                Margin="50 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="15 phút"
+                                <TextBlock Text="15 phút"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="150"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="1 tiết"
+                                <TextBlock Text="1 tiết"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="150"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="Trung Bình"
+                                <TextBlock Text="Trung Bình"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="150"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                            <TextBlock Text="Xếp loại"
+                                <TextBlock Text="Xếp loại"
                                VerticalAlignment="Center"
                                FontSize="18"
                                Width="160"
                                Margin="20 0 0 0"
                                FontWeight="Bold"/>
-                        </DockPanel>
+                            </DockPanel>
 
-                        <DataGrid Margin="25,0,25,10"
+                            <DataGrid Margin="25,0,25,10"
                                   Width="auto"
                                   Height="auto"
                                   IsEnabled="False"
+                                  AlternationCount="2"
+                                  RowHeight="40"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                   ItemsSource="{Binding DanhSachDiemHK2}"
-                                  Style="{StaticResource DataGridStyle1}"
-                                  RowStyle="{StaticResource MaterialDesignDataGridRow}"
-                                  CellStyle="{StaticResource MaterialDesignDataGridCell}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="1010">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="50 0 0 0"
+                                  Style="{StaticResource DataGridStyle1}">
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="{x:Type DataGridRow}">
+                                        <Style.Triggers>
+                                            <Trigger Property="AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="White" />
+                                            </Trigger>
+                                            <Trigger Property="AlternationIndex" Value="0">
+                                                <Setter Property="Background" Value="WhiteSmoke" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="{x:Type DataGridCell}">
+                                        <Style.Triggers>
+                                            <Trigger Property="DataGridCell.IsSelected" Value="True">
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                                                <Setter Property="Background" Value="Transparent"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.CellStyle>
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="1010">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="50 0 0 0"
                                                            FontSize="18"
                                                            Width="200"
                                                            Foreground="#000000"
                                                            Text="{Binding TenMon}"/>
-                                                <TextBlock Margin="20 0 0 0"
+                                                    <TextBlock Margin="20 0 0 0"
                                                            FontSize="18"
                                                            Width="150"
                                                            Foreground="#000000"
                                                            Text="{Binding Diem15Phut}"/>
-                                                <TextBlock Margin="20 0 0 0"
+                                                    <TextBlock Margin="20 0 0 0"
                                                            FontSize="18"
                                                            Width="150"
                                                            Foreground="#000000"
                                                            Text="{Binding Diem1Tiet}"/>
-                                                <TextBlock Margin="20 0 0 0"
+                                                    <TextBlock Margin="20 0 0 0"
                                                            FontSize="18"
                                                            Width="150"
-                                                           Foreground="#000000"
+                                                           FontWeight="DemiBold"
+                                                           Foreground="#009efd"
                                                            Text="{Binding DiemTB}"/>
-                                                <TextBlock Margin="20 0 0 0"
-                                                           FontSize="18"
-                                                           Width="160"
-                                                           Foreground="#000000"
-                                                           Text="{Binding XepLoai,Converter={StaticResource BooleanToXepLoaiConverter}}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
-                </ScrollViewer>
-            </StackPanel>
+                                                    <materialDesign:PackIcon Kind="{Binding XepLoai, Converter={StaticResource BooleanToCheckIconKindConverter}}"
+                                                                             Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                                             VerticalAlignment="Center"
+                                                                             Width="18"
+                                                                             Margin="25 0 0 0"
+                                                                             Height="18"/>
+                                                    <TextBlock VerticalAlignment="Center"
+                                                               Margin="2 0 0 0"
+                                                               Width="80"
+                                                               FontSize="18"
+                                                               Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                               Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
+                                                               TextTrimming="WordEllipsis"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>
