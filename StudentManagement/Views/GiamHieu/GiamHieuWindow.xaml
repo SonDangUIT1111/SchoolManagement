@@ -53,13 +53,13 @@
         <Border Grid.RowSpan="2" 
                 x:Name="SideBar"
                 Width="300"
-                Panel.ZIndex="2">
+                Panel.ZIndex="4">
             <Border.Background>White
             </Border.Background>
             <Border.Effect>
-                <DropShadowEffect BlurRadius="5" 
+                <DropShadowEffect BlurRadius="10" 
                                   ShadowDepth="1"
-                                  Opacity="0.1"/>
+                                  Opacity="0.4"/>
             </Border.Effect>
             <Border.Triggers>
                 <EventTrigger RoutedEvent="Border.Loaded">
@@ -410,7 +410,7 @@
             
         </Border>
         
-        <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Background="#FFECECEC" Panel.ZIndex="-1"/>
+        <Border Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White" Panel.ZIndex="-1"/>
         <Frame x:Name="RPage"  
                NavigationUIVisibility="Hidden" 
                Grid.Column="1" Grid.Row="1" 

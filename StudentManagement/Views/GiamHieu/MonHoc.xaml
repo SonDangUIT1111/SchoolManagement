@@ -15,7 +15,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="750" 
       d:DesignWidth="1000"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       Title="MonHoc"
       Name="MonHocWD"
       DataContext="{StaticResource MonHocVM}">

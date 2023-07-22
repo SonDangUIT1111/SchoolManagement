@@ -10,10 +10,10 @@
       mc:Ignorable="d" 
       d:DesignHeight="750" 
       d:DesignWidth="1000"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       Title="BaoCao"
       DataContext="{StaticResource BaoCaoMonHocVM}"
-      x:Name="BaoCaoWD"  
+      x:Name="BaoCaoWD" 
       >
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -23,7 +23,8 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="228" ></RowDefinition>
+            <RowDefinition Height="49.5" ></RowDefinition>
+            <RowDefinition Height="178.5"/>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Border BorderBrush="#110357" 
@@ -31,7 +32,7 @@
                 CornerRadius="30" 
                 Grid.Row="0" 
                 Background="#2e87e6" 
-                Margin="12" >
+                Margin="12,12,12,12" Grid.RowSpan="2" >
             <Grid>
                 <TextBlock Text="Báo cáo môn học" 
                            FontWeight="Bold" 
@@ -47,7 +48,7 @@
                 CornerRadius="10" 
                 Grid.Row="2" 
                 Background="White" 
-                Margin="12">
+                Margin="12,12,12,12">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="120"></RowDefinition>

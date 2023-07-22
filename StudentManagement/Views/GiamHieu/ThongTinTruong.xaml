@@ -8,7 +8,7 @@
       d:DesignHeight="750" 
       d:DesignWidth="1000"
       Title="ThongTinTruong"
-      Background="#FFECECEC">
+      Background="#FFFFFF">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

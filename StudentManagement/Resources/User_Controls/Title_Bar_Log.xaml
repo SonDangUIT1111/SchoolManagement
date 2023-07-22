@@ -24,7 +24,8 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid>
-            <Border CornerRadius="20" 
+            <Border Background="Transparent"
+                    CornerRadius="20" 
                     Grid.RowSpan="2" 
                     Opacity="1">
             </Border>

@@ -9,7 +9,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="750" 
       d:DesignWidth="1000"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       Title="ThanhTichHocSinh"
       DataContext="{StaticResource ThanhTichVM}"
       Name="ThanhTichWD">

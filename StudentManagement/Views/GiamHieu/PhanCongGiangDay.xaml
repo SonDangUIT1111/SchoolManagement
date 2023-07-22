@@ -15,7 +15,7 @@
       FontFamily="{DynamicResource MaterialDesignFont}"
       d:DesignHeight="800" 
       d:DesignWidth="1000"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       Title="PhanCongGiangDay"
       Name="PhanCongGiangDayWD"
       DataContext="{StaticResource PhanCongGiangDayVM}">

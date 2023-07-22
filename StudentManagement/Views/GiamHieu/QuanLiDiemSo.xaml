@@ -16,7 +16,7 @@
       d:DesignWidth="1000"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       x:Name="QuanLiDiemSoWD"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       DataContext="{StaticResource QuanLiDiemSoVM}"
       Title="QuanLiDiemSo">
     <i:Interaction.Triggers>

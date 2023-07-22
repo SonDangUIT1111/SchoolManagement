@@ -10,7 +10,7 @@
       d:DesignHeight="750" 
       d:DesignWidth="1000"
       Title="LopHoc"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       x:Name="LopHocWD"
       DataContext="{StaticResource LopHocVM}">
     <i:Interaction.Triggers>

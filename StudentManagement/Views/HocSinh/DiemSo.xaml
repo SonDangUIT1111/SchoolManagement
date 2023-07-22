@@ -11,7 +11,7 @@
       Title="DiemSo"
       Name="DiemSoWD"
       mc:Ignorable="d" 
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       DataContext="{StaticResource DiemSoVM}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

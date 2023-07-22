@@ -16,7 +16,7 @@
       d:DesignWidth="1000"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       x:Name="HeThongBangDiemWD"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       DataContext="{StaticResource HeThongBangDiemGVVM}"
       Title="HeThongBangDiem">
     <i:Interaction.Triggers>

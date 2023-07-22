@@ -11,7 +11,7 @@
       d:DesignWidth="1000"
       Title="ThongTinGiaoVien"
       DataContext="{StaticResource DanhSachGiaoVienVM}"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       Name="GiaoVienWD">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

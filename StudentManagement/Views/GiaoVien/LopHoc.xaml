@@ -12,7 +12,7 @@
       d:DesignWidth="1000"
       Title="LopHoc"
       Name="LopHocWD"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       DataContext="{StaticResource LopHocGVVM}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

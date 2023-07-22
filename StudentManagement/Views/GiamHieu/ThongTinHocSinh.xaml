@@ -15,7 +15,7 @@
       FontFamily="{DynamicResource MaterialDesignFont}"
       d:DesignHeight="750" 
       d:DesignWidth="1000"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       Title="ThongTinHocSinh"
       Name="ThongTinHocSinhWD"
       DataContext="{StaticResource ThongTinHocSinhVM}">

@@ -18,7 +18,7 @@
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       Title="DanhSachLop"
       x:Name="DanhSachLopWD"
-      Background="#FFECECEC"
+      Background="#FFFFFF"
       DataContext="{StaticResource DanhSachLopVM}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
