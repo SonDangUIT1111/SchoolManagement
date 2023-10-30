@@ -2,6 +2,6 @@
 {
     internal class ConnectionString
     {
-        public static string connectionString = "workstation id=studentmanagementdoan.mssql.somee.com;packet size=4096;user id=quanlyhocsinh_SQLLogin_2;pwd=fub21e6262;data source=studentmanagementdoan.mssql.somee.com;persist security info=False;initial catalog=studentmanagementdoan";
+        public static string connectionString = "workstation id=quanlyhocsinh.mssql.somee.com;packet size=4096;user id=quanlyhocsinhuit_SQLLogin_1;pwd=b22he7isrx;data source=quanlyhocsinh.mssql.somee.com;persist security info=False;initial catalog=quanlyhocsinh";
     }
 }
