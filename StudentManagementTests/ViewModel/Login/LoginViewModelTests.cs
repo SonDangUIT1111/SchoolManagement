@@ -20,6 +20,20 @@ namespace StudentManagement.ViewModel.Login.Tests
             viewModel = new LoginViewModel();
         }
 
+        [TestMethod()]
+        public void PropertiesTest()
+        {
+            viewModel.IndexRole = 1;
+            Assert.AreEqual(1, viewModel.IndexRole);
+            viewModel.Username = "hello";
+            Assert.AreEqual("hello", viewModel.Username);
+            viewModel.Password = "1234";
+            Assert.AreEqual("1234", viewModel.Password);
+            viewModel.LoginWindow = null;
+            Assert.IsNull(viewModel.LoginWindow);
+        }
+
+
 
         [TestMethod()]
         [DataRow("", "a1")]

@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    internal class ChangePasswordViewModel : BaseViewModel
+    public class ChangePasswordViewModel : BaseViewModel
     {
         private string _id;
         public string Id { get { return _id; } set { _id = value; OnPropertyChanged(); } }
@@ -47,82 +47,15 @@ namespace StudentManagement.ViewModel.Login
             });
             ChangePW = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                CapNhatMatKhau();
-            });
-        }
-        public void CapNhatMatKhau()
-        {
-            if (ChangePasswordWD.PasswordOld.Password == "" || ChangePasswordWD.PasswordNew.Password == "" || ChangePasswordWD.PasswordNewConfirm.Password == "")
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng nhập đầy đủ thông tin";
-                MB.ShowDialog();
-                return;
-            }
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
+                if (!CheckValidPassword(ChangePasswordWD.PasswordOld.Password, ChangePasswordWD.PasswordNew.Password, ChangePasswordWD.PasswordNewConfirm.Password))
                 {
-                    con.Open();
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập đầy đủ thông tin";
+                    MB.ShowDialog();
+                    return;
                 }
-                catch (Exception)
-                {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
-                }
-                try
-                {
-                    string cmdText = "";
-                    if (IsHS)
-                    {
-                        cmdText = "select UserPassword from HocSinh where MaHocSinh = " + Id;
-                    }
-                    else
-                    {
-                        cmdText = "select UserPassword from GiaoVien where MaGiaoVien = " + Id;
-                    }
-                    SqlCommand sqlCommand = new SqlCommand(cmdText, con);
-                    SqlDataReader reader = sqlCommand.ExecuteReader();
-                    reader.Read();
-                    MatKhau = reader.GetString(0);
-                    con.Close();
-                }
-                catch (Exception)
-                {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
-                }
-            }
-                
-
-            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordOld.Password)).ToLower() != MatKhau)
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Sai mật khẩu cũ";
-                MB.ShowDialog();
-                return;
-            }
-            if (ChangePasswordWD.PasswordNew.Password != ChangePasswordWD.PasswordNewConfirm.Password)
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Sai mật khẩu xác nhận";
-                MB.ShowDialog();
-                return;
-            }
-            if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password)).ToLower() == MatKhau)
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng nhập mật khẩu mới khác mật khẩu hiện tại.";
-                MB.ShowDialog();
-                return;
-            }
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
                 {
                     try
                     {
@@ -130,38 +63,123 @@ namespace StudentManagement.ViewModel.Login
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail MB = new MessageBoxFail();
-                        MB.ShowDialog();
-                        return;
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
                     }
-                    string passEncode = CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password));
-                    string CmdString;
-                    if (IsHS)
+                    try
                     {
-                        CmdString = "Update HocSinh set UserPassword = \'" + passEncode +
-                                            "\' where MaHocSinh = " + Id;
-                    }
-                    else
-                    {
-                        CmdString = "Update GiaoVien set UserPassword= \'" + passEncode +
-                                                "\' where MaGiaoVien = " + Id;
-                    }
-                    {
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteScalar();
-                        MessageBoxSuccessful MB = new MessageBoxSuccessful();
-                        MB.ShowDialog();
+                        string cmdText = "";
+                        if (IsHS)
+                        {
+                            cmdText = "select UserPassword from HocSinh where MaHocSinh = " + Id;
+                        }
+                        else
+                        {
+                            cmdText = "select UserPassword from GiaoVien where MaGiaoVien = " + Id;
+                        }
+                        SqlCommand sqlCommand = new SqlCommand(cmdText, con);
+                        SqlDataReader reader = sqlCommand.ExecuteReader();
+                        reader.Read();
+                        MatKhau = reader.GetString(0);
                         con.Close();
                     }
-                    ChangePasswordWD.Close();
+                    catch (Exception)
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
+                    }
                 }
-                catch (Exception)
+
+
+                if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordOld.Password)).ToLower() != MatKhau)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Sai mật khẩu cũ";
+                    MB.ShowDialog();
                     return;
                 }
+                if (!ValidatePassword(ChangePasswordWD.PasswordNew.Password, ChangePasswordWD.PasswordNewConfirm.Password))
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Mật khẩu phải chứa ít nhất 1 kí tự in hoa và một kí tự số. Mật khẩu xác nhận phải trùng với mật khẩu mới!";
+                    MB.ShowDialog();
+                    return;
+                }
+                if (CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password)).ToLower() == MatKhau)
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập mật khẩu mới khác mật khẩu hiện tại.";
+                    MB.ShowDialog();
+                    return;
+                }
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    try
+                    {
+                        try
+                        {
+                            con.Open();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBoxFail MB = new MessageBoxFail();
+                            MB.ShowDialog();
+                            return;
+                        }
+                        string passEncode = CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password));
+                        string CmdString;
+                        if (IsHS)
+                        {
+                            CmdString = "Update HocSinh set UserPassword = \'" + passEncode +
+                                                "\' where MaHocSinh = " + Id;
+                        }
+                        else
+                        {
+                            CmdString = "Update GiaoVien set UserPassword= \'" + passEncode +
+                                                    "\' where MaGiaoVien = " + Id;
+                        }
+                        {
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+                            MessageBoxSuccessful MB = new MessageBoxSuccessful();
+                            MB.ShowDialog();
+                            con.Close();
+                        }
+                        ChangePasswordWD.Close();
+                    }
+                    catch (Exception)
+                    {
+                        MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        messageBoxFail.ShowDialog();
+                        return;
+                    }
+                }
+            });
+        }
+
+        public bool CheckValidPassword(string oldPass, string newPass, string confirmPass)
+        {
+            if (string.IsNullOrEmpty(oldPass) || string.IsNullOrEmpty(newPass) || string.IsNullOrEmpty(confirmPass))
+                return false;
+            return true;
+        }
+
+        public bool ValidatePassword(string newPass, string confirmPass)
+        {
+            if (newPass == null || confirmPass == null || newPass == "" || confirmPass == "")
+                return false;
+            bool flagUpcase = false, flagNum = false;
+            foreach (char c in newPass)
+            {
+                if (c >= 'A' && c < 'Z' + 1)
+                    flagUpcase = true;
+                if (c >= '0' && c < '9' + 1)
+                    flagNum = true;
             }
+            return flagNum && flagUpcase && newPass == confirmPass;
         }
 
         // hàm mã hóa mật khẩu

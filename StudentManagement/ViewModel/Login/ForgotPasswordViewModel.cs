@@ -86,7 +86,7 @@ namespace StudentManagement.ViewModel.Login
                     MB.ShowDialog();
                     return;
                 }
-                if (!CheckValidRole(IndexRole))
+                if (IndexRole<0 || IndexRole > 2)
                 {
                     MessageBoxOK MB = new MessageBoxOK();
                     var data = MB.DataContext as MessageBoxOKViewModel;
@@ -94,7 +94,34 @@ namespace StudentManagement.ViewModel.Login
                     MB.ShowDialog();
                     return;
                 }
-                if (CheckExistEmail(EmailProtected,IndexRole))
+                int checkUser = 0;
+                string CmdString = string.Empty;
+                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                {
+                    try
+                    {
+                        try
+                        {
+                            con.Open();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
+                            return;
+                        }
+                        CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Email = '" + IndexRole + "'";
+                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                        con.Close();
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+
+                }
+                if (checkUser > 0)
                 {
                     IsSend = true;
                     Random rd = new Random();
@@ -161,7 +188,35 @@ namespace StudentManagement.ViewModel.Login
             },
             (parameter) =>
             {
-                Verified(parameter);
+                if (parameter == null)
+                    return;
+                var window = parameter as ForgotPasswordWindow;
+                if (!CheckValidCode(window.CodeVerified.Text))
+                {
+                    IsVerified = false;
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Định dạng mã xác thực không hợp lệ, vui lòng nhập 6 chữ số để xác thực";
+                    MB.ShowDialog();
+                }
+                if (Int32.Parse(window.CodeVerified.Text) == RandomCode)
+                {
+                    IsVerified = true;
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Xác thực thành công, vui lòng nhập mật khẩu mới.";
+                    MB.ShowDialog();
+                    return;
+                }
+                else
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Mã xác thực không chính xác, vui lòng kiểm tra lại.";
+                    MB.ShowDialog();
+                    IsVerified = false;
+                    return;
+                }
             });
             ChangePasswordCommand = new RelayCommand<Window>((parameter) =>
             {
@@ -172,7 +227,87 @@ namespace StudentManagement.ViewModel.Login
                 else return false;
             }, (parameter) =>
             {
-                Change(parameter);
+                if (parameter == null)
+                    return;
+                if (String.IsNullOrEmpty(NewPassword))
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập mật khẩu mới";
+                    MB.ShowDialog();
+                    return;
+                }
+                if (String.IsNullOrEmpty(ConfirmNewPassword))
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng xác nhận mật khẩu mới";
+                    MB.ShowDialog();
+                    return;
+                }
+                //check validation of password
+                if (!CheckValidPassword(NewPassword))
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Mật khẩu phải có ít nhất một chữ số và một kí tự in hoa.";
+                    MB.ShowDialog();
+                    return;
+                }
+                if (ConfirmNewPassword != NewPassword)
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Mật khẩu xác nhận không chính xác";
+                    MB.ShowDialog();
+                    return;
+                }
+                else
+                {
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string passEncode = CreateMD5(Base64Encode(NewPassword));
+                            if (IndexRole == 0)
+                            {
+                                CmdString = "Update GiamHieu Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
+                            }
+                            else if (IndexRole == 1)
+                            {
+                                CmdString = "Update GiaoVien Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
+                            }
+                            else if (IndexRole == 2)
+                            {
+                                CmdString = "Update HocSinh Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
+                            }
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Đổi mật khẩu thành công";
+                    MB.ShowDialog();
+                    parameter.Close();
+                    LoginWindow login = new LoginWindow();
+                    login.ShowDialog();
+                }
             });
             ShowNewPassword = new RelayCommand<ForgotPasswordWindow>((parameter) => { return true; }, (parameter) =>
             {
@@ -209,133 +344,18 @@ namespace StudentManagement.ViewModel.Login
 
         }
 
-        void Verified(Window parameter)
-        {
-            if (parameter == null)
-                return;
-            var window = parameter as ForgotPasswordWindow;
-            if (!CheckValidCode(window.CodeVerified.Text))
-            {
-                IsVerified = false;
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Định dạng mã xác thực không hợp lệ, vui lòng nhập 6 chữ số để xác thực";
-                MB.ShowDialog();
-            }
-            if (Int32.Parse(window.CodeVerified.Text) == RandomCode)
-            {
-                IsVerified = true;
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Xác thực thành công, vui lòng nhập mật khẩu mới.";
-                MB.ShowDialog();
-                return;
-            }
-            else
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Mã xác thực không chính xác, vui lòng kiểm tra lại.";
-                MB.ShowDialog();
-                IsVerified = false;
-                return;
-            }
-        }
-        void Change(Window parameter)
-        {
-            if (parameter == null)
-                return;
-            if (String.IsNullOrEmpty(NewPassword))
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng nhập mật khẩu mới";
-                MB.ShowDialog();
-                return;
-            }
-            if (String.IsNullOrEmpty(ConfirmNewPassword))
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng xác nhận mật khẩu mới";
-                MB.ShowDialog();
-                return;
-            }
-            //check validation of password
-            if (!CheckValidPassword(NewPassword))
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Mật khẩu phải có ít nhất một chữ số và một kí tự in hoa.";
-                MB.ShowDialog();
-                return;
-            }
-            if (ConfirmNewPassword != NewPassword)
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Mật khẩu xác nhận không chính xác";
-                MB.ShowDialog();
-                return;
-            }
-            else
-            {
-                string CmdString = string.Empty;
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    try
-                    {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception) 
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return;
-                        }
-                        string passEncode = CreateMD5(Base64Encode(NewPassword));
-                        if (IndexRole == 0)
-                        {
-                            CmdString = "Update GiamHieu Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                        }
-                        else if (IndexRole == 1)
-                        {
-                            CmdString = "Update GiaoVien Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                        }
-                        else if (IndexRole == 2)
-                        {
-                            CmdString = "Update HocSinh Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                        }
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteScalar();
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Đổi mật khẩu thành công";
-                MB.ShowDialog();
-                parameter.Close();
-                LoginWindow login = new LoginWindow();
-                login.ShowDialog();
-            }
-        }
-
         public bool CheckValidPassword(string pass)
         {
-            int countUpcase = 0, countNum = 0;
+            if (String.IsNullOrEmpty(pass)) return false;
+            bool flagUpcase = false, flagNum = false;
             foreach (char c in pass)
             {
-                if (c >= 'A' && c <= 'Z')
-                    countUpcase++;
-                if (c >= '0' && c <= '9')
-                    countNum++;
+                if (c >= 'A' && c < 'Z' + 1)
+                    flagUpcase = true;
+                if (c >= '0' && c < '9' + 1)
+                    flagNum = true; 
             }
-            return countNum != 0 && countUpcase != 0;
+            return flagNum && flagUpcase;
         }
 
         public bool CheckValidEmail(string email)
@@ -343,45 +363,10 @@ namespace StudentManagement.ViewModel.Login
             return Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$") && !String.IsNullOrEmpty(email);
         }
 
-        public bool CheckValidRole(int index)
-        {
-            return index >= 0;
-        }
-
-        public bool CheckExistEmail(string email,int index)
-        {
-            int checkUser = 0;
-            string CmdString = string.Empty;
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try
-                    {
-                        con.Open();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return false;
-                    }
-                    CmdString = "Select count(*) from "+(index==0?"GiamHieu":index==1?"GiaoVien":"HocSinh")+ " where Email = '" + email + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                    con.Close();
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-
-            }
-            return checkUser > 0;
-        }
 
         public bool CheckValidCode(string code)
         {
+            if (code.Length != 6) return false;
             try
             {
                 Int32.Parse(code);
