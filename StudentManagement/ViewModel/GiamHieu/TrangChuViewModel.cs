@@ -53,7 +53,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             PhanCongGiangDayPage = new Views.GiamHieu.PhanCongGiangDay();
 
             //define ICommand
-            LoadData = new RelayCommand<GiamHieuWindow>((parameter) => { return true; },(parameter) => 
+            LoadData = new RelayCommand<GiamHieuWindow>((parameter) => { return true; }, (parameter) =>
             {
                 parameter.RPage.Content = ThongTinTruongPage;
                 parameter.TrangChuRadioBtn.IsChecked = true;

@@ -25,7 +25,7 @@ namespace StudentManagement.ViewModel.Login
         public string Username { get => _username; set { _username = value; OnPropertyChanged(); } }
         private string _password;
         public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
-        public int _indexRole = -1;
+        private int _indexRole = -1;
         public int IndexRole { get => _indexRole; set { _indexRole = value; OnPropertyChanged(); } }
 
         // khai báo usercontrol
@@ -98,8 +98,100 @@ namespace StudentManagement.ViewModel.Login
             // navigate
             LoginSuccess = new RelayCommand<Window>((paramater) => { return true; }, (paramater) =>
             {
-                
-                Log(paramater);
+
+                if (paramater == null)
+                    return;
+                if (!ValidateInfo(Username, Password))
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng nhập đầy đủ thông tin";
+                    MB.ShowDialog();
+                    data.Content = "";
+                }
+                else
+                {
+                    if (!CheckInvalidRole(IndexRole))
+                    {
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Vui lòng chọn chức vụ";
+                        MB.ShowDialog();
+                        return;
+                    }
+                    string passEncode = CreateMD5(Base64Encode(Password));
+                    int id = -1;
+                    int checkUser = 0;
+                    string CmdString = string.Empty;
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                            }
+                            CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+
+
+                            CmdString = "Select " + (IndexRole == 0 ? "MaTruong" : IndexRole == 1 ? "MaGiaoVien" : "MaHocSinh") + " from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
+                            cmd = new SqlCommand(CmdString, con);
+                            id = Convert.ToInt32(cmd.ExecuteScalar());
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+
+                    }
+                    if (checkUser > 0)
+                    {
+                        IsLoggedIn = true;
+                        LoginWindow.LoadBorder.Visibility = Visibility.Visible;
+                        LoginWindow.Hide();
+                        if (IndexRole == 0)
+                        {
+                            GiamHieuWindow window = new GiamHieuWindow();
+                            StudentManagement.ViewModel.GiamHieu.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiamHieu.TrangChuViewModel;
+                            vm.IdGiamHieu = id;
+                            window.ShowDialog();
+                            return;
+                        }
+                        else if (IndexRole == 1)
+                        {
+                            GiaoVienWindow window = new GiaoVienWindow();
+                            StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
+                            vm.CurrentUser.MaGiaoVien = id;
+                            window.ShowDialog();
+                            return;
+                        }
+                        else
+                        {
+                            HocSinhWindow window = new HocSinhWindow();
+                            StudentManagement.ViewModel.HocSinh.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.HocSinh.TrangChuViewModel;
+                            vm.IdHocSinh = id;
+                            window.ShowDialog();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        IsLoggedIn = false;
+                        MessageBoxOK MB = new MessageBoxOK();
+                        var data = MB.DataContext as MessageBoxOKViewModel;
+                        data.Content = "Sai tài khoản hoặc mật khẩu";
+                        MB.ShowDialog();
+                        data.Content = "";
+                        return;
+                    }
+                }
             });
             GoToForgotPasswordCommand = new RelayCommand<LoginWindow>((paramater) => { return true; }, (paramater) =>
             {
@@ -171,203 +263,17 @@ namespace StudentManagement.ViewModel.Login
                 loginWindow.ShowDialog();
             });
         }
-        void Log(Window paramater)
+
+        public bool ValidateInfo(string username, string password)
         {
-            if (paramater == null)
-                return;
-            if (Username == "" || Password == "")
-            {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng nhập đầy đủ thông tin";
-                MB.ShowDialog();
-            }
-            else
-            {
-                string passEncode = CreateMD5(Base64Encode(Password));
-                string username = Username;
-                if (IndexRole == -1)
-                {
-                    MessageBoxOK MB = new MessageBoxOK();
-                    var data = MB.DataContext as MessageBoxOKViewModel;
-                    data.Content = "Vui lòng chọn chức vụ";
-                    MB.ShowDialog();
-                    return;
-                }
-                else if (IndexRole == 0)
-                {
-                    // queries giam hieu
-                    int id = -1;
-                    int checkUser = 0;
-                    string CmdString = string.Empty;
-                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                    {
-                        try
-                        {
-                            try 
-                            { 
-                                con.Open();
-                            } catch (Exception) 
-                            {
-                                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                messageBoxFail.ShowDialog();
-                                return; 
-                            }
-                            CmdString = "Select count(*) from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                            // select id
-                            CmdString = "Select MaTruong from GiamHieu where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                            cmd = new SqlCommand(CmdString, con);
-                            id = Convert.ToInt32(cmd.ExecuteScalar());
-                            con.Close();
-                        }
-                        catch (Exception)
-                        {
+            if ( username == "" || password == "" || username == null || password == null)
+                return false;
+            return true;
+        }
 
-                        }
-
-                    }
-
-                    if (checkUser > 0)
-                    {
-                        IsLoggedIn = true;
-                        LoginWindow loginWD = paramater as LoginWindow;
-                        loginWD.LoadBorder.Visibility = Visibility.Visible;
-                        GiamHieuWindow window = new GiamHieuWindow();
-                        StudentManagement.ViewModel.GiamHieu.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiamHieu.TrangChuViewModel;
-                        vm.IdGiamHieu = id;
-                        loginWD.Hide();
-                        window.ShowDialog();
-                        paramater.Close();
-                    }
-                    else
-                    {
-                        IsLoggedIn = false;
-                        MessageBoxOK MB = new MessageBoxOK();
-                        var data = MB.DataContext as MessageBoxOKViewModel;
-                        data.Content = "Sai tài khoản hoặc mật khẩu";
-                        MB.ShowDialog();
-                        return;
-                    }
-                }
-                else if (IndexRole == 1)
-                {
-                    // queries giao vien
-                    int id = -1;
-                    int checkUser = 0;
-                    string CmdString = string.Empty;
-                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                    {
-                        try
-                        {
-                            try 
-                            { 
-                                con.Open(); 
-                            } catch (Exception)
-                            {
-                                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                messageBoxFail.ShowDialog();
-                                return; 
-                            }
-                            CmdString = "Select count(*) from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-
-                            CmdString = "Select MaGiaoVien from GiaoVien where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                            cmd = new SqlCommand(CmdString, con);
-                            id = Convert.ToInt32(cmd.ExecuteScalar());
-                            con.Close();
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-
-                    }
-
-                    if (checkUser > 0)
-                    {
-                        IsLoggedIn = true;
-                        LoginWindow loginWD = paramater as LoginWindow;
-                        loginWD.LoadBorder.Visibility = Visibility.Visible;
-                        GiaoVienWindow window = new GiaoVienWindow();
-                        StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
-                        vm.CurrentUser.MaGiaoVien = id;
-                        loginWD.Hide();
-                        window.ShowDialog();
-                        paramater.Close();
-                    }
-                    else
-                    {
-                        IsLoggedIn = false;
-                        MessageBoxOK MB = new MessageBoxOK();
-                        var data = MB.DataContext as MessageBoxOKViewModel;
-                        data.Content = "Sai tài khoản hoặc mật khẩu";
-                        MB.ShowDialog();
-                        return;
-                    }
-                }
-                else if (IndexRole == 2)
-                {
-                    int id = -1;
-                    int checkUser = 0;
-                    string CmdString = string.Empty;
-                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                    {
-                        try
-                        {
-                            try
-                            { 
-                                con.Open(); 
-                            } catch (Exception) 
-                            {
-                                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                messageBoxFail.ShowDialog();
-                                return; 
-                            }
-                            CmdString = "Select count(*) from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-
-
-                            CmdString = "Select MaHocSinh from HocSinh where Username = '" + username + "' and UserPassword = '" + passEncode + "'";
-                            cmd = new SqlCommand(CmdString, con);
-                            id = Convert.ToInt32(cmd.ExecuteScalar());
-                            con.Close();
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-
-                    }
-
-                    if (checkUser > 0)
-                    {
-                        IsLoggedIn = true;
-                        LoginWindow loginWD = paramater as LoginWindow;
-                        loginWD.LoadBorder.Visibility = Visibility.Visible;
-                        HocSinhWindow window = new HocSinhWindow();
-                        StudentManagement.ViewModel.HocSinh.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.HocSinh.TrangChuViewModel;
-                        vm.IdHocSinh = id;
-                        loginWD.Hide();
-                        window.ShowDialog();
-                        paramater.Close();
-                    }
-                    else
-                    {
-                        IsLoggedIn = false;
-                        MessageBoxOK MB = new MessageBoxOK();
-                        var data = MB.DataContext as MessageBoxOKViewModel;
-                        data.Content = "Sai tài khoản hoặc mật khẩu";
-                        MB.ShowDialog();
-                        return;
-                    }
-                }
-
-            }
-
+        public bool CheckInvalidRole(int index)
+        {
+            return index >= 0 && index <= 2;
         }
 
         // hàm mã hóa mật khẩu

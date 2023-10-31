@@ -16,7 +16,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         private int _maLop;
         public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
-        public string TenLop { get { return _tenLop; } set { _tenLop = value;OnPropertyChanged(); } }
+        public string TenLop { get { return _tenLop; } set { _tenLop = value; OnPropertyChanged(); } }
         public DanhSachLop DanhSachLopWindow { get; set; }
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachLop;
         public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachLop { get => _danhSachLop; set { _danhSachLop = value; OnPropertyChanged(); } }
@@ -109,7 +109,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             Back = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
-                
+
                 try
                 {
                     DanhSachLopWindow.NavigationService.GoBack();
@@ -175,14 +175,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
-                        return; 
+                        return;
                     }
                     SqlCommand cmd;
                     string CmdString = "Update HocSinh set MaLop = null where MaHocSinh = " + value.MaHocSinh;
@@ -255,14 +256,15 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
+                    try
+                    {
+                        con.Open();
+                    }
+                    catch (Exception)
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
-                        return; 
+                        return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = " + MaLop.ToString()
                                         + " and TenHocSinh like N'%" + value + "%'";
