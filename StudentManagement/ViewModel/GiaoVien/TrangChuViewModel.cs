@@ -19,8 +19,6 @@ namespace StudentManagement.ViewModel.GiaoVien
     public class TrangChuViewModel : BaseViewModel
     {
         //declare variable
-        private string _sayHello;
-        public string SayHello { get { return _sayHello; } set { _sayHello = value;OnPropertyChanged(); } }
         private Model.GiaoVien _currentUser;
         public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
         public GiaoVienWindow GiaoVienWD { get; set; }
@@ -195,15 +193,6 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void LoadSayHello(Border item)
         {
-            int hour = DateTime.Now.Hour;
-            if (hour >= 0 && hour < 6)
-                SayHello = "Have a nice day";
-            else if (hour >= 6 && hour < 12)
-                SayHello = "Good morning";
-            else if (hour >= 12 && hour < 18)
-                SayHello = "Good afternoon";
-            else if (hour >= 18 && hour < 24)
-                SayHello = "Good evening";
             try
             {
                 GiaoVienWD.UserName.Text = CurrentUser.TenGiaoVien;

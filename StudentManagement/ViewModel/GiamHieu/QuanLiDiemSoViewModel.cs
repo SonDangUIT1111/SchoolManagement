@@ -117,7 +117,227 @@ namespace StudentManagement.ViewModel.GiamHieu
                 if (everLoaded == false)
                 {
                     QuanLiDiemSoWD = parameter as QuanLiDiemSo;
-                    LoadDuLieuComboBox();
+                    NienKhoaQueries = KhoiQueries = LopQueries = MonHocQueries = "";
+                    NienKhoaQueries2 = KhoiQueries2 = LopQueries2 = "";
+                    HocKyQueries = 1;
+                    HocKyQueries2 = 1;
+                    KhoiDataCmb.Clear();
+                    KhoiDataCmb2.Clear();
+                    LopDataCmb.Clear();
+                    LopDataCmb2.Clear();
+                    MonDataCmb.Clear();
+                    NienKhoaCmb.Clear();
+                    NienKhoaCmb2.Clear();
+                    if (QuanLiDiemSoWD != null)
+                    {
+                        QuanLiDiemSoWD.cmbHocKy.Items.Clear();
+                        QuanLiDiemSoWD.cmbHocKy2.Items.Clear();
+                        QuanLiDiemSoWD.cmbHocKy.Items.Add("Học kỳ 1");
+                        QuanLiDiemSoWD.cmbHocKy.Items.Add("Học kỳ 2");
+                        QuanLiDiemSoWD.cmbHocKy2.Items.Add("Học kỳ 1");
+                        QuanLiDiemSoWD.cmbHocKy2.Items.Add("Học kỳ 2");
+                        QuanLiDiemSoWD.cmbHocKy.SelectedIndex = 0;
+                        QuanLiDiemSoWD.cmbHocKy2.SelectedIndex = 0;
+                    }
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string CmdString = "select distinct NienKhoa from Lop";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader = cmd.ExecuteReader();
+
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    NienKhoaCmb.Add(reader.GetString(0));
+                                    NienKhoaCmb2.Add(reader.GetString(0));
+                                    if (String.IsNullOrEmpty(NienKhoaQueries))
+                                    {
+                                        NienKhoaQueries = reader.GetString(0);
+                                        QuanLiDiemSoWD.cmbNienKhoa.SelectedIndex = 0;
+                                    }
+                                    if (String.IsNullOrEmpty(NienKhoaQueries2))
+                                    {
+                                        NienKhoaQueries2 = reader.GetString(0);
+                                        QuanLiDiemSoWD.cmbNienKhoa2.SelectedIndex = 0;
+                                    }
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            CmdString = "select distinct MaKhoi,Khoi from Khoi";
+                            cmd = new SqlCommand(CmdString, con);
+                            reader = cmd.ExecuteReader();
+
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    Khoi item = new Khoi();
+                                    item.MaKhoi = reader.GetInt32(0);
+                                    item.TenKhoi = reader.GetString(1);
+                                    KhoiDataCmb.Add(item);
+                                    KhoiDataCmb2.Add(item);
+                                    if (String.IsNullOrEmpty(KhoiQueries))
+                                    {
+                                        KhoiQueries = reader.GetInt32(0).ToString();
+                                        QuanLiDiemSoWD.cmbKhoi.SelectedIndex = 0;
+                                    }
+                                    if (String.IsNullOrEmpty(KhoiQueries2))
+                                    {
+                                        KhoiQueries2 = reader.GetInt32(0).ToString();
+                                        QuanLiDiemSoWD.cmbKhoi2.SelectedIndex = 0;
+                                    }
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        if (!String.IsNullOrEmpty(NienKhoaQueries))
+                        {
+                            try
+                            {
+                                try
+                                {
+                                    con.Open();
+                                }
+                                catch (Exception)
+                                {
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
+                                    return;
+                                }
+                                string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
+                                SqlCommand cmd = new SqlCommand(CmdString, con);
+                                SqlDataReader reader1 = cmd.ExecuteReader();
+
+                                while (reader1.HasRows)
+                                {
+                                    while (reader1.Read())
+                                    {
+                                        Lop item = new Lop();
+                                        item.MaLop = reader1.GetInt32(0);
+                                        item.TenLop = reader1.GetString(1);
+                                        LopDataCmb.Add(item);
+                                        if (String.IsNullOrEmpty(LopQueries))
+                                        {
+                                            LopQueries = reader1.GetInt32(0).ToString();
+                                            QuanLiDiemSoWD.cmbLop.SelectedIndex = 0;
+                                        }
+                                    }
+                                    reader1.NextResult();
+                                }
+                                con.Close();
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(NienKhoaQueries2))
+                        {
+                            try
+                            {
+                                try
+                                {
+                                    con.Open();
+                                }
+                                catch (Exception)
+                                {
+                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                    messageBoxFail.ShowDialog();
+                                    return;
+                                }
+                                string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
+                                SqlCommand cmd = new SqlCommand(CmdString, con);
+                                SqlDataReader reader2 = cmd.ExecuteReader();
+
+                                while (reader2.HasRows)
+                                {
+                                    while (reader2.Read())
+                                    {
+                                        Lop item = new Lop();
+                                        item.MaLop = reader2.GetInt32(0);
+                                        item.TenLop = reader2.GetString(1);
+                                        LopDataCmb2.Add(item);
+                                        if (String.IsNullOrEmpty(LopQueries2))
+                                        {
+                                            LopQueries2 = reader2.GetInt32(0).ToString();
+                                            QuanLiDiemSoWD.cmbLop2.SelectedIndex = 0;
+                                        }
+                                    }
+                                    reader2.NextResult();
+                                }
+                                con.Close();
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string CmdString = "select MaMon,TenMon from MonHoc where ApDung = 1";
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader3 = cmd.ExecuteReader();
+
+                            while (reader3.HasRows)
+                            {
+                                while (reader3.Read())
+                                {
+                                    Model.MonHoc item = new Model.MonHoc();
+                                    item.MaMon = reader3.GetInt32(0);
+                                    item.TenMon = reader3.GetString(1);
+                                    MonDataCmb.Add(item);
+                                    if (String.IsNullOrEmpty(MonHocQueries))
+                                    {
+                                        MonHocQueries = reader3.GetInt32(0).ToString();
+                                        QuanLiDiemSoWD.cmbMonHoc.SelectedIndex = 0;
+                                    }
+                                }
+                                reader3.NextResult();
+                            }
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
                     ProgressBarVisibility = true;
                     DataGridVisibility = false;
                     await LoadDanhSachBangDiem();
@@ -141,7 +361,45 @@ namespace StudentManagement.ViewModel.GiamHieu
                 if (cmb != null && cmb.SelectedItem != null)
                 {
                     NienKhoaQueries = cmb.SelectedItem.ToString();
-                    FilterLopFromSelection();
+                    LopDataCmb.Clear();
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.Lop item = new StudentManagement.Model.Lop
+                                    {
+                                        MaLop = reader.GetInt32(0),
+                                        TenLop = reader.GetString(1),
+                                    };
+                                    LopDataCmb.Add(item);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            return;
+                        }
+                        QuanLiDiemSoWD.cmbLop.SelectedIndex = 0;
+                    }
                 }
             });
             FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
@@ -168,7 +426,45 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     Khoi item = cmb.SelectedItem as Khoi;
                     KhoiQueries = item.MaKhoi.ToString();
-                    FilterLopFromSelection();
+                    LopDataCmb.Clear();
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.Lop item2 = new StudentManagement.Model.Lop
+                                    {
+                                        MaLop = reader.GetInt32(0),
+                                        TenLop = reader.GetString(1),
+                                    };
+                                    LopDataCmb.Add(item2);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            return;
+                        }
+                        QuanLiDiemSoWD.cmbLop.SelectedIndex = 0;
+                    }
                 }
             });
             FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
@@ -210,7 +506,44 @@ namespace StudentManagement.ViewModel.GiamHieu
                 if (cmb != null && cmb.SelectedItem != null)
                 {
                     NienKhoaQueries2 = cmb.SelectedItem.ToString();
-                    FilterLopFromSelection2();
+                    LopDataCmb2.Clear();
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.Lop item = new StudentManagement.Model.Lop
+                                    {
+                                        MaLop = reader.GetInt32(0),
+                                        TenLop = reader.GetString(1),
+                                    };
+                                    LopDataCmb2.Add(item);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        QuanLiDiemSoWD.cmbLop2.SelectedIndex = 0;
+                    }
                 }
             });
             FilterHocKy2 = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -231,7 +564,44 @@ namespace StudentManagement.ViewModel.GiamHieu
                 {
                     Khoi item = cmb.SelectedItem as Khoi;
                     KhoiQueries2 = item.MaKhoi.ToString();
-                    FilterLopFromSelection2();
+                    LopDataCmb2.Clear();
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.Lop item2 = new StudentManagement.Model.Lop
+                                    {
+                                        MaLop = reader.GetInt32(0),
+                                        TenLop = reader.GetString(1),
+                                    };
+                                    LopDataCmb2.Add(item2);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                        QuanLiDiemSoWD.cmbLop2.SelectedIndex = 0;
+                    }
                 }
             });
             FilterLop2 = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -258,7 +628,41 @@ namespace StudentManagement.ViewModel.GiamHieu
                 var result = wd.DataContext as MessageBoxYesNoViewModel;
                 if (result.IsYes == true)
                 {
-                    MoKhoaBangDiem();
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            string hocky = "";
+                            if (HocKyQueries2 == 1)
+                            {
+                                hocky = "1";
+                            }
+                            else hocky = "2";
+                            string CmdString = "Update HeThongDiem "
+                                              + "set TrangThai = 0 "
+                                              + "where MaLop = " + LopQueries2 + " and HocKy = " + hocky;
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            messageBoxSuccessful.ShowDialog();
+                            con.Close();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            messageBoxFail.ShowDialog();
+                        }
+                    }
                 }
             });
             KhoaDiem = new RelayCommand<object>((parameter) =>
@@ -281,227 +685,247 @@ namespace StudentManagement.ViewModel.GiamHieu
                 var result = wd.DataContext as MessageBoxYesNoViewModel;
                 if (result.IsYes == true)
                 {
-                    KhoaBangDiem();
+                    DanhSachThanhTich.Clear();
+                    DanhSachBaoCaoMon.Clear();
+                    DanhSachBaoCaoHocKy.Clear();
+
+
+                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                    {
+                        try
+                        {
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            // khóa trạng thái
+                            string CmdString = "update HeThongDiem set TrangThai = 1 where MaLop = " + LopQueries2 +
+                                               " and HocKy = " + HocKyQueries2.ToString();
+                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            cmd.ExecuteScalar();
+                            con.Close();
+
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            // cập nhật database thành tích
+                            CmdString = "select HocKy,MaLop,MaHocSinh,avg(DiemTrungBinh) TBHK " +
+                                        "from HeThongDiem " +
+                                        "where MaLop = " + LopQueries2 + " and HocKy = " + HocKyQueries2.ToString() +
+                                        " group by HocKy,MaLop,MaHocSinh";
+                            cmd = new SqlCommand(CmdString, con);
+                            SqlDataReader reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.ThanhTich thanhtich = new StudentManagement.Model.ThanhTich
+                                    {
+                                        HocKy = reader.GetInt32(0),
+                                        MaLop = reader.GetInt32(1),
+                                        MaHocSinh = reader.GetInt32(2),
+                                        TBHK = (float)reader.GetDecimal(3),
+                                    };
+                                    DanhSachThanhTich.Add(thanhtich);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            for (int i = 0; i < DanhSachThanhTich.Count; i++)
+                            {
+                                // chia 2 trường hợp cập nhật lại hoặc thêm mới
+                                int xeploai = 0;
+                                if (DanhSachThanhTich[i].TBHK >= 5)
+                                    xeploai = 1;
+                                CmdString = "if (exists(select * from ThanhTich " +
+                                                        "where MaHocSinh = " + DanhSachThanhTich[i].MaHocSinh.ToString() + " and HocKy = " + DanhSachThanhTich[i].HocKy.ToString() + " and MaLop = " + DanhSachThanhTich[i].MaLop.ToString() + ")) " +
+                                            "begin " +
+                                            "update ThanhTich " +
+                                            "set TrungBinhHocKy = " + DanhSachThanhTich[i].TBHK.ToString() + ", XepLoai = " + xeploai.ToString() + " " +
+                                            "where MaHocSinh = " + DanhSachThanhTich[i].MaHocSinh.ToString() + " and HocKy = " + DanhSachThanhTich[i].HocKy.ToString() + " and MaLop = " + DanhSachThanhTich[i].MaLop.ToString() + " " +
+                                            "end " +
+                                            "else " +
+                                            "begin " +
+                                            "insert into ThanhTich(HocKy,MaLop,MaHocSinh,TrungBinhHocKy,XepLoai) values("
+                                            + DanhSachThanhTich[i].HocKy.ToString() + "," + DanhSachThanhTich[i].MaLop.ToString() + "," +
+                                            DanhSachThanhTich[i].MaHocSinh.ToString() + "," + DanhSachThanhTich[i].TBHK.ToString() + "," + xeploai.ToString() + ") " +
+                                            "end ";
+
+                                cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteScalar();
+                            }
+                            con.Close();
+
+                            // cập nhật database báo cáo môn học
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            CmdString = "select MaLop,MaMon,HocKy,count(MaDiem) SLD,SiSo = (select SiSo from Lop l where l.MaLop = htd.MaLop) " +
+                                        "from HeThongDiem htd " +
+                                        "where XepLoai = 1 and MaLop = " + LopQueries2 + " and HocKy = " + HocKyQueries2.ToString() +
+                                        " group by MaLop,MaMon,HocKy";
+                            cmd = new SqlCommand(CmdString, con);
+                            reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon
+                                    {
+                                        MaLop = reader.GetInt32(0),
+                                        MaMon = reader.GetInt32(1),
+                                        HocKy = reader.GetInt32(2),
+                                        SoLuongDat = reader.GetInt32(3),
+                                        TiLe = CountPercentage(reader.GetInt32(3), reader.GetInt32(4)),
+                                    };
+                                    DanhSachBaoCaoMon.Add(baocaomon);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            for (int i = 0; i < DanhSachBaoCaoMon.Count; i++)
+                            {
+                                // chia 2 trường hợp cập nhật lại hoặc thêm mới
+                                CmdString = "if (exists(select * from BaoCaoMon " +
+                                                        "where MaLop = " + DanhSachBaoCaoMon[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoMon[i].HocKy.ToString() + " and MaMon = " + DanhSachBaoCaoMon[i].MaMon.ToString() + ")) " +
+                                            "begin " +
+                                            "update BaoCaoMon " +
+                                            "set SoLuongDat = " + DanhSachBaoCaoMon[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoMon[i].TiLe + "' " +
+                                            "where MaLop = " + DanhSachBaoCaoMon[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoMon[i].HocKy.ToString() +
+                                            " end " +
+                                            "else " +
+                                            "begin " +
+                                            "insert into BaoCaoMon(MaLop,MaMon,HocKy,SoLuongDat,TiLe) values(" + DanhSachBaoCaoMon[i].MaLop.ToString() + ","
+                                            + DanhSachBaoCaoMon[i].MaMon.ToString() + "," + DanhSachBaoCaoMon[i].HocKy.ToString() + "," +
+                                            DanhSachBaoCaoMon[i].SoLuongDat.ToString() + ",'" + DanhSachBaoCaoMon[i].TiLe + "') " +
+                                            "end";
+                                cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteScalar();
+                            }
+                            con.Close();
+
+                            // cập nhật database báo cáo tổng kết học kỳ
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            CmdString = "select MaLop, SiSo = (select SiSo from Lop l where l.MaLop = tt.MaLop), HocKy,count(MaThanhTich) SLD " +
+                                        "from ThanhTich tt " +
+                                        "where XepLoai = 1 and MaLop = " + LopQueries2 + " and HocKy = " + HocKyQueries2.ToString() + " " +
+                                        "group by MaLop,HocKy";
+                            cmd = new SqlCommand(CmdString, con);
+                            reader = cmd.ExecuteReader();
+                            while (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    StudentManagement.Model.BaoCaoHocKy baocaohocky = new StudentManagement.Model.BaoCaoHocKy
+                                    {
+                                        MaLop = reader.GetInt32(0),
+                                        SiSo = reader.GetInt32(1),
+                                        HocKy = reader.GetInt32(2),
+                                        SoLuongDat = reader.GetInt32(3),
+                                        TiLe = CountPercentage(reader.GetInt32(3), reader.GetInt32(1)),
+                                    };
+                                    DanhSachBaoCaoHocKy.Add(baocaohocky);
+                                }
+                                reader.NextResult();
+                            }
+                            con.Close();
+
+                            try
+                            {
+                                con.Open();
+                            }
+                            catch (Exception)
+                            {
+                                MessageBoxFail messageBoxFail = new MessageBoxFail();
+                                messageBoxFail.ShowDialog();
+                                return;
+                            }
+                            for (int i = 0; i < DanhSachBaoCaoHocKy.Count; i++)
+                            {
+                                // chia 2 trường hợp cập nhật lại hoặc thêm mới
+                                CmdString = "if (exists(select * from BaoCaoHocKy " +
+                                                        "where MaLop = " + DanhSachBaoCaoHocKy[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoHocKy[i].HocKy.ToString() + ")) " +
+                                            "begin " +
+                                            "update BaoCaoHocKy " +
+                                            "set SoLuongDat = " + DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoHocKy[i].TiLe + "' " +
+                                            "where MaLop = " + DanhSachBaoCaoHocKy[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoHocKy[i].HocKy.ToString() + " " +
+                                            "end " +
+                                            "else " +
+                                            "begin " +
+                                            "insert into BaoCaoHocKy(MaLop,HocKy,SoLuongDat,TiLe) values(" + DanhSachBaoCaoHocKy[i].MaLop.ToString() +
+                                            "," + DanhSachBaoCaoHocKy[i].HocKy.ToString() + "," +
+                                            DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ",'" + DanhSachBaoCaoHocKy[i].TiLe + "') " +
+                                            "end";
+                                cmd = new SqlCommand(CmdString, con);
+                                cmd.ExecuteScalar();
+                            }
+                            con.Close();
+                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            messageBoxSuccessful.ShowDialog();
+                        }
+                        catch (Exception ex)
+                        {
+                            //    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            //    messageBoxFail.ShowDialog();
+                            MessageBoxOK messageBoxOK = new MessageBoxOK();
+                            MessageBoxOKViewModel dataOK = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                            dataOK.Content = ex.Message;
+                            messageBoxOK.ShowDialog();
+                        }
+                    }
                 }
             });
-
-        }
-        public void LoadDuLieuComboBox()
-        {
-            NienKhoaQueries = KhoiQueries = LopQueries = MonHocQueries = "";
-            NienKhoaQueries2 = KhoiQueries2 = LopQueries2 = "";
-            HocKyQueries = 1;
-            HocKyQueries2 = 1;
-            QuanLiDiemSoWD.cmbHocKy.Items.Clear();
-            QuanLiDiemSoWD.cmbHocKy2.Items.Clear();
-            KhoiDataCmb.Clear();
-            KhoiDataCmb2.Clear();
-            LopDataCmb.Clear();
-            LopDataCmb2.Clear();
-            MonDataCmb.Clear();
-            NienKhoaCmb.Clear();
-            NienKhoaCmb2.Clear();
-            QuanLiDiemSoWD.cmbHocKy.Items.Add("Học kỳ 1");
-            QuanLiDiemSoWD.cmbHocKy.Items.Add("Học kỳ 2");
-            QuanLiDiemSoWD.cmbHocKy2.Items.Add("Học kỳ 1");
-            QuanLiDiemSoWD.cmbHocKy2.Items.Add("Học kỳ 2");
-            QuanLiDiemSoWD.cmbHocKy.SelectedIndex = 0;
-            QuanLiDiemSoWD.cmbHocKy2.SelectedIndex = 0;
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-                    string CmdString = "select distinct NienKhoa from Lop";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            NienKhoaCmb.Add(reader.GetString(0));
-                            NienKhoaCmb2.Add(reader.GetString(0));
-                            if (String.IsNullOrEmpty(NienKhoaQueries))
-                            {
-                                NienKhoaQueries = reader.GetString(0);
-                                QuanLiDiemSoWD.cmbNienKhoa.SelectedIndex = 0;
-                            }
-                            if (String.IsNullOrEmpty(NienKhoaQueries2))
-                            {
-                                NienKhoaQueries2 = reader.GetString(0);
-                                QuanLiDiemSoWD.cmbNienKhoa2.SelectedIndex = 0;
-                            }
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-                    CmdString = "select distinct MaKhoi,Khoi from Khoi";
-                    cmd = new SqlCommand(CmdString, con);
-                    reader = cmd.ExecuteReader();
-
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            Khoi item = new Khoi();
-                            item.MaKhoi = reader.GetInt32(0);
-                            item.TenKhoi = reader.GetString(1);
-                            KhoiDataCmb.Add(item);
-                            KhoiDataCmb2.Add(item);
-                            if (String.IsNullOrEmpty(KhoiQueries))
-                            {
-                                KhoiQueries = reader.GetInt32(0).ToString();
-                                QuanLiDiemSoWD.cmbKhoi.SelectedIndex = 0;
-                            }
-                            if (String.IsNullOrEmpty(KhoiQueries2))
-                            {
-                                KhoiQueries2 = reader.GetInt32(0).ToString();
-                                QuanLiDiemSoWD.cmbKhoi2.SelectedIndex = 0;
-                            }
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
-                catch (Exception )
-                {
-                }
-
-                if (!String.IsNullOrEmpty(NienKhoaQueries))
-                {
-                    try
-                    {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception)
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
-                        string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                Lop item = new Lop();
-                                item.MaLop = reader.GetInt32(0);
-                                item.TenLop = reader.GetString(1);
-                                LopDataCmb.Add(item);
-                                if (String.IsNullOrEmpty(LopQueries))
-                                {
-                                    LopQueries = reader.GetInt32(0).ToString();
-                                    QuanLiDiemSoWD.cmbLop.SelectedIndex = 0;
-                                }
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
-                    }
-                    catch (Exception )
-                    {
-                    }
-                }
-                if (!String.IsNullOrEmpty(NienKhoaQueries2))
-                {
-                    try
-                    {
-                        try 
-                        {
-                            con.Open();
-                        } catch (Exception) 
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
-                        string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                Lop item = new Lop();
-                                item.MaLop = reader.GetInt32(0);
-                                item.TenLop = reader.GetString(1);
-                                LopDataCmb2.Add(item);
-                                if (String.IsNullOrEmpty(LopQueries2))
-                                {
-                                    LopQueries2 = reader.GetInt32(0).ToString();
-                                    QuanLiDiemSoWD.cmbLop2.SelectedIndex = 0;
-                                }
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
-                    }
-                    catch (Exception )
-                    {
-                    }
-                }
-
-                try
-                {
-                    try 
-                    { 
-                        con.Open();
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    string CmdString = "select MaMon,TenMon from MonHoc where ApDung = 1";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            Model.MonHoc item = new Model.MonHoc();
-                            item.MaMon = reader.GetInt32(0);
-                            item.TenMon = reader.GetString(1);
-                            MonDataCmb.Add(item);
-                            if (String.IsNullOrEmpty(MonHocQueries))
-                            {
-                                MonHocQueries = reader.GetInt32(0).ToString();
-                                QuanLiDiemSoWD.cmbMonHoc.SelectedIndex = 0;
-                            }
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
-                catch (Exception )
-                {
-                }
-            }
 
         }
 
@@ -574,357 +998,10 @@ namespace StudentManagement.ViewModel.GiamHieu
             QuanLiDiemSoWD.btnTrick.Focus();
         }
 
-        public void FilterLopFromSelection()
+
+        public string CountPercentage(int a,int b)
         {
-            LopDataCmb.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.Lop item = new StudentManagement.Model.Lop
-                            {
-                                MaLop = reader.GetInt32(0),
-                                TenLop = reader.GetString(1),
-                            };
-                            LopDataCmb.Add(item);
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
-                catch (Exception )
-                {
-                }
-                QuanLiDiemSoWD.cmbLop.SelectedIndex = 0;
-            }
-        }
-        public void FilterLopFromSelection2()
-        {
-            LopDataCmb2.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    string CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries2 + "' and MaKhoi = " + KhoiQueries2;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.Lop item = new StudentManagement.Model.Lop
-                            {
-                                MaLop = reader.GetInt32(0),
-                                TenLop = reader.GetString(1),
-                            };
-                            LopDataCmb2.Add(item);
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-                }
-                catch (Exception )
-                {
-                }
-                QuanLiDiemSoWD.cmbLop2.SelectedIndex = 0;
-            }
-        }
-        public void MoKhoaBangDiem()
-        {
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    string hocky = "";
-                    if (HocKyQueries2 == 1)
-                    {
-                        hocky = "1";
-                    }
-                    else hocky = "2";
-                    string CmdString = "Update HeThongDiem "
-                                      + "set TrangThai = 0 "
-                                      + "where MaLop = " + LopQueries2 + " and HocKy = " + hocky;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                    messageBoxSuccessful.ShowDialog();
-                    con.Close();
-                }
-                catch (Exception)
-                {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
-                }
-            }
-        }
-        public void KhoaBangDiem()
-        {
-            DanhSachThanhTich.Clear();
-            DanhSachBaoCaoMon.Clear();
-            DanhSachBaoCaoHocKy.Clear();
-
-
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    // khóa trạng thái
-                    string CmdString = "update HeThongDiem set TrangThai = 1 where MaLop = " + LopQueries2 +
-                                       " and HocKy = " + HocKyQueries2.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
-                    cmd.ExecuteScalar();
-                    con.Close();
-
-                    try 
-                    { 
-                        con.Open();
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    // cập nhật database thành tích
-                    CmdString = "select HocKy,MaLop,MaHocSinh,avg(DiemTrungBinh) TBHK " +
-                                "from HeThongDiem " +
-                                "where MaLop = " + LopQueries2 +  " and HocKy = " + HocKyQueries2.ToString() +
-                                " group by HocKy,MaLop,MaHocSinh";
-                    cmd = new SqlCommand(CmdString, con);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.ThanhTich thanhtich = new StudentManagement.Model.ThanhTich
-                            {
-                                HocKy = reader.GetInt32(0),
-                                MaLop = reader.GetInt32(1),
-                                MaHocSinh = reader.GetInt32(2),
-                                TBHK = (float)reader.GetDecimal(3),
-                            };
-                            DanhSachThanhTich.Add(thanhtich);
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    for (int i = 0; i < DanhSachThanhTich.Count; i++)
-                    {
-                        // chia 2 trường hợp cập nhật lại hoặc thêm mới
-                        int xeploai = 0;
-                        if (DanhSachThanhTich[i].TBHK >= 5)
-                            xeploai = 1;
-                        CmdString = "if (exists(select * from ThanhTich " +
-                                                "where MaHocSinh = " + DanhSachThanhTich[i].MaHocSinh.ToString() + " and HocKy = " + DanhSachThanhTich[i].HocKy.ToString() + " and MaLop = " + DanhSachThanhTich[i].MaLop.ToString() + ")) " +
-                                    "begin " +
-                                    "update ThanhTich " +
-                                    "set TrungBinhHocKy = " + DanhSachThanhTich[i].TBHK.ToString() + ", XepLoai = " + xeploai.ToString() + " " +
-                                    "where MaHocSinh = " + DanhSachThanhTich[i].MaHocSinh.ToString() + " and HocKy = " + DanhSachThanhTich[i].HocKy.ToString() + " and MaLop = " + DanhSachThanhTich[i].MaLop.ToString() + " " +
-                                    "end " +
-                                    "else " +
-                                    "begin " +
-                                    "insert into ThanhTich(HocKy,MaLop,MaHocSinh,TrungBinhHocKy,XepLoai) values("
-                                    + DanhSachThanhTich[i].HocKy.ToString() + "," + DanhSachThanhTich[i].MaLop.ToString() + "," +
-                                    DanhSachThanhTich[i].MaHocSinh.ToString() + "," + DanhSachThanhTich[i].TBHK.ToString() + "," + xeploai.ToString() + ") " +
-                                    "end ";
-                                    
-                        cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteScalar();
-                    }
-                    con.Close();
-
-                    // cập nhật database báo cáo môn học
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    CmdString = "select MaLop,MaMon,HocKy,count(MaDiem) SLD,SiSo = (select SiSo from Lop l where l.MaLop = htd.MaLop) " +
-                                "from HeThongDiem htd " +
-                                "where XepLoai = 1 and MaLop = " + LopQueries2 + " and HocKy = " + HocKyQueries2.ToString() +
-                                " group by MaLop,MaMon,HocKy";
-                    cmd = new SqlCommand(CmdString, con);
-                    reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.BaoCaoMon baocaomon = new StudentManagement.Model.BaoCaoMon
-                            {
-                                MaLop = reader.GetInt32(0),
-                                MaMon = reader.GetInt32(1),
-                                HocKy = reader.GetInt32(2),
-                                SoLuongDat = reader.GetInt32(3),
-                                TiLe = (Math.Round((double)reader.GetInt32(3) / reader.GetInt32(4) * 100)).ToString() + "%",
-                            };
-                            DanhSachBaoCaoMon.Add(baocaomon);
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    for (int i = 0; i < DanhSachBaoCaoMon.Count; i++)
-                    {
-                        // chia 2 trường hợp cập nhật lại hoặc thêm mới
-                        CmdString = "if (exists(select * from BaoCaoMon " +
-                                                "where MaLop = " + DanhSachBaoCaoMon[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoMon[i].HocKy.ToString() + " and MaMon = " + DanhSachBaoCaoMon[i].MaMon.ToString() + ")) " +
-                                    "begin " +
-                                    "update BaoCaoMon " +
-                                    "set SoLuongDat = " + DanhSachBaoCaoMon[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoMon[i].TiLe + "' " +
-                                    "where MaLop = " + DanhSachBaoCaoMon[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoMon[i].HocKy.ToString()  +
-                                    " end " +
-                                    "else " +
-                                    "begin " +
-                                    "insert into BaoCaoMon(MaLop,MaMon,HocKy,SoLuongDat,TiLe) values(" + DanhSachBaoCaoMon[i].MaLop.ToString() + "," 
-                                    + DanhSachBaoCaoMon[i].MaMon.ToString() + "," + DanhSachBaoCaoMon[i].HocKy.ToString() + "," +
-                                    DanhSachBaoCaoMon[i].SoLuongDat.ToString() + ",'" + DanhSachBaoCaoMon[i].TiLe + "') " +
-                                    "end";
-                        cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteScalar();
-                    }
-                    con.Close();
-
-                    // cập nhật database báo cáo tổng kết học kỳ
-                    try
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
-                    CmdString = "select MaLop, SiSo = (select SiSo from Lop l where l.MaLop = tt.MaLop), HocKy,count(MaThanhTich) SLD " +
-                                "from ThanhTich tt " +
-                                "where XepLoai = 1 and MaLop = " + LopQueries2 + " and HocKy = " + HocKyQueries2.ToString() +  " " +
-                                "group by MaLop,HocKy";
-                    cmd = new SqlCommand(CmdString, con);
-                    reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            StudentManagement.Model.BaoCaoHocKy baocaohocky = new StudentManagement.Model.BaoCaoHocKy
-                            {
-                                MaLop = reader.GetInt32(0),
-                                SiSo = reader.GetInt32(1),
-                                HocKy = reader.GetInt32(2),
-                                SoLuongDat = reader.GetInt32(3),
-                                TiLe = (Math.Round((double)reader.GetInt32(3) / reader.GetInt32(1) * 100)).ToString() + "%",
-                            };
-                            DanhSachBaoCaoHocKy.Add(baocaohocky);
-                        }
-                        reader.NextResult();
-                    }
-                    con.Close();
-
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-                    for (int i = 0; i < DanhSachBaoCaoHocKy.Count; i++)
-                    {
-                        // chia 2 trường hợp cập nhật lại hoặc thêm mới
-                        CmdString = "if (exists(select * from BaoCaoHocKy " +
-                                                "where MaLop = " + DanhSachBaoCaoHocKy[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoHocKy[i].HocKy.ToString()  + ")) " +
-                                    "begin " +
-                                    "update BaoCaoHocKy " +
-                                    "set SoLuongDat = " + DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ", TiLe = '" + DanhSachBaoCaoHocKy[i].TiLe + "' " +
-                                    "where MaLop = " + DanhSachBaoCaoHocKy[i].MaLop.ToString() + " and HocKy = " + DanhSachBaoCaoHocKy[i].HocKy.ToString()  + " " +
-                                    "end " +
-                                    "else " +
-                                    "begin " +
-                                    "insert into BaoCaoHocKy(MaLop,HocKy,SoLuongDat,TiLe) values(" + DanhSachBaoCaoHocKy[i].MaLop.ToString() + 
-                                    "," + DanhSachBaoCaoHocKy[i].HocKy.ToString() + ","  +
-                                    DanhSachBaoCaoHocKy[i].SoLuongDat.ToString() + ",'" + DanhSachBaoCaoHocKy[i].TiLe + "') " +
-                                    "end";
-                        cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteScalar();
-                    }
-                    con.Close();
-                    MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                    messageBoxSuccessful.ShowDialog();
-                }
-                catch (Exception ex)
-                {
-                    //    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //    messageBoxFail.ShowDialog();
-                    MessageBoxOK messageBoxOK = new MessageBoxOK();
-                    MessageBoxOKViewModel data = messageBoxOK.DataContext as MessageBoxOKViewModel;
-                    data.Content = ex.Message;
-                    messageBoxOK.ShowDialog();
-                }
-            }
+            return (Math.Round((double)a / b * 100)).ToString() + "%";
         }
     }
 }
