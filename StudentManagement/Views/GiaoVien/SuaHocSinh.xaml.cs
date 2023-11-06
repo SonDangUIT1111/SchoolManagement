@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using StudentManagement.ViewModel.GiaoVien;
+using System.Windows;
 
 namespace StudentManagement.Views.GiaoVien
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.GiaoVien
         public SuaHocSinh()
         {
             InitializeComponent();
+            DataContext = new SuaHocSinhViewModel();
         }
     }
 }

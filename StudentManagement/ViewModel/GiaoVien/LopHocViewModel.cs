@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
-    internal class LopHocViewModel : BaseViewModel
+    public class LopHocViewModel : BaseViewModel
     {
         public bool everLoaded { get; set; }
         private int _idGiaoVien;
@@ -68,6 +69,12 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand LoadLop { get; set; }
         public ICommand LoadHocSinh { get; set; }
         public ICommand UpdateHocSinh { get; set; }
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public LopHocViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public LopHocViewModel()
         {
             everLoaded = false;

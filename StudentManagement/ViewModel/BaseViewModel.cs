@@ -9,6 +9,7 @@ namespace StudentManagement.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public BaseViewModel() { }
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -44,6 +45,8 @@ namespace StudentManagement.ViewModel
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
+
     }
+
 
 }

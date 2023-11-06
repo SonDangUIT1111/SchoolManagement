@@ -2,6 +2,7 @@
 using StudentManagement.Converter;
 using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -16,7 +17,7 @@ using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
-    internal class SuaHocSinhViewModel : BaseViewModel
+    public class SuaHocSinhViewModel : BaseViewModel
     {
         public SuaHocSinh SuaHocSinhWD { get; set; }
         public string ImagePath { get; set; }
@@ -27,6 +28,12 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand LoadWindow { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand ChangeHocSinh { get; set; }
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public SuaHocSinhViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public SuaHocSinhViewModel()
         {
             HocSinhHienTai = new StudentManagement.Model.HocSinh();
@@ -74,7 +81,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 CapNhatHocSinh();
             });
         }
-        bool IsValidEmail(string email)
+        public bool IsValidEmail(string email)
         {
             if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
             {
@@ -82,95 +89,97 @@ namespace StudentManagement.ViewModel.GiaoVien
             }
             return true;
         }
-        public void CapNhatHocSinh()
+        public bool CapNhatHocSinh()
         {
-            if (SuaHocSinhWD.TenHS.Text == "" |
-                SuaHocSinhWD.NgaySinh.Text == "" |
-                SuaHocSinhWD.DiaChi.Text == "" |
+            if (SuaHocSinhWD.TenHS.Text == "" ||
+                SuaHocSinhWD.NgaySinh.Text == "" ||
+                SuaHocSinhWD.DiaChi.Text == "" ||
                 SuaHocSinhWD.Email.Text == "")
             {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng điền đầy đủ thông tin";
-                MB.ShowDialog();
+                // Display an error message here or return false
+                return false;
             }
-            else
-            if (!IsValidEmail(SuaHocSinhWD.Email.Text)
-                )
+            else if (!IsValidEmail(SuaHocSinhWD.Email.Text))
             {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Email không đúng cú pháp";
-                MB.ShowDialog();
-                SuaHocSinhWD.Email.Focus();
+                // Display an error message here or return false
+                return false;
             }
             else
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
                     try
                     {
-                        try 
-                        { 
-                            con.Open();
-                        } catch (Exception) 
-                        { 
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return;
-                        }
+                        Console.WriteLine("Before opening the connection");
+                        sqlConnectionWrapper.Open();
+                        Console.WriteLine("After opening the connection");
+
                         List<int> quiDinh = new List<int>();
                         string cmdTest = "select GiaTri from QuiDinh";
-                        SqlCommand cmd1 = new SqlCommand(cmdTest, con);
-                        SqlDataReader readerTest = cmd1.ExecuteReader();
-                        while (readerTest.HasRows)
+                        using (var cmd1 = new SqlCommand(cmdTest, sqlConnectionWrapper.GetSqlConnection()))
+                        using (var readerTest = cmd1.ExecuteReader())
                         {
-                            while (readerTest.Read())
+                            while (readerTest.HasRows)
                             {
-                                quiDinh.Add(readerTest.GetInt32(0));
+                                while (readerTest.Read())
+                                {
+                                    Console.WriteLine(readerTest.GetInt32(0));
+                                    quiDinh.Add(readerTest.GetInt32(0));
+                                }
+                                readerTest.NextResult();
                             }
-                            readerTest.NextResult();
                         }
-                        readerTest.Close();
+
+                        Console.WriteLine(SuaHocSinhWD.TenHS.Text);
+                        Console.WriteLine(SuaHocSinhWD.NgaySinh.SelectedDate);
+ 
+
                         if (DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
                         {
-                            MessageBoxOK messageBoxOK = new MessageBoxOK();
-                            MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
-                            datamb.Content = "Tuổi của học sinh phải từ " + quiDinh[1].ToString() + " đến " + quiDinh[2].ToString();
-                            messageBoxOK.ShowDialog();
-                            return;
+                            Console.WriteLine("error");
+                            // Display an error message here or return false
+                            return false;
                         }
 
-
                         string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
-                                            "', NgaySinh = '" + ToShortDateTime(SuaHocSinhWD.NgaySinh) +
-                                            "', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
-                                            ", DiaChi = N'" + SuaHocSinhWD.DiaChi.Text +
-                                            "', Email = '" + SuaHocSinhWD.Email.Text +
-                                            "' ,AnhThe = @image" +
-                                            " where MaHocSinh = " + HocSinhHienTai.MaHocSinh.ToString();
+                            "', NgaySinh = '" + ToShortDateTime(SuaHocSinhWD.NgaySinh) +
+                            "', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
+                            ", DiaChi = N'" + SuaHocSinhWD.DiaChi.Text +
+                            "', Email = '" + SuaHocSinhWD.Email.Text +
+                            "' ,AnhThe = @image" +
+                            " where MaHocSinh = " + "10046";
+
+
                         if (ImagePath != null)
                         {
                             ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                             byte[] buffer = converter.ImageToBinary(ImagePath);
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                            cmd.ExecuteScalar();
-                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                            messageBoxSuccessful.ShowDialog();
-                            con.Close();
+
+                            using (var cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection()))
+                            {
+                                cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                                cmd.ExecuteScalar();
+                                Console.WriteLine("excuted");
+
+                            }
+
+                            // Display a success message here or return true
                         }
+
                         SuaHocSinhWD.Close();
+                        return true;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
+                        // Handle exceptions here and display an error message or return false
+                        Console.WriteLine(e);
+                        return false;
                     }
                 }
             }
         }
+
+
         public string ToShortDateTime(DatePicker st)
         {
             string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();

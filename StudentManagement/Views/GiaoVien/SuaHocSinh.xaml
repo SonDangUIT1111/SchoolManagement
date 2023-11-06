@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:StudentManagement.Views.GiamHieu"
+        xmlns:local="clr-namespace:StudentManagement.Views.GiaoVien"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -12,7 +12,7 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:local1="clr-namespace:StudentManagement.ViewModel.GiaoVien"
         mc:Ignorable="d"
         Height="500" 
         Width="800"
@@ -22,11 +22,11 @@
         Title="THPT Thủ Đức"
         Icon="ThongTinTruong1.ico"
         Name="SuaHocSinhWD"
-        DataContext="{StaticResource SuaHocSinhVM}">
+        >
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
+        <i:EventTrigger EventName="Loaded" >
             <i:InvokeCommandAction Command="{Binding LoadWindow}"
-                               CommandParameter="{Binding ElementName=SuaHocSinhWD}">
+                               CommandParameter="{Binding ElementName=SuaHocSinhWD}" x:Name="InteractivityFix">
             </i:InvokeCommandAction>
         </i:EventTrigger>
     </i:Interaction.Triggers>
@@ -71,7 +71,7 @@
             </TextBlock>
         </StackPanel>
         <Grid Grid.Row="0">
-            <uc:Title_Bar_Log/>
+            <!--<uc:Title_Bar_Log/>-->
             <Separator VerticalAlignment="Bottom"
                        Background="#CCCCCC"
                        Margin="0 0 0 -2"/>
@@ -97,10 +97,10 @@
                         Width="150"
                         Height="150"
                         Margin="0 20 0 0">
-                    <Grid.Background>
+                    <!--<Grid.Background>
                         <ImageBrush ImageSource="{Binding HocSinhHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"
                                     Stretch="UniformToFill"/>
-                    </Grid.Background>
+                    </Grid.Background>-->
                     <Rectangle 
                                 x:Name="ChangerecImage"
                                 StrokeDashArray="4 2" 
@@ -138,41 +138,44 @@
                         Grid.Column="1">
                     <TextBox x:Name="TenHS"
                          materialDesign:HintAssist.Hint="Tên Học Sinh"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
+
                          Width="450"
                          Margin="25 0 0 0"
                          HorizontalAlignment="Left"
-                         Text="{Binding HocSinhHienTai.TenHocSinh}"/>
-                    <DatePicker Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                         Text="{Binding HocSinhHienTai.TenHocSinh}"
+                         x:FieldModifier="public"/>
+                    <DatePicker 
                                 x:Name="NgaySinh"
                                 Width="450"
                                 HorizontalAlignment="Left"
                                 Margin="25 20 0 0"
-                                SelectedDate="{Binding HocSinhHienTai.NgaySinh}"/>
+                                SelectedDate="{Binding HocSinhHienTai.NgaySinh}"
+                                x:FieldModifier="public"/>
                     <ComboBox x:Name="GioiTinh"
                           materialDesign:HintAssist.Hint="Giới tính"
                           IsEditable="False"
                           Width="450"
                           HorizontalAlignment="Left"
                           Margin="25 20 0 0"
-                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
+
+                              x:FieldModifier="public">
                         <ComboBoxItem IsSelected="True">Nữ</ComboBoxItem>
                         <ComboBoxItem IsSelected="{Binding HocSinhHienTai.GioiTinh}">Nam</ComboBoxItem>
                     </ComboBox>
                     <TextBox x:Name="DiaChi"
                          materialDesign:HintAssist.Hint="Địa chỉ"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="450"
                          Margin="25 20 0 0"
                          HorizontalAlignment="Left"
-                         Text="{Binding HocSinhHienTai.DiaChi}"/>
+                         Text="{Binding HocSinhHienTai.DiaChi}"
+                             x:FieldModifier="public"/>
                     <TextBox x:Name="Email"
                          materialDesign:HintAssist.Hint="Email"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="450"
                          Margin="25 20 0 0"
                          HorizontalAlignment="Left"
-                         Text="{Binding HocSinhHienTai.Email}"/>
+                         Text="{Binding HocSinhHienTai.Email}"
+                             x:FieldModifier="public"/>
                     <StackPanel Orientation="Horizontal"/>
                     <StackPanel Orientation="Horizontal"/>
 
@@ -183,13 +186,13 @@
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Margin="0 0 35 20">
-                <Button Style="{StaticResource InteractiveButton}"
+                <Button 
                         Content="Cập nhật"
                         Width="100"
                         Height="40"
                         Margin="0 0 20 0"
                         Command="{Binding ChangeHocSinh}"/>
-                <Button Style="{StaticResource InteractiveButton}"
+                <Button 
                         Content="Hủy"
                         Width="100"
                         Height="40"
