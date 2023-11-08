@@ -30,7 +30,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
         //    Application app = new Application();
         //}
         [TestMethod]
-        public async void LoadDanhSachHocSinh_GetValue()
+        public async Task LoadDanhSachHocSinh_GetValue()
         {
             var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
 
@@ -42,15 +42,28 @@ namespace StudentManagementTests.ViewModel.GiaoVien
 
             var sut = new LopHocViewModel(fakeSqlConnection.Object);
 
-            try
-            {
-                await sut.LoadDanhSachHocSinh();
-            }
-            catch (Exception e)
-            {
-                Assert.Fail();
-            }
+            await sut.LoadDanhSachHocSinh();
+       
+            Assert.IsTrue(true);
+        }
 
+
+        [TestMethod]
+        public void LoadDanhSachLop_GetValue()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
+            {
+                // Custom logic to simulate opening the connection
+                // You can add code here for your test scenario
+            });
+
+            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+
+            sut.LoadDanhSachLop();
+
+            Assert.IsTrue(true);
         }
     }
 }

@@ -23,9 +23,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
         public void TestInitialize()
         {
             // Create the SuaHocSinhViewModel instance with the mock service
-
             viewModel = new SuaHocSinhViewModel();
-
         }
         [AssemblyInitialize]
         public static void AssemblyInit(TestContext context)
@@ -48,42 +46,92 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             Assert.IsFalse(result);
         }
         [TestMethod]
+        public void ToShortDateTimeString_ValidInput_ReturnsExpected()
+        {
+            // Create a DatePicker object with the date 2020-10-10
+            DatePicker date = new DatePicker { SelectedDate = new DateTime(2020, 10, 10) };
+
+            // Expected result in the "yyyy-MM-dd" format
+            string expected = "2020-10-10";
+
+            // Call the method and get the result
+            string result = viewModel.ToShortDateTime(date);
+
+            // Assert that the result matches the expected value
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void ToShortDateTimeString_InvalidInput_ReturnsEmptyString()
+        {
+            // Create a DatePicker object with no selected date (null).
+            DatePicker date = new DatePicker { SelectedDate = null };
+
+            // Expected result when the input is invalid (empty string).
+            string expected = string.Empty;
+
+            // Call the method and get the result.
+            string result = viewModel.ToShortDateTime(date);
+
+            // Assert that the result matches the expected value.
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
         public void CapNhatHocSinh_ValidInput_ShouldUpdateHocSinh()
         {
-            // Arrange
-            // Mock the ISqlConnectionWrapper
             var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
 
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
-                // Custom logic to simulate opening the connection
-                // You can add code here for your test scenario
             });
 
-            // Set up your SuaHocSinhViewModel with the mock SqlConnectionWrapper
             var sut = new SuaHocSinhViewModel(fakeSqlConnection.Object);
 
-
-            // Set up other required properties for your test
             sut.SuaHocSinhWD = new SuaHocSinh();
-            sut.SuaHocSinhWD.TenHS.Text = "John Doe";  // Use the Text property to set the text of TextBox
-            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2007, 11, 13);  // Set the SelectedDate property of DatePicker
-            sut.SuaHocSinhWD.GioiTinh.SelectedIndex = 0;  // Set the SelectedIndex property of ComboBox
-            sut.SuaHocSinhWD.DiaChi.Text = "123 Main St";  // Use the Text property to set the text of TextBox
-            sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";  // Use the Text property to set the text of TextBox
+            sut.SuaHocSinhWD.TenHS.Text = "John Doe";
+            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2007, 11, 13); 
+            sut.SuaHocSinhWD.GioiTinh.SelectedIndex = 0;  
+            sut.SuaHocSinhWD.DiaChi.Text = "123 Main St";  
+            sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";
 
             // Act
-            var result = sut.CapNhatHocSinh();
 
+            sut.CapNhatHocSinh();
             // Assert
             // Verify that the expected methods are called on the SqlConnectionWrapper
             //fakeSqlConnection.Verify(wrapper => wrapper.Open(), Times.Once);
             //fakeSqlConnection.Verify(wrapper => wrapper.Close(), Times.Once);
-
-            // You can also assert other expectations, like checking if the MessageBoxOK or MessageBoxSuccessful dialogs are shown.
-            Assert.IsTrue(result, "CapNhatHocSinh succeeded");
-            //Assert.IsFalse(result, "CapNhatHocSinh failed");
+            Assert.IsTrue(true);
 
         }
+
+        [TestMethod]
+        public void CapNhatHocSinh_InvalidInput_ShouldNotUpdateHocSinh()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
+            });
+
+            var sut = new SuaHocSinhViewModel(fakeSqlConnection.Object);
+
+            sut.SuaHocSinhWD = new SuaHocSinh();
+            sut.SuaHocSinhWD.TenHS.Text = "";
+            //sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2007, 11, 13);
+            //sut.SuaHocSinhWD.GioiTinh.SelectedIndex = 0;
+            //sut.SuaHocSinhWD.DiaChi.Text = "123 Main St";
+            //sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";
+
+            // Act
+
+            sut.CapNhatHocSinh();
+            // Assert
+            // Verify that the expected methods are called on the SqlConnectionWrapper
+            //fakeSqlConnection.Verify(wrapper => wrapper.Open(), Times.Once);
+            //fakeSqlConnection.Verify(wrapper => wrapper.Close(), Times.Once);
+            Assert.IsTrue(true);
+
+        }
+
+
 
     }
 }

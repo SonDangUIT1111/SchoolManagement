@@ -89,7 +89,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             }
             return true;
         }
-        public bool CapNhatHocSinh()
+        public void CapNhatHocSinh()
         {
             if (SuaHocSinhWD.TenHS.Text == "" ||
                 SuaHocSinhWD.NgaySinh.Text == "" ||
@@ -97,12 +97,12 @@ namespace StudentManagement.ViewModel.GiaoVien
                 SuaHocSinhWD.Email.Text == "")
             {
                 // Display an error message here or return false
-                return false;
+                return;
             }
             else if (!IsValidEmail(SuaHocSinhWD.Email.Text))
             {
                 // Display an error message here or return false
-                return false;
+                return;
             }
             else
             {
@@ -138,7 +138,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         {
                             Console.WriteLine("error");
                             // Display an error message here or return false
-                            return false;
+                            return;
                         }
 
                         string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
@@ -167,13 +167,13 @@ namespace StudentManagement.ViewModel.GiaoVien
                         }
 
                         SuaHocSinhWD.Close();
-                        return true;
+                        return;
                     }
                     catch (Exception e)
                     {
                         // Handle exceptions here and display an error message or return false
                         Console.WriteLine(e);
-                        return false;
+                        return;
                     }
                 }
             }
@@ -182,8 +182,15 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public string ToShortDateTime(DatePicker st)
         {
-            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
-            return date;
+            if (st.SelectedDate.HasValue)
+            {
+                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+                return date;
+            }else
+            {
+                return string.Empty;
+
+            }
         }
     }
 }

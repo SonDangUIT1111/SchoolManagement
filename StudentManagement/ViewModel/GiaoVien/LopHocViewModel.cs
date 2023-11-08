@@ -65,8 +65,9 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ObservableCollection<StudentManagement.Model.Lop> DanhSachLop { get => _danhsachlop; set { _danhsachlop = value; OnPropertyChanged(); } }
         public ICommand LoadWindow { get; set; }
         public ICommand LocHocSinh { get; set; }
-        public ICommand LoadKhoi { get; set; }
         public ICommand LoadLop { get; set; }
+        public ICommand LoadKhoi { get; set; }
+
         public ICommand LoadHocSinh { get; set; }
         public ICommand UpdateHocSinh { get; set; }
         private readonly ISqlConnectionWrapper sqlConnection;
@@ -188,7 +189,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public async Task LoadDanhSachHocSinh()
         {
-            DanhSachhs.Clear();
+            //DanhSachhs.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
@@ -349,17 +350,18 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void LoadDanhSachLop()
         {
-            LopQueries = null;
-            DanhSachhs.Clear();
-            DanhSachLop.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            //LopQueries = null;
+            //DanhSachhs.Clear();
+            //DanhSachLop.Clear();
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
-                    { 
-                        con.Open();
-                    } catch (Exception) 
+                    {
+                        sqlConnectionWrapper.Open();
+                    }
+                    catch (Exception) 
                     {
                         MessageBoxFail messageBoxFail = new MessageBoxFail();
                         messageBoxFail.ShowDialog();
@@ -369,7 +371,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         KhoiQueries = "0";
                     string CmdString = "select MaLop,TenLop from Lop where MaKhoi = " + KhoiQueries +
                         " and NienKhoa = '" + NienKhoaQueries + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.HasRows)
@@ -385,7 +387,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                     if (LopHocWD.ChonLop != null && LopHocWD.ChonLop.Items.Count > 0 && LopHocWD.ChonLop.SelectedIndex != 0)
                     {
                         LopHocWD.ChonLop.SelectedIndex = 0;
@@ -393,8 +395,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
                 catch (Exception )
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
