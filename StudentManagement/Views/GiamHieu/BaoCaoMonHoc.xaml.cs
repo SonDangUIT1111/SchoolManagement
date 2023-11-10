@@ -10,6 +10,7 @@ namespace StudentManagement.Views.GiamHieu
         public BaoCaoMonHoc()
         {
             InitializeComponent();
+            DataContext = new ViewModel.GiamHieu.BaoCaoMonHocViewModel();
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Windows.Media;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    internal class ThongTinTruongViewModel:BaseViewModel
+    public class ThongTinTruongViewModel:BaseViewModel
     {
 
         private string _thongTinTruongImageSource;

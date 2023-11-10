@@ -10,7 +10,6 @@
       d:DesignHeight="750" 
       d:DesignWidth="1000"
       Title="ThongTinGiaoVien"
-      DataContext="{StaticResource DanhSachGiaoVienVM}"
       Background="#FFFFFF"
       Name="GiaoVienWD">
     <i:Interaction.Triggers>
