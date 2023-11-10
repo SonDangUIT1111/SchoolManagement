@@ -18,7 +18,6 @@
         Background="Transparent"
         ResizeMode="NoResize" WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        DataContext="{StaticResource SuaThongTinHocSinhVM}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
         Name="SuaThongTinHocSinhWD"

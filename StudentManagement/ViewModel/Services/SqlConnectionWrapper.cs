@@ -19,18 +19,12 @@ namespace StudentManagement.ViewModel.Services
 
         public void Open()
         {
-            //if (connection.State != System.Data.ConnectionState.Open)
-            //{
                 connection.Open();
-            //}
         }
 
         public void Close()
         {
-            //if (connection.State != System.Data.ConnectionState.Closed)
-            //{
                 connection.Close();
-            //}
         }
 
         public void Dispose()

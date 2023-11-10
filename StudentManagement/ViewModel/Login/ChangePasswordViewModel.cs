@@ -1,6 +1,7 @@
 ﻿using StudentManagement.Converter;
 using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.Login;
 using StudentManagement.Views.MessageBox;
@@ -37,6 +38,13 @@ namespace StudentManagement.ViewModel.Login
         public StudentManagement.Model.GiaoVien GiaoVienHienTai { get => _giaovienhientai; set { _giaovienhientai = value; OnPropertyChanged(); } }
         public ICommand LoadWindow { get; set; }
         public ICommand ChangePW { get; set; }
+
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public ChangePasswordViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public ChangePasswordViewModel()
         {
             HocSinhHienTai = new StudentManagement.Model.HocSinh();
@@ -55,39 +63,14 @@ namespace StudentManagement.ViewModel.Login
                     MB.ShowDialog();
                     return;
                 }
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                try
                 {
-                    try
-                    {
-                        con.Open();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                    }
-                    try
-                    {
-                        string cmdText = "";
-                        if (IsHS)
-                        {
-                            cmdText = "select UserPassword from HocSinh where MaHocSinh = " + Id;
-                        }
-                        else
-                        {
-                            cmdText = "select UserPassword from GiaoVien where MaGiaoVien = " + Id;
-                        }
-                        SqlCommand sqlCommand = new SqlCommand(cmdText, con);
-                        SqlDataReader reader = sqlCommand.ExecuteReader();
-                        reader.Read();
-                        MatKhau = reader.GetString(0);
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                    }
+                    GetMatKhauCu();
+                }
+                catch (Exception)
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
                 }
 
 
@@ -115,47 +98,16 @@ namespace StudentManagement.ViewModel.Login
                     MB.ShowDialog();
                     return;
                 }
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                try
                 {
-                    try
-                    {
-                        try
-                        {
-                            con.Open();
-                        }
-                        catch (Exception)
-                        {
-                            MessageBoxFail MB = new MessageBoxFail();
-                            MB.ShowDialog();
-                            return;
-                        }
-                        string passEncode = CreateMD5(Base64Encode(ChangePasswordWD.PasswordNew.Password));
-                        string CmdString;
-                        if (IsHS)
-                        {
-                            CmdString = "Update HocSinh set UserPassword = \'" + passEncode +
-                                                "\' where MaHocSinh = " + Id;
-                        }
-                        else
-                        {
-                            CmdString = "Update GiaoVien set UserPassword= \'" + passEncode +
-                                                    "\' where MaGiaoVien = " + Id;
-                        }
-                        {
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.ExecuteScalar();
-                            MessageBoxSuccessful MB = new MessageBoxSuccessful();
-                            MB.ShowDialog();
-                            con.Close();
-                        }
-                        ChangePasswordWD.Close();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
+                    UpdateMatKhauMoi(ChangePasswordWD.PasswordNew.Password);
+                    ChangePasswordWD.Close();
+                }
+                catch (Exception)
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
+                    return;
                 }
             });
         }
@@ -182,13 +134,80 @@ namespace StudentManagement.ViewModel.Login
             return flagNum && flagUpcase && newPass == confirmPass;
         }
 
+        public void GetMatKhauCu()
+        {
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                sqlConnectionWrap.Open();
+                try
+                {
+                    string cmdText = "";
+                    if (IsHS)
+                    {
+                        cmdText = "select UserPassword from HocSinh where MaHocSinh = " + Id;
+                    }
+                    else
+                    {
+                        cmdText = "select UserPassword from GiaoVien where MaGiaoVien = " + Id;
+                    }
+                    SqlCommand sqlCommand = new SqlCommand(cmdText, sqlConnectionWrap.GetSqlConnection());
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+                    MatKhau = reader.GetString(0);
+                    sqlConnectionWrap.Close();
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                }
+            }
+
+        }
+
+        public void UpdateMatKhauMoi(string matkhaumoi)
+        {
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    string passEncode = CreateMD5(Base64Encode(matkhaumoi));
+                    string CmdString;
+                    if (IsHS)
+                    {
+                        CmdString = "Update HocSinh set UserPassword = \'" + passEncode +
+                                            "\' where MaHocSinh = " + Id;
+                    }
+                    else
+                    {
+                        CmdString = "Update GiaoVien set UserPassword= \'" + passEncode +
+                                                "\' where MaGiaoVien = " + Id;
+                    }
+                    {
+                        SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                        cmd.ExecuteScalar();
+                        //MessageBoxSuccessful MB = new MessageBoxSuccessful();
+                        //MB.ShowDialog();
+                        sqlConnectionWrap.Close();
+                    }
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                    return;
+                }
+            }
+        }
+
         // hàm mã hóa mật khẩu
-        public static string Base64Encode(string plainText)
+        public string Base64Encode(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
-        public static string CreateMD5(string input)
+        public string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())

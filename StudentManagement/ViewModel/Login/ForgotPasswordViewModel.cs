@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.Login;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -57,6 +58,12 @@ namespace StudentManagement.ViewModel.Login
         public ICommand ShowConfirmPassword_Register { get; set; }
         public ICommand UnshowConfirmPassword_Register { get; set; }
 
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public ForgotPasswordViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public ForgotPasswordViewModel()
         {
             //Declare random code
@@ -94,33 +101,8 @@ namespace StudentManagement.ViewModel.Login
                     MB.ShowDialog();
                     return;
                 }
-                int checkUser = 0;
-                string CmdString = string.Empty;
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    try
-                    {
-                        try
-                        {
-                            con.Open();
-                        }
-                        catch (Exception)
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return;
-                        }
-                        CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Email = '" + IndexRole + "'";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
-
-                }
+                int checkUser = GetThongTin();
+                
                 if (checkUser > 0)
                 {
                     IsSend = true;
@@ -264,42 +246,7 @@ namespace StudentManagement.ViewModel.Login
                 }
                 else
                 {
-                    string CmdString = string.Empty;
-                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                    {
-                        try
-                        {
-                            try
-                            {
-                                con.Open();
-                            }
-                            catch (Exception)
-                            {
-                                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                messageBoxFail.ShowDialog();
-                                return;
-                            }
-                            string passEncode = CreateMD5(Base64Encode(NewPassword));
-                            if (IndexRole == 0)
-                            {
-                                CmdString = "Update GiamHieu Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                            }
-                            else if (IndexRole == 1)
-                            {
-                                CmdString = "Update GiaoVien Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                            }
-                            else if (IndexRole == 2)
-                            {
-                                CmdString = "Update HocSinh Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                            }
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            cmd.ExecuteScalar();
-                            con.Close();
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
+                    DoiMatKhauMoi();
                     MessageBoxOK MB = new MessageBoxOK();
                     var data = MB.DataContext as MessageBoxOKViewModel;
                     data.Content = "Đổi mật khẩu thành công";
@@ -342,6 +289,47 @@ namespace StudentManagement.ViewModel.Login
                 parameter.ConfirmPassEye.Visibility = Visibility.Hidden;
             });
 
+        }
+
+        public void DoiMatKhauMoi()
+        {
+            string CmdString = string.Empty;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    string passEncode = CreateMD5(Base64Encode(NewPassword));
+                    CmdString = "Update "+ (IndexRole==0?"GiamHieu":IndexRole==1?"GiaoVien":"HocSinh") +" Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    cmd.ExecuteScalar();
+                    sqlConnectionWrap.Close();
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+        public int GetThongTin()
+        {
+            string CmdString = string.Empty;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Email = '" + IndexRole + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    int check = Convert.ToInt32(cmd.ExecuteScalar());
+                    sqlConnection.Close();
+                    return check;
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
+
+            }
         }
 
         public bool CheckValidPassword(string pass)
@@ -401,7 +389,7 @@ namespace StudentManagement.ViewModel.Login
                 return sb.ToString();
             }
         }
-        public static void SendCodeByEmail(string codesend, string to)
+        public void SendCodeByEmail(string codesend, string to)
         {
             string from, subject, messageBody;
             messageBody = "Your verified code is " + codesend;
@@ -416,15 +404,15 @@ namespace StudentManagement.ViewModel.Login
             try
             {
                 client.Send(message);
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Mã xác thực đã được gửi đến email bảo vệ của bạn";
-                MB.ShowDialog();
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Mã xác thực đã được gửi đến email bảo vệ của bạn";
+                //MB.ShowDialog();
             }
             catch (Exception)
             {
-                MessageBoxFail messageBoxFail = new MessageBoxFail();   
-                messageBoxFail.ShowDialog();
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();   
+                //messageBoxFail.ShowDialog();
             }
         }
 

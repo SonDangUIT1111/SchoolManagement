@@ -1,19 +1,25 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using StudentManagement.Model;
 using StudentManagement.ViewModel.Login;
-using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
+using StudentManagement.Views.Login;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Controls;
+using System.Windows;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentManagement.ViewModel.Login.Tests
 {
     [TestClass()]
     public class LoginViewModelTests
     {
-        LoginViewModel viewModel;
-
+        private Mock<IDatabaseService> mockDatabaseService;
+        private LoginViewModel viewModel;
         [TestInitialize]
         public void TestInitialize()
         {
@@ -64,6 +70,71 @@ namespace StudentManagement.ViewModel.Login.Tests
                 Assert.IsTrue(viewModel.CheckInvalidRole(a));
             }
             else Assert.IsFalse(viewModel.CheckInvalidRole(a));
+        }
+
+        [TestMethod]
+        public void GeThongTin()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
+            {
+                // Custom logic to simulate opening the connection
+                // You can add code here for your test scenario
+            });
+
+            var sut = new LoginViewModel(fakeSqlConnection.Object);
+
+            try
+            {
+                sut.Username = "hs100046";
+                sut.IndexRole = 2;
+                var result = sut.GetThongTin(CreateMD5(Base64Encode("123456")));
+                Assert.AreEqual(result, 100046);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void MD5Hash_Test()
+        {
+            var result = viewModel.CreateMD5("hello");
+            Assert.AreEqual(result, "5D41402ABC4B2A76B9719D911017C592");
+        }
+
+        [TestMethod]
+        public void Base4Hash_Test()
+        {
+            var result = viewModel.Base64Encode("password");
+            Assert.AreEqual(result, "cGFzc3dvcmQ=");
+        }
+
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                //return Convert.ToHexString(hashBytes); // .NET 5 +
+
+                // Convert the byte array to hexadecimal string prior to .NET 5
+                StringBuilder sb = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
         }
     }
 }

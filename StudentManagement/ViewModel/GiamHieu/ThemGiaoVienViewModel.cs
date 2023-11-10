@@ -2,6 +2,7 @@
 using StudentManagement.Converter;
 using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -20,7 +21,7 @@ using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    internal class ThemGiaoVienViewModel : BaseViewModel
+    public class ThemGiaoVienViewModel : BaseViewModel
     {
         // khai báo biến
         //public int MatKhau;
@@ -30,6 +31,13 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand LoadWindow { get; set; }
         public ICommand AddGiaoVien { get; set; }
         public ICommand ChangeImage { get; set; }
+
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public ThemGiaoVienViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public ThemGiaoVienViewModel()
         {
             ImagePath = null;
@@ -75,7 +83,32 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             AddGiaoVien = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                ThemGiaoVienMoi();
+                int result = ThemGiaoVienMoi(ThemGiaoVienWD.TenGV.Text,ThemGiaoVienWD.NgaySinh,ThemGiaoVienWD.DiaChi.Text,ThemGiaoVienWD.Email.Text,
+                    ThemGiaoVienWD.GioiTinh.SelectedIndex.ToString());
+                if (result == -2)
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Vui lòng điền đầy đủ thông tin";
+                    MB.ShowDialog();
+                }
+                else if (result == -1)
+                {
+                    MessageBoxOK MB = new MessageBoxOK();
+                    var data = MB.DataContext as MessageBoxOKViewModel;
+                    data.Content = "Email không đúng cú pháp!";
+                    MB.ShowDialog();
+                    ThemGiaoVienWD.Email.Focus();
+                }
+                else if (result == 1)
+                {
+                    ThemGiaoVienWD.Close();
+                }
+                else
+                {
+                    MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    messageBoxFail.ShowDialog();
+                }
             });
 
         }
@@ -87,7 +120,7 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
 
 
-        bool IsValidEmail(string email)
+        public bool IsValidEmail(string email)
         {
             if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
             {
@@ -96,7 +129,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             return true;
         }
 
-        public static void SendAccountByEmail(string Account, string Password, string to)
+        public void SendAccountByEmail(string Account, string Password, string to)
         {
             string from, subject, messageBody, header;
             header = "Chào mừng bạn đến với hệ thống Student Management! \n Thông báo tạo tài khoản giáo viên thành công \n";
@@ -112,91 +145,56 @@ namespace StudentManagement.ViewModel.GiamHieu
             try
             {
                 client.Send(message);
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to;
-                MB.ShowDialog();
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to;
+                //MB.ShowDialog();
             }
             catch (Exception)
             {
-                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                messageBoxFail.ShowDialog();
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();
             }
         }
 
-        void ThemGiaoVienMoi()
+        public int ThemGiaoVienMoi(string tengv, DatePicker ngaysinh, string diachi,string email,string gioitinh)
         {
-            if (ThemGiaoVienWD.TenGV.Text == "" |
-                ThemGiaoVienWD.NgaySinh.Text == "" |
-                ThemGiaoVienWD.DiaChi.Text == "" |
-                ThemGiaoVienWD.Email.Text == "")
+            if (String.IsNullOrEmpty(tengv) |
+                String.IsNullOrEmpty(ngaysinh.Text) |
+                String.IsNullOrEmpty(diachi) |
+                String.IsNullOrEmpty(email))
             {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng điền đầy đủ thông tin";
-                MB.ShowDialog();
+                return -2;
             }
             else
-            if (!IsValidEmail(ThemGiaoVienWD.Email.Text)
+            if (!IsValidEmail(email)
                 )
             {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Email không đúng cú pháp!";
-                MB.ShowDialog();
-                ThemGiaoVienWD.Email.Focus();
+                return -1;
             }
             else
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
                     try
                     {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception)
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
+                        sqlConnectionWrap.Open();
                         string CmdString1 = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (N'" +
-                        ThemGiaoVienWD.TenGV.Text + "' , CAST(N'" +
-                        ToShortDateTime(ThemGiaoVienWD.NgaySinh) + "' AS DATE) ," + ThemGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
-                        ", N'" + ThemGiaoVienWD.DiaChi.Text + "' , '" + ThemGiaoVienWD.Email.Text + "', 1);";
-                        SqlCommand cmd1 = new SqlCommand(CmdString1, con);
+                        tengv + "' , CAST(N'" +
+                        ToShortDateTime(ngaysinh) + "' AS DATE) ," + gioitinh +
+                        ", N'" + diachi + "' , '" + email + "', 1);";
+                        SqlCommand cmd1 = new SqlCommand(CmdString1, sqlConnectionWrap.GetSqlConnection());
                         cmd1.ExecuteScalar();
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-
-
-
-                    //Tao tai khoan va mat khau
-                    Random rnd = new Random();
-                    string MatKhau = rnd.Next(100000, 999999).ToString();
-                    string TaiKhoan = "gv";
-                    string emailOfNewUser = "";
-                    int maSo = 0;
-                    try
-                    {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception) 
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
+                        sqlConnectionWrap.Close();
+                        //Tao tai khoan va mat khau
+                        Random rnd = new Random();
+                        string MatKhau = rnd.Next(100000, 999999).ToString();
+                        string TaiKhoan = "gv";
+                        string emailOfNewUser = "";
+                        int maSo = 0;
+                        sqlConnectionWrap.Open();
                         string CmdString = "select top 1 MaGiaoVien,Email from GiaoVien order by MaGiaoVien desc";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
+                        SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                         SqlDataReader reader = cmd.ExecuteReader();
                         reader.Read();
                         StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien
@@ -207,68 +205,46 @@ namespace StudentManagement.ViewModel.GiamHieu
                         maSo = teacher.MaGiaoVien;
                         emailOfNewUser = teacher.Email;
                         TaiKhoan += maSo.ToString();
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                    }
-                    
-
-                    //Update tai khoan va mat khau, avatar
-                    try
-                    {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception) 
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
+                        sqlConnectionWrap.Close();
+                        //Update tai khoan va mat khau, avatar
+                        sqlConnectionWrap.Open();
 
                         string uriImage = "";
                         if (ImagePath == null)
                         {
                             var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                            var filePath = Path.Combine(projectPath, "Resources","Images", "user_image.jpg");
+                            var filePath = Path.Combine(projectPath, "Resources", "Images", "user_image.jpg");
                             uriImage = filePath;
                         }
                         else uriImage = ImagePath;
 
                         ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
                         byte[] buffer = converter.ImageToBinary(uriImage);
-
                         string passEncode = CreateMD5(Base64Encode(MatKhau));
-                        string CmdString = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode + "', AnhThe = @image " +
+                        string CmdString2 = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode + "', AnhThe = @image " +
                                             " where MaGiaoVien =" + maSo.ToString();
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        cmd.Parameters.AddWithValue("@image", buffer);
-                        cmd.ExecuteScalar();
-
-
+                        SqlCommand cmd2 = new SqlCommand(CmdString2, sqlConnectionWrap.GetSqlConnection());
+                        cmd2.Parameters.AddWithValue("@image", buffer);
+                        cmd2.ExecuteScalar();
                         SendAccountByEmail(TaiKhoan, MatKhau, emailOfNewUser);
-                        con.Close();
+                        sqlConnectionWrap.Close();
                         ImagePath = null;
-                        ThemGiaoVienWD.Close();
+                        return 1;
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        return -3;
                     }
                 }
             }
         }
 
-        public static string Base64Encode(string plainText)
+        public string Base64Encode(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
-        public static string CreateMD5(string input)
+        public string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())

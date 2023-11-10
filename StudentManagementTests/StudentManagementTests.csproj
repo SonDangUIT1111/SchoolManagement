@@ -90,10 +90,19 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\MonHocViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\QuanLiDiemSoViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaLopHocViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaThongTinHocSinhViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThemGiaoVienViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThongTinHocSinhViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\XepLopViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\HeThongBangDiemViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\LopHocViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\SuaHocSinhViewModelTests.cs" />
+    <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModelTests.cs" />
     <Compile Include="ViewModel\Login\ChangePasswordViewModelTests.cs" />
     <Compile Include="ViewModel\Login\LoginViewModelTests.cs" />
     <Compile Include="ViewModel\Login\ForgotPasswordViewModelTests.cs" />
@@ -110,6 +119,10 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\Images\elaina-and-saya-flight-training.jpg" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

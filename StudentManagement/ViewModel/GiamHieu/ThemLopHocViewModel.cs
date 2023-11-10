@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -19,6 +20,13 @@ namespace StudentManagement.ViewModel.GiamHieu
         private ObservableCollection<Khoi> _khoiCmb;
         public ObservableCollection<Khoi> KhoiCmb { get { return _khoiCmb;}  set { _khoiCmb = value;OnPropertyChanged(); } }
 
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public ThemLopHocViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
+
         public ICommand AddClass { get; set; }
         public ICommand LoadData { get; set; }
         public ICommand CancelAddClass { get; set; }
@@ -30,7 +38,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThemLopHocWD = parameter as ThemLopHoc;
                 LoadKhoiCmb();
-                LoadNienKhoa();
+                NienKhoa = LoadNienKhoa(DateTime.Today);
             });
 
             AddClass = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -42,25 +50,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                     data.Content = "Vui lòng điền đầy đủ thông tin";
                     MB.ShowDialog();
                 }
-                else using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                else 
                 {
                     try
                     {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception) 
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();   
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
-
-
-                        string cmdText = "Select * from Lop where TenLop = '" + ThemLopHocWD.ClassName.Text + "' and NienKhoa = '" + NienKhoa + "' and MaKhoi = "+MaKhoi;
-                        SqlCommand cmdTest = new SqlCommand(cmdText, con);
-                        int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
-                        if (checkExists > 0)
+                        int result = ThemLopMoi(ThemLopHocWD.ClassName.Text, ThemLopHocWD.KhoiCmb.SelectedItem as Khoi);
+                        if (result == -2)
                         {
                             MessageBoxOK messageBoxOK = new MessageBoxOK();
                             MessageBoxOKViewModel data = messageBoxOK.DataContext as MessageBoxOKViewModel;
@@ -68,17 +63,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                             messageBoxOK.ShowDialog();
                             return;
                         }
-
-                        Khoi item = ThemLopHocWD.KhoiCmb.SelectedItem as Khoi;
-                        MaKhoi = item.MaKhoi.ToString();
-                        string cmdString = "INSERT INTO Lop(TenLop, MaKhoi,NienKhoa) VALUES ('" 
-                                            + ThemLopHocWD.ClassName.Text + "', " + MaKhoi + ", '" 
-                                            + NienKhoa + "')";
-                        SqlCommand cmd = new SqlCommand(cmdString, con);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                        messageBoxSuccessful.ShowDialog();
+                        else
+                        {
+                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            messageBoxSuccessful.ShowDialog();
+                        }
                         ThemLopHocWD.Close();
                     }
                     catch (Exception)
@@ -99,22 +88,22 @@ namespace StudentManagement.ViewModel.GiamHieu
         public void LoadKhoiCmb()
         {
             KhoiCmb.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        con.Open();
+                        sqlConnectionWrap.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "SELECT DISTINCT MaKhoi,Khoi FROM Khoi";
-                    SqlCommand cmd = new SqlCommand(cmdString, con);
+                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -128,36 +117,70 @@ namespace StudentManagement.ViewModel.GiamHieu
                             if (String.IsNullOrEmpty(MaKhoi))
                             {
                                 MaKhoi = reader.GetInt32(0).ToString();
-                                ThemLopHocWD.KhoiCmb.SelectedIndex = 0;
+                                try
+                                {
+                                    ThemLopHocWD.KhoiCmb.SelectedIndex = 0;
+                                } catch (Exception) { }
                             }
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrap.Close();
 
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                     return;
                 };
             }
         }
-        public void LoadNienKhoa()
+        public int ThemLopMoi(string tenlop, Khoi item)
         {
-            DateTime dateTime = DateTime.Today;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                    return -2;
+                }
+                string cmdText = "Select * from Lop where TenLop = '" + tenlop + "' and NienKhoa = '" + NienKhoa + "' and MaKhoi = " + MaKhoi;
+                SqlCommand cmdTest = new SqlCommand(cmdText, sqlConnectionWrap.GetSqlConnection());
+                int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
+                if (checkExists > 0)
+                {
+                    return -1;
+                }
+                MaKhoi = item.MaKhoi.ToString();
+                string cmdString = "INSERT INTO Lop(TenLop, MaKhoi,NienKhoa) VALUES ('"
+                                    + tenlop + "', " + MaKhoi + ", '"
+                                    + NienKhoa + "')";
+                SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
+                cmd.ExecuteNonQuery();
+                sqlConnectionWrap.Close();
+                return 1;
+            }
+        }
+        public string LoadNienKhoa(DateTime dateTime)
+        {
             int Month = dateTime.Month;
             int Year = dateTime.Year;
 
             if (Month < 6)
             {
                 int PreviousYear = Year - 1;
-                NienKhoa = PreviousYear + "-" + Year;
-            } else
+                return PreviousYear + "-" + Year;
+            }
+            else
             {
                 int NextYear = Year + 1;
-                NienKhoa = Year + "-" + NextYear;
+                return Year + "-" + NextYear;
             }
         }
     }

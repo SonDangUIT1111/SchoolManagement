@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
@@ -30,6 +31,14 @@ namespace StudentManagement.ViewModel.Login
 
         // khai báo usercontrol
         public LoginWindow LoginWindow { get; set; }
+
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public LoginViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
+
 
         // khai báo command
         public ICommand GoToRegisterCommand { get; set; }
@@ -120,37 +129,7 @@ namespace StudentManagement.ViewModel.Login
                         return;
                     }
                     string passEncode = CreateMD5(Base64Encode(Password));
-                    int id = -1;
-                    int checkUser = 0;
-                    string CmdString = string.Empty;
-                    using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                    {
-                        try
-                        {
-                            try
-                            {
-                                con.Open();
-                            }
-                            catch (Exception)
-                            {
-                                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                messageBoxFail.ShowDialog();
-                            }
-                            CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
-                            checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-
-
-                            CmdString = "Select " + (IndexRole == 0 ? "MaTruong" : IndexRole == 1 ? "MaGiaoVien" : "MaHocSinh") + " from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
-                            cmd = new SqlCommand(CmdString, con);
-                            id = Convert.ToInt32(cmd.ExecuteScalar());
-                            con.Close();
-                        }
-                        catch (Exception)
-                        {
-                        }
-
-                    }
+                    int checkUser = GetThongTin(passEncode);
                     if (checkUser > 0)
                     {
                         IsLoggedIn = true;
@@ -160,7 +139,7 @@ namespace StudentManagement.ViewModel.Login
                         {
                             GiamHieuWindow window = new GiamHieuWindow();
                             StudentManagement.ViewModel.GiamHieu.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiamHieu.TrangChuViewModel;
-                            vm.IdGiamHieu = id;
+                            vm.IdGiamHieu = checkUser;
                             window.ShowDialog();
                             return;
                         }
@@ -168,7 +147,7 @@ namespace StudentManagement.ViewModel.Login
                         {
                             GiaoVienWindow window = new GiaoVienWindow();
                             StudentManagement.ViewModel.GiaoVien.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.GiaoVien.TrangChuViewModel;
-                            vm.CurrentUser.MaGiaoVien = id;
+                            vm.CurrentUser.MaGiaoVien = checkUser;
                             window.ShowDialog();
                             return;
                         }
@@ -176,7 +155,7 @@ namespace StudentManagement.ViewModel.Login
                         {
                             HocSinhWindow window = new HocSinhWindow();
                             StudentManagement.ViewModel.HocSinh.TrangChuViewModel vm = window.DataContext as StudentManagement.ViewModel.HocSinh.TrangChuViewModel;
-                            vm.IdHocSinh = id;
+                            vm.IdHocSinh = checkUser;
                             window.ShowDialog();
                             return;
                         }
@@ -276,13 +255,41 @@ namespace StudentManagement.ViewModel.Login
             return index >= 0 && index <= 2;
         }
 
+        public int GetThongTin(string passEncode)
+        {
+            string CmdString = string.Empty;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    int checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                    if (checkUser <= 0) return -1;
+
+
+                    CmdString = "Select " + (IndexRole == 0 ? "MaTruong" : IndexRole == 1 ? "MaGiaoVien" : "MaHocSinh") + " from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    int id = Convert.ToInt32(cmd.ExecuteScalar());
+                    sqlConnectionWrap.Close();
+                    return id;
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
+
+            }
+        }
+
         // hàm mã hóa mật khẩu
-        public static string Base64Encode(string plainText)
+        public string Base64Encode(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
-        public static string CreateMD5(string input)
+        public string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())

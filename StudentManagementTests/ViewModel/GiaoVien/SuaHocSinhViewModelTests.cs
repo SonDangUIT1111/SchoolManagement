@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Controls;
 using System.Windows;
-
+using System.IO;
 
 namespace StudentManagementTests.ViewModel.GiaoVien
 {
@@ -25,12 +25,18 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             // Create the SuaHocSinhViewModel instance with the mock service
             viewModel = new SuaHocSinhViewModel();
         }
-        [AssemblyInitialize]
-        public static void AssemblyInit(TestContext context)
+        
+        [TestMethod()]
+        public void PropertiesTest()
         {
-            // Initialize the WPF application for UI tests
-            Application app = new Application();
+            viewModel.ImagePath = "abc";
+            Assert.AreEqual("abc", viewModel.ImagePath);
+            viewModel.SuaHocSinhWD = null;
+            Assert.IsNull(viewModel.SuaHocSinhWD);
+            viewModel.HocSinhHienTai = null;
+            Assert.IsNull(viewModel.HocSinhHienTai);
         }
+
         [TestMethod()]
         public void IsValidEmail_ValidEmail_ReturnsTrue()
         {
@@ -91,10 +97,18 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             sut.SuaHocSinhWD.GioiTinh.SelectedIndex = 0;  
             sut.SuaHocSinhWD.DiaChi.Text = "123 Main St";  
             sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";
-
+            var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+            string filePath = System.IO.Path.Combine(projectPath, "Resources", "Images", "elaina-and-saya-flight-training.jpg");
+            sut.ImagePath = filePath;
             // Act
 
-            sut.CapNhatHocSinh();
+            try
+            {
+                sut.CapNhatHocSinh();
+            } catch (Exception)
+            {
+                Assert.Fail();
+            }
             // Assert
             // Verify that the expected methods are called on the SqlConnectionWrapper
             //fakeSqlConnection.Verify(wrapper => wrapper.Open(), Times.Once);
@@ -121,13 +135,20 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             //sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";
 
             // Act
-
-            sut.CapNhatHocSinh();
+            try
+            {
+                sut.CapNhatHocSinh();
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Assert.IsFalse(true);
+            }
             // Assert
             // Verify that the expected methods are called on the SqlConnectionWrapper
             //fakeSqlConnection.Verify(wrapper => wrapper.Open(), Times.Once);
             //fakeSqlConnection.Verify(wrapper => wrapper.Close(), Times.Once);
             Assert.IsTrue(true);
+
 
         }
 

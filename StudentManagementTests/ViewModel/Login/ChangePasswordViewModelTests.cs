@@ -1,24 +1,31 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using StudentManagement.Model;
 using StudentManagement.ViewModel.Login;
-using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
+using StudentManagement.Views.Login;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Controls;
+using System.Windows;
+using System.IO;
 
 namespace StudentManagement.ViewModel.Login.Tests
 {
     [TestClass()]
     public class ChangePasswordViewModelTests
     {
-        ChangePasswordViewModel viewModel;
-
+        private Mock<IDatabaseService> mockDatabaseService;
+        private ChangePasswordViewModel viewModel;
         [TestInitialize]
         public void TestInitialize()
         {
+            // Create the SuaHocSinhViewModel instance with the mock service
             viewModel = new ChangePasswordViewModel();
         }
+
 
         [TestMethod()]
         public void PropertiesTest()
@@ -83,6 +90,77 @@ namespace StudentManagement.ViewModel.Login.Tests
                 return;
             }
             Assert.IsTrue(result);  
+        }
+
+        [TestMethod]
+        public void GetMatKhauCu_GetValue()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
+            {
+                // Custom logic to simulate opening the connection
+                // You can add code here for your test scenario
+            });
+
+            var sut = new ChangePasswordViewModel(fakeSqlConnection.Object);
+
+            try
+            {
+                sut.IsHS = true;
+                sut.Id = "100046";
+                sut.GetMatKhauCu();
+                sut.IsHS = false;
+                sut.Id = "100031";
+                sut.GetMatKhauCu();
+                Assert.IsTrue(true);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void UpdateMatKhauMoiTest()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
+            {
+                // Custom logic to simulate opening the connection
+                // You can add code here for your test scenario
+            });
+
+            var sut = new ChangePasswordViewModel(fakeSqlConnection.Object);
+
+            try
+            {
+                sut.IsHS = true;
+                sut.Id = "1";
+                sut.UpdateMatKhauMoi("123456");
+                sut.IsHS = false;
+                sut.UpdateMatKhauMoi("123456");
+                Assert.IsTrue(true);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void MD5Hash_Test()
+        {
+            var result = viewModel.CreateMD5("hello");
+            Assert.AreEqual(result, "5D41402ABC4B2A76B9719D911017C592");
+        }
+
+        [TestMethod]
+        public void Base4Hash_Test()
+        {
+            var result = viewModel.Base64Encode("password");
+            Assert.AreEqual(result, "cGFzc3dvcmQ=");
         }
     }
 }

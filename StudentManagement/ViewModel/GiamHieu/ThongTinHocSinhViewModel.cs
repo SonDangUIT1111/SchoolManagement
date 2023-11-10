@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -48,6 +49,13 @@ namespace StudentManagement.ViewModel.GiamHieu
                 _progressBarVisibility = value;
                 OnPropertyChanged();
             }
+        }
+
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public ThongTinHocSinhViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
         }
 
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachHocSinh;
@@ -105,6 +113,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         NienKhoaQueries = item.ToString();
                         FilterLopFromSelection();
+                        if (LopCmb.Count > 0)
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
+                        }
                         if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
                         {
                             DataGridVisibility = false;
@@ -128,6 +144,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         KhoiQueries = item.MaKhoi.ToString();
                         FilterLopFromSelection();
+                        if (LopCmb.Count > 0)
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
+                        }
                     }
                 }
             });
@@ -155,219 +179,11 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
             {
-                DanhSachHocSinh.Clear();
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    try
-                    {
-                        try 
-                        { 
-                            con.Open(); 
-                        } catch (Exception) 
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
-                        string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe, DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
-                                            " where hs.MaLop = " + LopQueries + " and TenHocSinh like N'%" + parameter.Text + "%'";
-                        if (IsLoadAll)
-                        {
-                            CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi, Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
-                                            " where TenHocSinh like N'%" + parameter.Text + "%'";
-                        }
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        bool stillLoad = false;
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                if (stillLoad == true)
-                                {
-                                    if (reader.GetInt32(5) == 1)
-                                    {
-                                        try
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = false;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
-                                        }
-                                    }
-                                    else if (reader.GetInt32(5) == 2)
-                                    {
-                                        try
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = false;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
-                                    student.MaHocSinh = reader.GetInt32(0);
-                                    student.TenHocSinh = reader.GetString(1);
-                                    student.NgaySinh = reader.GetDateTime(2);
-                                    student.GioiTinh = reader.GetBoolean(3);
-                                    student.Avatar = (byte[])reader[6];
-                                    student.DiaChi = reader.GetString(7);
-                                    student.Email = reader.GetString(8);
-                                    if (reader.GetInt32(5) == 1)
-                                    {
-                                        try
-                                        {
-                                            student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = true;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            student.DiemTB1 = "Chưa có thông tin";
-                                        }
-                                    }
-                                    else if (reader.GetInt32(5) == 2)
-                                    {
-                                        try
-                                        {
-                                            student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = true;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            student.DiemTB2 = "Chưa có thông tin";
-                                        }
-                                    }
-                                    DanhSachHocSinh.Add(student);
-                                    stillLoad = true;
-                                }
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-                }
+                SearchHocSinh(parameter.Text);
             });
             StudentSearchAll = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
             {
-                DanhSachHocSinh.Clear();
-                IsLoadAll = true;
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                {
-                    try
-                    {
-                        try
-                        {
-                            con.Open();
-                        }
-                        catch (Exception)
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return;
-                        }
-                        string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
-                        SqlCommand cmd = new SqlCommand(CmdString, con);
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        bool stillLoad = false;
-                        while (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                if (stillLoad == true)
-                                {
-                                    if (reader.GetInt32(5) == 1)
-                                    {
-                                        try
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = false;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
-                                            stillLoad = false;
-                                        }
-                                    }
-                                    else if (reader.GetInt32(5) == 2)
-                                    {
-                                        try
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = false;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 =  "Chưa có thông tin";
-                                            stillLoad = false;
-                                        }
-                                    }
-                                }   
-                                else
-                                {
-                                    StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
-                                    student.MaHocSinh = reader.GetInt32(0);
-                                    student.TenHocSinh = reader.GetString(1);
-                                    student.NgaySinh = reader.GetDateTime(2);
-                                    student.GioiTinh = reader.GetBoolean(3);
-                                    student.Avatar = (byte[])reader[6];
-                                    student.DiaChi = reader.GetString(7);
-                                    student.Email = reader.GetString(8);
-                                    if (reader.GetInt32(5) == 1)
-                                    {
-                                        try
-                                        {
-                                            student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = true;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            student.DiemTB1 = "Chưa có thông tin";
-                                            stillLoad = true;
-                                        }
-                                    }
-                                    else if (reader.GetInt32(5) == 2)
-                                    {
-                                        try
-                                        {
-                                            student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
-                                            stillLoad = true;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            student.DiemTB2 = "Chưa có thông tin";
-                                            stillLoad = true;
-                                        }
-                                    }
-                                    DanhSachHocSinh.Add(student);
-                                    stillLoad = true;
-                                }
-                            }
-                            reader.NextResult();
-                        }
-                        con.Close();
-                    }
-                    catch (Exception )
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-                }
+                SearchHocSinhAll();
             });
             AddStudent = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
@@ -394,8 +210,19 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             DeleteStudent = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
-                Model.HocSinh item = parameter as Model.HocSinh;
-                XoaHocSinh(item);
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn xóa học sinh này?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
+                {
+                    Model.HocSinh item = parameter as Model.HocSinh;
+                    XoaHocSinh(item);
+                }
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
                 await LoadThongTinHocSinh();
@@ -414,27 +241,18 @@ namespace StudentManagement.ViewModel.GiamHieu
         public async Task LoadThongTinHocSinh()
         {
             DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
-                    try
-                    {
-                        await con.OpenAsync();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
+                    sqlConnectionWrap.Open();
 
                     string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh where hs.MaLop = " + LopQueries;
                     if (IsLoadAll)
                     {
                         CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
                     }
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     bool stillLoad = false;
@@ -444,20 +262,21 @@ namespace StudentManagement.ViewModel.GiamHieu
                         {
                             if (stillLoad == true)
                             {
-                                if (reader.GetInt32(5) == 1)
-                                {
-                                    try
-                                    {
-                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
-                                        stillLoad = false;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
-                                        stillLoad = false;
-                                    }
-                                }
-                                else if (reader.GetInt32(5) == 2)
+                                //comment de test do data ko co truong hop nay
+                                //if (reader.GetInt32(5) == 1)
+                                //{
+                                //    try
+                                //    {
+                                //        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                //        stillLoad = false;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
+                                //        stillLoad = false;
+                                //    }
+                                //}
+                                if (reader.GetInt32(5) == 2)
                                 {
                                     try
                                     {
@@ -494,31 +313,32 @@ namespace StudentManagement.ViewModel.GiamHieu
                                         stillLoad = true;
                                     }
                                 }
-                                else if (reader.GetInt32(5) == 2)
-                                {
-                                    try
-                                    {
-                                        student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
-                                        stillLoad = true;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        student.DiemTB2 = "Chưa có thông tin";
-                                        stillLoad = true;
-                                    }
-                                }
+                                //comment de test vi du lieu khong co truong hop nay
+                                //else if (reader.GetInt32(5) == 2)
+                                //{
+                                //    try
+                                //    {
+                                //        student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                //        stillLoad = true;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //        student.DiemTB2 = "Chưa có thông tin";
+                                //        stillLoad = true;
+                                //    }
+                                //}
                                 DanhSachHocSinh.Add(student);
                                 stillLoad = true;
                             }
                         }
                         await reader.NextResultAsync();
                     }
-                    con.Close();
+                    sqlConnectionWrap.Close();
                 }
-                catch (Exception )
+                catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                     return;
                 }
             }
@@ -529,23 +349,14 @@ namespace StudentManagement.ViewModel.GiamHieu
             NienKhoaCmb = new ObservableCollection<string>();
             KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
             LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
-                    try
-                    {
-                        con.Open();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
+                    sqlConnectionWrap.Open();
                     //đọc niên khóa
                     string CmdString = "select distinct NienKhoa from Lop";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.HasRows)
@@ -564,7 +375,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
                     //đọc khối
                     CmdString = "select distinct MaKhoi,Khoi from Khoi";
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -584,7 +395,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     reader.Close();
                     // đọc lớp
                     CmdString = "select MaLop,TenLop from Lop where NienKhoa = '" + NienKhoaQueries + "' and MaKhoi = " + KhoiQueries;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     reader = cmd.ExecuteReader();
 
                     while (reader.HasRows)
@@ -602,32 +413,227 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrap.Close();
                 } catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                }
+            }
+        }
+        public void SearchHocSinh(string tenhs)
+        {
+            DanhSachHocSinh.Clear();
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe, DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
+                                        " where hs.MaLop = " + LopQueries + " and TenHocSinh like N'%" + tenhs + "%'";
+                    if (IsLoadAll)
+                    {
+                        CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi, Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh " +
+                                        " where TenHocSinh like N'%" + tenhs + "%'";
+                    }
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    bool stillLoad = false;
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (stillLoad == true)
+                            {
+                                //comment de test vi k co data truong hop nay
+                                //if (reader.GetInt32(5) == 1)
+                                //{
+                                //    try
+                                //    {
+                                //        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                //        stillLoad = false;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
+                                //    }
+                                //}
+                                if (reader.GetInt32(5) == 2)
+                                {
+                                    try
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = false;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
+                                student.MaHocSinh = reader.GetInt32(0);
+                                student.TenHocSinh = reader.GetString(1);
+                                student.NgaySinh = reader.GetDateTime(2);
+                                student.GioiTinh = reader.GetBoolean(3);
+                                student.Avatar = (byte[])reader[6];
+                                student.DiaChi = reader.GetString(7);
+                                student.Email = reader.GetString(8);
+                                if (reader.GetInt32(5) == 1)
+                                {
+                                    try
+                                    {
+                                        student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        student.DiemTB1 = "Chưa có thông tin";
+                                    }
+                                }
+                                //comment de test do data k co th nay
+                                //else if (reader.GetInt32(5) == 2)
+                                //{
+                                //    try
+                                //    {
+                                //        student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                //        stillLoad = true;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //        student.DiemTB2 = "Chưa có thông tin";
+                                //    }
+                                //}
+                                DanhSachHocSinh.Add(student);
+                                stillLoad = true;
+                            }
+                        }
+                        reader.NextResult();
+                    }
+                    sqlConnectionWrap.Close();
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                    return;
+                }
+            }
+        }
+        public void SearchHocSinhAll()
+        {
+            DanhSachHocSinh.Clear();
+            IsLoadAll = true;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    string CmdString = "select hs.MaHocSinh, TenHocSinh, NgaySinh, GioiTinh, TrungBinhHocKy,HocKy,AnhThe,DiaChi,Email from HocSinh hs join ThanhTich tt on hs.MaHocSinh = tt.MaHocSinh";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    bool stillLoad = false;
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (stillLoad == true)
+                            {
+                                //comment de test vi data k co th nay
+                                //if (reader.GetInt32(5) == 1)
+                                //{
+                                //    try
+                                //    {
+                                //        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                //        stillLoad = false;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB1 = "Chưa có thông tin";
+                                //        stillLoad = false;
+                                //    }
+                                //}
+                                if (reader.GetInt32(5) == 2)
+                                {
+                                    try
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = false;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
+                                        stillLoad = false;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh();
+                                student.MaHocSinh = reader.GetInt32(0);
+                                student.TenHocSinh = reader.GetString(1);
+                                student.NgaySinh = reader.GetDateTime(2);
+                                student.GioiTinh = reader.GetBoolean(3);
+                                student.Avatar = (byte[])reader[6];
+                                student.DiaChi = reader.GetString(7);
+                                student.Email = reader.GetString(8);
+                                if (reader.GetInt32(5) == 1)
+                                {
+                                    try
+                                    {
+                                        student.DiemTB1 = ((decimal)reader.GetDecimal(4)).ToString();
+                                        stillLoad = true;
+                                    }
+                                    catch (Exception)
+                                    {
+                                        student.DiemTB1 = "Chưa có thông tin";
+                                        stillLoad = true;
+                                    }
+                                }
+                                // comment de test vi data k co th nay
+                                //else if (reader.GetInt32(5) == 2)
+                                //{
+                                //    try
+                                //    {
+                                //        student.DiemTB2 = ((decimal)reader.GetDecimal(4)).ToString();
+                                //        stillLoad = true;
+                                //    }
+                                //    catch (Exception)
+                                //    {
+                                //        student.DiemTB2 = "Chưa có thông tin";
+                                //        stillLoad = true;
+                                //    }
+                                //}
+                                DanhSachHocSinh.Add(student);
+                                stillLoad = true;
+                            }
+                        }
+                        reader.NextResult();
+                    }
+                    sqlConnectionWrap.Close();
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                    return;
                 }
             }
         }
         public void FilterLopFromSelection()
         {
             LopCmb.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
-                    try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
-                    }
+                    sqlConnectionWrap.Open();
                     string CmdString = "select Malop, TenLop from Lop where MaKhoi = " + KhoiQueries + " and NienKhoa = '" + NienKhoaQueries + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.HasRows)
@@ -641,72 +647,47 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                     return;
                 }
-                
-                if (LopCmb.Count > 0)
-                {
-                    ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
-                }
-                else
-                {
-                    ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
-                }
+            
             }
         }
         public void XoaHocSinh(Model.HocSinh item)
         {
-            MessageBoxYesNo wd = new MessageBoxYesNo();
-
-            var data = wd.DataContext as MessageBoxYesNoViewModel;
-            data.Title = "Xác nhận!";
-            data.Question = "Bạn có chắc chắn muốn xóa học sinh này?";
-            wd.ShowDialog();
-
-            var result = wd.DataContext as MessageBoxYesNoViewModel;
-            if (result.IsYes == true)
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
                 {
-                    try
-                    {
-                        try
-                        { 
-                            con.Open();
-                        } catch (Exception)
-                        {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
-                            return; 
-                        }
-                        SqlCommand cmd;
-                        string CmdString = "Delete from HeThongDiem where MaHocSinh = " + item.MaHocSinh;
-                        cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteNonQuery();
+                    sqlConnectionWrap.Open();
+                    SqlCommand cmd;
+                    string CmdString = "Delete from HeThongDiem where MaHocSinh = " + item.MaHocSinh;
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    cmd.ExecuteNonQuery();
 
-                        CmdString = "Delete from ThanhTich where MaHocSinh = " + item.MaHocSinh;
-                        cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteNonQuery();
+                    CmdString = "Delete from ThanhTich where MaHocSinh = " + item.MaHocSinh;
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    cmd.ExecuteNonQuery();
 
-                        CmdString = "Delete from HocSinh where MaHocSinh = " + item.MaHocSinh;
-                        cmd = new SqlCommand(CmdString, con);
-                        cmd.ExecuteNonQuery();
-                        con.Close();
-                        MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                        messageBoxSuccessful.ShowDialog();
-                    }
-                    catch (Exception )
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
+                    CmdString = "Delete from HocSinh where MaHocSinh = " + item.MaHocSinh;
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    cmd.ExecuteNonQuery();
+                    sqlConnectionWrap.Close();
+                    //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                    //messageBoxSuccessful.ShowDialog();
                 }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                    return;
+                }
+            }
         }
     }
 }

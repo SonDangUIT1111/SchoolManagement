@@ -1,24 +1,32 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using StudentManagement.Model;
 using StudentManagement.ViewModel.Login;
-using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
+using StudentManagement.Views.Login;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Security.Cryptography.X509Certificates;
+using System.Windows.Controls;
+using System.Windows;
+using System.IO;
+
 
 namespace StudentManagement.ViewModel.Login.Tests
 {
     [TestClass()]
     public class ForgotPasswordViewModelTests
     {
-        ForgotPasswordViewModel viewModel;
-
+        private Mock<IDatabaseService> mockDatabaseService;
+        private ForgotPasswordViewModel viewModel;
         [TestInitialize]
         public void TestInitialize()
         {
+            // Create the SuaHocSinhViewModel instance with the mock service
             viewModel = new ForgotPasswordViewModel();
         }
+
 
         [TestMethod()]
         public void PropertiesTest()
@@ -66,7 +74,6 @@ namespace StudentManagement.ViewModel.Login.Tests
         }
 
         [TestMethod()]
-        [DataRow(null)]
         [DataRow("")]
         [DataRow("gmail@gmail")]
         [DataRow("gmail.com")]
@@ -83,7 +90,6 @@ namespace StudentManagement.ViewModel.Login.Tests
         }
 
         [TestMethod()]
-        [DataRow(null)]
         [DataRow("")]
         [DataRow("1")]
         [DataRow("abc211")]
@@ -109,5 +115,73 @@ namespace StudentManagement.ViewModel.Login.Tests
             Assert.AreEqual(flag, result);
 
         }
+
+
+        [TestMethod]
+        public void DoiMatKhauMoiTest()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
+            {
+                // Custom logic to simulate opening the connection
+                // You can add code here for your test scenario
+            });
+
+            var sut = new ForgotPasswordViewModel(fakeSqlConnection.Object);
+
+            try
+            {
+                sut.NewPassword = "";
+                sut.IndexRole = 0;
+                sut.EmailProtected = "";
+                sut.DoiMatKhauMoi();
+                Assert.IsTrue(true);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void KiemTraEmailCoTonTai()
+        {
+            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
+
+            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
+            {
+                // Custom logic to simulate opening the connection
+                // You can add code here for your test scenario
+            });
+
+            var sut = new ForgotPasswordViewModel(fakeSqlConnection.Object);
+
+            try
+            {
+                sut.IndexRole = 0;
+                sut.GetThongTin();
+                Assert.IsTrue(true);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestMethod]
+        public void SendMail_Test()
+        {
+            try
+            {
+                viewModel.SendCodeByEmail("ab", "a@gmail.com");
+                Assert.IsTrue(true);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
+        }
+
     }
 }

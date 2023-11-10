@@ -17,7 +17,6 @@
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       x:Name="QuanLiDiemSoWD"
       Background="#FFFFFF"
-      DataContext="{StaticResource QuanLiDiemSoVM}"
       Title="QuanLiDiemSo">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

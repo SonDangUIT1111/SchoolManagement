@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using StudentManagement.ViewModel.GiamHieu;
+using System.Windows.Controls;
 
 namespace StudentManagement.Views.GiamHieu
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.GiamHieu
         public QuanLiDiemSo()
         {
             InitializeComponent();
+            DataContext = new QuanLiDiemSoViewModel();
         }
     }
 }

@@ -159,8 +159,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                             {
                                 cmd.Parameters.AddWithValue("@imagebinary", buffer);
                                 cmd.ExecuteScalar();
-                                Console.WriteLine("excuted");
-
                             }
 
                             // Display a success message here or return true
@@ -172,7 +170,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                     catch (Exception e)
                     {
                         // Handle exceptions here and display an error message or return false
-                        Console.WriteLine(e);
                         return;
                     }
                 }

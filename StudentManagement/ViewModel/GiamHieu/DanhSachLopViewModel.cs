@@ -1,4 +1,5 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -24,32 +25,17 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         private bool _dataGridVisibility;
 
-        public bool DataGridVisibility
-        {
-            get
-            {
-                return _dataGridVisibility;
-            }
-            set
-            {
-                _dataGridVisibility = value;
-                OnPropertyChanged();
-            }
-        }
+        public bool DataGridVisibility{get{return _dataGridVisibility;}set{_dataGridVisibility = value;OnPropertyChanged();}}
 
         private bool _progressBarVisibility;
 
-        public bool ProgressBarVisibility
+        public bool ProgressBarVisibility { get {return _progressBarVisibility;}set{_progressBarVisibility = value;OnPropertyChanged();}
+        }
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public DanhSachLopViewModel(ISqlConnectionWrapper sqlConnection)
         {
-            get
-            {
-                return _progressBarVisibility;
-            }
-            set
-            {
-                _progressBarVisibility = value;
-                OnPropertyChanged();
-            }
+            this.sqlConnection = sqlConnection;
         }
 
         // declare ICommand
@@ -69,6 +55,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
                 DanhSachLopWindow = parameter;
+                DanhSachLop.Clear();
                 await LoadDanhSachHocSinh();
                 DataGridVisibility = true;
                 ProgressBarVisibility = false;
@@ -82,6 +69,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 window.ShowDialog();
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
+                DanhSachLop.Clear();
                 await LoadDanhSachHocSinh();
                 DataGridVisibility = true;
                 ProgressBarVisibility = false;
@@ -92,6 +80,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 XoaHocSinh(item);
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
+                DanhSachLop.Clear();
                 await LoadDanhSachHocSinh();
                 DataGridVisibility = true;
                 ProgressBarVisibility = false;
@@ -105,6 +94,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             LocHocSinh = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
             {
                 TextBox tb = parameter;
+                DanhSachLop.Clear();
                 LocHocSinhTheoTen(tb.Text);
             });
             Back = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
@@ -123,27 +113,25 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public async Task LoadDanhSachHocSinh()
         {
-            DanhSachLop.Clear();
-
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        await con.OpenAsync();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
 
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = " + MaLop.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
+                    Console.WriteLine(CmdString);
                     while (await reader.ReadAsync())
                     {
                         StudentManagement.Model.HocSinh student = new StudentManagement.Model.HocSinh
@@ -159,116 +147,115 @@ namespace StudentManagement.ViewModel.GiamHieu
                         DanhSachLop.Add(student);
                     }
 
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
 
         public void XoaHocSinh(Model.HocSinh value)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     SqlCommand cmd;
                     string CmdString = "Update HocSinh set MaLop = null where MaHocSinh = " + value.MaHocSinh;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     cmd.ExecuteScalar();
 
                     CmdString = "Update HeThongDiem set MaLop = null where MaHocSinh = " + value.MaHocSinh;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     cmd.ExecuteScalar();
 
                     CmdString = "Update ThanhTich set MaLop = null where MaHocSinh = " + value.MaHocSinh;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     cmd.ExecuteScalar();
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
         public void HoanTac(Model.HocSinh value)
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                     }
                     SqlCommand cmd;
                     string CmdString = "Update HocSinh set MaLop = " + MaLop.ToString() + " where MaHocSinh = " + value.MaHocSinh;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     cmd.ExecuteScalar();
 
                     CmdString = "Update HeThongDiem set MaLop = " + MaLop.ToString() + " where MaHocSinh = " + value.MaHocSinh;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     cmd.ExecuteScalar();
 
                     CmdString = "Update ThanhTich set MaLop = " + MaLop.ToString() + " where MaHocSinh = " + value.MaHocSinh;
-                    cmd = new SqlCommand(CmdString, con);
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     cmd.ExecuteScalar();
-                    con.Close();
-                    LoadDanhSachHocSinh();
-                    DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
-                        $"Hoàn tác thành công",
-                        null,
-                        null,
-                        TimeSpan.FromSeconds(5));
+                    sqlConnectionWrapper.Close();
+                    //LoadDanhSachHocSinh();
+                    //DanhSachLopWindow.Snackbar.MessageQueue?.Enqueue(
+                    //    $"Hoàn tác thành công",
+                    //    null,
+                    //    null,
+                    //    TimeSpan.FromSeconds(5));
 
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
         public void LocHocSinhTheoTen(string value)
         {
-            DanhSachLop.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select * from HocSinh where TenHocSinh is not null and MaLop = " + MaLop.ToString()
                                         + " and TenHocSinh like N'%" + value + "%'";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     while (reader.HasRows)
@@ -289,12 +276,12 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
