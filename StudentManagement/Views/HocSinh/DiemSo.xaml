@@ -11,8 +11,7 @@
       Title="DiemSo"
       Name="DiemSoWD"
       mc:Ignorable="d" 
-      Background="#FFFFFF"
-      DataContext="{StaticResource DiemSoVM}">
+      Background="#FFFFFF">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"
@@ -68,7 +67,6 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled"
                               x:Name="BangDiem"
-                              Style="{StaticResource FavsScrollViewer}" 
                               Height="480">
                         <StackPanel Orientation="Vertical" >
                             <TextBlock Text="Học kì I"
@@ -221,8 +219,7 @@
                                   IsEnabled="False"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                  ItemsSource="{Binding DanhSachDiemHK1}"
-                                  Style="{StaticResource DataGridStyle1}">
+                                  ItemsSource="{Binding DanhSachDiemHK1}">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="{x:Type DataGridRow}">
                                         <Style.Triggers>
@@ -272,8 +269,7 @@
                                                            FontWeight="DemiBold"
                                                            Foreground="#009efd"
                                                            Text="{Binding DiemTB}"/>
-                                                    <materialDesign:PackIcon Kind="{Binding XepLoai, Converter={StaticResource BooleanToCheckIconKindConverter}}"
-                                                                             Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                    <materialDesign:PackIcon 
                                                                              VerticalAlignment="Center"
                                                                              Width="18"
                                                                              Margin="25 0 0 0"
@@ -282,8 +278,6 @@
                                                                Margin="2 0 0 0"
                                                                Width="80"
                                                                FontSize="18"
-                                                               Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
-                                                               Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
                                                                TextTrimming="WordEllipsis"/>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -441,8 +435,7 @@
                                   RowHeight="40"
                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                   ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                  ItemsSource="{Binding DanhSachDiemHK2}"
-                                  Style="{StaticResource DataGridStyle1}">
+                                  ItemsSource="{Binding DanhSachDiemHK2}">
                                 <DataGrid.RowStyle>
                                     <Style TargetType="{x:Type DataGridRow}">
                                         <Style.Triggers>
@@ -492,8 +485,7 @@
                                                            FontWeight="DemiBold"
                                                            Foreground="#009efd"
                                                            Text="{Binding DiemTB}"/>
-                                                    <materialDesign:PackIcon Kind="{Binding XepLoai, Converter={StaticResource BooleanToCheckIconKindConverter}}"
-                                                                             Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
+                                                    <materialDesign:PackIcon 
                                                                              VerticalAlignment="Center"
                                                                              Width="18"
                                                                              Margin="25 0 0 0"
@@ -502,8 +494,6 @@
                                                                Margin="2 0 0 0"
                                                                Width="80"
                                                                FontSize="18"
-                                                               Foreground="{Binding XepLoai, Converter={StaticResource BooleanToGreenRedConverter}}"
-                                                               Text="{Binding XepLoai, Converter={StaticResource BooleanToXepLoaiConverter}}"
                                                                TextTrimming="WordEllipsis"/>
                                                 </StackPanel>
                                             </DataTemplate>

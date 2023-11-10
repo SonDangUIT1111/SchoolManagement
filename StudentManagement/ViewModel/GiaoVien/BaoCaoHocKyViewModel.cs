@@ -1,7 +1,8 @@
 ﻿using LiveCharts;
 using LiveCharts.Wpf;
 using StudentManagement.Model;
-using StudentManagement.Views.GiaoVien;
+using StudentManagement.ViewModel.Services;
+using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
 using System.Collections.Generic;
@@ -11,20 +12,21 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace StudentManagement.ViewModel.GiaoVien
 {
-    internal class BaoCaoHocKyViewModel : BaseViewModel
+    public class BaoCaoHocKyViewModel : BaseViewModel
     {
         public string NienKhoaQueries { get; set; }
         public string HocKyQueries { get; set; }
-        public string MonHocQueries { get; set; }
         public string KhoiQueries { get; set; }
-        public string LopQueries { get; set; }
         public int TongSiSoLop { get; set; }
         public bool everLoaded { get; set; }
 
-        public Views.GiaoVien.BaoCaoTongKetHocKy BaoCaoHocKyWD;
+        public bool IsTesting { get; set; }
+
+        public BaoCaoTongKetHocKy BaoCaoHocKyWD;
 
         private ObservableCollection<StudentManagement.Model.BaoCaoHocKy> _danhSachBaoCaoHocKy;
         public ObservableCollection<StudentManagement.Model.BaoCaoHocKy> DanhSachBaoCaoHocKy
@@ -94,23 +96,6 @@ namespace StudentManagement.ViewModel.GiaoVien
             set { _tiLeDat = value; OnPropertyChanged(); }
         }
 
-        public CartesianChart ReportChart { get; set; }
-
-        private BaoCaoHocKy _gridSeletecdItem;
-
-        public BaoCaoHocKy GridSelectedItem
-        {
-            get { return _gridSeletecdItem; }
-            set
-            {
-                _gridSeletecdItem = value;
-                OnPropertyChanged();
-                LoadPieChart();
-                CartersianChartVisibility = false;
-                PieChartVisibility = true;
-            }
-        }
-
         private bool _cartesianChartVisibility;
         public bool CartersianChartVisibility
         {
@@ -171,6 +156,11 @@ namespace StudentManagement.ViewModel.GiaoVien
 
 
 
+        private readonly ISqlConnectionWrapper sqlConnection;
+        public BaoCaoHocKyViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public BaoCaoHocKyViewModel()
         {
             everLoaded = false;
@@ -189,8 +179,13 @@ namespace StudentManagement.ViewModel.GiaoVien
                 {
                     DataGridVisibility = true;
                     ProgressBarVisibility = true;
-                    BaoCaoHocKyWD = parameter as Views.GiaoVien.BaoCaoTongKetHocKy;
+                    BaoCaoHocKyWD = parameter as BaoCaoTongKetHocKy;
+                    BaoCaoHocKyWD.cmbHocKy.Items.Add("Học kỳ 1");
+                    BaoCaoHocKyWD.cmbHocKy.Items.Add("Học kỳ 2");
+                    HocKyQueries = "1";
+                    BaoCaoHocKyWD.cmbHocKy.SelectedIndex = 0;
                     LoadComboboxData();
+                    FilterKhoiFromNienKhoa();
                     await LoadDanhSachBaoCaoHocKy();
                     ProgressBarVisibility = false;
                     LoadCartesianChart();
@@ -258,25 +253,22 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public void LoadComboboxData()
         {
-            BaoCaoHocKyWD.cmbHocKy.Items.Add("Học kỳ 1");
-            BaoCaoHocKyWD.cmbHocKy.Items.Add("Học kỳ 2");
-            HocKyQueries = "1";
-            BaoCaoHocKyWD.cmbHocKy.SelectedIndex = 0;
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
-                    { 
-                        con.Open(); 
-                    } catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        sqlConnectionWrapper.Open();
+                    }
+                    catch (Exception)
+                    {
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string cmdString = "select distinct NienKhoa from Lop";
-                    SqlCommand cmd = new SqlCommand(cmdString, con);
+                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -286,18 +278,17 @@ namespace StudentManagement.ViewModel.GiaoVien
                             if (string.IsNullOrEmpty(NienKhoaQueries))
                             {
                                 NienKhoaQueries = reader.GetString(0);
-                                BaoCaoHocKyWD.cmbNienKhoa.SelectedIndex = 0;
-                                FilterKhoiFromNienKhoa();
+                                //BaoCaoHocKyWD.cmbNienKhoa.SelectedIndex = 0;
                             }
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -305,28 +296,29 @@ namespace StudentManagement.ViewModel.GiaoVien
 
 
 
-        
+
         public void FilterKhoiFromNienKhoa()
         {
             KhoiComboBox.Clear();
             KhoiQueries = null;
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return; 
+                        sqlConnectionWrapper.Open();
+                    }
+                    catch (Exception)
+                    {
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
+                        return;
                     }
                     string cmdString = "select distinct k.MaKhoi,Khoi from BaoCaoHocKy bc join Lop l on bc.MaLop = l.MaLop join Khoi k on k.MaKhoi = l.MaKhoi " +
                                         " where NienKhoa = '" + NienKhoaQueries
                                         + "' and HocKy =  " + HocKyQueries + " ";
-                    SqlCommand cmd = new SqlCommand(cmdString, con);
+                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -340,14 +332,14 @@ namespace StudentManagement.ViewModel.GiaoVien
                             if (String.IsNullOrEmpty(KhoiQueries))
                             {
                                 KhoiQueries = reader.GetInt32(0).ToString();
-                                BaoCaoHocKyWD.cmbKhoi.SelectedIndex = 0;
+                                //BaoCaoHocKyWD.cmbKhoi.SelectedIndex = 0;
                             }
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
-                catch (Exception )
+                catch (Exception)
                 {
                 }
             }
@@ -358,24 +350,24 @@ namespace StudentManagement.ViewModel.GiaoVien
         public async Task LoadDanhSachBaoCaoHocKy()
         {
             DanhSachBaoCaoHocKy.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        await con.OpenAsync();
+                        sqlConnectionWrapper.OpenAsync();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString;
                     CmdString = "select bc.MaLop,l.TenLop,l.SiSo,bc.SoLuongDat,bc.TiLe from BaoCaoHocKy bc join Lop l on bc.MaLop = l.MaLop " +
                         " where NienKhoa = '" + NienKhoaQueries + "' and HocKy = " + HocKyQueries + " " + " and MaKhoi = " + KhoiQueries;
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (await reader.ReadAsync())
@@ -388,7 +380,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                         baocaohocky.TiLe = reader.GetString(4);
                         DanhSachBaoCaoHocKy.Add(baocaohocky);
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
@@ -406,11 +398,11 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 try
                 {
-                    for (int i = 0;i<DanhSachBaoCaoHocKy.Count;i++)
+                    for (int i = 0; i < DanhSachBaoCaoHocKy.Count; i++)
                     {
                         TenLop.Add(DanhSachBaoCaoHocKy[i].TenLop);
                         SoLuongDatChartVal.Add(DanhSachBaoCaoHocKy[i].SoLuongDat);
-                    }    
+                    }
                     SoLuongDat.Add(new ColumnSeries
                     {
                         Title = "Số lượng đạt",
@@ -419,8 +411,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -434,7 +426,12 @@ namespace StudentManagement.ViewModel.GiaoVien
             {
                 try
                 {
-                    if (BaoCaoHocKyWD.BaoCaoHocKyDataGrid.SelectedIndex >= 0 && DanhSachBaoCaoHocKy.Count > BaoCaoHocKyWD.BaoCaoHocKyDataGrid.SelectedIndex)
+                    int SelectingItem = BaoCaoHocKyWD.BaoCaoHocKyDataGrid.SelectedIndex;
+                    if (IsTesting == true)
+                    {
+                        SelectingItem = 1;
+                    }
+                    if (SelectingItem >= 0)
                     {
                         Dat = DanhSachBaoCaoHocKy[BaoCaoHocKyWD.BaoCaoHocKyDataGrid.SelectedIndex].SoLuongDat;
                         TongSiSoLop = DanhSachBaoCaoHocKy[BaoCaoHocKyWD.BaoCaoHocKyDataGrid.SelectedIndex].SiSo;
@@ -456,10 +453,12 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                 };
                     }
-                } catch (Exception)
+                }
+                catch (Exception e)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    Console.WriteLine(e);
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }

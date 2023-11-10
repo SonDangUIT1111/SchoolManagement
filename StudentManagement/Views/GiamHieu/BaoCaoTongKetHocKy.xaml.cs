@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using StudentManagement.ViewModel.GiamHieu;
 
 namespace StudentManagement.Views.GiamHieu
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.GiamHieu
         public BaoCaoTongKetHocKy()
         {
             InitializeComponent();
+            DataContext = new BaoCaoHocKyViewModel();
         }
     }
 }

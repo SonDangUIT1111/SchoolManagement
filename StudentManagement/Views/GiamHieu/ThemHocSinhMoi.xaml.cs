@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using StudentManagement.ViewModel.GiamHieu;
+
 
 namespace StudentManagement.Views.GiamHieu
 {
@@ -10,6 +12,7 @@ namespace StudentManagement.Views.GiamHieu
         public ThemHocSinhMoi()
         {
             InitializeComponent();
+            DataContext = new ThemHocSinhMoiViewModel();
         }
     }
 }

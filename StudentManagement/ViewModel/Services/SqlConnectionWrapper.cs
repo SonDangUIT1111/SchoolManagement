@@ -38,6 +38,11 @@ namespace StudentManagement.ViewModel.Services
             connection.Dispose();
         }
 
+        public void OpenAsync()
+        {
+            connection.OpenAsync();
+        }
+
         public SqlConnection GetSqlConnection()
         {
             return connection;

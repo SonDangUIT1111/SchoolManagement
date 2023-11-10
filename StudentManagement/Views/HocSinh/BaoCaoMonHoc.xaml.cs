@@ -23,6 +23,7 @@ namespace StudentManagement.Views.HocSinh
         public BaoCaoMonHoc()
         {
             InitializeComponent();
+            DataContext = new StudentManagement.ViewModel.HocSinh.BaoCaoMonHocViewModel();
         }
     }
 }

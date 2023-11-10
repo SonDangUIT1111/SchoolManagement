@@ -91,6 +91,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     InitComboBox();
                     DataGridVisibility = false;
                     ProgressBarVisibility = true;
+                    DanhSachhs.Clear();
                     await LoadDanhSachHocSinh();
                     DataGridVisibility = true;
                     ProgressBarVisibility = false;
@@ -128,6 +129,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
+                DanhSachhs.Clear();
                 await LoadDanhSachHocSinh();
                 DataGridVisibility = true;
                 ProgressBarVisibility = false;
@@ -148,6 +150,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                  window.ShowDialog();
                  DataGridVisibility = false;
                  ProgressBarVisibility = true;
+                 DanhSachhs.Clear();
                  await LoadDanhSachHocSinh();
                  DataGridVisibility = true;
                  ProgressBarVisibility = false;
@@ -189,7 +192,6 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public async Task LoadDanhSachHocSinh()
         {
-            //DanhSachhs.Clear();
             using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
             {
                 try
@@ -200,8 +202,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select MaHocSinh,TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaLop = \'" + LopQueries + "\'";
@@ -228,8 +230,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -247,8 +249,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                         con.Open();
                     } catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "Select distinct NienKhoa from Lop";
@@ -278,8 +280,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     CmdString = "select MaKhoi,Khoi from Khoi";
@@ -312,8 +314,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     if (String.IsNullOrEmpty(KhoiQueries))
@@ -343,8 +345,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
@@ -363,8 +365,8 @@ namespace StudentManagement.ViewModel.GiaoVien
                     }
                     catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return; 
                     }
                     if (String.IsNullOrEmpty(KhoiQueries))

@@ -12,7 +12,6 @@
       d:DesignWidth="1000"
       Background="#FFFFFF"
       Title="BaoCao"
-      DataContext="{StaticResource BaoCaoHocKyVM}"
       x:Name="BaoCaoHocKyWD"  
       >
     <i:Interaction.Triggers>
@@ -64,8 +63,7 @@
                                 Padding="10"
                                 materialDesign:HintAssist.Hint="Niên khoá"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                                ItemsSource="{Binding NienKhoaComboBox}"
-                                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                ItemsSource="{Binding NienKhoaComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"
@@ -80,8 +78,7 @@
                                 Margin="20 0 0 0"
                                 materialDesign:HintAssist.Hint="Học kỳ"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                                ItemsSource="{Binding HocKyComboBox}"
-                                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                ItemsSource="{Binding HocKyComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterHocKy}"
@@ -97,8 +94,7 @@
                                 DisplayMemberPath="TenKhoi"
                                 materialDesign:HintAssist.Hint="Khối"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                                ItemsSource="{Binding KhoiComboBox}"
-                                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                ItemsSource="{Binding KhoiComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterKhoi}"
@@ -113,8 +109,7 @@
                             Orientation="Vertical">
                     <ProgressBar Grid.Row="0" 
                                  IsIndeterminate="True"
-                                 Margin=" 20 0 20 0" 
-                                 Visibility="{Binding ProgressBarVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                 Margin=" 20 0 20 0" />
                     <StackPanel Orientation="Horizontal"
                                 Margin="0 10 0 0">
                         <TextBlock Text="Tên lớp"
@@ -151,10 +146,9 @@
                               x:Name="BaoCaoHocKyDataGrid"
                               HorizontalScrollBarVisibility="Hidden"
                               ItemsSource="{Binding DanhSachBaoCaoHocKy}"
-                              Style="{StaticResource DataGridStyle1}"
                               SelectedItem="{Binding GridSelectedItem}"
                               Grid.Row="2"
-                              Visibility="{Binding DataGridVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                               x:FieldModifier="public">
                         <DataGrid.RowStyle>
                             <Style TargetType="{x:Type DataGridRow}">
                                 <Style.Triggers>
@@ -209,8 +203,7 @@
                     Grid.Row="0"
                     Margin="0 0 0 0"
                     Width="400"
-                    Series="{Binding SoLuongDat}"
-                    Visibility="{Binding CartersianChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    Series="{Binding SoLuongDat}">
                         <lvc:CartesianChart.AxisX>
                             <lvc:Axis Title="Lớp" Labels="{Binding TenLop}"></lvc:Axis>
                         </lvc:CartesianChart.AxisX>
@@ -222,8 +215,7 @@
                         Width="400"
                         LegendLocation="Bottom" 
                         Hoverable="True" 
-                        Series="{Binding TiLeDat}"
-                        Visibility="{Binding PieChartVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Series="{Binding TiLeDat}">
                     </lvc:PieChart>
                 </StackPanel>
             </Grid>

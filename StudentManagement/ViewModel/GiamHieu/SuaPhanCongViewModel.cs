@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -25,6 +26,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand SuaPhanCong { get; set; }
         public ICommand HuySuaPC { get; set; }
 
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public SuaPhanCongViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public SuaPhanCongViewModel()
         {
 
@@ -32,6 +39,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 SuaPhanCongWD = parameter;
                 LoadThongTinCmb();
+                SuaPhanCongWD.cmbGiaoVien.SelectedIndex = GiaoVienCmb.ToList().FindIndex(x => x.TenGiaoVien == PhanCongHienTai.TenGiaoVien); ;
             });
 
             SuaPhanCong = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -97,21 +105,22 @@ namespace StudentManagement.ViewModel.GiamHieu
         public void LoadThongTinCmb()
         {
             GiaoVienCmb = new ObservableCollection<StudentManagement.Model.GiaoVien>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try 
-                    { 
-                        con.Open(); 
-                    } catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        sqlConnectionWrapper.Open();
+                    }
+                    catch (Exception) 
+                    {
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select MaGiaoVien, TenGiaoVien from GiaoVien";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -124,16 +133,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
-            SuaPhanCongWD.cmbGiaoVien.SelectedIndex = GiaoVienCmb.ToList().FindIndex(x => x.TenGiaoVien == PhanCongHienTai.TenGiaoVien); ;
-
         }
     }
 }

@@ -10,6 +10,7 @@ namespace StudentManagement.Views.HocSinh
         public HocSinhWindow()
         {
             InitializeComponent();
+            DataContext = new StudentManagement.ViewModel.HocSinh.TrangChuViewModel();
         }
     }
 }
