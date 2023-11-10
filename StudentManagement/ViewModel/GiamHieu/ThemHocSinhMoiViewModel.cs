@@ -2,6 +2,7 @@
 using StudentManagement.Converter;
 using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -31,6 +32,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand CreateStudent { get; set; }
         public ICommand CancelAdd { get; set; }
         public ObservableCollection<string> ListCommand = new ObservableCollection<string>();
+
+        private readonly ISqlConnectionWrapper sqlConnection;
+        public ThemHocSinhMoiViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public ThemHocSinhMoiViewModel()
         {
             LoadData = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
@@ -104,150 +111,164 @@ namespace StudentManagement.ViewModel.GiamHieu
                     if (result.IsYes == true)
                     {
                         ListCommand.Clear();
-                        using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
-                        {
-                            try
-                            {
-                                try 
-                                { 
-                                    con.Open(); 
-                                } catch (Exception) 
-                                {
-                                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                    messageBoxFail.ShowDialog();
-                                    return; 
-                                }
-                                List<int> quiDinh = new List<int>();
-                                string cmdTest = "select GiaTri from QuiDinh";
-                                SqlCommand cmd1 = new SqlCommand(cmdTest,con);
-                                SqlDataReader readerTest = cmd1.ExecuteReader();
-                                while (readerTest.HasRows)
-                                {
-                                    while (readerTest.Read())
-                                    {
-                                        quiDinh.Add(readerTest.GetInt32(0));
-                                    }
-                                    readerTest.NextResult();
-                                }
-                                readerTest.Close();
-                                if (DateTime.Now.Year - ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
-                                {
-                                    MessageBoxOK messageBoxOK = new MessageBoxOK();
-                                    MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
-                                    datamb.Content = "Tuổi của học sinh phải từ " + quiDinh[1].ToString() + " đến " + quiDinh[2].ToString();
-                                    messageBoxOK.ShowDialog();
-                                    return;
-                                }
-
-
-                                string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'" 
-                                + ThemHocSinhWD.Hoten.Text + "', CAST(N'" +ToShortDateTime(ThemHocSinhWD.NgaySinh) + "' AS DATE), ";
-                                if (ThemHocSinhWD.Male.IsChecked == true)
-                                {
-                                    CmdString += "1, ";
-                                }
-                                else
-                                {
-                                    CmdString += "0, ";
-                                }
-                                CmdString = CmdString + "N'" + ThemHocSinhWD.DiaChi.Text + "', '" + ThemHocSinhWD.Email.Text + "', @imagebinary) ";
-
-                                string uriImage = "";
-                                if (ImagePath == null)
-                                {
-                                    var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                                    var filePath = Path.Combine(projectPath, "Resources", "Images", "user_image.jpg");
-                                    uriImage = filePath;
-                                }
-                                else uriImage = ImagePath;
-
-                                ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                                byte[] buffer = converter.ImageToBinary(uriImage);
-                                // Định nghĩa sqlcommand
-                                SqlCommand cmd = new SqlCommand(CmdString, con);
-                                SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                                sqlParam.DbType = DbType.Binary;
-                                cmd.ExecuteNonQuery();
-
-                                // Tạo tài khoản cho học sinh vừa thêm
-                                Random rnd = new Random();
-                                string MatKhau = rnd.Next(100000, 999999).ToString();
-                                string TaiKhoan = "hs";
-                                CmdString = "select top 1 MaHocSinh,Email from HocSinh order by MaHocSinh desc";
-                                cmd = new SqlCommand(CmdString, con);
-                                SqlDataReader reader = cmd.ExecuteReader();
-                                reader.Read();
-                                StudentManagement.Model.HocSinh hocsinh = new StudentManagement.Model.HocSinh
-                                {
-                                    MaHocSinh = reader.GetInt32(0),
-                                    Email = reader.GetString(1)
-                                };
-                                reader.Close();
-                                TaiKhoan += hocsinh.MaHocSinh.ToString();
-
-                                // Tạo bảng điểm cho học sinh
-                                CmdString = "select MaMon from MonHoc where ApDung = 1";
-                                cmd = new SqlCommand(CmdString, con);
-                                SqlDataReader reader1 = cmd.ExecuteReader();
-                                while (reader1.HasRows)
-                                {
-                                    while (reader1.Read())
-                                    {
-                                        string CmdString1 = "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai) values (1,"+ reader1.GetInt32(0).ToString()
-                                                    +", "+hocsinh.MaHocSinh.ToString() + ",NULL,NULL,NULL,NULL)  ";
-                                        CmdString1 = CmdString1 + "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai) values (2," + reader1.GetInt32(0).ToString()
-                                                                + ", " + hocsinh.MaHocSinh.ToString() + ",NULL,NULL,NULL,NULL) ";
-                                        ListCommand.Add(CmdString1);
-                                    }
-                                    reader1.NextResult();
-                                }
-                                reader1.Close();
-
-                                for (int i = 0;i<ListCommand.Count;i++)
-                                {
-                                    CmdString = ListCommand[i].ToString();
-                                    cmd = new SqlCommand(CmdString, con);
-                                    cmd.ExecuteNonQuery();
-                                }
-
-                                CmdString = "insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy,XepLoai) values (1,"+hocsinh.MaHocSinh.ToString()
-                                            +",NULL,NULL) insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy,XepLoai) values (2, "+hocsinh.MaHocSinh.ToString()+",NULL,NULL) ";
-                                cmd = new SqlCommand(CmdString, con);
-                                cmd.ExecuteNonQuery();
-
-                                // cập nhật lại tài khoản
-                                string passEncode = CreateMD5(Base64Encode(MatKhau));
-                                CmdString = "Update HocSinh set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode 
-                                            + "' where MaHocSinh =" + hocsinh.MaHocSinh.ToString();
-                                cmd = new SqlCommand(CmdString, con);
-                                cmd.ExecuteNonQuery();
-
-
-                                con.Close();
-                                SendAccountByEmail(TaiKhoan, MatKhau, hocsinh.Email);
-                                ImagePath = null;
-                                ThemHocSinhWD.Close();
-                            }
-                            catch (Exception )
-                            {
-                                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                                messageBoxFail.ShowDialog();
-                                return;
-                            }
-                            
-                        }
+                        ThemHocSinhMoi();
                     }
 
                 }
 
             });
         }
+
+        public void ThemHocSinhMoi()
+        {
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    try
+                    {
+                        sqlConnectionWrapper.Open();
+                    }
+                    catch (Exception)
+                    {
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
+                        return;
+                    }
+                    List<int> quiDinh = new List<int>();
+                    string cmdTest = "select GiaTri from QuiDinh";
+                    SqlCommand cmd1 = new SqlCommand(cmdTest, sqlConnectionWrapper.GetSqlConnection());
+                    SqlDataReader readerTest = cmd1.ExecuteReader();
+                    while (readerTest.HasRows)
+                    {
+                        while (readerTest.Read())
+                        {
+                            quiDinh.Add(readerTest.GetInt32(0));
+                        }
+                        readerTest.NextResult();
+                    }
+                    readerTest.Close();
+                    if (DateTime.Now.Year - ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - ThemHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
+                    {
+                        //MessageBoxOK messageBoxOK = new MessageBoxOK();
+                        //MessageBoxOKViewModel datamb = messageBoxOK.DataContext as MessageBoxOKViewModel;
+                        //datamb.Content = "Tuổi của học sinh phải từ " + quiDinh[1].ToString() + " đến " + quiDinh[2].ToString();
+                        //messageBoxOK.ShowDialog();
+                        return;
+                    }
+
+
+                    string CmdString = @"insert into HocSinh (TenHocSinh, NgaySinh, GioiTinh, DiaChi, Email,AnhThe) VALUES (N'"
+                    + ThemHocSinhWD.Hoten.Text + "', CAST(N'" + ToShortDateTime(ThemHocSinhWD.NgaySinh) + "' AS DATE), ";
+                    if (ThemHocSinhWD.Male.IsChecked == true)
+                    {
+                        CmdString += "1, ";
+                    }
+                    else
+                    {
+                        CmdString += "0, ";
+                    }
+                    CmdString = CmdString + "N'" + ThemHocSinhWD.DiaChi.Text + "', '" + ThemHocSinhWD.Email.Text + "', @imagebinary) ";
+
+                    //string uriImage = "";
+                    //if (ImagePath == null)
+                    //{
+                    //    var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                    //    var filePath = Path.Combine(projectPath, "Resources", "Images", "user_image.jpg");
+                    //    uriImage = filePath;
+                    //}
+                    //else uriImage = ImagePath;
+
+                    //ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                    //byte[] buffer = converter.ImageToBinary(uriImage);
+                    //// Định nghĩa sqlcommand
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    //SqlParameter sqlParam = cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                    //sqlParam.DbType = DbType.Binary;
+                    //cmd.ExecuteNonQuery();
+
+                    // Tạo tài khoản cho học sinh vừa thêm
+                    Random rnd = new Random();
+                    string MatKhau = rnd.Next(100000, 999999).ToString();
+                    string TaiKhoan = "hs";
+                    CmdString = "select top 1 MaHocSinh,Email from HocSinh order by MaHocSinh desc";
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    reader.Read();
+                    StudentManagement.Model.HocSinh hocsinh = new StudentManagement.Model.HocSinh
+                    {
+                        MaHocSinh = reader.GetInt32(0),
+                        Email = reader.GetString(1)
+                    };
+                    reader.Close();
+                    TaiKhoan += hocsinh.MaHocSinh.ToString();
+
+                    // Tạo bảng điểm cho học sinh
+                    CmdString = "select MaMon from MonHoc where ApDung = 1";
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    SqlDataReader reader1 = cmd.ExecuteReader();
+                    while (reader1.HasRows)
+                    {
+                        while (reader1.Read())
+                        {
+                            string CmdString1 = "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai) values (1," + reader1.GetInt32(0).ToString()
+                                        + ", " + hocsinh.MaHocSinh.ToString() + ",NULL,NULL,NULL,NULL)  ";
+                            CmdString1 = CmdString1 + "insert into HeThongDiem (HocKy,MaMon,MaHocSinh,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai) values (2," + reader1.GetInt32(0).ToString()
+                                                    + ", " + hocsinh.MaHocSinh.ToString() + ",NULL,NULL,NULL,NULL) ";
+                            ListCommand.Add(CmdString1);
+                        }
+                        reader1.NextResult();
+                    }
+                    reader1.Close();
+
+                    for (int i = 0; i < ListCommand.Count; i++)
+                    {
+                        CmdString = ListCommand[i].ToString();
+                        cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    CmdString = "insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy,XepLoai) values (1," + hocsinh.MaHocSinh.ToString()
+                                + ",NULL,NULL) insert into ThanhTich (HocKy,MaHocSinh,TrungBinhHocKy,XepLoai) values (2, " + hocsinh.MaHocSinh.ToString() + ",NULL,NULL) ";
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    cmd.ExecuteNonQuery();
+
+                    // cập nhật lại tài khoản
+                    string passEncode = CreateMD5(Base64Encode(MatKhau));
+                    CmdString = "Update HocSinh set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode
+                                + "' where MaHocSinh =" + hocsinh.MaHocSinh.ToString();
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    cmd.ExecuteNonQuery();
+
+
+                    sqlConnectionWrapper.Close();
+                    SendAccountByEmail(TaiKhoan, MatKhau, hocsinh.Email);
+                    ImagePath = null;
+                    ThemHocSinhWD.Close();
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                    return;
+                }
+
+            }
+        }
+
         public string ToShortDateTime(DatePicker st)
         {
-            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
-            return date;
+            if (st.SelectedDate.HasValue)
+            {
+                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+                return date;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
-        public static void SendAccountByEmail(string Account, string Password, string to)
+        public void SendAccountByEmail(string Account, string Password, string to)
         {
             string from, subject, messageBody, header;
             header = "Chào mừng bạn đến với hệ thống Student Management! \n Thông báo tạo tài khoản học sinh thành công \n";
@@ -263,25 +284,25 @@ namespace StudentManagement.ViewModel.GiamHieu
             try
             {
                 client.Send(message);
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Tạo tài khoản học sinh thành công! Tài khoản học sinh đã được gửi đến email " + to;
-                MB.ShowDialog();
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Tạo tài khoản học sinh thành công! Tài khoản học sinh đã được gửi đến email " + to;
+                //MB.ShowDialog();
                 
             }
             catch (Exception)
             {
-                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                messageBoxFail.ShowDialog();
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();
             }
         }
 
-        public static string Base64Encode(string plainText)
+        public string Base64Encode(string plainText)
         {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
             return System.Convert.ToBase64String(plainTextBytes);
         }
-        public static string CreateMD5(string input)
+        public string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())

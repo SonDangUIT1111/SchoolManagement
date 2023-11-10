@@ -21,8 +21,7 @@
         Background="Transparent" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" WindowStyle="None"
         Name="SuaGiaoVienWD"
-        Icon="ThongTinTruong1.ico"
-        DataContext="{StaticResource SuaGiaoVienVM}">
+        Icon="ThongTinTruong1.ico">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -69,7 +68,7 @@
                        VerticalAlignment="Top"/>
         </StackPanel>
         <Grid Grid.Row="0">
-            <uc:Title_Bar_Log/>
+            <!--<uc:Title_Bar_Log/>-->
             <Separator VerticalAlignment="Bottom"
                        Background="#CCCCCC"
                        Margin="0 0 0 -2"/>
@@ -94,10 +93,10 @@
                         Height="150"
                         VerticalAlignment="Top"
                         Margin="40 20 0 0">
-                    <Grid.Background>
+                    <!--<Grid.Background>
                         <ImageBrush ImageSource="{Binding GiaoVienHienTai.Avatar,Converter={StaticResource ByteToImageConverter}}"
                                     Stretch="UniformToFill"/>
-                    </Grid.Background>
+                    </Grid.Background>-->
                     <Rectangle 
                                 x:Name="ChangerecImage"
                                 StrokeDashArray="4 2" 
@@ -137,17 +136,18 @@
                             Grid.Column="1">
                     <TextBox x:Name="TenGV"
                          materialDesign:HintAssist.Hint="Tên Giáo Viên"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="450"
                          Margin="25 20 0 0"
                          HorizontalAlignment="Left"
-                         Text="{Binding GiaoVienHienTai.TenGiaoVien}"/>
-                    <DatePicker Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                         Text="{Binding GiaoVienHienTai.TenGiaoVien}" TextChanged="TenGV_TextChanged"
+                             x:FieldModifier="public"/>
+                    <DatePicker 
                                 x:Name="NgaySinh"
                                 Width="450"
                                 HorizontalAlignment="Left"
                                 Margin="25 20 0 0"
-                                SelectedDate ="{Binding GiaoVienHienTai.NgaySinh}"/>
+                                SelectedDate ="{Binding GiaoVienHienTai.NgaySinh}"
+                                x:FieldModifier="public"/>
 
                     <ComboBox x:Name="GioiTinh"
                           materialDesign:HintAssist.Hint="Giới tính"
@@ -155,24 +155,24 @@
                           Width="450"
                           HorizontalAlignment="Left"
                           Margin="25 20 0 0"
-                          Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                              x:FieldModifier="public">
                         <ComboBoxItem IsSelected="True">Nữ</ComboBoxItem>
                         <ComboBoxItem IsSelected="{Binding GiaoVienHienTai.GioiTinh}">Nam</ComboBoxItem>
                     </ComboBox>
                     <TextBox x:Name="DiaChi"
                          materialDesign:HintAssist.Hint="Địa chỉ"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="450"
                          Margin="25 20 0 0"
                          Text="{Binding GiaoVienHienTai.DiaChi}"
-                         HorizontalAlignment="Left"/>
+                         HorizontalAlignment="Left"
+                             x:FieldModifier="public"/>
                     <TextBox x:Name="Email"
                          materialDesign:HintAssist.Hint="Email"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                          Width="450"
                          Margin="25 20 0 0"
                          Text="{Binding GiaoVienHienTai.Email}"
-                         HorizontalAlignment="Left"/>
+                         HorizontalAlignment="Left"
+                             x:FieldModifier="public"/>
                     <StackPanel Orientation="Horizontal"/>
                     <StackPanel Orientation="Horizontal"/>
 
@@ -183,13 +183,13 @@
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
                         Margin="0 0 55 40">
-                <Button Style="{StaticResource InteractiveButton}"
+                <Button 
                         Content="Sửa"
                         Width="100"
                         Height="40"
                         Margin="0 0 20 0"
                         Command="{Binding ChangeGiaoVien}"/>
-                <Button Style="{StaticResource InteractiveButton}"
+                <Button 
                         Content="Hủy"
                         Width="100"
                         Height="40"

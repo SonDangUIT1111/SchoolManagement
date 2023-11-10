@@ -1,4 +1,5 @@
 ﻿using StudentManagement.Model;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.HocSinh;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -21,6 +22,11 @@ namespace StudentManagement.ViewModel.HocSinh
         private ObservableCollection<StudentManagement.Model.HeThongDiem> _danhsachdiemhk2;
         public ObservableCollection<StudentManagement.Model.HeThongDiem> DanhSachDiemHK2 { get => _danhsachdiemhk2; set { _danhsachdiemhk2 = value; OnPropertyChanged(); } }
         public ICommand LoadWindow { get; set; }
+        private readonly ISqlConnectionWrapper sqlConnection;
+        public DiemSoViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public DiemSoViewModel()
         {
             everLoaded = false;
@@ -38,53 +44,53 @@ namespace StudentManagement.ViewModel.HocSinh
         public void LoadDanhSachDiem()
         {
             //load ten
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     string TenHs;
                     try
                     {
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenHocSinh,TenLop from HocSinh hs join Lop l on hs.MaLop = l.MaLop where MaHocSinh = " + IdHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) reader.Read();
                     TenHs = reader.GetString(0);
                     DiemSoWD.Ten.Text = TenHs;
                     DiemSoWD.Ten2.Text = TenHs;
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
             // load diem
             DanhSachDiemHK1 = new ObservableCollection<Model.HeThongDiem>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     { 
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     } catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem ht join MonHoc mh on ht.MaMon = mh.MaMon where HocKy = 1 and MaHocSinh = " + IdHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -108,29 +114,29 @@ namespace StudentManagement.ViewModel.HocSinh
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 } catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
             DanhSachDiemHK2 = new ObservableCollection<Model.HeThongDiem>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try 
                     { 
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     } catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenMon,Diem15Phut,Diem1Tiet,DiemTrungBinh,XepLoai from HeThongDiem ht join MonHoc mh on ht.MaMon = mh.MaMon where HocKy = 2 and MaHocSinh = " + IdHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -150,30 +156,30 @@ namespace StudentManagement.ViewModel.HocSinh
                             }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
             //load xep loai
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try 
                     { 
-                        con.Open(); 
+                        sqlConnectionWrapper.Open(); 
                     } catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select XepLoai,NhanXet,TrungBinhHocky from ThanhTich where MaHocSinh = " + IdHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     int stt = 0;
                     while (reader.HasRows)
@@ -247,11 +253,11 @@ namespace StudentManagement.ViewModel.HocSinh
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 } catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }

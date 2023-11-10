@@ -91,6 +91,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                     InitComboBox();
                     DataGridVisibility = false;
                     ProgressBarVisibility = true;
+                    DanhSachhs.Clear();
                     await LoadDanhSachHocSinh();
                     DataGridVisibility = true;
                     ProgressBarVisibility = false;
@@ -128,6 +129,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                 }
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
+                DanhSachhs.Clear();
                 await LoadDanhSachHocSinh();
                 DataGridVisibility = true;
                 ProgressBarVisibility = false;
@@ -148,6 +150,7 @@ namespace StudentManagement.ViewModel.GiaoVien
                  window.ShowDialog();
                  DataGridVisibility = false;
                  ProgressBarVisibility = true;
+                 DanhSachhs.Clear();
                  await LoadDanhSachHocSinh();
                  DataGridVisibility = true;
                  ProgressBarVisibility = false;

@@ -1,6 +1,7 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.ViewModel.Login;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.Login;
@@ -30,6 +31,13 @@ namespace StudentManagement.ViewModel.GiaoVien
         public StudentManagement.Views.GiaoVien.HeThongBangDiem HeThongBangDiemPage { get; set; }
         public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
         public StudentManagement.Views.GiaoVien.SuaThongTinCaNhan ThongTinCaNhanPage { get; set; }
+
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public TrangChuViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
 
         //declare ICommand
         public ICommand LoadWindow { get; set; }
@@ -159,22 +167,13 @@ namespace StudentManagement.ViewModel.GiaoVien
         }
         public void LoadThongTinCaNhan()
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
-                    try
-                    {
-                        con.Open();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
+                    sqlConnectionWrap.Open();
                     string CmdString = "select TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) reader.Read();
                     CurrentUser.TenGiaoVien = reader.GetString(0);
@@ -183,11 +182,11 @@ namespace StudentManagement.ViewModel.GiaoVien
                     CurrentUser.DiaChi = reader.GetString(3);
                     CurrentUser.Email = reader.GetString(4);
                     CurrentUser.Avatar = (byte[])reader[5];
-                    con.Close();
+                    sqlConnectionWrap.Close();
                 } catch (Exception)
                 {
-                    MessageBoxFail msgBoxFail = new MessageBoxFail();   
-                    msgBoxFail.ShowDialog();
+                    //MessageBoxFail msgBoxFail = new MessageBoxFail();   
+                    //msgBoxFail.ShowDialog();
                 }
             }
         }
@@ -209,8 +208,8 @@ namespace StudentManagement.ViewModel.GiaoVien
             }
             catch (Exception)
             {
-                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                messageBoxFail.ShowDialog();    
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();    
             }
         }
     }

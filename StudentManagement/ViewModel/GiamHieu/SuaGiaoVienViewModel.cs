@@ -2,6 +2,7 @@
 using StudentManagement.Converter;
 using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -15,7 +16,7 @@ using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.GiamHieu
 {
-    internal class SuaGiaoVienViewModel : BaseViewModel
+    public class SuaGiaoVienViewModel : BaseViewModel
     {
         public SuaGiaoVien SuaGiaoVienWD { get; set; }
         public string ImagePath { get; set; }
@@ -26,7 +27,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand LoadWindow { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand ChangeGiaoVien { get; set; }
+        private readonly ISqlConnectionWrapper sqlConnection;
 
+        public SuaGiaoVienViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public SuaGiaoVienViewModel()
         {
 
@@ -77,7 +83,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 CapNhatGiaoVien();
             });
         }
-        bool IsValidEmail(string email)
+        public bool IsValidEmail(string email)
         {
             if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
             {
@@ -92,37 +98,38 @@ namespace StudentManagement.ViewModel.GiamHieu
                 SuaGiaoVienWD.DiaChi.Text == "" |
                 SuaGiaoVienWD.Email.Text == "")
             {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Vui lòng điền đầy đủ thông tin";
-                MB.ShowDialog();
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Vui lòng điền đầy đủ thông tin";
+                //MB.ShowDialog();
                 return;
             }
             else
             if (!IsValidEmail(SuaGiaoVienWD.Email.Text)
                 )
             {
-                MessageBoxOK MB = new MessageBoxOK();
-                var data = MB.DataContext as MessageBoxOKViewModel;
-                data.Content = "Email không đúng cú pháp!";
-                MB.ShowDialog();
-                SuaGiaoVienWD.Email.Focus();
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Email không đúng cú pháp!";
+                //MB.ShowDialog();
+                //SuaGiaoVienWD.Email.Focus();
+                return;
             }
             else
             {
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
                     try
                     {
                         try
                         {
-                            con.Open();
+                            sqlConnectionWrapper.Open();
 
                         }
                         catch (Exception)
                         {
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
+                            //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            //messageBoxFail.ShowDialog();
                             return;
                         }
                         string CmdString = "Update GiaoVien set TenGiaoVien = N'" + SuaGiaoVienWD.TenGV.Text +
@@ -135,39 +142,48 @@ namespace StudentManagement.ViewModel.GiamHieu
                         if (ImagePath != null)
                         {
                             CmdString = CmdString + " , AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                            StudentManagement.Converter.ByteArrayToBitmapImageConverter converter = new StudentManagement.Converter.ByteArrayToBitmapImageConverter();
                             byte[] buffer = converter.ImageToBinary(ImagePath);
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                             cmd.Parameters.AddWithValue("@image", buffer);
                             cmd.ExecuteScalar();
-                            con.Close();
-                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                            messageBoxSuccessful.ShowDialog();
+                            sqlConnectionWrapper.Close();
+               
+                            //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            //messageBoxSuccessful.ShowDialog();
                         }
                         else
                         {
                             CmdString = CmdString + " where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                            SqlCommand cmd = new SqlCommand(CmdString, con);
+                            SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                             cmd.ExecuteScalar();
-                            MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                            messageBoxSuccessful.ShowDialog();
-                            con.Close();
+                            //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            //messageBoxSuccessful.ShowDialog();
+                            sqlConnectionWrapper.Close();
                         }
                         ImagePath = null;
                         SuaGiaoVienWD.Close();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                     }
                 }
             }
         }
         public string ToShortDateTime(DatePicker st)
         {
-            string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
-            return date;
+            if (st.SelectedDate.HasValue)
+            {
+                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+                return date;
+            }
+            else
+            {
+                return string.Empty;
+
+            }
         }
     }
 }

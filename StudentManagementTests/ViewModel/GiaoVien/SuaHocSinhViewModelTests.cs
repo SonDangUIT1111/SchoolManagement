@@ -22,7 +22,6 @@ namespace StudentManagementTests.ViewModel.GiaoVien
         [TestInitialize]
         public void TestInitialize()
         {
-            // Create the SuaHocSinhViewModel instance with the mock service
             viewModel = new SuaHocSinhViewModel();
         }
         

@@ -11,7 +11,6 @@
       d:DesignWidth="1000"
       Background="#FFFFFF"
       Title="ThanhTichHocSinh"
-      DataContext="{StaticResource ThanhTichVM}"
       Name="ThanhTichWD">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

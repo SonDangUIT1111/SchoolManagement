@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using StudentManagement.ViewModel.GiaoVien;
+using System.Windows.Controls;
 
 namespace StudentManagement.Views.GiaoVien
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.GiaoVien
         public ThanhTichHocSinh()
         {
             InitializeComponent();
+            DataContext = new ThanhTichHocSinhViewModel();
         }
     }
 }

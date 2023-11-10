@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -16,6 +17,9 @@ namespace StudentManagement.ViewModel.GiamHieu
         public bool everLoaded { get; set; }
         public ThayDoiQuyDinh ThayDoiQuyDinhWD { get; set; }
         public string QuyDinhQueries { get; set; }
+
+        public QuiDinh itemQuyDinh { get; set; }
+
         private ObservableCollection<StudentManagement.Model.QuiDinh> _danhSachQuyDinh;
         public ObservableCollection<StudentManagement.Model.QuiDinh> DanhSachQuyDinh { get => _danhSachQuyDinh; set { _danhSachQuyDinh = value; OnPropertyChanged(); } }
         public ICommand LoadData { get; set; }
@@ -23,6 +27,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand EnableChange { get; set; }
         public ICommand CancelChange { get; set; }
         public ICommand ChangeRule { get; set; }
+        private readonly ISqlConnectionWrapper sqlConnection;
+
+        public ThayDoiQuyDinhViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public ThayDoiQuyDinhViewModel()
         {
             everLoaded = false;
@@ -48,6 +58,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         QuyDinhQueries = item.ToString();
                         LoadQuyDinhFromSelection();
+                        ThayDoiQuyDinhWD.tbGiaTri.Text = itemQuyDinh.GiaTri.ToString();
                     }
                 }
             });
@@ -63,6 +74,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 ThayDoiQuyDinhWD.CancelChange.Visibility = Visibility.Collapsed;
                 LoadQuyDinhFromSelection();
+                ThayDoiQuyDinhWD.tbGiaTri.Text = itemQuyDinh.GiaTri.ToString();
                 ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
                 ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
 
@@ -118,6 +130,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                         data.Content = "Giá trị không được rỗng và phải là một số nguyên!";
                         MB.ShowDialog();
                         LoadQuyDinhFromSelection();
+                        ThayDoiQuyDinhWD.tbGiaTri.Text = itemQuyDinh.GiaTri.ToString();
                         ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                         ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
                         ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
@@ -132,6 +145,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     data.Content = "Hãy chọn quy định trước";
                     MB.ShowDialog();
                     LoadQuyDinhFromSelection();
+                    ThayDoiQuyDinhWD.tbGiaTri.Text = itemQuyDinh.GiaTri.ToString();
                     ThayDoiQuyDinhWD.tbGiaTri.IsEnabled = false;
                     ThayDoiQuyDinhWD.btnEnable.IsEnabled = true;
                     ThayDoiQuyDinhWD.btnXacNhan.IsEnabled = false;
@@ -143,22 +157,22 @@ namespace StudentManagement.ViewModel.GiamHieu
         public void LoadThongTinCmb()
         {
             DanhSachQuyDinh = new ObservableCollection<StudentManagement.Model.QuiDinh>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try 
-                    { 
-                        con.Open(); 
-                    } 
+                    {
+                        sqlConnectionWrapper.Open();
+                    }
                     catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return; 
                     }
                     string CmdString = "select * from QuiDinh";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
@@ -172,55 +186,59 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
         public void LoadQuyDinhFromSelection()
         {
-            QuiDinh item = new QuiDinh();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     
                     try 
-                    { 
-                        con.Open(); 
+                    {
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception) 
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select * from QuiDinh where TenQuiDinh = N'" + QuyDinhQueries + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            item.MaQuiDinh = reader.GetInt32(0);
-                            item.TenQuiDinh = reader.GetString(1);
-                            item.GiaTri = reader.GetInt32(2);
+                            try
+                            {
+                                itemQuyDinh.MaQuiDinh = reader.GetInt32(0);
+                                itemQuyDinh.TenQuiDinh = reader.GetString(1);
+                                itemQuyDinh.GiaTri = reader.GetInt32(2);
+                            } catch (Exception)
+                            {
+
+                            }
                         }
                         reader.NextResult();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception) 
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
-            ThayDoiQuyDinhWD.tbGiaTri.Text = item.GiaTri.ToString();
         }
     }
 

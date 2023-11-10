@@ -14,8 +14,7 @@
         WindowStyle="None"
         Background="Transparent"
         Name="GiaoVienWD"
-        Icon="ThongTinTruong1.ico"
-        DataContext="{StaticResource TrangChuGVVM}">
+        Icon="ThongTinTruong1.ico">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"

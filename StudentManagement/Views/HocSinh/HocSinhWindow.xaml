@@ -15,8 +15,7 @@
         WindowStyle="None"
         Background="Transparent"
         Name="HocSinhWD"
-        Icon="ThongTinTruong1.ico"
-        DataContext="{StaticResource TrangChuHSVM}">
+        Icon="ThongTinTruong1.ico">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"
@@ -49,9 +48,6 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <uc:Title_Bar_Log Grid.RowSpan="1"
-                          Grid.ColumnSpan="2"
-                          Panel.ZIndex="2"/>
         <Border Grid.RowSpan="2" 
                 x:Name="SideBar"
                 Width="300"
@@ -96,8 +92,7 @@
                     Margin="0 10 0 0"
                     Background="White">
                     <StackPanel.Resources>
-                        <Style TargetType="RadioButton"
-                       BasedOn="{StaticResource NavigationButton}"></Style>
+                        <Style TargetType="RadioButton"></Style>
                     </StackPanel.Resources>
                     <Line X1="30" Y1="10"
                           X2="270" Y2="10"
@@ -339,8 +334,7 @@
                 </Border.Effect>
                 <StackPanel>
                 <StackPanel.Resources>
-                        <Style TargetType="Button"
-                       BasedOn="{StaticResource SideButton}">
+                        <Style TargetType="Button">
                             <Setter Property="Width" Value="289"/>
                         </Style>
                     </StackPanel.Resources>
@@ -388,7 +382,7 @@
                                FontSize="20"/>
                         </StackPanel>
                     </Button>
-                    <Button Command="{Binding Source={StaticResource LoginVM}, Path=LogOut}"
+                    <Button
                             CommandParameter="{Binding ElementName=HocSinhWD}"
                             Margin="0 0 0 10">
                         <StackPanel Orientation="Horizontal"

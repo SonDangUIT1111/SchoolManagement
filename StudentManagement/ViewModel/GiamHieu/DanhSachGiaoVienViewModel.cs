@@ -1,5 +1,6 @@
 ﻿using StudentManagement.Model;
 using StudentManagement.ViewModel.MessageBox;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.MessageBox;
 using System;
@@ -53,7 +54,12 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ThemGiaoVien { get; set; }
         public ICommand UpdateGiaoVien { get; set; }
         public ICommand RemoveGiaoVien { get; set; }
+        private readonly ISqlConnectionWrapper sqlConnection;
 
+        public DanhSachGiaoVienViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public DanhSachGiaoVienViewModel()
         {
             LoadGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
@@ -70,6 +76,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 ProgressBarVisibility = true;
                 DataGridVisibility = false;
                 TextBox tb = parameter;
+                DanhSachGiaoVien.Clear();
                 await LocGiaoVienTheoTen(tb.Text);
                 ProgressBarVisibility = false;
                 DataGridVisibility = true;
@@ -100,35 +107,46 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
             {
-                Model.GiaoVien item = parameter;
-                XoaGiaoVien(item);
-                ProgressBarVisibility = true;
-                DataGridVisibility = false;
-                await LoadDanhSachGiaoVien();
-                ProgressBarVisibility = false;
-                DataGridVisibility = true;
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn xóa giáo viên này?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true) {
+                    Model.GiaoVien item = parameter;
+                    XoaGiaoVien(item);
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    await LoadDanhSachGiaoVien();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
+                }
+
             });
         }
         public async Task LoadDanhSachGiaoVien()
         {
             DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        await con.OpenAsync();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog(); 
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog(); 
                         return;
                     }
 
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
@@ -147,36 +165,35 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         await reader.NextResultAsync();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    messageBoxFail.ShowDialog();
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
                 }
             }
         }
 
         public async Task LocGiaoVienTheoTen(string value)
         {
-            DanhSachGiaoVien.Clear();
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        await con.OpenAsync();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
 
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where TenGiaoVien is not null and TenGiaoVien like N'%" + value + "%'";
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
                     while (reader.HasRows)
@@ -197,54 +214,46 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         await reader.NextResultAsync();
                     }
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
-                    MessageBoxFail commandBoxFail = new MessageBoxFail();
-                    commandBoxFail.ShowDialog();
+                    //MessageBoxFail commandBoxFail = new MessageBoxFail();
+                    //commandBoxFail.ShowDialog();
                 }
             }
         }
 
         public void XoaGiaoVien(Model.GiaoVien value)
         {
-            MessageBoxYesNo wd = new MessageBoxYesNo();
-
-            var data = wd.DataContext as MessageBoxYesNoViewModel;
-            data.Title = "Xác nhận!";
-            data.Question = "Bạn có chắc chắn muốn xóa giáo viên này?";
-            wd.ShowDialog();
-
-            var result = wd.DataContext as MessageBoxYesNoViewModel;
-            if (result.IsYes == true)
-                using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
                     try
                     {
                         try 
+                        {
+                            sqlConnectionWrapper.Open();
+                        }
+                        catch (Exception) 
                         { 
-                            con.Open(); 
-                        } catch (Exception) 
-                        { 
-                            MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            messageBoxFail.ShowDialog();
+                            //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                            //messageBoxFail.ShowDialog();
                             return; 
                         }
                         SqlCommand cmd;
                         string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
-                        cmd = new SqlCommand(CmdString, con);
+                        cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                         cmd.ExecuteScalar();
-                        MessageBoxOK MB = new MessageBoxOK();
-                        var datamb = MB.DataContext as MessageBoxOKViewModel;
-                        datamb.Content = "Đã xóa " + value.TenGiaoVien;
-                        MB.ShowDialog();
-                        con.Close();
+                        //MessageBoxOK MB = new MessageBoxOK();
+                        //var datamb = MB.DataContext as MessageBoxOKViewModel;
+                        //datamb.Content = "Đã xóa " + value.TenGiaoVien;
+                        //MB.ShowDialog();
+                        sqlConnectionWrapper.Close();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                     }
                 }
         }

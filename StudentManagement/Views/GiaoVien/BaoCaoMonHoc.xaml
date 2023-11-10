@@ -12,7 +12,6 @@
       d:DesignWidth="1000"
       Background="#FFFFFF"
       Title="BaoCao"
-      DataContext="{StaticResource BaoCaoMonHocVMGV}"
       x:Name="BaoCaoGVWD"  
       >
     <i:Interaction.Triggers>

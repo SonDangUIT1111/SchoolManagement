@@ -10,6 +10,7 @@ namespace StudentManagement.Views.GiaoVien
         public GiaoVienWindow()
         {
             InitializeComponent();
+            DataContext = new StudentManagement.ViewModel.GiaoVien.TrangChuViewModel();
         }
     }
 }

@@ -94,7 +94,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
             try
             {
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopQueries = "151";
                 await sut.LoadThongTinHocSinh();
             }
@@ -120,7 +120,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
             try
             {
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopQueries = "151";
                 sut.SearchHocSinh("");
             }
@@ -146,7 +146,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
             try
             {
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.SearchHocSinhAll();
             }
             catch (Exception)
@@ -197,7 +197,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
             try
             {
-                HocSinh hs = new HocSinh()
+                StudentManagement.Model.HocSinh hs = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1
                 };

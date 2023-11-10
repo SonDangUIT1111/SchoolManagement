@@ -22,8 +22,7 @@
         ResizeMode="NoResize" WindowStyle="None"
         Title="THPT Thủ Đức"
         Icon="ThongTinTruong1.ico"
-        Name="SuaThongTinCaNhanGVWD"
-        DataContext="{StaticResource SuaHocSinhVM}">
+        Name="SuaThongTinCaNhanGVWD">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"

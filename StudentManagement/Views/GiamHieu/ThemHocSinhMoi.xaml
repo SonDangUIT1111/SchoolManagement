@@ -18,7 +18,6 @@
         Background="Transparent"
         ResizeMode="NoResize" WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        DataContext="{StaticResource ThemHocSinhMoiVM}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:uc="clr-namespace:StudentManagement.Resources.User_Controls"
         Name="ThemHocSinhWD"
@@ -34,7 +33,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <uc:Title_Bar_Log Panel.ZIndex="2"/>
+        <!--<uc:Title_Bar_Log Panel.ZIndex="2"/>-->
         <Border Background="White"
                 Grid.RowSpan="2"
                 CornerRadius="20"
@@ -134,13 +133,14 @@
                          Background="#ffffff"
                          Width="450"
                          HorizontalAlignment="Left"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                          x:FieldModifier="public"
+                         />
                 <DatePicker Margin="20 25 20 0"
-                            Style="{StaticResource MaterialDesignOutlinedDatePicker}"
                             x:Name="NgaySinh"
                             Width="450"
                             HorizontalAlignment="Left"
-                            materialDesign:HintAssist.Hint="Ngày sinh">
+                            materialDesign:HintAssist.Hint="Ngày sinh"
+                             x:FieldModifier="public">
                 </DatePicker>
                 <StackPanel Orientation="Horizontal"
                             Margin="20 25 20 0"
@@ -150,11 +150,13 @@
                     <RadioButton Content="Nam"
                                  Margin="20 0 20 0"
                                  x:Name="Male"
-                                 IsChecked="True">
+                                 IsChecked="True"
+                                  x:FieldModifier="public">
 
                     </RadioButton>
                     <RadioButton Content="Nữ"
-                                 x:Name="Female">
+                                 x:Name="Female"
+                                  x:FieldModifier="public">
 
                     </RadioButton>
                 </StackPanel>
@@ -164,25 +166,25 @@
                          Background="#ffffff"
                          HorizontalAlignment="Left"
                          materialDesign:HintAssist.Hint="Địa chỉ"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                          x:FieldModifier="public"/>
                 <TextBox Margin="20 25 20 0"
                          x:Name="Email"
                          Width="450"
                          Background="#FFFFFF"
                          HorizontalAlignment="Left"
                          materialDesign:HintAssist.Hint="Email"
-                         Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                          x:FieldModifier="public"/>
                 <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             Margin="20 30 60 0">
-                    <Button Style="{StaticResource InteractiveButton}"
+                    <Button 
                             Content="Thêm"
                             Width="100"
                             Height="40"
                             Margin="0 0 20 0"
                             Command="{Binding CreateStudent}">
                     </Button>
-                    <Button Style="{StaticResource InteractiveButton}"
+                    <Button 
                             Content="Hủy"
                             Width="100"
                             Height="40"

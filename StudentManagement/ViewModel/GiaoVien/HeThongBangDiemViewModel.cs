@@ -810,6 +810,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             }
 
         }
+
         public bool KiemTraDiemHopLe()
         {
             for (int i = 0; i < DanhSachDiem.Count; i++)

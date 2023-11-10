@@ -2,6 +2,7 @@
 using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.ViewModel.GiaoVien;
 using StudentManagement.ViewModel.Login;
+using StudentManagement.ViewModel.Services;
 using StudentManagement.Views.GiamHieu;
 using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.HocSinh;
@@ -20,7 +21,7 @@ using System.Windows.Media.Imaging;
 
 namespace StudentManagement.ViewModel.HocSinh
 {
-    internal class TrangChuViewModel : BaseViewModel
+    public class TrangChuViewModel : BaseViewModel
     {
         //declare variable
         private string _sayHello;
@@ -51,7 +52,11 @@ namespace StudentManagement.ViewModel.HocSinh
         public ICommand DoiMatKhau { get; set; }
         public ICommand SwitchBaoCaoMonHoc { get; set; }
         public ICommand SwitchBaoCaoHocKy { get; set; }
-
+        private readonly ISqlConnectionWrapper sqlConnection;
+        public TrangChuViewModel(ISqlConnectionWrapper sqlConnection)
+        {
+            this.sqlConnection = sqlConnection;
+        }
         public TrangChuViewModel()
         {
             IdHocSinh = 100000;
@@ -124,22 +129,22 @@ namespace StudentManagement.ViewModel.HocSinh
         }
         public void LoadThongTinCaNhan()
         {
-            using (SqlConnection con = new SqlConnection(ConnectionString.connectionString))
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     try
                     {
-                        con.Open();
+                        sqlConnectionWrapper.Open();
                     }
                     catch (Exception)
                     {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
+                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                        //messageBoxFail.ShowDialog();
                         return;
                     }
                     string CmdString = "select TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, con);
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) reader.Read();
                     HocSinhHienTai.MaHocSinh = IdHocSinh;
@@ -149,11 +154,11 @@ namespace StudentManagement.ViewModel.HocSinh
                     HocSinhHienTai.DiaChi = reader.GetString(3);
                     HocSinhHienTai.Email = reader.GetString(4);
                     HocSinhHienTai.Avatar = (byte[])reader[5];
-                    con.Close();
+                    sqlConnectionWrapper.Close();
                 }catch (Exception)
                 {
-                    MessageBoxFail msgBoxFail = new MessageBoxFail();   
-                    msgBoxFail.ShowDialog();
+                    //MessageBoxFail msgBoxFail = new MessageBoxFail();   
+                    //msgBoxFail.ShowDialog();
                 }
             }
         }
@@ -184,8 +189,8 @@ namespace StudentManagement.ViewModel.HocSinh
             }
             catch (Exception)
             {
-                MessageBoxFail messageBoxFail = new MessageBoxFail();
-                messageBoxFail.ShowDialog();
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();
             }
         }
     }

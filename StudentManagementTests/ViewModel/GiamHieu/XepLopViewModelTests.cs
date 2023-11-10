@@ -85,7 +85,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new XepLopViewModel(fakeSqlConnection.Object);
             try
             {
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopHocDangChon = new Lop()
                 {
                     MaLop = 151
@@ -114,7 +114,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new XepLopViewModel(fakeSqlConnection.Object);
             try
             {
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopHocDangChon = new Lop()
                 {
                     MaLop = 151
@@ -143,7 +143,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             var sut = new XepLopViewModel(fakeSqlConnection.Object);
             try
             {
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopHocDangChon = new Lop()
                 {
                     MaLop = 151
@@ -176,7 +176,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 {
                     MaLop = 151
                 };
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { };
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 var result = sut.ThemHocSinhVaoLop();
                 Assert.AreEqual(-1, result);
             }
@@ -204,9 +204,9 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 {
                     MaLop = 152
                 };
-                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { 
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { 
                 };
-                sut.DanhSachHocSinh.Add(new HocSinh()
+                sut.DanhSachHocSinh.Add(new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 100056
                 });

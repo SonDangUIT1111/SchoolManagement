@@ -65,8 +65,7 @@
                                 Padding="10"
                                 materialDesign:HintAssist.Hint="Niên khoá"
                                 IsEnabled="{Binding Path=IsChecked, ElementName=OutlinedComboBoxEnabledCheckBox}"
-                                ItemsSource="{Binding NienKhoaComboBox}"
-                                Style="{StaticResource MaterialDesignOutlinedComboBox}">
+                                ItemsSource="{Binding NienKhoaComboBox}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding FilterNienKhoa}"

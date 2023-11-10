@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StudentManagement.ViewModel.GiaoVien;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,7 @@ namespace StudentManagement.Views.GiaoVien
         public BaoCaoTongKetHocKy()
         {
             InitializeComponent();
+            DataContext = new BaoCaoHocKyViewModel();
         }
     }
 }

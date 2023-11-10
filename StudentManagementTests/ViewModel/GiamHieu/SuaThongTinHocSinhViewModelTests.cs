@@ -51,7 +51,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             try
             {
                 DatePicker date = new DatePicker { SelectedDate = new DateTime(2010,1,1) };
-                sut.HocSinhHienTai = new HocSinh()
+                sut.HocSinhHienTai = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1,
                 };
@@ -105,7 +105,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             try
             {
                 DatePicker date = new DatePicker { SelectedDate = new DateTime(2007, 1, 1) };
-                sut.HocSinhHienTai = new HocSinh()
+                sut.HocSinhHienTai = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1
                 };
@@ -134,7 +134,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             try
             {
                 DatePicker date = new DatePicker { SelectedDate = new DateTime(2007, 1, 1) };
-                sut.HocSinhHienTai = new HocSinh()
+                sut.HocSinhHienTai = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1
                 };

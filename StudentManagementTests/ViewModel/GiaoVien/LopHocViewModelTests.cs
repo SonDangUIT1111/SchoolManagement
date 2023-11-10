@@ -21,15 +21,8 @@ namespace StudentManagementTests.ViewModel.GiaoVien
         [TestInitialize]
         public void TestInitialize()
         {
-            // Create the LopHocViewModel instance with the mock service
             viewModel = new LopHocViewModel();
         }
-        //[AssemblyInitialize]
-        //public static void AssemblyInit(TestContext context)
-        //{
-        //    // Initialize the WPF application for UI tests
-        //    Application app = new Application();
-        //}
 
         [TestMethod]
         public void PropertiesTest()

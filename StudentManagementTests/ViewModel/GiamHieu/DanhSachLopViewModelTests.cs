@@ -73,7 +73,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
 
             try
             {
-                HocSinh hocsinh = new HocSinh()
+                StudentManagement.Model.HocSinh hocsinh = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1,
                 };
@@ -101,7 +101,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
 
             try
             {
-                HocSinh hocsinh = new HocSinh()
+                StudentManagement.Model.HocSinh hocsinh = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1,
                 };
@@ -132,7 +132,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
 
             try
             { 
-                sut.DanhSachLop = new System.Collections.ObjectModel.ObservableCollection<HocSinh> { new HocSinh() };
+                sut.DanhSachLop = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { new StudentManagement.Model.HocSinh() };
                 sut.MaLop = 151;
                 sut.LocHocSinhTheoTen(searchWord);
             }

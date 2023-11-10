@@ -12,8 +12,7 @@
       d:DesignWidth="1000"
       Title="LopHoc"
       Name="LopHocWD"
-      Background="#FFFFFF"
-      DataContext="{StaticResource LopHocGVVM}">
+      Background="#FFFFFF">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadWindow}"

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using StudentManagement.ViewModel.HocSinh;
+using System.Windows.Controls;
 
 namespace StudentManagement.Views.HocSinh
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.HocSinh
         public DiemSo()
         {
             InitializeComponent();
+            DataContext = new DiemSoViewModel();
         }
     }
 }
