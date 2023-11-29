@@ -10,6 +10,7 @@ namespace StudentManagement.Views.GiamHieu
         public LopHoc()
         {
             InitializeComponent();
+            DataContext = new ViewModel.GiamHieu.LopHocViewModel();
         }
     }
 }

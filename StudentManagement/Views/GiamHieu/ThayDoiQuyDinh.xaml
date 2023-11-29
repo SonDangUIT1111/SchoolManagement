@@ -17,8 +17,7 @@
       d:DesignWidth="1000"
       Background="#FFFFFF"
       Name="ThayDoiQuyDinhWD"
-      Title="ThayDoiQuyDinh"
-      DataContext="{StaticResource ThayDoiQuyDinhVM}">
+      Title="ThayDoiQuyDinh">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadData}"

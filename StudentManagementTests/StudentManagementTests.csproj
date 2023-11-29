@@ -102,6 +102,7 @@
     <Compile Include="ViewModel\GiamHieu\ThemGiaoVienViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\ThongTinHocSinhViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThongTinTrongViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\XepLopViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\HeThongBangDiemViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\LopHocViewModelTests.cs" />

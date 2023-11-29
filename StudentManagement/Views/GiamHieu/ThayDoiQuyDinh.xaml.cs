@@ -10,6 +10,7 @@ namespace StudentManagement.Views.GiamHieu
         public ThayDoiQuyDinh()
         {
             InitializeComponent();
+            DataContext = new StudentManagement.ViewModel.GiamHieu.ThayDoiQuyDinhViewModel();
         }
     }
 }
