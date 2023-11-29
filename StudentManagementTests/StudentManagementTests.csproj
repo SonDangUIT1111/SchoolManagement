@@ -120,7 +120,6 @@
     <Compile Include="ViewModel\GiamHieu\ThemPhanCongViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\BaoCaoHocKyViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\BaoCaoMonHocVIewModelTests.cs" />
-    <Compile Include="ViewModel\GiaoVien\TrangChuViewModelTests.cs" />
     <Compile Include="ViewModel\HocSinh\BaoCaoHocKyViewModelTests.cs" />
     <Compile Include="ViewModel\HocSinh\BaoCaoMonHocVIewModelTests.cs" />
     <Compile Include="ViewModel\HocSinh\DiemSoViewModelTests.cs" />
