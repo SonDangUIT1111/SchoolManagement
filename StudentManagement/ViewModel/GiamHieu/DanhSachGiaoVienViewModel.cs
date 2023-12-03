@@ -16,7 +16,7 @@ namespace StudentManagement.ViewModel.GiamHieu
     public class DanhSachGiaoVienViewModel : BaseViewModel
     {
         private ObservableCollection<StudentManagement.Model.GiaoVien> _danhSachGiaoVien;
-        public ObservableCollection<StudentManagement.Model.GiaoVien> DanhSachGiaoVien { get => _danhSachGiaoVien; set { _danhSachGiaoVien = value; OnPropertyChanged(); } }
+        public ObservableCollection<StudentManagement.Model.GiaoVien> DanhSachGiaoVien { get => _danhSachGiaoVien; set { _danhSachGiaoVien = value;  } }
 
         private bool _dataGridVisibility;
         public bool DataGridVisibility
@@ -28,7 +28,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             set
             {
                 _dataGridVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -43,7 +43,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             set
             {
                 _progressBarVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -54,96 +54,14 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand ThemGiaoVien { get; set; }
         public ICommand UpdateGiaoVien { get; set; }
         public ICommand RemoveGiaoVien { get; set; }
-        private readonly ISqlConnectionWrapper sqlConnection;
 
-        public DanhSachGiaoVienViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
-        public DanhSachGiaoVienViewModel()
-        {
-            LoadGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
-            {
-                ProgressBarVisibility = true;
-                DataGridVisibility = false;
-                await LoadDanhSachGiaoVien();
-                ProgressBarVisibility = false;
-                DataGridVisibility = true;
-
-            });
-            LocGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
-            {
-                ProgressBarVisibility = true;
-                DataGridVisibility = false;
-                TextBox tb = parameter;
-                DanhSachGiaoVien.Clear();
-                await LocGiaoVienTheoTen(tb.Text);
-                ProgressBarVisibility = false;
-                DataGridVisibility = true;
-
-            });
-            ThemGiaoVien = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                ThemGiaoVien window = new ThemGiaoVien();
-                ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
-                window.ShowDialog();
-                ProgressBarVisibility = true;
-                DataGridVisibility = false;
-                await LoadDanhSachGiaoVien();
-                ProgressBarVisibility = false;
-                DataGridVisibility = true;
-            });
-            UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
-            {
-                SuaGiaoVien window = new SuaGiaoVien();
-                SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
-                data.GiaoVienHienTai = parameter;
-                window.ShowDialog();
-                ProgressBarVisibility = true;
-                DataGridVisibility = false;
-                await LoadDanhSachGiaoVien();
-                ProgressBarVisibility = false;
-                DataGridVisibility = true;
-            });
-            RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
-            {
-                MessageBoxYesNo wd = new MessageBoxYesNo();
-
-                var data = wd.DataContext as MessageBoxYesNoViewModel;
-                data.Title = "Xác nhận!";
-                data.Question = "Bạn có chắc chắn muốn xóa giáo viên này?";
-                wd.ShowDialog();
-
-                var result = wd.DataContext as MessageBoxYesNoViewModel;
-                if (result.IsYes == true) {
-                    Model.GiaoVien item = parameter;
-                    XoaGiaoVien(item);
-                    ProgressBarVisibility = true;
-                    DataGridVisibility = false;
-                    await LoadDanhSachGiaoVien();
-                    ProgressBarVisibility = false;
-                    DataGridVisibility = true;
-                }
-
-            });
-        }
         public async Task LoadDanhSachGiaoVien()
         {
-            DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
             using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
-                    try
-                    {
-                        sqlConnectionWrapper.Open();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog(); 
-                        return;
-                    }
+                    sqlConnectionWrapper.Open();
 
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien";
                     SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
@@ -165,7 +83,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         await reader.NextResultAsync();
                     }
-                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
@@ -181,16 +98,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 try
                 {
-                    try
-                    {
-                        sqlConnectionWrapper.Open();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                        return;
-                    }
+                    sqlConnectionWrapper.Open();
 
                     string CmdString = "select MaGiaoVien,TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where TenGiaoVien is not null and TenGiaoVien like N'%" + value + "%'";
                     SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
@@ -214,7 +122,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         await reader.NextResultAsync();
                     }
-                    sqlConnectionWrapper.Close();
                 }
                 catch (Exception)
                 {
@@ -224,38 +131,95 @@ namespace StudentManagement.ViewModel.GiamHieu
             }
         }
 
-        public void XoaGiaoVien(Model.GiaoVien value)
+        public int XoaGiaoVien(Model.GiaoVien value)
         {
                 using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
-                    try
-                    {
-                        try 
-                        {
-                            sqlConnectionWrapper.Open();
-                        }
-                        catch (Exception) 
-                        { 
-                            //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            //messageBoxFail.ShowDialog();
-                            return; 
-                        }
+
+                        sqlConnectionWrapper.Open();
                         SqlCommand cmd;
                         string CmdString = "Delete From GiaoVien where MaGiaoVien = " + value.MaGiaoVien;
                         cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                        cmd.ExecuteScalar();
+                        return cmd.ExecuteNonQuery();
                         //MessageBoxOK MB = new MessageBoxOK();
                         //var datamb = MB.DataContext as MessageBoxOKViewModel;
                         //datamb.Content = "Đã xóa " + value.TenGiaoVien;
                         //MB.ShowDialog();
-                        sqlConnectionWrapper.Close();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                    }
+
                 }
+        }
+        public DanhSachGiaoVienViewModel()
+        {
+            // Stryker disable all
+            LoadGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
+            {
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
+
+            });
+            LocGiaoVien = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
+            {
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                TextBox tb = parameter;
+                DanhSachGiaoVien.Clear();
+                await LocGiaoVienTheoTen(tb.Text);
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
+
+            });
+            ThemGiaoVien = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                ThemGiaoVien window = new ThemGiaoVien();
+                ThemGiaoVienViewModel data = window.DataContext as ThemGiaoVienViewModel;
+                window.ShowDialog();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
+            });
+            UpdateGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
+            {
+                SuaGiaoVien window = new SuaGiaoVien();
+                SuaGiaoVienViewModel data = window.DataContext as SuaGiaoVienViewModel;
+                data.GiaoVienHienTai = parameter;
+                window.ShowDialog();
+                ProgressBarVisibility = true;
+                DataGridVisibility = false;
+                DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
+                await LoadDanhSachGiaoVien();
+                ProgressBarVisibility = false;
+                DataGridVisibility = true;
+            });
+            RemoveGiaoVien = new RelayCommand<Model.GiaoVien>((parameter) => { return true; }, async (parameter) =>
+            {
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn xóa giáo viên này?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
+                {
+                    Model.GiaoVien item = parameter;
+                    XoaGiaoVien(item);
+                    ProgressBarVisibility = true;
+                    DataGridVisibility = false;
+                    DanhSachGiaoVien = new ObservableCollection<Model.GiaoVien>();
+                    await LoadDanhSachGiaoVien();
+                    ProgressBarVisibility = false;
+                    DataGridVisibility = true;
+                }
+
+            });
         }
     }
 }

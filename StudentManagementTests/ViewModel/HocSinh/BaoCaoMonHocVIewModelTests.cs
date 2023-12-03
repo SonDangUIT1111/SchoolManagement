@@ -38,7 +38,7 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 // You can add code here for your test scenario
             });
 
-            var sut = new BaoCaoMonHocViewModel(fakeSqlConnection.Object);
+            var sut = new BaoCaoMonHocViewModel();
 
 
             ObservableCollection<string> _testNienKhoaComboBox = new ObservableCollection<string>();
@@ -57,8 +57,18 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 sut.MonHocComboBox = _testMonHocComboBox;
                 sut.HocKyQueries = _testHocKyQueries;
  
+                var result = sut.LoadComboboxData();
+                Assert.IsTrue(result);
+                Assert.IsTrue(sut.NienKhoaComboBox.Count > 0);
+                Assert.AreEqual(sut.NienKhoaQueries, "2023-2024");
+                Assert.AreEqual(sut.MonHocComboBox[0].MaMon, 120);
+                Assert.AreEqual(sut.MonHocQueries, "120");
+                sut.NienKhoaQueries = null;
                 sut.LoadComboboxData();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.NienKhoaQueries, "2023-2024");
+                sut.NienKhoaQueries = "1111";
+                result = sut.LoadComboboxData();
+                Assert.IsFalse(result);
             }
             catch (Exception)
             {
@@ -78,7 +88,7 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 // You can add code here for your test scenario
             });
 
-            var sut = new BaoCaoMonHocViewModel(fakeSqlConnection.Object);
+            var sut = new BaoCaoMonHocViewModel();
 
 
             ObservableCollection<string> _testNienKhoaComboBox = new ObservableCollection<string>();
@@ -113,9 +123,9 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 sut.KhongDat = _testKhongDat;
                 sut.TiLeDat = _testTiLeDat;
                 await sut.LoadDanhSachBaoCaoMon();
+                Assert.IsTrue(sut.DanhSachBaoCaoMon.Count > 0);
                 sut.LoadCartesianChart();
                 sut.LoadPieChart();
-                Assert.IsTrue(true);
             }
             catch (Exception e)
             {
@@ -131,6 +141,10 @@ namespace StudentManagementTests.ViewModel.HocSinh
             viewModel.PieChartVisibility = true;
             viewModel.DataGridVisibility = true;
             viewModel.ProgressBarVisibility = true;
+            viewModel.Dat = 1;
+            viewModel.KhongDat = 1;
+            Assert.AreEqual(1, viewModel.Dat);
+            Assert.AreEqual(1, viewModel.KhongDat);
 
             Assert.AreEqual(true, viewModel.CartersianChartVisibility);
             Assert.AreEqual(true, viewModel.PieChartVisibility);

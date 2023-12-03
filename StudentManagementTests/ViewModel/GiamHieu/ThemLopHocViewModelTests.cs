@@ -53,12 +53,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new ThemLopHocViewModel(fakeSqlConnection.Object);
+            var sut = new ThemLopHocViewModel();
 
             try
             {
                 sut.KhoiCmb = new System.Collections.ObjectModel.ObservableCollection<Khoi> { };
                 sut.LoadKhoiCmb();
+                Assert.AreEqual(sut.MaKhoi, "1");
+                Assert.AreEqual(sut.KhoiCmb[0].MaKhoi, 1);
             }
             catch (Exception ex)
             {
@@ -78,7 +80,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new ThemLopHocViewModel(fakeSqlConnection.Object);
+            var sut = new ThemLopHocViewModel();
 
             try
             {
@@ -104,7 +106,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new ThemLopHocViewModel(fakeSqlConnection.Object);
+            var sut = new ThemLopHocViewModel();
 
             try
             {

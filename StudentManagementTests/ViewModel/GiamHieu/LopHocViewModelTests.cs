@@ -67,11 +67,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             {});
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
             try
             {
                 sut.LoadComboBox();
-                Assert.IsTrue(true);
+                Assert.IsTrue(sut.NienKhoaCmb.Count > 0);
+                Assert.AreEqual(sut.NienKhoaQueries, "2022-2023");
+                Assert.AreEqual(sut.KhoiQueries, "1");
+                Assert.AreEqual(sut.KhoiCmb[0].MaKhoi, 1);
             }
             catch (Exception)
             {
@@ -90,16 +93,22 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             {});
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
                 sut.DanhSachLopHoc = _testDanhSachLop;
                 sut.NienKhoaCmb = _testNienKhoaCmb;
                 sut.KhoiCmb = _testKhoiCmb;
-                sut.NienKhoaQueries = null;
-                sut.KhoiQueries = null;
+                sut.NienKhoaQueries = "2023-2024";
+                sut.KhoiQueries = "1";
                 await sut.LoadDanhSachLopHoc();
+                Assert.AreEqual(sut.DanhSachLopHoc[0].MaLop, 151);
+                Assert.AreEqual(sut.DanhSachLopHoc[0].TenGVCN, "Nguyễn Thủy Hằng");
+                Assert.AreEqual(sut.DanhSachLopHoc[0].TenLop, "10A1");
+                Assert.AreEqual(sut.DanhSachLopHoc[0].SiSo, 10);
+                Assert.AreEqual(sut.DanhSachLopHoc[0].NienKhoa, "2023-2024");
+                Assert.AreEqual(sut.DanhSachLopHoc[3].TenGVCN, "Chưa có GVCN");
             }
             catch (Exception)
             {
@@ -116,7 +125,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             { });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
@@ -140,17 +149,21 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             {});
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
                 sut.DanhSachLopHoc = _testDanhSachLop;
                 sut.NienKhoaQueries = "2023-2024";
                 sut.KhoiQueries = "1";
-                sut.TenLopQueries = "10A1";
+                sut.TenLopQueries = "10";
                 sut.FilterFromTenLop();
-            } catch (Exception)
+                Assert.AreEqual(sut.DanhSachLopHoc[0].MaLop, 151);
+                Assert.AreEqual(sut.DanhSachLopHoc[0].TenGVCN, "Nguyễn Thủy Hằng");
+                Assert.AreEqual(sut.DanhSachLopHoc[3].TenGVCN, "Chưa có GVCN");
+            } catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
@@ -164,7 +177,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             { });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {

@@ -89,12 +89,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new ThemGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new ThemGiaoVienViewModel();
 
             try
             {
                 DatePicker date = new DatePicker { SelectedDate = new DateTime(1999, 1, 1) };
-                var result = sut.ThemGiaoVienMoi("", date, null, null, "1");
+                var result = sut.ThemGiaoVienMoi("", date, "a", "v", "1");
+                Assert.AreEqual(result, -2);
+                result = sut.ThemGiaoVienMoi("dd", date, "", "v", "1");
+                Assert.AreEqual(result, -2);
+                result = sut.ThemGiaoVienMoi("ss", date, "a", "", "1");
+                Assert.AreEqual(result, -2);
+                date.Text = "";
+                result = sut.ThemGiaoVienMoi("ff", date,"a" ,"v", "1");
                 Assert.AreEqual(result, -2);
             }
             catch (Exception ex)
@@ -114,7 +121,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new ThemGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new ThemGiaoVienViewModel();
 
             try
             {
@@ -139,7 +146,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new ThemGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new ThemGiaoVienViewModel();
 
             try
             {
@@ -148,7 +155,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 string filePath = System.IO.Path.Combine(projectPath, "Resources", "Images", "elaina-and-saya-flight-training.jpg");
                 sut.ImagePath = filePath;
                 var result = sut.ThemGiaoVienMoi("Nguyen Van A", date, "Hoang gia", "a@gmail.com", "1");
-                Assert.AreEqual(result, 1);
+                Assert.AreEqual(result, 2);
             }
             catch (Exception ex)
             {

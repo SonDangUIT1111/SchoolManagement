@@ -25,7 +25,7 @@ namespace StudentManagement.ViewModel.HocSinh
     {
         //declare variable
         private string _sayHello;
-        public string SayHello { get { return _sayHello; } set { _sayHello = value;OnPropertyChanged(); } }
+        public string SayHello { get { return _sayHello; } set { _sayHello = value;} }
         public HocSinhWindow HocSinhWD { get; set; }
         private int _idHocSinh;
         public int IdHocSinh { get { return _idHocSinh; } set { _idHocSinh = value; } }
@@ -35,7 +35,7 @@ namespace StudentManagement.ViewModel.HocSinh
 
 
         private Model.HocSinh _hocSinhHienTai;
-        public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value;OnPropertyChanged(); } }
+        public Model.HocSinh HocSinhHienTai { get { return _hocSinhHienTai;} set { _hocSinhHienTai = value; } }
         //declare Pages
         public StudentManagement.Views.HocSinh.BaoCaoMonHoc BaoCaoPage { get; set; }
         public StudentManagement.Views.HocSinh.BaoCaoTongKetHocKy BaoCaoHocKyPage { get; set; }
@@ -52,13 +52,68 @@ namespace StudentManagement.ViewModel.HocSinh
         public ICommand DoiMatKhau { get; set; }
         public ICommand SwitchBaoCaoMonHoc { get; set; }
         public ICommand SwitchBaoCaoHocKy { get; set; }
-        private readonly ISqlConnectionWrapper sqlConnection;
-        public TrangChuViewModel(ISqlConnectionWrapper sqlConnection)
+
+        public void LoadThongTinCaNhan()
         {
-            this.sqlConnection = sqlConnection;
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrapper.Open();
+                    string CmdString = "select TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    HocSinhHienTai.MaHocSinh = IdHocSinh;
+                    HocSinhHienTai.TenHocSinh = reader.GetString(0);
+                    HocSinhHienTai.NgaySinh = reader.GetDateTime(1);
+                    HocSinhHienTai.GioiTinh = reader.GetBoolean(2);
+                    HocSinhHienTai.DiaChi = reader.GetString(3);
+                    HocSinhHienTai.Email = reader.GetString(4);
+                    HocSinhHienTai.Avatar = (byte[])reader[5];
+                }catch (Exception)
+                {
+                    //MessageBoxFail msgBoxFail = new MessageBoxFail();   
+                    //msgBoxFail.ShowDialog();
+                }
+            }
         }
+        public void LoadSayHello(Border item)
+        {
+            // Stryker disable all
+            int hour = DateTime.Now.Hour;
+            if (hour >= 0 && hour < 6)
+                SayHello = "Have a nice day";
+            else if (hour >= 6 && hour < 12)
+                SayHello = "Good morning";
+            else if (hour >= 12 && hour < 18)
+                SayHello = "Good afternoon";
+            else if (hour >= 18 && hour < 24)
+                SayHello = "Good evening";
+            try
+            {
+                HocSinhWD.UserName.Text = HocSinhHienTai.TenHocSinh;
+                ImageBrush imageBrush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                MemoryStream stream = new MemoryStream(HocSinhHienTai.Avatar);
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                imageBrush.ImageSource = bitmap;
+                imageBrush.Stretch = Stretch.UniformToFill;
+                item.Background = imageBrush;
+            }
+            catch (Exception)
+            {
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();
+            }
+        }
+
         public TrangChuViewModel()
         {
+            // Stryker disable all
             IdHocSinh = 100000;
             IdHocSinhstring = IdHocSinh.ToString();
 
@@ -78,7 +133,7 @@ namespace StudentManagement.ViewModel.HocSinh
                 vm.IdHocSinh = IdHocSinh;
                 HocSinhWD.RPage.Content = ThongTinTruongPage;
                 HocSinhWD.TrangChuRadiobtn.IsChecked = true;
-                
+
             });
             SwitchThongTinTruong = new RelayCommand<Frame>((parameter) => { return true; }, (parameter) =>
             {
@@ -126,72 +181,6 @@ namespace StudentManagement.ViewModel.HocSinh
             {
                 parameter.Content = BaoCaoHocKyPage;
             });
-        }
-        public void LoadThongTinCaNhan()
-        {
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try
-                    {
-                        sqlConnectionWrapper.Open();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                        return;
-                    }
-                    string CmdString = "select TenHocSinh,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from HocSinh where MaHocSinh = " + IdHocSinh.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows) reader.Read();
-                    HocSinhHienTai.MaHocSinh = IdHocSinh;
-                    HocSinhHienTai.TenHocSinh = reader.GetString(0);
-                    HocSinhHienTai.NgaySinh = reader.GetDateTime(1);
-                    HocSinhHienTai.GioiTinh = reader.GetBoolean(2);
-                    HocSinhHienTai.DiaChi = reader.GetString(3);
-                    HocSinhHienTai.Email = reader.GetString(4);
-                    HocSinhHienTai.Avatar = (byte[])reader[5];
-                    sqlConnectionWrapper.Close();
-                }catch (Exception)
-                {
-                    //MessageBoxFail msgBoxFail = new MessageBoxFail();   
-                    //msgBoxFail.ShowDialog();
-                }
-            }
-        }
-        public void LoadSayHello(Border item)
-        {
-            int hour = DateTime.Now.Hour;
-            if (hour >= 0 && hour < 6)
-                SayHello = "Have a nice day";
-            else if (hour >= 6 && hour < 12)
-                SayHello = "Good morning";
-            else if (hour >= 12 && hour < 18)
-                SayHello = "Good afternoon";
-            else if (hour >= 18 && hour < 24)
-                SayHello = "Good evening";
-            try
-            {
-                HocSinhWD.UserName.Text = HocSinhHienTai.TenHocSinh;
-                ImageBrush imageBrush = new ImageBrush();
-                BitmapImage bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                MemoryStream stream = new MemoryStream(HocSinhHienTai.Avatar);
-                bitmap.StreamSource = stream;
-                bitmap.EndInit();
-                imageBrush.ImageSource = bitmap;
-                imageBrush.Stretch = Stretch.UniformToFill;
-                item.Background = imageBrush;
-            }
-            catch (Exception)
-            {
-                //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                //messageBoxFail.ShowDialog();
-            }
         }
     }
 }

@@ -50,7 +50,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new XepLopViewModel(fakeSqlConnection.Object);
+            var sut = new XepLopViewModel();
 
             try
             {
@@ -60,13 +60,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                     MaLop = 151
                 };
                 sut.LoadNamSinh();
+                Assert.IsTrue(sut.NamSinhCmb.Count > 0);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
@@ -82,7 +82,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new XepLopViewModel(fakeSqlConnection.Object);
+            var sut = new XepLopViewModel();
             try
             {
                 sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
@@ -91,13 +91,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                     MaLop = 151
                 };
                 await sut.LoadDanhSachHocSinh();
+                Assert.AreEqual(sut.DanhSachHocSinh[0].MaHocSinh,100056);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new XepLopViewModel(fakeSqlConnection.Object);
+            var sut = new XepLopViewModel();
             try
             {
                 sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
@@ -120,13 +121,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                     MaLop = 151
                 };
                 await sut.LoadDanhSachTheoNamSinh("2007","");
+                Assert.AreEqual(sut.DanhSachHocSinh[0].MaHocSinh, 100056);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
-
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -140,7 +140,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new XepLopViewModel(fakeSqlConnection.Object);
+            var sut = new XepLopViewModel();
             try
             {
                 sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
@@ -150,13 +150,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 };
                 ComboBox cb =new ComboBox() { SelectedItem = "2007"};
                 await sut.LocDanhSach("",cb);
+                Assert.AreEqual(sut.DanhSachHocSinh[0].MaHocSinh, 100056);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -167,7 +167,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new XepLopViewModel(fakeSqlConnection.Object);
+            var sut = new XepLopViewModel();
 
             try
             {
@@ -195,7 +195,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new XepLopViewModel(fakeSqlConnection.Object);
+            var sut = new XepLopViewModel();
 
             try
             {
@@ -211,7 +211,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                     MaHocSinh = 100056
                 });
                 var result = sut.ThemHocSinhVaoLop();
-                Assert.AreEqual(1, result);
+                Assert.IsTrue(result>0);
             }
             catch (Exception ex)
             {

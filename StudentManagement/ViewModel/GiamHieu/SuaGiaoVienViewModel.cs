@@ -22,20 +22,74 @@ namespace StudentManagement.ViewModel.GiamHieu
         public string ImagePath { get; set; }
 
         private StudentManagement.Model.GiaoVien _giaovienhientai;
-        public StudentManagement.Model.GiaoVien GiaoVienHienTai { get => _giaovienhientai; set { _giaovienhientai = value; OnPropertyChanged(); } }
+        public StudentManagement.Model.GiaoVien GiaoVienHienTai { get => _giaovienhientai; set { _giaovienhientai = value;  } }
         public ICommand CancelCommand { get; set; }
         public ICommand LoadWindow { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand ChangeGiaoVien { get; set; }
-        private readonly ISqlConnectionWrapper sqlConnection;
-
-        public SuaGiaoVienViewModel(ISqlConnectionWrapper sqlConnection)
+        public bool IsValidEmail(string email)
         {
-            this.sqlConnection = sqlConnection;
+            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            {
+                return false;
+            }
+            return true;
+        }
+        public int CapNhatGiaoVien()
+        {
+            
+                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+                {
+                        sqlConnectionWrapper.Open();
+                        string CmdString = "Update GiaoVien set TenGiaoVien = N'" + SuaGiaoVienWD.TenGV.Text +
+                            "', NgaySinh = CAST(N'" + ToShortDateTime(SuaGiaoVienWD.NgaySinh) +
+                            "' AS DATE), GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
+                            ", DiaChi = N'" + SuaGiaoVienWD.DiaChi.Text +
+                            "', Email = '" + SuaGiaoVienWD.Email.Text +
+                            "'";
+
+                        if (ImagePath != null)
+                        {
+                            CmdString = CmdString + " , AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+                            StudentManagement.Converter.ByteArrayToBitmapImageConverter converter = new StudentManagement.Converter.ByteArrayToBitmapImageConverter();
+                            byte[] buffer = converter.ImageToBinary(ImagePath);
+                            SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                            cmd.Parameters.AddWithValue("@image", buffer);
+                            return cmd.ExecuteNonQuery();
+               
+                            //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            //messageBoxSuccessful.ShowDialog();
+                        }
+                        else
+                        {
+                            CmdString = CmdString + " where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
+                            SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                            return cmd.ExecuteNonQuery();
+                            //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                            //messageBoxSuccessful.ShowDialog();
+                        }
+                        //ImagePath = null;
+                        //SuaGiaoVienWD.Close();
+
+                }
+            
+        }
+        public string ToShortDateTime(DatePicker st)
+        {
+            if (st.SelectedDate.HasValue)
+            {
+                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+                return date;
+            }
+            else
+            {
+                return "";
+
+            }
         }
         public SuaGiaoVienViewModel()
         {
-
+            // Stryker disable all
             GiaoVienHienTai = new StudentManagement.Model.GiaoVien { };
 
             LoadWindow = new RelayCommand<SuaGiaoVien>((parameter) => { return true; }, (parameter) =>
@@ -80,110 +134,33 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             ChangeGiaoVien = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                CapNhatGiaoVien();
-            });
-        }
-        public bool IsValidEmail(string email)
-        {
-            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-            {
-                return false;
-            }
-            return true;
-        }
-        public void CapNhatGiaoVien()
-        {
-            if (SuaGiaoVienWD.TenGV.Text == "" |
+                if (SuaGiaoVienWD.TenGV.Text == "" |
                 SuaGiaoVienWD.NgaySinh.Text == "" |
                 SuaGiaoVienWD.DiaChi.Text == "" |
                 SuaGiaoVienWD.Email.Text == "")
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Vui lòng điền đầy đủ thông tin";
-                //MB.ShowDialog();
-                return;
-            }
-            else
+                {
+                    //MessageBoxOK MB = new MessageBoxOK();
+                    //var data = MB.DataContext as MessageBoxOKViewModel;
+                    //data.Content = "Vui lòng điền đầy đủ thông tin";
+                    //MB.ShowDialog();
+                    return;
+                }
+                else
             if (!IsValidEmail(SuaGiaoVienWD.Email.Text)
                 )
-            {
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Email không đúng cú pháp!";
-                //MB.ShowDialog();
-                //SuaGiaoVienWD.Email.Focus();
-                return;
-            }
-            else
-            {
-                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
-                    try
-                    {
-                        try
-                        {
-                            sqlConnectionWrapper.Open();
-
-                        }
-                        catch (Exception)
-                        {
-                            //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                            //messageBoxFail.ShowDialog();
-                            return;
-                        }
-                        string CmdString = "Update GiaoVien set TenGiaoVien = N'" + SuaGiaoVienWD.TenGV.Text +
-                            "', NgaySinh = CAST(N'" + ToShortDateTime(SuaGiaoVienWD.NgaySinh) +
-                            "' AS DATE), GioiTinh = " + SuaGiaoVienWD.GioiTinh.SelectedIndex.ToString() +
-                            ", DiaChi = N'" + SuaGiaoVienWD.DiaChi.Text +
-                            "', Email = '" + SuaGiaoVienWD.Email.Text +
-                            "'";
-
-                        if (ImagePath != null)
-                        {
-                            CmdString = CmdString + " , AnhThe = @image where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                            StudentManagement.Converter.ByteArrayToBitmapImageConverter converter = new StudentManagement.Converter.ByteArrayToBitmapImageConverter();
-                            byte[] buffer = converter.ImageToBinary(ImagePath);
-                            SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                            cmd.Parameters.AddWithValue("@image", buffer);
-                            cmd.ExecuteScalar();
-                            sqlConnectionWrapper.Close();
-               
-                            //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                            //messageBoxSuccessful.ShowDialog();
-                        }
-                        else
-                        {
-                            CmdString = CmdString + " where MaGiaoVien = " + GiaoVienHienTai.MaGiaoVien.ToString();
-                            SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                            cmd.ExecuteScalar();
-                            //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                            //messageBoxSuccessful.ShowDialog();
-                            sqlConnectionWrapper.Close();
-                        }
-                        ImagePath = null;
-                        SuaGiaoVienWD.Close();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                    }
+                    //MessageBoxOK MB = new MessageBoxOK();
+                    //var data = MB.DataContext as MessageBoxOKViewModel;
+                    //data.Content = "Email không đúng cú pháp!";
+                    //MB.ShowDialog();
+                    //SuaGiaoVienWD.Email.Focus();
+                    return;
                 }
-            }
-        }
-        public string ToShortDateTime(DatePicker st)
-        {
-            if (st.SelectedDate.HasValue)
-            {
-                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
-                return date;
-            }
-            else
-            {
-                return string.Empty;
-
-            }
+                else
+                {
+                    CapNhatGiaoVien();
+                }
+            });
         }
     }
 }

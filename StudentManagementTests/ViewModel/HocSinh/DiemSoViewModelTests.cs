@@ -21,6 +21,18 @@ namespace StudentManagementTests.ViewModel.HocSinh
         public void TestInitialize()
         {
             viewModel = new DiemSoViewModel();
+            viewModel.NhanXet1 = "abc";
+            Assert.AreEqual("abc", viewModel.NhanXet1);
+            viewModel.NhanXet2 = "abc";
+            Assert.AreEqual("abc", viewModel.NhanXet2);
+            viewModel.XepLoai1 = "abc";
+            Assert.AreEqual("abc", viewModel.XepLoai1);
+            viewModel.XepLoai2 = "abc";
+            Assert.AreEqual("abc", viewModel.XepLoai2);
+            viewModel.TBHK1 = "abc";
+            Assert.AreEqual("abc", viewModel.TBHK1);
+            viewModel.TBHK2 = "abc";
+            Assert.AreEqual("abc", viewModel.TBHK2);
         }
 
         [TestMethod]
@@ -34,17 +46,31 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 // You can add code here for your test scenario
             });
 
-            var sut = new DiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new DiemSoViewModel();
 
             sut.DiemSoWD = new StudentManagement.Views.HocSinh.DiemSo();
 
             try
             {
                 sut.IdHocSinh = 100046;
-                sut.LoadDanhSachDiem();
+                var res = sut.LoadDanhSachDiem();
+                Assert.IsTrue(sut.DanhSachDiemHK1.Count > 0);
+                Assert.IsTrue(sut.DanhSachDiemHK2.Count > 0);
+                Assert.IsTrue(res > 0);
+                Assert.AreEqual(sut.XepLoai1, "Đạt");
+                Assert.AreEqual(sut.XepLoai2, "Đạt");
+                Assert.AreNotEqual(sut.TBHK1, "");
+                Assert.AreNotEqual(sut.TBHK2, "");
+                sut.IdHocSinh = 100055;
+                res = sut.LoadDanhSachDiem();
+                Assert.AreEqual(sut.XepLoai1, "Không đạt");
+                Assert.AreEqual(sut.XepLoai2, "Không đạt");
                 sut.IdHocSinh = 100096;
                 sut.LoadDanhSachDiem();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.XepLoai1, "Chưa có dữ liệu");
+                Assert.AreEqual(sut.XepLoai2, "Chưa có dữ liệu");
+                Assert.AreEqual(sut.TBHK1, "Chưa có dữ liệu");
+                Assert.AreEqual(sut.TBHK2, "Chưa có dữ liệu");
             } catch (Exception e)
             {
                 Console.WriteLine(e);

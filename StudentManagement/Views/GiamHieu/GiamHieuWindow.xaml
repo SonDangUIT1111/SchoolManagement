@@ -15,7 +15,6 @@
         ResizeMode="NoResize"
         Background="Transparent"
         Name="GiamHieuWD"
-        DataContext="{StaticResource TrangChuVM}"
         Icon="ThongTinTruong1.ico">
     <Window.Resources>
         <Style x:Key = "SideButton" TargetType = "Button">

@@ -24,6 +24,14 @@ namespace StudentManagementTests.ViewModel.HocSinh
         public void TestInitialize()
         {
             viewModel = new TrangChuViewModel();
+            viewModel.SayHello = "abc";
+            Assert.AreEqual(viewModel.SayHello, "abc");
+            viewModel.IdHocSinh = 1;
+            Assert.AreEqual(viewModel.IdHocSinh, 1);
+            viewModel.IdHocSinhstring = "abc";
+            Assert.AreEqual(viewModel.IdHocSinhstring, "abc");
+            viewModel.HocSinhHienTai = null;
+            Assert.IsNull(viewModel.HocSinhHienTai);
         }
         [TestMethod]
         public void LoadThongTinCaNhan()
@@ -36,7 +44,7 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 // You can add code here for your test scenario
             });
 
-            var sut = new TrangChuViewModel(fakeSqlConnection.Object);
+            var sut = new TrangChuViewModel();
 
             StudentManagement.Model.HocSinh _testHocSinh = new StudentManagement.Model.HocSinh();
 
@@ -46,7 +54,7 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 sut.IdHocSinh = 100046;
                 sut.HocSinhHienTai = _testHocSinh;
                 sut.LoadThongTinCaNhan();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.HocSinhHienTai.TenHocSinh, "Nguyễn Thiện Thanh 123");
             }
             catch (Exception e)
             {
@@ -58,6 +66,7 @@ namespace StudentManagementTests.ViewModel.HocSinh
         [TestMethod]
         public void LoadSayHello()
         {
+
             var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
 
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
@@ -66,7 +75,7 @@ namespace StudentManagementTests.ViewModel.HocSinh
                 // You can add code here for your test scenario
             });
 
-            var sut = new TrangChuViewModel(fakeSqlConnection.Object);
+            var sut = new TrangChuViewModel();
 
             StudentManagement.Model.HocSinh _testHocSinh = new StudentManagement.Model.HocSinh();
 

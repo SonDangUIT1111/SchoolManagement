@@ -97,22 +97,23 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
-                sut.DanhSachDiem = new System.Collections.ObjectModel.ObservableCollection<HeThongDiem> { new HeThongDiem() };
+                sut.DanhSachDiem = new System.Collections.ObjectModel.ObservableCollection<HeThongDiem> { };
                 sut.MonHocQueries = "120";
                 sut.LopQueries = "151";
                 sut.HocKyQueries = 1;
-                sut.NienKhoaQueries = "2021-2022"; 
+                sut.NienKhoaQueries = "2023-2024"; 
+                
                 await sut.LoadDanhSachBangDiem();
+                Assert.AreEqual(sut.DanhSachDiem[0].MaHocSinh, 100046);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
-
-            Assert.IsTrue(true);
         }
 
 
@@ -127,18 +128,20 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
-                sut.MonDataCmb = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.MonHoc> { new StudentManagement.Model.MonHoc() };
+                sut.MonDataCmb = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.MonHoc> ();
                 sut.MonHocQueries = "";
                 sut.LoadDanhSachMon();
+                Assert.AreEqual(sut.MonDataCmb[0].MaMon,120);
+                Assert.AreEqual(sut.MonHocQueries, "120");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -152,7 +155,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
                 sut.NienKhoaCmb = new System.Collections.ObjectModel.ObservableCollection<string> { };
@@ -160,13 +163,16 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.NienKhoaQueries = "";
                 sut.NienKhoaQueries2 = "";
                 sut.LoadDanhSachNienKhoa();
+                Assert.IsTrue(sut.NienKhoaCmb.Count > 0);
+                Assert.IsTrue(sut.NienKhoaCmb2.Count > 0);
+                Assert.AreEqual(sut.NienKhoaQueries, "2022-2023");
+                Assert.AreEqual(sut.NienKhoaQueries2, "2022-2023");
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -180,7 +186,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
                 sut.KhoiDataCmb = new System.Collections.ObjectModel.ObservableCollection<Khoi> { };
@@ -188,13 +194,15 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.KhoiQueries = "";
                 sut.KhoiQueries2 = "";
                 sut.LoadDanhSachKhoi();
+                Assert.IsTrue(sut.KhoiDataCmb.Count > 0);
+                Assert.IsTrue(sut.KhoiDataCmb2.Count > 0);
+                Assert.AreEqual(sut.KhoiQueries, "1");
+                Assert.AreEqual(sut.KhoiQueries2, "1");
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
-
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -208,7 +216,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
                 sut.LopDataCmb = new System.Collections.ObjectModel.ObservableCollection<Lop> { };
@@ -221,13 +229,16 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.KhoiQueries2 = "1";
                 sut.LoadDanhSachLop1();
                 sut.LoadDanhSachLop2();
+                Assert.IsTrue(sut.LopDataCmb.Count > 0);
+                Assert.IsTrue(sut.LopDataCmb2.Count > 0);
+                Assert.AreEqual(sut.LopQueries, "151");
+                Assert.AreEqual(sut.LopQueries2, "151");
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -241,19 +252,18 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
-                sut.LopQueries2 = "1";
+                sut.LopQueries2 = "151";
                 sut.HocKyQueries2 = 1;
-                sut.MoKhoa();
+                var res = sut.MoKhoa();
+                Assert.IsTrue(res > 0);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
-
-            Assert.IsTrue(true);
         }
         [TestMethod]
         public void TestKhoa()
@@ -266,7 +276,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
                 sut.LopQueries2 = "151";
@@ -274,14 +284,21 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.DanhSachThanhTich = new System.Collections.ObjectModel.ObservableCollection<ThanhTich> { };
                 sut.DanhSachBaoCaoMon = new System.Collections.ObjectModel.ObservableCollection<BaoCaoMon> { };
                 sut.DanhSachBaoCaoHocKy = new System.Collections.ObjectModel.ObservableCollection<BaoCaoHocKy> { };
-                sut.Khoa();
+                var res = sut.Khoa();
+                Assert.AreEqual(sut.DanhSachThanhTich[0].MaHocSinh, 100046);
+                Assert.AreEqual(sut.DanhSachBaoCaoMon[0].MaMon, 120);
+                Assert.AreEqual(sut.DanhSachBaoCaoHocKy[0].MaLop, 151);
+                Assert.IsTrue(res[0] > 0);
+                Assert.IsTrue(res[1] > 0);
+                Assert.IsTrue(res[2] > 0);
+                Assert.IsTrue(res[3] > 0);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
 
@@ -296,7 +313,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new QuanLiDiemSoViewModel(fakeSqlConnection.Object);
+            var sut = new QuanLiDiemSoViewModel();
             try
             {
                 sut.LopDataCmb = new System.Collections.ObjectModel.ObservableCollection<Lop> { };
@@ -307,13 +324,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.KhoiQueries2 = "1";
                 sut.LocLop();
                 sut.LocLop2();
+                Assert.AreEqual(sut.LopDataCmb[0].MaLop, 151);
+                Assert.AreEqual(sut.LopDataCmb2[0].MaLop, 151);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
     }
 }

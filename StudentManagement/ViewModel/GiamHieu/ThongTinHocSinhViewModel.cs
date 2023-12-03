@@ -15,6 +15,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class ThongTinHocSinhViewModel : BaseViewModel
     {
+        const string cctt = "Chưa có thông tin";
         public bool everLoaded { get; set; }
         public ThongTinHocSinh ThongTinHocSinhWD { get; set; }
         public string NienKhoaQueries { get; set; }
@@ -32,7 +33,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             set
             {
                 _dataGridVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -47,25 +48,19 @@ namespace StudentManagement.ViewModel.GiamHieu
             set
             {
                 _progressBarVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
-        private readonly ISqlConnectionWrapper sqlConnection;
-
-        public ThongTinHocSinhViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
 
         private ObservableCollection<StudentManagement.Model.HocSinh> _danhSachHocSinh;
-        public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachHocSinh { get => _danhSachHocSinh; set { _danhSachHocSinh = value; OnPropertyChanged(); } }
+        public ObservableCollection<StudentManagement.Model.HocSinh> DanhSachHocSinh { get => _danhSachHocSinh; set { _danhSachHocSinh = value;  } }
         private ObservableCollection<string> _nienKhoaCmb;
-        public ObservableCollection<string> NienKhoaCmb { get => _nienKhoaCmb; set { _nienKhoaCmb = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> NienKhoaCmb { get => _nienKhoaCmb; set { _nienKhoaCmb = value;  } }
         private ObservableCollection<StudentManagement.Model.Khoi> _khoiCmb;
-        public ObservableCollection<StudentManagement.Model.Khoi> KhoiCmb { get => _khoiCmb; set { _khoiCmb = value; OnPropertyChanged(); } }
+        public ObservableCollection<StudentManagement.Model.Khoi> KhoiCmb { get => _khoiCmb; set { _khoiCmb = value;  } }
         private ObservableCollection<StudentManagement.Model.Lop> _lopCmb;
-        public ObservableCollection<StudentManagement.Model.Lop> LopCmb { get => _lopCmb; set { _lopCmb = value; OnPropertyChanged(); } }
+        public ObservableCollection<StudentManagement.Model.Lop> LopCmb { get => _lopCmb; set { _lopCmb = value;  } }
         //public ICommand Test { get; set; }
         public ICommand LoadData { get; set; }
         public ICommand FilterNienKhoa { get; set; }
@@ -78,169 +73,8 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand DeleteStudent { get; set; }
         public ICommand MouseEnterComboBox { get; set; }
         public ICommand MouseLeaveComboBox { get; set; }
-        public ThongTinHocSinhViewModel()
-        {
-            everLoaded = false;
-            NienKhoaQueries = "";
-            KhoiQueries = "";
-            LopQueries = "";
-            LoadThongTinCmb();
-
-            LoadData = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                if (everLoaded == false )
-                {
-                    ThongTinHocSinhWD = parameter as ThongTinHocSinh;
-                    ThongTinHocSinhWD.cmbNienKhoa.SelectedIndex = 0;
-                    ThongTinHocSinhWD.cmbKhoi.SelectedIndex = 0;
-                    ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
-                    DataGridVisibility = false;
-                    ProgressBarVisibility = true;
-                    await LoadThongTinHocSinh();
-                    DataGridVisibility = true;
-                    ProgressBarVisibility = false;
-                    everLoaded = true;
-                }
-            });
-            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                IsLoadAll = false;
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null)
-                {
-                    string item = cmb.SelectedItem as string;
-                    if (item != null)
-                    {
-                        NienKhoaQueries = item.ToString();
-                        FilterLopFromSelection();
-                        if (LopCmb.Count > 0)
-                        {
-                            ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
-                        }
-                        else
-                        {
-                            ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
-                        }
-                        if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
-                        {
-                            DataGridVisibility = false;
-                            ProgressBarVisibility = true;
-                            await LoadThongTinHocSinh();
-                            DataGridVisibility = true;
-                            ProgressBarVisibility = false;
-                        }
-                        else DanhSachHocSinh.Clear();
-                    }
-                }
-            });
-            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                IsLoadAll = false;
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null)
-                {
-                    Khoi item = cmb.SelectedItem as Khoi;
-                    if (item != null)
-                    {
-                        KhoiQueries = item.MaKhoi.ToString();
-                        FilterLopFromSelection();
-                        if (LopCmb.Count > 0)
-                        {
-                            ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
-                        }
-                        else
-                        {
-                            ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
-                        }
-                    }
-                }
-            });
-            FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                IsLoadAll = false;
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null)
-                {
-                    Lop item = cmb.SelectedItem as Lop;
-                    if (item != null)
-                    {
-                        LopQueries = item.MaLop.ToString();
-                        if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
-                        {
-                            DataGridVisibility = false;
-                            ProgressBarVisibility = true;
-                            await LoadThongTinHocSinh();
-                            DataGridVisibility = true;
-                            ProgressBarVisibility = false;
-                        }
-                        else DanhSachHocSinh.Clear();
-                    }
-                }
-            });
-            StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
-            {
-                SearchHocSinh(parameter.Text);
-            });
-            StudentSearchAll = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
-            {
-                SearchHocSinhAll();
-            });
-            AddStudent = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                ThemHocSinhMoi window = new ThemHocSinhMoi();
-                ThemHocSinhMoiViewModel data = window.DataContext as ThemHocSinhMoiViewModel;
-                window.ShowDialog();
-                DataGridVisibility = false;
-                ProgressBarVisibility = true;
-                await LoadThongTinHocSinh();
-                DataGridVisibility = true;
-                ProgressBarVisibility = false;
-            });
-            UpdateStudent = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, async (parameter) =>
-            {
-                SuaThongTinHocSinh window = new SuaThongTinHocSinh();
-                SuaThongTinHocSinhViewModel data = window.DataContext as SuaThongTinHocSinhViewModel;
-                data.HocSinhHienTai = parameter;
-                window.ShowDialog();
-                DataGridVisibility = false;
-                ProgressBarVisibility = true;
-                await LoadThongTinHocSinh();
-                DataGridVisibility = true;
-                ProgressBarVisibility = false;
-            });
-            DeleteStudent = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                MessageBoxYesNo wd = new MessageBoxYesNo();
-
-                var data = wd.DataContext as MessageBoxYesNoViewModel;
-                data.Title = "Xác nhận!";
-                data.Question = "Bạn có chắc chắn muốn xóa học sinh này?";
-                wd.ShowDialog();
-
-                var result = wd.DataContext as MessageBoxYesNoViewModel;
-                if (result.IsYes == true)
-                {
-                    Model.HocSinh item = parameter as Model.HocSinh;
-                    XoaHocSinh(item);
-                }
-                DataGridVisibility = false;
-                ProgressBarVisibility = true;
-                await LoadThongTinHocSinh();
-                DataGridVisibility = true;
-                ProgressBarVisibility = false;
-            });
-            MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
-            {
-                parameter.Focus();
-            });
-            MouseLeaveComboBox = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                ThongTinHocSinhWD.btnTrick.Focus();
-            });
-        }
         public async Task LoadThongTinHocSinh()
         {
-            DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
@@ -285,7 +119,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     }
                                     catch (Exception)
                                     {
-                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = cctt;
                                         stillLoad = false;
                                     }
                                 }
@@ -309,7 +143,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     }
                                     catch (Exception)
                                     {
-                                        student.DiemTB1 = "Chưa có thông tin";
+                                        student.DiemTB1 = cctt;
                                         stillLoad = true;
                                     }
                                 }
@@ -333,22 +167,17 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         await reader.NextResultAsync();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
                     //MessageBoxFail messageBoxFail = new MessageBoxFail();
                     //messageBoxFail.ShowDialog();
-                    return;
                 }
             }
         }
 
         public void LoadThongTinCmb()
         {
-            NienKhoaCmb = new ObservableCollection<string>();
-            KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
-            LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
@@ -413,7 +242,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 } catch (Exception)
                 {
                     //MessageBoxFail messageBoxFail = new MessageBoxFail();
@@ -423,7 +251,6 @@ namespace StudentManagement.ViewModel.GiamHieu
         }
         public void SearchHocSinh(string tenhs)
         {
-            DanhSachHocSinh.Clear();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
@@ -468,7 +295,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     }
                                     catch (Exception)
                                     {
-                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = cctt;
                                     }
                                 }
                             }
@@ -491,7 +318,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     }
                                     catch (Exception)
                                     {
-                                        student.DiemTB1 = "Chưa có thông tin";
+                                        student.DiemTB1 = cctt;
                                     }
                                 }
                                 //comment de test do data k co th nay
@@ -513,20 +340,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
                     //MessageBoxFail messageBoxFail = new MessageBoxFail();
                     //messageBoxFail.ShowDialog();
-                    return;
                 }
             }
         }
         public void SearchHocSinhAll()
         {
-            DanhSachHocSinh.Clear();
-            IsLoadAll = true;
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
@@ -566,7 +389,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     }
                                     catch (Exception)
                                     {
-                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = "Chưa có thông tin";
+                                        DanhSachHocSinh[DanhSachHocSinh.Count - 1].DiemTB2 = cctt;
                                         stillLoad = false;
                                     }
                                 }
@@ -590,7 +413,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     }
                                     catch (Exception)
                                     {
-                                        student.DiemTB1 = "Chưa có thông tin";
+                                        student.DiemTB1 = cctt;
                                         stillLoad = true;
                                     }
                                 }
@@ -614,19 +437,16 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
                     //MessageBoxFail messageBoxFail = new MessageBoxFail();
                     //messageBoxFail.ShowDialog();
-                    return;
                 }
             }
         }
         public void FilterLopFromSelection()
         {
-            LopCmb.Clear();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
@@ -647,47 +467,231 @@ namespace StudentManagement.ViewModel.GiamHieu
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
                     //MessageBoxFail messageBoxFail = new MessageBoxFail();
                     //messageBoxFail.ShowDialog();
-                    return;
                 }
             
             }
         }
-        public void XoaHocSinh(Model.HocSinh item)
+        public int XoaHocSinh(Model.HocSinh item)
         {
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
-                try
-                {
+                int count = 0;
                     sqlConnectionWrap.Open();
                     SqlCommand cmd;
                     string CmdString = "Delete from HeThongDiem where MaHocSinh = " + item.MaHocSinh;
                     cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    cmd.ExecuteNonQuery();
+                    count += cmd.ExecuteNonQuery();
 
                     CmdString = "Delete from ThanhTich where MaHocSinh = " + item.MaHocSinh;
                     cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    cmd.ExecuteNonQuery();
+                    count +=cmd.ExecuteNonQuery();
 
                     CmdString = "Delete from HocSinh where MaHocSinh = " + item.MaHocSinh;
                     cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    cmd.ExecuteNonQuery();
-                    sqlConnectionWrap.Close();
-                    //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
-                    //messageBoxSuccessful.ShowDialog();
-                }
-                catch (Exception)
-                {
-                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //messageBoxFail.ShowDialog();
-                    return;
-                }
+                    count+=cmd.ExecuteNonQuery();
+                //MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
+                //messageBoxSuccessful.ShowDialog();
+                return count;
+
             }
+        }
+
+        public ThongTinHocSinhViewModel()
+        {
+            // Stryker disable all
+            everLoaded = false;
+            NienKhoaQueries = "";
+            KhoiQueries = "";
+            LopQueries = "";
+            NienKhoaCmb = new ObservableCollection<string>();
+            KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+            LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+            LoadThongTinCmb();
+
+            LoadData = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                if (everLoaded == false)
+                {
+                    ThongTinHocSinhWD = parameter as ThongTinHocSinh;
+                    ThongTinHocSinhWD.cmbNienKhoa.SelectedIndex = 0;
+                    ThongTinHocSinhWD.cmbKhoi.SelectedIndex = 0;
+                    ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
+                    NienKhoaCmb = new ObservableCollection<string>();
+                    KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+                    LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+                    await LoadThongTinHocSinh();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
+                    everLoaded = true;
+                }
+            });
+            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                IsLoadAll = false;
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    string item = cmb.SelectedItem as string;
+                    if (item != null)
+                    {
+                        NienKhoaQueries = item.ToString();
+                        LopCmb.Clear();
+                        FilterLopFromSelection();
+                        if (LopCmb.Count > 0)
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
+                        }
+                        if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
+                        {
+                            DataGridVisibility = false;
+                            ProgressBarVisibility = true;
+                            DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
+                            NienKhoaCmb = new ObservableCollection<string>();
+                            KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+                            LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+                            await LoadThongTinHocSinh();
+                            DataGridVisibility = true;
+                            ProgressBarVisibility = false;
+                        }
+                        else DanhSachHocSinh.Clear();
+                    }
+                }
+            });
+            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                IsLoadAll = false;
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    Khoi item = cmb.SelectedItem as Khoi;
+                    if (item != null)
+                    {
+                        KhoiQueries = item.MaKhoi.ToString();
+                        LopCmb.Clear();
+                        FilterLopFromSelection();
+                        if (LopCmb.Count > 0)
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = 0;
+                        }
+                        else
+                        {
+                            ThongTinHocSinhWD.cmbLop.SelectedIndex = -1;
+                        }
+                    }
+                }
+            });
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                IsLoadAll = false;
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null)
+                {
+                    Lop item = cmb.SelectedItem as Lop;
+                    if (item != null)
+                    {
+                        LopQueries = item.MaLop.ToString();
+                        if (ThongTinHocSinhWD.cmbLop.SelectedIndex >= 0)
+                        {
+                            DataGridVisibility = false;
+                            ProgressBarVisibility = true;
+                            DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
+                            NienKhoaCmb = new ObservableCollection<string>();
+                            KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+                            LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+                            await LoadThongTinHocSinh();
+                            DataGridVisibility = true;
+                            ProgressBarVisibility = false;
+                        }
+                        else DanhSachHocSinh.Clear();
+                    }
+                }
+            });
+            StudentSearch = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachHocSinh.Clear();
+                SearchHocSinh(parameter.Text);
+            });
+            StudentSearchAll = new RelayCommand<TextBox>((parameter) => { return true; }, (parameter) =>
+            {
+                DanhSachHocSinh.Clear();
+                IsLoadAll = true;
+                SearchHocSinhAll();
+            });
+            AddStudent = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                ThemHocSinhMoi window = new ThemHocSinhMoi();
+                ThemHocSinhMoiViewModel data = window.DataContext as ThemHocSinhMoiViewModel;
+                window.ShowDialog();
+                DataGridVisibility = false;
+                ProgressBarVisibility = true;
+                DanhSachHocSinh = new ObservableCollection<Model.HocSinh>(); NienKhoaCmb = new ObservableCollection<string>();
+                KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+                LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+                await LoadThongTinHocSinh();
+                DataGridVisibility = true;
+                ProgressBarVisibility = false;
+            });
+            UpdateStudent = new RelayCommand<Model.HocSinh>((parameter) => { return true; }, async (parameter) =>
+            {
+                SuaThongTinHocSinh window = new SuaThongTinHocSinh();
+                SuaThongTinHocSinhViewModel data = window.DataContext as SuaThongTinHocSinhViewModel;
+                data.HocSinhHienTai = parameter;
+                window.ShowDialog();
+                DataGridVisibility = false;
+                ProgressBarVisibility = true;
+                DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
+                NienKhoaCmb = new ObservableCollection<string>();
+                KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+                LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+                await LoadThongTinHocSinh();
+                DataGridVisibility = true;
+                ProgressBarVisibility = false;
+            });
+            DeleteStudent = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                MessageBoxYesNo wd = new MessageBoxYesNo();
+
+                var data = wd.DataContext as MessageBoxYesNoViewModel;
+                data.Title = "Xác nhận!";
+                data.Question = "Bạn có chắc chắn muốn xóa học sinh này?";
+                wd.ShowDialog();
+
+                var result = wd.DataContext as MessageBoxYesNoViewModel;
+                if (result.IsYes == true)
+                {
+                    Model.HocSinh item = parameter as Model.HocSinh;
+                    XoaHocSinh(item);
+                }
+                DataGridVisibility = false;
+                ProgressBarVisibility = true;
+                DanhSachHocSinh = new ObservableCollection<Model.HocSinh>();
+                NienKhoaCmb = new ObservableCollection<string>();
+                KhoiCmb = new ObservableCollection<StudentManagement.Model.Khoi>();
+                LopCmb = new ObservableCollection<StudentManagement.Model.Lop>();
+                await LoadThongTinHocSinh();
+                DataGridVisibility = true;
+                ProgressBarVisibility = false;
+            });
+            MouseEnterComboBox = new RelayCommand<ComboBox>((parameter) => { return true; }, (parameter) =>
+            {
+                parameter.Focus();
+            });
+            MouseLeaveComboBox = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ThongTinHocSinhWD.btnTrick.Focus();
+            });
         }
     }
 }

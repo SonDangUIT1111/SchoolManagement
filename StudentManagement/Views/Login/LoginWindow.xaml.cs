@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using StudentManagement.ViewModel.Login;
+using System.Windows;
 
 namespace StudentManagement.Views.Login
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.Login
         public LoginWindow()
         {
             InitializeComponent();
+            DataContext = new LoginViewModel();
         }
     }
 }

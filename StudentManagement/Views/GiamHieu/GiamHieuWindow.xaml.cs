@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using StudentManagement.ViewModel.GiamHieu;
+using System.Windows;
 
 namespace StudentManagement.Views.GiamHieu
 {
@@ -10,6 +11,7 @@ namespace StudentManagement.Views.GiamHieu
         public GiamHieuWindow()
         {
             InitializeComponent();
+            DataContext = new TrangChuViewModel();
         }
     }
 }

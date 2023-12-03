@@ -112,7 +112,6 @@
     <Compile Include="Model\BaoCaoHocKy.cs" />
     <Compile Include="Model\BaoCaoMon.cs" />
     <Compile Include="Model\ConnectionString.cs" />
-    <Compile Include="Model\GiamHieu.cs" />
     <Compile Include="Model\GiaoVien.cs" />
     <Compile Include="Model\HeThongDiem.cs" />
     <Compile Include="Model\HocSinh.cs" />
@@ -159,6 +158,7 @@
     <Compile Include="ViewModel\HocSinh\DiemSoViewModel.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModel.cs" />
     <Compile Include="ViewModel\Login\ChangePasswordViewModel.cs" />
+    <Compile Include="ViewModel\Login\ForgotPasswordViewModel.cs" />
     <Compile Include="ViewModel\MessageBox\MessageBoxOKViewModel.cs" />
     <Compile Include="ViewModel\MessageBox\MessageBoxViewModel.cs" />
     <Compile Include="ViewModel\MessageBox\MessageBoxYesNoViewModel.cs" />
@@ -275,7 +275,6 @@
       <DependentUpon>ForgotPasswordWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\Login\LoginViewModel.cs" />
-    <Compile Include="ViewModel\Login\ForgotPasswordViewModel.cs" />
     <Compile Include="ViewModel\Title_Bar_ViewModels\Title_Bar_Log_ViewModel.cs" />
     <Compile Include="Views\Login\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>

@@ -11,7 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Windows.Controls;
 using System.Windows;
 using System.IO;
-
+using System.Text;
 
 namespace StudentManagement.ViewModel.Login.Tests
 {
@@ -25,6 +25,7 @@ namespace StudentManagement.ViewModel.Login.Tests
         {
             // Create the SuaHocSinhViewModel instance with the mock service
             viewModel = new ForgotPasswordViewModel();
+            Assert.IsNotNull(viewModel);
         }
 
 
@@ -113,6 +114,18 @@ namespace StudentManagement.ViewModel.Login.Tests
                 flag = false;
             }
             Assert.AreEqual(flag, result);
+            code = "A";
+            result = viewModel.CheckValidCode(code);
+            Assert.AreEqual(false, result);
+            code = "Z";
+            result = viewModel.CheckValidCode(code);
+            Assert.AreEqual(false, result);
+            code = "1";
+            result = viewModel.CheckValidCode(code);
+            Assert.AreEqual(false, result);
+            code = "9";
+            result = viewModel.CheckValidCode(code);
+            Assert.AreEqual(false, result);
 
         }
 
@@ -128,15 +141,21 @@ namespace StudentManagement.ViewModel.Login.Tests
                 // You can add code here for your test scenario
             });
 
-            var sut = new ForgotPasswordViewModel(fakeSqlConnection.Object);
+            var sut = new ForgotPasswordViewModel();
 
             try
             {
-                sut.NewPassword = "";
+                sut.NewPassword = "123456";
                 sut.IndexRole = 0;
                 sut.EmailProtected = "";
-                sut.DoiMatKhauMoi();
-                Assert.IsTrue(true);
+                var result = sut.DoiMatKhauMoi();
+                Assert.AreEqual(result, 0);
+                sut.IndexRole = 1;
+                result = sut.DoiMatKhauMoi();
+                Assert.AreEqual(result, 0);
+                sut.IndexRole = 2;
+                result = sut.DoiMatKhauMoi();
+                Assert.AreEqual(result, 0);
             }
             catch (Exception)
             {
@@ -155,16 +174,26 @@ namespace StudentManagement.ViewModel.Login.Tests
                 // You can add code here for your test scenario
             });
 
-            var sut = new ForgotPasswordViewModel(fakeSqlConnection.Object);
+            var sut = new ForgotPasswordViewModel();
 
             try
             {
                 sut.IndexRole = 0;
-                sut.GetThongTin();
-                Assert.IsTrue(true);
+                sut.EmailProtected = "";
+                var result = sut.GetThongTin();
+                Assert.AreEqual(result, 0);
+                sut.IndexRole = 1;
+                sut.EmailProtected = "thuyhang_edu_thuduc@gmail.com";
+                result = sut.GetThongTin();
+                Assert.AreEqual(result, 1);
+                sut.IndexRole = 2;
+                sut.EmailProtected = "thienthanh2007@gmail.com";
+                result = sut.GetThongTin();
+                Assert.AreEqual(result, 1);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
@@ -180,6 +209,44 @@ namespace StudentManagement.ViewModel.Login.Tests
             catch (Exception)
             {
                 Assert.Fail();
+            }
+        }
+        [TestMethod]
+        public void MD5Hash_Test()
+        {
+            var result = viewModel.CreateMD5("hello");
+            Assert.AreEqual(result, "5D41402ABC4B2A76B9719D911017C592");
+        }
+
+        [TestMethod]
+        public void Base4Hash_Test()
+        {
+            var result = viewModel.Base64Encode("password");
+            Assert.AreEqual(result, "cGFzc3dvcmQ=");
+        }
+
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                //return Convert.ToHexString(hashBytes); // .NET 5 +
+
+                // Convert the byte array to hexadecimal string prior to .NET 5
+                StringBuilder sb = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
             }
         }
 

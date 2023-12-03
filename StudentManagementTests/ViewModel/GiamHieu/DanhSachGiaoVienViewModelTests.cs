@@ -9,8 +9,7 @@ using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.ViewModel.Services;
 using StudentManagement.Model;
 using System.Windows;
-
-
+using System.Collections.ObjectModel;
 
 namespace StudentManagementTests.ViewModel.GiamHieu
 {
@@ -48,11 +47,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new DanhSachGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachGiaoVienViewModel();
             try
             {
+                sut.DanhSachGiaoVien = new ObservableCollection<StudentManagement.Model.GiaoVien>();
                 await sut.LoadDanhSachGiaoVien();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.DanhSachGiaoVien[0].MaGiaoVien,100031);
             } catch (Exception)
             {
                 Assert.Fail();
@@ -70,11 +70,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new DanhSachGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachGiaoVienViewModel();
             try
             {
+                sut.DanhSachGiaoVien = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.GiaoVien>() { };
                 await sut.LocGiaoVienTheoTen("Nguyễn Thủy Hằng");
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.DanhSachGiaoVien[0].MaGiaoVien, 100031);
             }
             catch (Exception)
             {
@@ -93,7 +94,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new DanhSachGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachGiaoVienViewModel();
 
 
             StudentManagement.Model.GiaoVien giaoVien = new StudentManagement.Model.GiaoVien();
@@ -101,8 +102,8 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             
             try
             {
-                sut.XoaGiaoVien(giaoVien);
-                Assert.IsTrue(true);
+                var res = sut.XoaGiaoVien(giaoVien);
+                Assert.AreEqual(res, 0);
             } catch (Exception)
             {
                 Assert.Fail();

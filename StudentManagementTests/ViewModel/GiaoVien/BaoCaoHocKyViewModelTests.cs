@@ -25,6 +25,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
         {
             viewModel = new BaoCaoHocKyViewModel();
         }
+
         [TestMethod]
         public void LoadComboboxData()
         {
@@ -37,7 +38,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new BaoCaoHocKyViewModel(fakeSqlConnection.Object);
+            var sut = new BaoCaoHocKyViewModel();
 
 
             ObservableCollection<string> _testNienKhoaComboBox = new ObservableCollection<string>();
@@ -49,8 +50,15 @@ namespace StudentManagementTests.ViewModel.GiaoVien
 
                 sut.NienKhoaComboBox = _testNienKhoaComboBox;
                 sut.NienKhoaQueries = _testNienKhoaQueries;
+                var result = sut.LoadComboboxData() > 0;
+
+                Assert.IsTrue(result);
+                result = sut.NienKhoaComboBox.Count > 0;
+
+                Assert.IsTrue(result);
+                sut.NienKhoaQueries = null;
                 sut.LoadComboboxData();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.NienKhoaQueries, "2022-2023");
             }
             catch (Exception)
             {
@@ -69,7 +77,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new BaoCaoHocKyViewModel(fakeSqlConnection.Object);
+            var sut = new BaoCaoHocKyViewModel();
             ObservableCollection<Khoi> _testKhoiComboBox = new ObservableCollection<Khoi>();
             string _testHocKyQueries = "1";
             string _testNienKhoaQueries = "2023-2024";
@@ -81,10 +89,14 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.HocKyQueries = _testHocKyQueries;
                 sut.NienKhoaQueries = _testNienKhoaQueries;
                 sut.KhoiQueries = _testKhoiQueries;
-                sut.FilterKhoiFromNienKhoa();
-                Assert.IsTrue(true);
-            } catch (Exception)
+                var result = sut.FilterKhoiFromNienKhoa() > 0;
+                Assert.IsTrue(result);
+                Assert.AreEqual(sut.KhoiComboBox[0].MaKhoi, 1);
+                Assert.AreEqual(sut.KhoiQueries, "1");
+            }
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
 
@@ -117,9 +129,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
 
 
 
-            var sut = new BaoCaoHocKyViewModel(fakeSqlConnection.Object);
-            sut.BaoCaoHocKyWD = new StudentManagement.Views.GiamHieu.BaoCaoTongKetHocKy();
-
+            var sut = new BaoCaoHocKyViewModel();
 
             try
             {
@@ -136,9 +146,10 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.TiLeDat = _testTiLeDat;
                 sut.IsTesting = _IsTeting;
                 await sut.LoadDanhSachBaoCaoHocKy();
+                var res = sut.DanhSachBaoCaoHocKy.Count > 0;
+                Assert.IsTrue(res);
                 sut.LoadCartesianChart();
                 sut.LoadPieChart();
-                Assert.IsTrue(true);
             }
             catch (Exception e)
             {
@@ -154,7 +165,10 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             viewModel.PieChartVisibility = true;
             viewModel.DataGridVisibility = true;
             viewModel.ProgressBarVisibility = true;
-
+            viewModel.Dat = 1;
+            viewModel.KhongDat = 1;
+            Assert.AreEqual(1, viewModel.Dat);
+            Assert.AreEqual(1, viewModel.KhongDat);
             Assert.AreEqual(true, viewModel.CartersianChartVisibility);
             Assert.AreEqual(true, viewModel.PieChartVisibility);
             Assert.AreEqual(true, viewModel.DataGridVisibility);

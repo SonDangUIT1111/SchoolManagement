@@ -14,6 +14,10 @@ namespace StudentManagement.ViewModel.GiaoVien
 {
     public class ThanhTichHocSinhViewModel : BaseViewModel
     {
+        const string whereconst = "' where MaThanhTich = '";
+        const string ccnx = "Chưa có nhận xét";
+        const bool t = true;
+        const bool f = false;
         public ThanhTichHocSinh ThanhTichWD;
 
         public string NienKhoaQueries;
@@ -28,35 +32,35 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ObservableCollection<string> NienKhoaCombobox
         {
             get => _nienKhoaCombobox;
-            set { _nienKhoaCombobox = value; OnPropertyChanged(); }
+            set { _nienKhoaCombobox = value;  }
         }
 
         public ObservableCollection<Model.Khoi> _khoiCombobox;
         public ObservableCollection<Model.Khoi> KhoiCombobox
         {
             get => _khoiCombobox;
-            set { _khoiCombobox = value; OnPropertyChanged(); }
+            set { _khoiCombobox = value;  }
         }
 
         public ObservableCollection<Model.Lop> _lopCombobox;
         public ObservableCollection<Model.Lop> LopCombobox
         {
             get => _lopCombobox;
-            set { _lopCombobox = value; OnPropertyChanged(); }
+            set { _lopCombobox = value;  }
         }
 
         public ObservableCollection<string> _hocKyCombobox;
         public ObservableCollection<string> HocKyCombobox
         {
             get => _hocKyCombobox;
-            set { _hocKyCombobox = value; OnPropertyChanged(); }
+            set { _hocKyCombobox = value;  }
         }
 
         private ObservableCollection<StudentManagement.Model.ThanhTich> _danhSachThanhTichHocSinh;
         public ObservableCollection<StudentManagement.Model.ThanhTich> DanhSachThanhTichHocSinh
         {
             get => _danhSachThanhTichHocSinh;
-            set { _danhSachThanhTichHocSinh = value; OnPropertyChanged(); }
+            set { _danhSachThanhTichHocSinh = value;  }
         }
 
 
@@ -67,7 +71,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _nhanXetTextBoxVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -78,8 +82,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _nhanXetTextBlockVisibility = value;
-                OnPropertyChanged();
-            }
+                            }
         }
 
 
@@ -90,7 +93,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _editNhanXetVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -101,7 +104,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _completeNhanXetVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -113,7 +116,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _nhanXetTextBoxIsEnabled = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -128,7 +131,7 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _dataGridVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -143,16 +146,10 @@ namespace StudentManagement.ViewModel.GiaoVien
             set
             {
                 _progressBarVisibility = value;
-                OnPropertyChanged();
+                
             }
         }
 
-        private readonly ISqlConnectionWrapper sqlConnection;
-
-        public ThanhTichHocSinhViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
 
         public ICommand LoadThanhTich { get; set; }
         public ICommand FilterNienKhoa { get; set; }
@@ -162,93 +159,6 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand EditNhanXet { get; set; }
         public ICommand CompleteNhanXet { get; set; }
 
-        public ThanhTichHocSinhViewModel()
-        {
-            IdUser = 100000;
-            everLoaded = false;
-            DanhSachThanhTichHocSinh = new ObservableCollection<Model.ThanhTich>();
-            NienKhoaCombobox = new ObservableCollection<string>();
-            KhoiCombobox = new ObservableCollection<Khoi>();
-            HocKyCombobox = new ObservableCollection<string>();
-            LopCombobox = new ObservableCollection<Lop>();
-            LoadThanhTich = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                //if (everLoaded == false)
-                //{
-                    ThanhTichWD = parameter as ThanhTichHocSinh;
-                    LoadComboBox();
-                    DataGridVisibility = false;
-                    ProgressBarVisibility = true;
-                    await LoadDanhSachThanhTichHocSinh();
-                    DataGridVisibility = true;
-                    ProgressBarVisibility = false;
-                //    everLoaded = true;
-                //}
-            });
-
-            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null && cmb.SelectedItem != null)
-                {
-                    NienKhoaQueries = cmb.SelectedItem.ToString();
-                    FilterKhoiFromNienKhoa();
-                }
-            });
-
-            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null && cmb.SelectedItem != null)
-                {
-                    Khoi item = cmb.SelectedItem as Khoi;
-                    KhoiQueries = item.MaKhoi.ToString();
-                    FilterLopFromKhoi();
-                }
-            });
-
-            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null && cmb.SelectedItem != null)
-                {
-                    Lop item = cmb.SelectedItem as Lop;
-                    LopQueries = item.MaLop.ToString();
-                    FilterHocKyFromLop();
-                }
-            });
-            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
-            {
-                ComboBox cmb = parameter as ComboBox;
-                if (cmb != null && cmb.SelectedItem != null)
-                {
-                    if (cmb.SelectedItem.ToString().Contains("1"))
-                        HocKyQueries = "1";
-                    else
-                        HocKyQueries = "2";
-                    DataGridVisibility = false;
-                    ProgressBarVisibility = true;
-                    await LoadDanhSachThanhTichHocSinh();
-                    DataGridVisibility = true;
-                    ProgressBarVisibility = false;
-                }
-            });
-
-            EditNhanXet = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                EditNhanXetVisibility = false;
-                CompleteNhanXetVisibility = true;
-                NhanXetTextBoxIsEnabled = true;
-            });
-
-            CompleteNhanXet = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
-            {
-                EditNhanXetVisibility = true;
-                CompleteNhanXetVisibility = false;
-                NhanXetTextBoxIsEnabled = false;
-                UpdateNhanXet();
-            });
-        }
 
 
         public void LoadComboBox()
@@ -269,32 +179,31 @@ namespace StudentManagement.ViewModel.GiaoVien
                             if (string.IsNullOrEmpty(NienKhoaQueries))
                             {
                                 NienKhoaQueries = reader.GetString(0);
-                                try
-                                {
-                                    ThanhTichWD.cmbNienKhoa.SelectedIndex = 0;
-                                }
-                                catch (Exception) { }
-                                FilterKhoiFromNienKhoa();
-                                try
-                                {
-                                    ThanhTichWD.cmbKhoi.SelectedIndex = 0;
-                                } catch (Exception) { }
-                                FilterLopFromKhoi();
-                                try
-                                {
-                                    ThanhTichWD.cmbLop.SelectedIndex = 0;
-                                } catch (Exception) { }
-                                FilterHocKyFromLop();
-                                try
-                                {
-                                    ThanhTichWD.cmbHocky.SelectedIndex = 0;
-                                } catch (Exception) { }
+                                //try
+                                //{
+                                //    ThanhTichWD.cmbNienKhoa.SelectedIndex = 0;
+                                //}
+                                //catch (Exception) { }
+                                //FilterKhoiFromNienKhoa();
+                                //try
+                                //{
+                                //    ThanhTichWD.cmbKhoi.SelectedIndex = 0;
+                                //} catch (Exception) { }
+                                //FilterLopFromKhoi();
+                                //try
+                                //{
+                                //    ThanhTichWD.cmbLop.SelectedIndex = 0;
+                                //} catch (Exception) { }
+                                //FilterHocKyFromLop();
+                                //try
+                                //{
+                                //    ThanhTichWD.cmbHocky.SelectedIndex = 0;
+                                //} catch (Exception) { }
 
                             }
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
@@ -307,7 +216,6 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public void FilterKhoiFromNienKhoa()
         {
-            KhoiCombobox.Clear();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
@@ -325,10 +233,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                                 MaKhoi = reader.GetInt32(0),
                                 TenKhoi = reader.GetString(1)
                             });
-                            try
-                            {
-                                ThanhTichWD.cmbKhoi.SelectedIndex = 0;
-                            } catch (Exception) { }   
+                            //try
+                            //{
+                            //    ThanhTichWD.cmbKhoi.SelectedIndex = 0;
+                            //} catch (Exception) { }   
                             if (string.IsNullOrEmpty(KhoiQueries))
                             {
                                 KhoiQueries = reader.GetInt32(0).ToString();
@@ -336,7 +244,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 } catch (Exception)
                 {
                     //MessageBoxFail messageBoxFail = new MessageBoxFail();
@@ -347,14 +254,13 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public void FilterLopFromKhoi()
         {
-            LopCombobox.Clear();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     sqlConnectionWrap.Open();
                     string cmdString = "select distinct tt.MaLop,TenLop from ThanhTich tt join Lop l on tt.MaLop = l.MaLop " +
-                                        " where NienKhoa = '" + NienKhoaQueries + "' and  l.MaKhoi = " + KhoiQueries + " ";
+                                        " where NienKhoa = '" + NienKhoaQueries + "' and  l.MaKhoi = " + KhoiQueries;
                     SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -366,10 +272,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                                 MaLop = reader.GetInt32(0),
                                 TenLop = reader.GetString(1)
                             });
-                            try
-                            {
-                                ThanhTichWD.cmbLop.SelectedIndex = 0;
-                            } catch (Exception) { }
+                            //try
+                            //{
+                            //    ThanhTichWD.cmbLop.SelectedIndex = 0;
+                            //} catch (Exception) { }
                             if (string.IsNullOrEmpty(LopQueries))
                             {
                                 LopQueries = reader.GetInt32(0).ToString();
@@ -377,7 +283,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
@@ -391,14 +296,13 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public void FilterHocKyFromLop()
         {
-            HocKyCombobox.Clear();
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     sqlConnectionWrap.Open();
                     string cmdString = "select distinct HocKy from ThanhTich tt join Lop l on tt.MaLop = l.MaLop " +
-                                        " where NienKhoa = '" + NienKhoaQueries + "' and l.MaKhoi = " + KhoiQueries + " and l.MaLop = " + LopQueries + " ";
+                                        " where NienKhoa = '" + NienKhoaQueries + "' and l.MaKhoi = " + KhoiQueries + " and l.MaLop = " + LopQueries;
                     SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.HasRows)
@@ -406,10 +310,10 @@ namespace StudentManagement.ViewModel.GiaoVien
                         while (reader.Read())
                         {
                             HocKyCombobox.Add("Học kỳ " + reader.GetInt32(0).ToString());
-                            try
-                            {
-                                ThanhTichWD.cmbHocky.SelectedIndex = 0;
-                            } catch (Exception) { }
+                            //try
+                            //{
+                            //    ThanhTichWD.cmbHocky.SelectedIndex = 0;
+                            //} catch (Exception) { }
                             if (string.IsNullOrEmpty(HocKyQueries))
                             {
                                 HocKyQueries = reader.GetInt32(0).ToString();
@@ -417,7 +321,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                         }
                         reader.NextResult();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
@@ -430,15 +333,14 @@ namespace StudentManagement.ViewModel.GiaoVien
 
         public async Task LoadDanhSachThanhTichHocSinh()
         {
-            DanhSachThanhTichHocSinh.Clear();
-            bool verify = false;
+            bool verify = f;
             using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
                 try
                 {
                     sqlConnectionWrap.Open();
                     string CmdString = "select tt.MaThanhTich,TenHocSinh,l.TenLop,tt.XepLoai,tt.TrungBinhHocKy,tt.NhanXet,MaGVCN from ThanhTich tt join Lop l on tt.MaLop = l.MaLop join HocSinh hs on tt.MaHocSinh = hs.MaHocSinh " +
-                                        " where NienKhoa ='" + NienKhoaQueries + "' and l.MaKhoi = " + KhoiQueries + " and tt.MaLop = " + LopQueries + " and HocKy = " + HocKyQueries + " ";
+                                        " where NienKhoa ='" + NienKhoaQueries + "' and l.MaKhoi = " + KhoiQueries + " and tt.MaLop = " + LopQueries + " and HocKy = " + HocKyQueries;
                     SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
                     SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
@@ -466,44 +368,43 @@ namespace StudentManagement.ViewModel.GiaoVien
                             }
                             catch (Exception)
                             {
-                                thanhtich.NhanXet = "Chưa có nhận xét";
+                                thanhtich.NhanXet = ccnx;
                             }
 
                            
 
                             DanhSachThanhTichHocSinh.Add(thanhtich);
-                            if (verify == false)
+                            if (verify == f)
                             {
                                 try
                                 {
                                     if (IdUser == reader.GetInt32(6))
                                     {
-                                        EditNhanXetVisibility = true;
-                                        CompleteNhanXetVisibility = false;
-                                        NhanXetTextBoxIsEnabled = false;
-                                        verify = true;
+                                        EditNhanXetVisibility = t;
+                                        CompleteNhanXetVisibility = f;
+                                        NhanXetTextBoxIsEnabled = f;
+                                        verify = t;
                                     }
                                     else
                                     {
-                                        EditNhanXetVisibility = false;
-                                        CompleteNhanXetVisibility = false;
-                                        NhanXetTextBoxIsEnabled = false;
-                                        verify = true;
+                                        EditNhanXetVisibility = f;
+                                        CompleteNhanXetVisibility = f;
+                                        NhanXetTextBoxIsEnabled = f;
+                                        verify = t;
                                     }
                                 }
                                 catch (Exception)
                                 {
-                                    EditNhanXetVisibility = false;
-                                    CompleteNhanXetVisibility = false;
-                                    NhanXetTextBoxIsEnabled = false;
-                                    verify = true;
+                                    EditNhanXetVisibility = f;
+                                    CompleteNhanXetVisibility = f;
+                                    NhanXetTextBoxIsEnabled = f;
+                                    verify = t;
                                 }
                                 
                             }
                         }
                         await reader.NextResultAsync();
                     }
-                    sqlConnectionWrap.Close();
                 }
                 catch (Exception)
                 {
@@ -513,29 +414,122 @@ namespace StudentManagement.ViewModel.GiaoVien
             }
         }
 
-         public void UpdateNhanXet()
+         public int UpdateNhanXet()
             {
+            int count = 0;
                 foreach (var item in DanhSachThanhTichHocSinh)
                 {
                     using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
                     {
-                        try
-                        {
                             sqlConnectionWrap.Open();
-                            string CmdString = "update ThanhTich Set NhanXet=N'" + item.NhanXet + "' where MaThanhTich = '" + item.MaThanhTich + "'";
+                            string CmdString = "update ThanhTich Set NhanXet=N'" + item.NhanXet + whereconst + item.MaThanhTich + "'";
                             SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                            cmd.ExecuteNonQuery();
-                            sqlConnectionWrap.Close();
-                        }
-                        catch (Exception)
-                        {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                    }
+                            count += cmd.ExecuteNonQuery();
+
                     }
                 }
+            return count;
             }
+        public ThanhTichHocSinhViewModel()
+        {
+            // Stryker disable all
+            IdUser = 100000;
+            everLoaded = false;
+            DanhSachThanhTichHocSinh = new ObservableCollection<Model.ThanhTich>();
+            NienKhoaCombobox = new ObservableCollection<string>();
+            KhoiCombobox = new ObservableCollection<Khoi>();
+            HocKyCombobox = new ObservableCollection<string>();
+            LopCombobox = new ObservableCollection<Lop>();
+            LoadThanhTich = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                //if (everLoaded == false)
+                //{
+                ThanhTichWD = parameter as ThanhTichHocSinh;
+                KhoiCombobox.Clear();
+                LopCombobox.Clear();
+                HocKyCombobox.Clear();
+                LoadComboBox();
+                FilterKhoiFromNienKhoa();
+                FilterLopFromKhoi();
+                FilterHocKyFromLop();
+                DataGridVisibility = false;
+                ProgressBarVisibility = true;
+                DanhSachThanhTichHocSinh.Clear();
+                await LoadDanhSachThanhTichHocSinh();
+                DataGridVisibility = true;
+                ProgressBarVisibility = false;
+                //    everLoaded = true;
+                //}
+            });
+
+            FilterNienKhoa = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null && cmb.SelectedItem != null)
+                {
+                    NienKhoaQueries = cmb.SelectedItem.ToString();
+                    KhoiCombobox.Clear();
+                    FilterKhoiFromNienKhoa();
+                }
+            });
+
+            FilterKhoi = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null && cmb.SelectedItem != null)
+                {
+                    Khoi item = cmb.SelectedItem as Khoi;
+                    KhoiQueries = item.MaKhoi.ToString();
+                    LopCombobox.Clear();
+                    FilterLopFromKhoi();
+                }
+            });
+
+            FilterLop = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null && cmb.SelectedItem != null)
+                {
+                    Lop item = cmb.SelectedItem as Lop;
+                    LopQueries = item.MaLop.ToString();
+                    HocKyCombobox.Clear();
+                    FilterHocKyFromLop();
+                }
+            });
+            FilterHocKy = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
+            {
+                ComboBox cmb = parameter as ComboBox;
+                if (cmb != null && cmb.SelectedItem != null)
+                {
+                    if (cmb.SelectedItem.ToString().Contains("1"))
+                        HocKyQueries = "1";
+                    else
+                        HocKyQueries = "2";
+                    DataGridVisibility = false;
+                    ProgressBarVisibility = true;
+                    DanhSachThanhTichHocSinh.Clear();
+                    await LoadDanhSachThanhTichHocSinh();
+                    DataGridVisibility = true;
+                    ProgressBarVisibility = false;
+                }
+            });
+
+            EditNhanXet = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                EditNhanXetVisibility = false;
+                CompleteNhanXetVisibility = true;
+                NhanXetTextBoxIsEnabled = true;
+            });
+
+            CompleteNhanXet = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
+            {
+                EditNhanXetVisibility = true;
+                CompleteNhanXetVisibility = false;
+                NhanXetTextBoxIsEnabled = false;
+                UpdateNhanXet();
+            });
         }
+    }
     }
 
  

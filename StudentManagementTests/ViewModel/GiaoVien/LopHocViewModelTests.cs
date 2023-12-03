@@ -67,14 +67,17 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
                 sut.DanhSachLop = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.Lop> { };
                 sut.DanhSachhs = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
+                sut.KhoiQueries = "1";
+                sut.NienKhoaQueries = "2023-2024";
                 sut.LoadDanhSachLop();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.LopQueries, "151");
+                Assert.IsTrue(sut.DanhSachLop.Count > 0);
             }catch (Exception)
             {
                 Assert.Fail();
@@ -93,7 +96,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
@@ -117,7 +120,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
@@ -142,7 +145,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
@@ -153,12 +156,17 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.KhoiQueries = null;
                 sut.InitComboBox();
                 sut.KhoiQueries = "1";
-                sut.NienKhoaQueries = "2023-2024";
                 sut.InitComboBox();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.NienKhoaQueries,"2022-2023");
+                Assert.IsTrue(sut.DanhSachNienKhoa.Count > 0);
+                Assert.AreEqual(sut.DanhSachKhoi[0].MaKhoi,1);
+                Assert.AreEqual(sut.KhoiQueries, "1");
+                Assert.AreEqual(sut.LopQueries, "166");
+                Assert.IsTrue(sut.DanhSachLop.Count > 0);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }
@@ -174,15 +182,15 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
 
             try
             {
                 sut.DanhSachhs = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopQueries = "151";
-                TextBox textBox = new TextBox() { Text = "" };
+                TextBox textBox = new TextBox() { Text = "Thanh 123" };
                 sut.LocHocSinhTheoTen(textBox);
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.DanhSachhs[0].MaHocSinh,100046);
             }
             catch (Exception)
             {
@@ -201,13 +209,13 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new LopHocViewModel(fakeSqlConnection.Object);
+            var sut = new LopHocViewModel();
             try
             {
                 sut.DanhSachhs = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopQueries = "151";
                 await sut.LoadDanhSachHocSinh();
-                Assert.IsTrue(true);
+                Assert.IsTrue(sut.DanhSachhs.Count > 0);
             }
             catch (Exception)
             {

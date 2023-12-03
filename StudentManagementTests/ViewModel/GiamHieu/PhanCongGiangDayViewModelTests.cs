@@ -49,7 +49,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new PhanCongGiangDayViewModel(fakeSqlConnection.Object);
+            var sut = new PhanCongGiangDayViewModel();
 
             try
             {
@@ -60,7 +60,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.KhoiCmb = _testKhoiCmb;
                 sut.LopCmb = _testLopCmb;
                 sut.LoadThongTinCmb();
-                Assert.IsTrue(true);
+                Assert.IsTrue(sut.NienKhoaCmb.Count > 0);
+                Assert.AreEqual(sut.NienKhoaQueries, "2022-2023");
+                Assert.IsTrue(sut.KhoiCmb.Count > 0);
+                Assert.AreEqual(sut.KhoiQueries, "1");
+                Assert.IsTrue(sut.LopCmb.Count > 0);
+                Assert.AreEqual(sut.LopQueries, "166");
             }
             catch (Exception)
             {
@@ -76,13 +81,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new PhanCongGiangDayViewModel(fakeSqlConnection.Object);
+            var sut = new PhanCongGiangDayViewModel();
 
             try
             {
                 sut.LopQueries = "151";
+                sut.DanhSachPhanCong = new ObservableCollection<PhanCongGiangDay>();
                 await sut.LoadThongTinPhanCong();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.DanhSachPhanCong[0].MaPhanCong, 100022);
             }
             catch (Exception)   
             {
@@ -98,7 +104,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             {
             });
-            var sut = new PhanCongGiangDayViewModel(fakeSqlConnection.Object);
+            var sut = new PhanCongGiangDayViewModel();
 
             try
             {
@@ -106,7 +112,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 sut.KhoiQueries = "1";
                 sut.NienKhoaQueries = "2023-2024";
                 sut.FilterLopFromSelection();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.LopCmb[0].MaLop,151);
             } catch (Exception)
             {
                 Assert.Fail();
@@ -120,13 +126,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             {
             });
-            var sut = new PhanCongGiangDayViewModel(fakeSqlConnection.Object);
+            var sut = new PhanCongGiangDayViewModel();
 
             try
             {
                 sut.KhoiCmb = _testKhoiCmb;
                 sut.FilterKhoiFromSelection();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.KhoiCmb[0].MaKhoi,1);
             }
             catch (Exception)
             {
@@ -137,16 +143,16 @@ namespace StudentManagementTests.ViewModel.GiamHieu
         public void XoaPhanCong()
         {
             PhanCongGiangDay _testItem = new PhanCongGiangDay();
-            _testItem.MaPhanCong = 100021;
+            _testItem.MaPhanCong = 1;
             var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() =>
             {
             });
-            var sut = new PhanCongGiangDayViewModel(fakeSqlConnection.Object);
+            var sut = new PhanCongGiangDayViewModel();
             try
             {
-                sut.XoaPhanCong(_testItem);
-                Assert.IsTrue(true);
+                var res = sut.XoaPhanCong(_testItem);
+                Assert.AreEqual(res,0);
             }
             catch (Exception)
             {

@@ -8,8 +8,7 @@ namespace StudentManagement.Model
 {
     public class BaoCaoMon
     {
-        private int _maBaoCaoMon;
-        public int MaBaoCaoMon { get { return _maBaoCaoMon; } set { _maBaoCaoMon = value; } }
+
         private int _maLop;
         public int MaLop { get { return _maLop; } set { _maLop = value; } }
         private string _tenLop;
@@ -22,8 +21,7 @@ namespace StudentManagement.Model
         public string TenMon { get { return _tenMon; } set { _tenMon = value; } }
         private int _hocKy;
         public int HocKy { get { return _hocKy; } set { _hocKy = value; } }
-        private string _nienKhoa;
-        public string NienKhoa { get { return _nienKhoa; } set { _nienKhoa = value; } }
+
         private int _soLuongDat;
         public int SoLuongDat { get { return _soLuongDat; } set { _soLuongDat = value; } }
         private string _tiLe;

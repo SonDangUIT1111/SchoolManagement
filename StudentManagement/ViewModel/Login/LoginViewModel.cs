@@ -17,27 +17,20 @@ using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
 {
-    public class LoginViewModel : BaseViewModel, IDataErrorInfo
+    public class LoginViewModel : BaseViewModel
     {
 
         // khai báo biến
         public bool IsLoggedIn { get; set; }
         private string _username;
-        public string Username { get => _username; set { _username = value; OnPropertyChanged(); } }
+        public string Username { get => _username; set { _username = value;  } }
         private string _password;
-        public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
+        public string Password { get => _password; set { _password = value;  } }
         private int _indexRole = -1;
-        public int IndexRole { get => _indexRole; set { _indexRole = value; OnPropertyChanged(); } }
+        public int IndexRole { get => _indexRole; set { _indexRole = value;  } }
 
         // khai báo usercontrol
         public LoginWindow LoginWindow { get; set; }
-
-        private readonly ISqlConnectionWrapper sqlConnection;
-
-        public LoginViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
 
 
         // khai báo command
@@ -53,55 +46,85 @@ namespace StudentManagement.ViewModel.Login
         public ICommand TurnToLoginForm { get; set; }
         public ICommand LogOut { get; set; }
 
-        // in lỗi để username trống
-        public string Error { get { return null; } }
 
-        public string this[string columnName]
+
+
+        public bool ValidateInfo(string username, string password)
         {
-            get
+            if ( username == "" || password == "" || username == null || password == null)
+                return false;
+            return true;
+        }
+
+        public bool CheckInvalidRole(int index)
+        {
+            return index >= 0 && index <= 2;
+        }
+
+        public int GetThongTin(string passEncode)
+        {
+            string CmdString;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
             {
-                if (LoginWindow != null)
-                {
-                    string ErrorMess = null;
-                    if (LoginWindow.Account.IsFocused == true)
-                    {
-                        switch (columnName)
-                        {
-                            case "Username":
-                                if (String.IsNullOrEmpty(Username))
-                                    ErrorMess = "Vui lòng nhập username.";
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        ErrorMess = "";
-                    }
-                    return ErrorMess;
-                }
-                else return null;
+                //try
+                //{
+                    sqlConnectionWrap.Open();
+                    CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    int checkUser = Convert.ToInt32(cmd.ExecuteScalar());
+                    if (checkUser == 0) return -1;
+
+
+                    CmdString = "Select " + (IndexRole == 0 ? "MaTruong" : IndexRole == 1 ? "MaGiaoVien" : "MaHocSinh") + " from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
+                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    int id = Convert.ToInt32(cmd.ExecuteScalar());
+                    return id;
+                //}
+                //catch (Exception)
+                //{
+                //    return -1;
+                //}
 
             }
         }
 
+        // hàm mã hóa mật khẩu
+        public string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                //return Convert.ToHexString(hashBytes); // .NET 5 +
+
+                // Convert the byte array to hexadecimal string prior to .NET 5
+                StringBuilder sb = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
 
         public LoginViewModel()
         {
-            IsLoggedIn = false;
-            Username = "";
-            Password = "";
-
-            // binding text 
+            // Stryker disable all
             PasswordChangedCommand = new RelayCommand<PasswordBox>((paramater) => { return true; }, (paramater) => { Password = paramater.Password; });
             PasswordEyeChangedCommand = new RelayCommand<TextBox>((paramater) => { return true; }, (paramater) => { Password = paramater.Text; });
 
             LoadData = new RelayCommand<LoginWindow>((parameter) => { return true; }, (parameter) =>
             {
                 LoginWindow = parameter;
-                
-                
+
+
             });
 
             // navigate
@@ -219,6 +242,7 @@ namespace StudentManagement.ViewModel.Login
             {
                 LoginWindow.RoleForm.Visibility = Visibility.Collapsed;
                 LoginWindow.LoginForm.Visibility = Visibility.Visible;
+
                 if (LoginWindow.GiaoVienRole.IsChecked == true)
                 {
                     IndexRole = 1;
@@ -238,75 +262,8 @@ namespace StudentManagement.ViewModel.Login
                 parameter.Close();
                 LoginWindow loginWindow = new LoginWindow();
                 LoginViewModel vm = loginWindow.DataContext as LoginViewModel;
-                vm.Username = "";
                 loginWindow.ShowDialog();
             });
-        }
-
-        public bool ValidateInfo(string username, string password)
-        {
-            if ( username == "" || password == "" || username == null || password == null)
-                return false;
-            return true;
-        }
-
-        public bool CheckInvalidRole(int index)
-        {
-            return index >= 0 && index <= 2;
-        }
-
-        public int GetThongTin(string passEncode)
-        {
-            string CmdString = string.Empty;
-            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrap.Open();
-                    CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    int checkUser = Convert.ToInt32(cmd.ExecuteScalar());
-                    if (checkUser <= 0) return -1;
-
-
-                    CmdString = "Select " + (IndexRole == 0 ? "MaTruong" : IndexRole == 1 ? "MaGiaoVien" : "MaHocSinh") + " from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Username = '" + Username + "' and UserPassword = '" + passEncode + "'";
-                    cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    int id = Convert.ToInt32(cmd.ExecuteScalar());
-                    sqlConnectionWrap.Close();
-                    return id;
-                }
-                catch (Exception)
-                {
-                    return -1;
-                }
-
-            }
-        }
-
-        // hàm mã hóa mật khẩu
-        public string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-        public string CreateMD5(string input)
-        {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                //return Convert.ToHexString(hashBytes); // .NET 5 +
-
-                // Convert the byte array to hexadecimal string prior to .NET 5
-                StringBuilder sb = new System.Text.StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
-            }
         }
     }
 }

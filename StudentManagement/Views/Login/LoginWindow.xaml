@@ -20,9 +20,9 @@
         ResizeMode="NoResize" WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         Icon="ThongTinTruong1.ico"
-        DataContext="{StaticResource LoginVM}"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        Name="LoginWD">
+        Name="LoginWD"
+        x:FieldModifier="public">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding LoadData}"
@@ -160,10 +160,9 @@
                                              HorizontalAlignment="Center"
                                              Margin="30,0,0,0"
                                              Text="{Binding Username,
-                                             ValidatesOnDataErrors=True,
                                              UpdateSourceTrigger=PropertyChanged}"
-                                             Validation.ErrorTemplate="{StaticResource ErrorMessage}" 
-                                             FontWeight="SemiBold"/>
+                                             FontWeight="SemiBold"
+                                             x:FieldModifier="public"/>
                                     <materialDesign:PackIcon Kind="Account"
                                                  Height="20"
                                                  Width="20"
@@ -304,7 +303,7 @@
                             </materialDesign:TransitioningContent>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel x:Name="RoleForm" Visibility="Visible">
+                    <StackPanel x:Name="RoleForm" Visibility="Visible" x:FieldModifier="public">
                         <materialDesign:TransitioningContent>
                             <materialDesign:TransitioningContent.OpeningEffects>
                                 <materialDesign:TransitionEffect Kind="SlideInFromLeft" Duration="0:0:0.8"/>

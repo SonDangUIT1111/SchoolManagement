@@ -34,13 +34,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThayDoiQuyDinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThayDoiQuyDinhViewModel();
 
             try
             {
                 sut.DanhSachQuyDinh = _testDanhSachQuyDinh;
                 sut.LoadThongTinCmb();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.DanhSachQuyDinh[0].MaQuiDinh, 1);
             }
             catch (Exception)
             {
@@ -62,16 +62,18 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThayDoiQuyDinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThayDoiQuyDinhViewModel();
 
             try
             {
+                sut.itemQuyDinh = new StudentManagement.Model.QuiDinh();
                 sut.QuyDinhQueries = _testQuyDinhQueries;
                 sut.LoadQuyDinhFromSelection();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.itemQuyDinh.MaQuiDinh, 1);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
 

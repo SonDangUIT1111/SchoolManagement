@@ -12,6 +12,7 @@ using StudentManagement.Views.GiaoVien;
 using StudentManagement.Views.GiamHieu;
 using System.IO;
 using System.Reflection;
+using System.Windows.Controls;
 
 namespace StudentManagementTests.ViewModel.GiamHieu
 {
@@ -39,6 +40,17 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             bool result = viewModel.IsValidEmail(invalidEmail);
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void ToShortDateTimeTest()
+        {
+            DatePicker dt= new DatePicker();
+            var res = viewModel.ToShortDateTime(dt);
+            Assert.AreEqual(res, "");
+            dt = new DatePicker() { SelectedDate = new DateTime(2003,1,1)};
+            res = viewModel.ToShortDateTime(dt);
+            Assert.AreEqual(res, "2003-1-1");
+        }
         [TestMethod]
         public void CapNhatGiaoVien_ValidInput_ShouldUpdate()
         {
@@ -48,7 +60,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new SuaGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new SuaGiaoVienViewModel();
 
             sut.SuaGiaoVienWD = new SuaGiaoVien();
             sut.SuaGiaoVienWD.TenGV.Text = "John Doe";
@@ -56,11 +68,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             sut.SuaGiaoVienWD.GioiTinh.SelectedIndex = 0;
             sut.SuaGiaoVienWD.DiaChi.Text = "123 Main St";
             sut.SuaGiaoVienWD.Email.Text = "john.doe@example.com";
+            sut.GiaoVienHienTai = new StudentManagement.Model.GiaoVien() { MaGiaoVien = 100046 };
 
             try
             {
-                sut.CapNhatGiaoVien();
-                Assert.IsTrue(true);
+                var res = sut.CapNhatGiaoVien();
+                Assert.AreEqual(res,1);
             }
             catch (Exception)
             {
@@ -77,7 +90,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new SuaGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new SuaGiaoVienViewModel();
 
             sut.SuaGiaoVienWD = new SuaGiaoVien();
             sut.SuaGiaoVienWD.TenGV.Text = "";
@@ -102,7 +115,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             {
             });
 
-            var sut = new SuaGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new SuaGiaoVienViewModel();
 
             sut.SuaGiaoVienWD = new SuaGiaoVien();
             sut.SuaGiaoVienWD.Email.Text = "invalid-email";
@@ -131,7 +144,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
 
 
 
-            var sut = new SuaGiaoVienViewModel(fakeSqlConnection.Object);
+            var sut = new SuaGiaoVienViewModel();
 
 
             sut.SuaGiaoVienWD = new SuaGiaoVien();

@@ -40,26 +40,29 @@ namespace StudentManagement.ViewModel.Login.Tests
             Assert.AreEqual("123", viewModel.MatKhau);
             viewModel.ChangePasswordWD = null;
             Assert.IsNull(viewModel.ChangePasswordWD);
-            viewModel.HocSinhHienTai = null;
-            Assert.IsNull(viewModel.HocSinhHienTai);
-            viewModel.GiaoVienHienTai = null;
-            Assert.IsNull(viewModel.GiaoVienHienTai);
+            Model.HocSinh hs = new Model.HocSinh() { MaHocSinh = 1};
+            viewModel.HocSinhHienTai = hs;
+            Assert.AreEqual(viewModel.HocSinhHienTai,hs);
+            Model.GiaoVien gv = new Model.GiaoVien() { MaGiaoVien = 1 };
+            viewModel.GiaoVienHienTai = gv;
+            Assert.AreEqual(gv,viewModel.GiaoVienHienTai);
         }
 
 
 
         [TestMethod()]
-        [DataRow("","")]
-        [DataRow(null,"A1")]
-        [DataRow("1","A1bc")]
-        [DataRow("A1bc","A1b")]
-        [DataRow("a1","a1")]
-        [DataRow("Aa1","Aa1")]
-        [DataRow("A1",null)]
+        [DataRow("s", "")]
+        [DataRow("", "s")]
+        [DataRow(null, "A1")]
+        [DataRow("1", "A1bc")]
+        [DataRow("A1bc", "A1b")]
+        [DataRow("a1", "a1")]
+        [DataRow("Aa1", "Aa1")]
+        [DataRow("A1", null)]
         public void ValidatePasswordTest(string newPass, string confirmPass)
         {
-            var result = viewModel.ValidatePassword(newPass,confirmPass);
-            if (String.IsNullOrEmpty(newPass)||String.IsNullOrEmpty(confirmPass))
+            var result = viewModel.ValidatePassword(newPass, confirmPass);
+            if (String.IsNullOrEmpty(newPass) || String.IsNullOrEmpty(confirmPass))
             {
                 Assert.IsFalse(result);
                 return;
@@ -67,29 +70,41 @@ namespace StudentManagement.ViewModel.Login.Tests
             bool flagUpcase = false, flagNum = false;
             foreach (char c in newPass)
             {
-                if (c >= 'A' && c < 'Z' + 1)
+                if (c >= 'A' && c <= 'Z')
                     flagUpcase = true;
-                if (c >= '0' && c < '9' + 1)
+                if (c >= '0' && c <= '9')
                     flagNum = true;
             }
             if (flagUpcase && flagNum && newPass == confirmPass)
                 Assert.IsTrue(result);
             else Assert.IsFalse(result);
+            newPass = confirmPass = "A";
+            result = viewModel.ValidatePassword(newPass, confirmPass);
+            Assert.AreEqual(false, result);
+            newPass = confirmPass = "Z";
+            result = viewModel.ValidatePassword(newPass, confirmPass);
+            Assert.AreEqual(false, result);
+            newPass = confirmPass = "1";
+            result = viewModel.ValidatePassword(newPass, confirmPass);
+            Assert.AreEqual(false, result);
+            newPass = confirmPass = "9";
+            result = viewModel.ValidatePassword(newPass, confirmPass);
+            Assert.AreEqual(false, result);
         }
 
         [TestMethod()]
-        [DataRow("","a","")]
-        [DataRow(null,"a","A1")]
-        [DataRow("a","b","c")]
-        public void CheckValidPasswordTest(string a,string b, string c)
+        [DataRow("", "a", "")]
+        [DataRow(null, "a", "A1")]
+        [DataRow("a", "b", "c")]
+        public void CheckValidPasswordTest(string a, string b, string c)
         {
-            var result = viewModel.CheckValidPassword(a,b,c);
-            if (a == null || b == null || c == null || a== ""|| b==""||c=="")
+            var result = viewModel.CheckValidPassword(a, b, c);
+            if (a == null || b == null || c == null || a == "" || b == "" || c == "")
             {
                 Assert.IsFalse(result);
                 return;
             }
-            Assert.IsTrue(result);  
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
@@ -103,17 +118,18 @@ namespace StudentManagement.ViewModel.Login.Tests
                 // You can add code here for your test scenario
             });
 
-            var sut = new ChangePasswordViewModel(fakeSqlConnection.Object);
+            var sut = new ChangePasswordViewModel();
 
             try
             {
                 sut.IsHS = true;
                 sut.Id = "100046";
-                sut.GetMatKhauCu();
+                var result =  sut.GetMatKhauCu();
+                Assert.AreEqual(result.ToUpper(), "87d9bb400c0634691f0e3baaf1e2fd0d".ToUpper());
                 sut.IsHS = false;
                 sut.Id = "100031";
-                sut.GetMatKhauCu();
-                Assert.IsTrue(true);
+                result = sut.GetMatKhauCu();
+                Assert.AreEqual(result.ToUpper(), "87d9bb400c0634691f0e3baaf1e2fd0d".ToUpper());
             }
             catch (Exception)
             {
@@ -132,16 +148,17 @@ namespace StudentManagement.ViewModel.Login.Tests
                 // You can add code here for your test scenario
             });
 
-            var sut = new ChangePasswordViewModel(fakeSqlConnection.Object);
+            var sut = new ChangePasswordViewModel();
 
             try
             {
                 sut.IsHS = true;
                 sut.Id = "1";
-                sut.UpdateMatKhauMoi("123456");
+                var result = sut.UpdateMatKhauMoi("123456");
+                Assert.AreEqual(0, result);
                 sut.IsHS = false;
-                sut.UpdateMatKhauMoi("123456");
-                Assert.IsTrue(true);
+                result = sut.UpdateMatKhauMoi("123456");
+                Assert.AreEqual(0, result);
             }
             catch (Exception)
             {

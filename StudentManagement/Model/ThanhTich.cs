@@ -10,8 +10,6 @@ namespace StudentManagement.Model
     {
         private int _maThanhTich;
         public int MaThanhTich { get { return _maThanhTich; } set { _maThanhTich = value; } }
-        private string _nienKhoa;
-        public string NienKhoa { get { return _nienKhoa; } set { _nienKhoa = value; } }
         private int _hocKy;
         public int HocKy { get { return _hocKy; } set { _hocKy = value; } }
         private int _maLop;

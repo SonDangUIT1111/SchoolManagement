@@ -46,18 +46,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new SuaThongTinHocSinhViewModel();
 
             try
             {
-                DatePicker date = new DatePicker { SelectedDate = new DateTime(2010,1,1) };
+                DatePicker date = new DatePicker { SelectedDate = new DateTime(2009,1,1) };
                 sut.HocSinhHienTai = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1,
                 };
                 sut.ImagePath = null;
                 var result = sut.TienHanhSuaThongTinHocSinh(date, "ABC", true, "Home Street", "abc@gmal.com");
-                Assert.AreEqual(result, 0);
+                Assert.AreEqual(result[0], 0);
+                Assert.AreEqual(result[1], 0);
             }
             catch (Exception ex)
             {
@@ -75,14 +76,15 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new SuaThongTinHocSinhViewModel();
 
             try
             {
-                DatePicker date = new DatePicker { SelectedDate = new DateTime(2000, 1, 1) };
+                DatePicker date = new DatePicker { SelectedDate = new DateTime(2002, 1, 1) };
                 sut.ImagePath = null;
                 var result = sut.TienHanhSuaThongTinHocSinh(date, "ABC", true, "Home Street", "abc@gmal.com");
-                Assert.AreEqual(result, 0);
+                Assert.AreEqual(result[0], 0);
+                Assert.AreEqual(result[1], 0);
             }
             catch (Exception ex)
             {
@@ -100,18 +102,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new SuaThongTinHocSinhViewModel();
 
             try
             {
-                DatePicker date = new DatePicker { SelectedDate = new DateTime(2007, 1, 1) };
+                DatePicker date = new DatePicker { SelectedDate = new DateTime(2003, 1, 1) };
                 sut.HocSinhHienTai = new StudentManagement.Model.HocSinh()
                 {
-                    MaHocSinh = 1
+                    MaHocSinh = 100096
                 };
                 sut.ImagePath = null;
                 var result = sut.TienHanhSuaThongTinHocSinh(date, "ABC", true, "Home Street", "abc@gmal.com");
-                Assert.AreEqual(result, 1);
+                Assert.AreEqual(result[0],0);
+                Assert.AreEqual(result[1], 1);
             }
             catch (Exception ex)
             {
@@ -129,20 +132,21 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new SuaThongTinHocSinhViewModel();
 
             try
             {
-                DatePicker date = new DatePicker { SelectedDate = new DateTime(2007, 1, 1) };
+                DatePicker date = new DatePicker { SelectedDate = new DateTime(2008, 1, 1) };
                 sut.HocSinhHienTai = new StudentManagement.Model.HocSinh()
                 {
-                    MaHocSinh = 1
+                    MaHocSinh = 100096
                 };
                 var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
                 string filePath = System.IO.Path.Combine(projectPath, "Resources", "Images", "elaina-and-saya-flight-training.jpg");
                 sut.ImagePath = filePath;
                 var result = sut.TienHanhSuaThongTinHocSinh(date, "ABC", true, "Home Street", "abc@gmal.com");
-                Assert.AreEqual(result, 1);
+                Assert.AreEqual(result[0], 1);
+                Assert.AreEqual(result[1], 0);
             }
             catch (Exception ex)
             {

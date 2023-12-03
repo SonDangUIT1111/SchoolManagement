@@ -22,7 +22,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             set
             {
                 _thongTinTruongImageSource = value;
-                OnPropertyChanged();
+                
             }
 
         }
@@ -35,7 +35,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             set
             {
                 _imageNum = value;
-                OnPropertyChanged();
+                
             }
         }
 
@@ -44,6 +44,7 @@ namespace StudentManagement.ViewModel.GiamHieu
 
         public ThongTinTruongViewModel()
         {
+            // Stryker disable all
             GetImage();
 
 

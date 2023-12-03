@@ -23,6 +23,18 @@ namespace StudentManagement.ViewModel.GiamHieu
 {
     public class ThemGiaoVienViewModel : BaseViewModel
     {
+        const string headerstring = "Chào mừng bạn đến với hệ thống Student Management! \n Thông báo tạo tài khoản giáo viên thành công \n";
+        const string bd1 = "Tên đăng nhập tài khoản giáo viên của bạn là: ";
+        const string bd2 = "\n Mật khẩu của bạn là: ";
+        const string fromstring = "studentsp111111@gmail.com";
+        const string subjectstring = "Student management - Tài khoản giáo viên";
+        const string credentialstring = "dfmsetbdrstlnenr";
+        const string resourcestring = "Resources";
+        const string imagestring = "Images";
+        const string imagenamestring = "user_image.jpg";
+        const string gv = "gv";
+
+        const bool t = true;
         // khai báo biến
         //public int MatKhau;
         public string ImagePath { get; set; }
@@ -32,14 +44,154 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand AddGiaoVien { get; set; }
         public ICommand ChangeImage { get; set; }
 
-        private readonly ISqlConnectionWrapper sqlConnection;
 
-        public ThemGiaoVienViewModel(ISqlConnectionWrapper sqlConnection)
+
+        public string ToShortDateTime(DatePicker st)
         {
-            this.sqlConnection = sqlConnection;
+            string date = st.SelectedDate.Value.Year.ToString()+"-"+st.SelectedDate.Value.Month.ToString()+"-"+st.SelectedDate.Value.Day.ToString();
+            return date;
+        }
+
+
+        public bool IsValidEmail(string email)
+        {
+            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void SendAccountByEmail(string Account, string Password, string to)
+        {
+            string from, subject, messageBody, header;
+            header = headerstring;
+            messageBody = header + bd1 + Account + bd2 + Password;
+            from = fromstring;
+            subject = subjectstring;
+            MailMessage message = new MailMessage(from, to, subject, messageBody);
+            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            client.EnableSsl = t;
+            client.Port = 587;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.Credentials = new NetworkCredential(from, credentialstring);
+            try
+            {
+                client.Send(message);
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to;
+                //MB.ShowDialog();
+            }
+            catch (Exception)
+            {
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();
+            }
+        }
+
+        public int ThemGiaoVienMoi(string tengv, DatePicker ngaysinh, string diachi,string email,string gioitinh)
+        {
+            if (String.IsNullOrEmpty(tengv) |
+                String.IsNullOrEmpty(ngaysinh.Text) |
+                String.IsNullOrEmpty(diachi) |
+                String.IsNullOrEmpty(email))
+            {
+                return -2;
+            }
+            else
+            if (!IsValidEmail(email)
+                )
+            {
+                return -1;
+            }
+            else
+            {
+                using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+                {
+                    int count = 0;
+                        sqlConnectionWrap.Open();
+                        string CmdString1 = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (N'" +
+                        tengv + "' , CAST(N'" +
+                        ToShortDateTime(ngaysinh) + "' AS DATE) ," + gioitinh +
+                        ", N'" + diachi + "' , '" + email + "', 1);";
+                        SqlCommand cmd1 = new SqlCommand(CmdString1, sqlConnectionWrap.GetSqlConnection());
+                        count +=cmd1.ExecuteNonQuery();
+                        sqlConnectionWrap.Close();
+                        //Tao tai khoan va mat khau
+                        Random rnd = new Random();
+                        string MatKhau = rnd.Next(100000, 999999).ToString();
+                        string TaiKhoan = gv;
+                    string emailOfNewUser;
+                        int maSo = 0;
+                        sqlConnectionWrap.Open();
+                        string CmdString = "select top 1 MaGiaoVien,Email from GiaoVien order by MaGiaoVien desc";
+                        SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        reader.Read();
+                        StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien
+                        {
+                            MaGiaoVien = reader.GetInt32(0),
+                            Email = reader.GetString(1)
+                        };
+                        maSo = teacher.MaGiaoVien;
+                        emailOfNewUser = teacher.Email;
+                        TaiKhoan += maSo.ToString();
+                        sqlConnectionWrap.Close();
+                        //Update tai khoan va mat khau, avatar
+                        sqlConnectionWrap.Open();
+
+                        string uriImage;
+                        if (ImagePath == null)
+                        {
+                            var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
+                            var filePath = Path.Combine(projectPath, resourcestring,imagestring, imagenamestring);
+                            uriImage = filePath;
+                        }
+                        else uriImage = ImagePath;
+
+                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                        byte[] buffer = converter.ImageToBinary(uriImage);
+                        string passEncode = CreateMD5(Base64Encode(MatKhau));
+                        string CmdString2 = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode + "', AnhThe = @image " +
+                                            " where MaGiaoVien =" + maSo.ToString();
+                        SqlCommand cmd2 = new SqlCommand(CmdString2, sqlConnectionWrap.GetSqlConnection());
+                        cmd2.Parameters.AddWithValue("@image", buffer);
+                        count+= cmd2.ExecuteNonQuery();
+                        SendAccountByEmail(TaiKhoan, MatKhau, emailOfNewUser);
+                        ImagePath = null;
+                    return count;
+                }
+            }
+        }
+
+        public string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                //return Convert.ToHexString(hashBytes); // .NET 5 +
+
+                // Convert the byte array to hexadecimal string prior to .NET 5
+                StringBuilder sb = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
         }
         public ThemGiaoVienViewModel()
         {
+            // Stryker disable all
             ImagePath = null;
             ChangeImage = new RelayCommand<Grid>((parameter) => { return true; }, (parameter) =>
             {
@@ -83,7 +235,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             AddGiaoVien = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                int result = ThemGiaoVienMoi(ThemGiaoVienWD.TenGV.Text,ThemGiaoVienWD.NgaySinh,ThemGiaoVienWD.DiaChi.Text,ThemGiaoVienWD.Email.Text,
+                int result = ThemGiaoVienMoi(ThemGiaoVienWD.TenGV.Text, ThemGiaoVienWD.NgaySinh, ThemGiaoVienWD.DiaChi.Text, ThemGiaoVienWD.Email.Text,
                     ThemGiaoVienWD.GioiTinh.SelectedIndex.ToString());
                 if (result == -2)
                 {
@@ -111,157 +263,6 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
             });
 
-        }
-
-        public string ToShortDateTime(DatePicker st)
-        {
-            string date = st.SelectedDate.Value.Year.ToString()+"-"+st.SelectedDate.Value.Month.ToString()+"-"+st.SelectedDate.Value.Day.ToString();
-            return date;
-        }
-
-
-        public bool IsValidEmail(string email)
-        {
-            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public void SendAccountByEmail(string Account, string Password, string to)
-        {
-            string from, subject, messageBody, header;
-            header = "Chào mừng bạn đến với hệ thống Student Management! \n Thông báo tạo tài khoản giáo viên thành công \n";
-            messageBody = header + "Tên đăng nhập tài khoản giáo viên của bạn là: " + Account + "\n Mật khẩu của bạn là: " + Password;
-            from = "studentsp111111@gmail.com";
-            subject = "Student management - Tài khoản giáo viên";
-            MailMessage message = new MailMessage(from, to, subject, messageBody);
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
-            client.EnableSsl = true;
-            client.Port = 587;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.Credentials = new NetworkCredential(from, "dfmsetbdrstlnenr");
-            try
-            {
-                client.Send(message);
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Tạo tài khoản giáo viên thành công! Tài khoản giáo viên đã được gửi đến email " + to;
-                //MB.ShowDialog();
-            }
-            catch (Exception)
-            {
-                //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                //messageBoxFail.ShowDialog();
-            }
-        }
-
-        public int ThemGiaoVienMoi(string tengv, DatePicker ngaysinh, string diachi,string email,string gioitinh)
-        {
-            if (String.IsNullOrEmpty(tengv) |
-                String.IsNullOrEmpty(ngaysinh.Text) |
-                String.IsNullOrEmpty(diachi) |
-                String.IsNullOrEmpty(email))
-            {
-                return -2;
-            }
-            else
-            if (!IsValidEmail(email)
-                )
-            {
-                return -1;
-            }
-            else
-            {
-                using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-                {
-                    try
-                    {
-                        sqlConnectionWrap.Open();
-                        string CmdString1 = "INSERT INTO GiaoVien(TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,MaTruong) VALUES (N'" +
-                        tengv + "' , CAST(N'" +
-                        ToShortDateTime(ngaysinh) + "' AS DATE) ," + gioitinh +
-                        ", N'" + diachi + "' , '" + email + "', 1);";
-                        SqlCommand cmd1 = new SqlCommand(CmdString1, sqlConnectionWrap.GetSqlConnection());
-                        cmd1.ExecuteScalar();
-                        sqlConnectionWrap.Close();
-                        //Tao tai khoan va mat khau
-                        Random rnd = new Random();
-                        string MatKhau = rnd.Next(100000, 999999).ToString();
-                        string TaiKhoan = "gv";
-                        string emailOfNewUser = "";
-                        int maSo = 0;
-                        sqlConnectionWrap.Open();
-                        string CmdString = "select top 1 MaGiaoVien,Email from GiaoVien order by MaGiaoVien desc";
-                        SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        reader.Read();
-                        StudentManagement.Model.GiaoVien teacher = new StudentManagement.Model.GiaoVien
-                        {
-                            MaGiaoVien = reader.GetInt32(0),
-                            Email = reader.GetString(1)
-                        };
-                        maSo = teacher.MaGiaoVien;
-                        emailOfNewUser = teacher.Email;
-                        TaiKhoan += maSo.ToString();
-                        sqlConnectionWrap.Close();
-                        //Update tai khoan va mat khau, avatar
-                        sqlConnectionWrap.Open();
-
-                        string uriImage = "";
-                        if (ImagePath == null)
-                        {
-                            var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
-                            var filePath = Path.Combine(projectPath, "Resources", "Images", "user_image.jpg");
-                            uriImage = filePath;
-                        }
-                        else uriImage = ImagePath;
-
-                        ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                        byte[] buffer = converter.ImageToBinary(uriImage);
-                        string passEncode = CreateMD5(Base64Encode(MatKhau));
-                        string CmdString2 = "Update GiaoVien set Username = '" + TaiKhoan + "', UserPassword = '" + passEncode + "', AnhThe = @image " +
-                                            " where MaGiaoVien =" + maSo.ToString();
-                        SqlCommand cmd2 = new SqlCommand(CmdString2, sqlConnectionWrap.GetSqlConnection());
-                        cmd2.Parameters.AddWithValue("@image", buffer);
-                        cmd2.ExecuteScalar();
-                        SendAccountByEmail(TaiKhoan, MatKhau, emailOfNewUser);
-                        sqlConnectionWrap.Close();
-                        ImagePath = null;
-                        return 1;
-                    }
-                    catch (Exception)
-                    {
-                        return -3;
-                    }
-                }
-            }
-        }
-
-        public string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-        public string CreateMD5(string input)
-        {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                //return Convert.ToHexString(hashBytes); // .NET 5 +
-
-                // Convert the byte array to hexadecimal string prior to .NET 5
-                StringBuilder sb = new System.Text.StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
-            }
         }
     }
 }

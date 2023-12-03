@@ -74,7 +74,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThanhTichHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThanhTichHocSinhViewModel();
 
             try
             {
@@ -83,9 +83,13 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.LopCombobox = new System.Collections.ObjectModel.ObservableCollection<Lop> { };
                 sut.HocKyCombobox = new System.Collections.ObjectModel.ObservableCollection<string> { };
                 sut.LoadComboBox();
-                Assert.IsTrue(true);
+                Assert.IsTrue(sut.NienKhoaCombobox.Count > 0);
+                Assert.AreEqual(sut.NienKhoaQueries, "2023-2024");
+                sut.NienKhoaQueries = null;
+                sut.LoadComboBox();
+                Assert.AreEqual(sut.NienKhoaQueries, "2023-2024");
             }
-            catch (Exception)
+            catch (Exception )
             {
                 Assert.Fail();
             }
@@ -99,14 +103,15 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThanhTichHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThanhTichHocSinhViewModel();
 
             try
             {
                 sut.KhoiCombobox = new System.Collections.ObjectModel.ObservableCollection<Khoi> { };
                 sut.NienKhoaQueries = "2023-2024";
                 sut.FilterKhoiFromNienKhoa();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.KhoiCombobox[0].MaKhoi, 1);
+                Assert.AreEqual(sut.KhoiQueries, "1");
             }
             catch (Exception)
             {
@@ -122,7 +127,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThanhTichHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThanhTichHocSinhViewModel();
 
             try
             {
@@ -131,7 +136,8 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.KhoiQueries = "1";
                 sut.LopQueries = null;
                 sut.FilterLopFromKhoi();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.LopQueries,"151");
+                Assert.AreEqual(sut.LopCombobox[0].MaLop,151);
             }
             catch (Exception)
             {
@@ -147,7 +153,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThanhTichHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThanhTichHocSinhViewModel();
 
             try
             {
@@ -156,10 +162,12 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.KhoiQueries = "1";
                 sut.LopQueries = "151";
                 sut.FilterHocKyFromLop();
-                Assert.IsTrue(true);
+                //Assert.AreEqual(sut.HocKyCombobox[0],"Học kỳ 1");
+                //Assert.AreEqual(sut.HocKyQueries, "1");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
 
@@ -177,7 +185,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThanhTichHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThanhTichHocSinhViewModel();
             try
             {
                 sut.DanhSachThanhTichHocSinh = new System.Collections.ObjectModel.ObservableCollection<ThanhTich> { };
@@ -187,6 +195,14 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.HocKyQueries = "1";
                 sut.IdUser = 100031;
                 await sut.LoadDanhSachThanhTichHocSinh();
+                Assert.IsTrue(sut.DanhSachThanhTichHocSinh.Count > 0);
+                Assert.AreEqual(sut.DanhSachThanhTichHocSinh[0].XepLoai, true);
+                //Assert.AreEqual(sut.DanhSachThanhTichHocSinh[0].TBHK, 9.97);
+                Assert.AreEqual(sut.DanhSachThanhTichHocSinh[0].NhanXet, "");
+                Assert.AreEqual(sut.EditNhanXetVisibility, true);
+                Assert.AreEqual(sut.CompleteNhanXetVisibility, false);
+                Assert.AreEqual(sut.NhanXetTextBoxIsEnabled, false);
+
             }
             catch (Exception)
             {
@@ -204,7 +220,7 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThanhTichHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThanhTichHocSinhViewModel();
 
             try
             {
@@ -215,7 +231,8 @@ namespace StudentManagementTests.ViewModel.GiaoVien
                 sut.HocKyQueries = "1";
                 sut.IdUser = 100031;
                 await sut.LoadDanhSachThanhTichHocSinh();
-                sut.UpdateNhanXet();
+                var result = sut.UpdateNhanXet();
+                Assert.IsTrue(result > 0);
                 sut.IdUser = 100032;
                 sut.UpdateNhanXet();
 

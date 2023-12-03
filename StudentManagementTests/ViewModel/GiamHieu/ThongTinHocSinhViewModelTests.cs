@@ -62,20 +62,28 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThongTinHocSinhViewModel();
 
             try
             {
+                sut.NienKhoaCmb = new System.Collections.ObjectModel.ObservableCollection<string>();
+                sut.KhoiCmb = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.Khoi>();
+                sut.LopCmb = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.Lop>();
+                sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh>();
                 sut.NienKhoaQueries = "2023-2024";
                 sut.KhoiQueries = "1";
-                sut.LoadThongTinCmb(); 
+                sut.LoadThongTinCmb();
+                Assert.IsTrue(sut.NienKhoaCmb.Count > 0);
+                Assert.IsTrue(sut.KhoiCmb.Count > 0);
+                Assert.AreEqual(sut.KhoiQueries, "1");
+                Assert.AreEqual(sut.LopCmb[0].MaLop,151);
+                Assert.IsTrue(sut.LopCmb.Count > 0);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
@@ -91,19 +99,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThongTinHocSinhViewModel();
             try
             {
                 sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopQueries = "151";
                 await sut.LoadThongTinHocSinh();
+                Assert.AreEqual(sut.DanhSachHocSinh[0].MaHocSinh, 100046);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -117,19 +125,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThongTinHocSinhViewModel();
             try
             {
                 sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.LopQueries = "151";
                 sut.SearchHocSinh("");
+                Assert.IsTrue(sut.DanhSachHocSinh.Count > 0);
+                Assert.AreEqual(sut.DanhSachHocSinh[0].MaHocSinh, 100046);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
-
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -143,18 +151,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThongTinHocSinhViewModel();
             try
             {
+                sut.IsLoadAll = true;
                 sut.DanhSachHocSinh = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.SearchHocSinhAll();
+                Assert.IsTrue(sut.DanhSachHocSinh.Count > 0);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
         [TestMethod]
         public void FilterLopFromSelectionTest()
@@ -167,20 +176,20 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThongTinHocSinhViewModel();
             try
             {
                 sut.LopCmb = new System.Collections.ObjectModel.ObservableCollection<Lop> { };
                 sut.KhoiQueries = "1";
                 sut.NienKhoaQueries = "2023-2024";
                 sut.FilterLopFromSelection();
+                Assert.AreEqual(sut.LopCmb[0].MaLop, 151);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -194,21 +203,21 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new ThongTinHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new ThongTinHocSinhViewModel();
             try
             {
                 StudentManagement.Model.HocSinh hs = new StudentManagement.Model.HocSinh()
                 {
                     MaHocSinh = 1
                 };
-                sut.XoaHocSinh(hs);
+                var res = sut.XoaHocSinh(hs);
+                Assert.AreEqual(res, 0);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
     }
 }

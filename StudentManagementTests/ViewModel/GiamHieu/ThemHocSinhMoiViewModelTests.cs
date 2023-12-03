@@ -107,7 +107,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new ThemHocSinhMoiViewModel(fakeSqlConnection.Object);
+            var sut = new ThemHocSinhMoiViewModel();
 
             sut.ThemHocSinhWD = new ThemHocSinhMoi();
             sut.ThemHocSinhWD.Hoten.Text = "John Doe";
@@ -118,8 +118,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
 
             try
             {
-                sut.ThemHocSinhMoi();
-                Assert.IsTrue(true);
+                var ress = sut.ThemHocSinhMoi();
+                Assert.AreEqual(ress[0],1);
+                Assert.AreEqual(ress[1], 2);
+                Assert.AreEqual(ress[2], 2);
+                Assert.AreEqual(ress[3], 1);
+                Assert.AreEqual(ress[4], 1);
 
             } catch (Exception e)
             {

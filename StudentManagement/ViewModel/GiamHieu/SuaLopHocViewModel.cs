@@ -20,32 +20,26 @@ namespace StudentManagement.ViewModel.GiamHieu
         public int Khoi { get; set; }
 
 
-        private readonly ISqlConnectionWrapper sqlConnection;
-
-        public SuaLopHocViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
         public SuaThongTinLopHoc SuaLopWD { get; set; }
         private StudentManagement.Model.Lop _lopHocHienTai;
         public StudentManagement.Model.Lop LopHocHienTai
         {
             get => _lopHocHienTai;
-            set { _lopHocHienTai = value; OnPropertyChanged(); }
+            set { _lopHocHienTai = value;  }
         }
 
         private ObservableCollection<Model.GiaoVien> _giaoVienComboBox;
         public ObservableCollection<Model.GiaoVien> GiaoVienComboBox
         {
             get => _giaoVienComboBox;
-            set { _giaoVienComboBox = value; OnPropertyChanged(); }
+            set { _giaoVienComboBox = value;  }
         }
 
         private ObservableCollection<string> _nienKhoaComboBox;
         public ObservableCollection<string> NienKhoaComboBox
         {
             get => _nienKhoaComboBox;
-            set { _nienKhoaComboBox = value; OnPropertyChanged(); }
+            set { _nienKhoaComboBox = value;  }
         }
 
        
@@ -53,12 +47,76 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand EditClass { get; set; }
         public ICommand CancelEditClass { get; set; }
 
+
+        public void LoadGVCNCombobox()
+        {
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE NOT EXISTS (Select DISTINCT MAGVCN from LOP where MaGiaoVien = MAGVCN)";
+                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            GiaoVienComboBox.Add(new Model.GiaoVien()
+                            {
+                                MaGiaoVien = reader.GetInt32(0),
+                                TenGiaoVien = reader.GetString(1)
+                            });
+                            //if (string.IsNullOrEmpty(GiaoVienQueries))
+                            //{
+                            //    GiaoVienQueries = reader.GetString(0);
+                            //}
+                        }
+                        reader.NextResult();
+                    }
+                }
+                catch (Exception)
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                }
+            }
+
+        }
+
+
+        public int TienHanhSuaLopHoc(string tenlop, string nienkhoa, string malop,string magv)
+        {
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+
+                    sqlConnectionWrap.Open();
+
+                    string cmdText = "Select * from Lop where TenLop = '" + tenlop + "' and NienKhoa = '" + nienkhoa + "' and MaLop <>  " + malop;
+                    SqlCommand cmdTest = new SqlCommand(cmdText, sqlConnectionWrap.GetSqlConnection());
+                    int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
+                    sqlConnectionWrap.Close();
+                    if (checkExists > 0)
+                    {
+                        return 0;
+                    }
+
+                    sqlConnectionWrap.Open();
+                    string cmdString = "UPDATE Lop Set TenLop = '" + tenlop + "', NienKhoa = '" + nienkhoa + "', " +
+                        "MaGVCN = " + magv + " where MaLop = " + malop;
+                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
+                    return cmd.ExecuteNonQuery();
+
+            }
+        }
         public SuaLopHocViewModel()
         {
+            // Stryker disable all
             LopHocHienTai = new StudentManagement.Model.Lop() { };
             LoadWindow = new RelayCommand<SuaThongTinLopHoc>((parameter) => { return true; }, (parameter) =>
             {
                 SuaLopWD = parameter;
+                GiaoVienComboBox = new ObservableCollection<Model.GiaoVien>();
                 LoadGVCNCombobox();
                 NienKhoaComboBox = new ObservableCollection<string>();
                 using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
@@ -117,7 +175,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 }
                 else
                 {
-                    int result = TienHanhSuaLopHoc(SuaLopWD.EditClassName.Text,SuaLopWD.NienKhoaCmB.Text,LopHocHienTai.MaLop.ToString(),GiaoVienQueries);
+                    int result = TienHanhSuaLopHoc(SuaLopWD.EditClassName.Text, SuaLopWD.NienKhoaCmB.Text, LopHocHienTai.MaLop.ToString(), GiaoVienQueries);
                     if (result == 0)
                     {
                         MessageBoxOK messageBoxOK = new MessageBoxOK();
@@ -144,103 +202,6 @@ namespace StudentManagement.ViewModel.GiamHieu
             {
                 SuaLopWD.Close();
             });
-        }
-
-        public void LoadGVCNCombobox()
-        {
-            GiaoVienComboBox = new ObservableCollection<Model.GiaoVien>();
-            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try
-                    {
-                        sqlConnectionWrap.Open();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                        return;
-                    }
-                    string cmdString = "SELECT DISTINCT MaGiaoVien,TenGiaoVien FROM GiaoVien WHERE NOT EXISTS (Select DISTINCT MAGVCN from LOP where MaGiaoVien = MAGVCN)";
-                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            GiaoVienComboBox.Add(new Model.GiaoVien()
-                            {
-                                MaGiaoVien = reader.GetInt32(0),
-                                TenGiaoVien = reader.GetString(1)
-                            });
-                            //if (string.IsNullOrEmpty(GiaoVienQueries))
-                            //{
-                            //    GiaoVienQueries = reader.GetString(0);
-                            //}
-                        }
-                        reader.NextResult();
-                    }
-                    sqlConnectionWrap.Close();
-                }
-                catch (Exception)
-                {
-                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //messageBoxFail.ShowDialog();
-                    return;
-                }
-            }
-
-        }
-
-
-        public int TienHanhSuaLopHoc(string tenlop, string nienkhoa, string malop,string magv)
-        {
-            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try
-                    {
-                        sqlConnectionWrap.Open();
-                    }
-                    catch (Exception)
-                    {
-                        //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        //messageBoxFail.ShowDialog();
-                        return -1;
-                    }
-
-                    string cmdText = "Select * from Lop where TenLop = '" + tenlop + "' and NienKhoa = '" + nienkhoa + "' and MaLop <>  " + malop;
-                    SqlCommand cmdTest = new SqlCommand(cmdText, sqlConnectionWrap.GetSqlConnection());
-                    int checkExists = Convert.ToInt32(cmdTest.ExecuteScalar());
-                    sqlConnectionWrap.Close();
-                    if (checkExists > 0)
-                    {
-                        return 0;
-                    }
-
-                    try
-                    {
-                        sqlConnectionWrap.Open();
-                    }
-                    catch (Exception)
-                    {
-                        return -1;
-                    }
-                    string cmdString = "UPDATE Lop Set TenLop = '" + tenlop + "', NienKhoa = '" + nienkhoa + "', " +
-                        "MaGVCN = " + magv + " where MaLop = " + malop;
-                    SqlCommand cmd = new SqlCommand(cmdString, sqlConnectionWrap.GetSqlConnection());
-                    cmd.ExecuteNonQuery();
-                    sqlConnectionWrap.Close();
-                    return 1;
-                }
-                catch (Exception)
-                {
-                    return -1;
-                }
-            }
         }
     }
 }

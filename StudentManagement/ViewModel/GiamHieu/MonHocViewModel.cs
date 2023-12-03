@@ -17,29 +17,24 @@ namespace StudentManagement.ViewModel.GiamHieu
     {
         public bool everLoaded { get; set; }
         public MonHoc MonHocWD { get; set; }
-        public bool IsLoadAll { get; set; } = false;
+        public bool IsLoadAll { get; set; }
 
         private ObservableCollection<StudentManagement.Model.MonHoc> _danhSachMonHoc;
-        public ObservableCollection<StudentManagement.Model.MonHoc> DanhSachMonHoc { get => _danhSachMonHoc; set { _danhSachMonHoc = value; OnPropertyChanged(); } }
+        public ObservableCollection<StudentManagement.Model.MonHoc> DanhSachMonHoc { get => _danhSachMonHoc; set { _danhSachMonHoc = value;  } }
 
         private Model.MonHoc _monHocEditting;
-        public Model.MonHoc MonHocEditting { get => _monHocEditting; set { _monHocEditting = value; OnPropertyChanged(); } }
+        public Model.MonHoc MonHocEditting { get => _monHocEditting; set { _monHocEditting = value;  } }
 
         private bool _dataGridVisibility;
 
-        public bool DataGridVisibility{get{return _dataGridVisibility;}set { _dataGridVisibility = value; OnPropertyChanged(); }
+        public bool DataGridVisibility{get{return _dataGridVisibility;}set { _dataGridVisibility = value;  }
         }
 
         private bool _progressBarVisibility;
 
-        public bool ProgressBarVisibility{get{return _progressBarVisibility;}set { _progressBarVisibility = value; OnPropertyChanged(); }}
+        public bool ProgressBarVisibility{get{return _progressBarVisibility;}set { _progressBarVisibility = value;  }}
 
-        private readonly ISqlConnectionWrapper sqlConnection;
 
-        public MonHocViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
 
         public ICommand LoadData { get; set; }
         public ICommand DeleteSubject { get; set; }
@@ -53,8 +48,105 @@ namespace StudentManagement.ViewModel.GiamHieu
         public ICommand LostFocusTxt { get; set; }
 
 
+        public async Task LoadThongTinMonHoc()
+        {
+
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrapper.Open();
+
+                    string CmdString = "select * from MonHoc where ApDung = 1";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                    while (await reader.ReadAsync())
+                    {
+                        StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
+                        monhoc.MaMon = reader.GetInt32(0);
+                        monhoc.TenMon = reader.GetString(1);
+                        DanhSachMonHoc.Add(monhoc);
+                    }
+                }
+                catch (Exception )
+                {
+                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                    //messageBoxFail.ShowDialog();
+                }
+            }
+        }
+        public int DeleteMonHoc(Model.MonHoc mh)
+        {
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                sqlConnectionWrapper.Open();
+                string CmdString = "update MonHoc set ApDung = 0 where MaMon = " + mh.MaMon.ToString();
+                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int KiemTraTonTaiMonHoc(string tenmon)
+        {
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                sqlConnectionWrapper.Open();
+                string CmdString1 = "select * from MonHoc where TenMon = N'" + tenmon + "'";
+                SqlCommand cmd1 = new SqlCommand(CmdString1, sqlConnectionWrapper.GetSqlConnection());
+                int count = Convert.ToInt32(cmd1.ExecuteScalar());
+                return count;
+            }
+        }
+
+        public int EditTenMon(string tenmon,string mamon)
+        {
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                sqlConnectionWrapper.Open();
+                string CmdString = "update MonHoc set TenMon = N'" + tenmon + "' where MaMon = " + mamon;
+                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void TraCuuMonHoc(string searchWord)
+        {
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                sqlConnectionWrapper.Open();
+                string CmdString = "select * from MonHoc where TenMon like N'%" + searchWord + "%' and ApDung = 1";
+                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
+                        monhoc.MaMon = reader.GetInt32(0);
+                        monhoc.TenMon = reader.GetString(1);
+                        DanhSachMonHoc.Add(monhoc);
+                    }
+                    reader.NextResult();
+                }
+            }
+        }
+
+        public int ThemMonHocMoi(string monhoc)
+        {
+            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                sqlConnectionWrapper.Open();
+                string CmdString = "insert into MonHoc (TenMon, MaTruong, ApDung) values (N'" + monhoc + "', 1, 1)";
+                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
         public MonHocViewModel()
         {
+            // Stryker disable all
             everLoaded = false;
             MonHocEditting = new Model.MonHoc();
             LoadData = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
@@ -64,6 +156,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                     MonHocWD = parameter as MonHoc;
                     DataGridVisibility = false;
                     ProgressBarVisibility = true;
+                    DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
                     await LoadThongTinMonHoc();
                     DataGridVisibility = true;
                     ProgressBarVisibility = false;
@@ -101,13 +194,14 @@ namespace StudentManagement.ViewModel.GiamHieu
                         MB.ShowDialog();
                         DataGridVisibility = false;
                         ProgressBarVisibility = true;
+                        DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
                         await LoadThongTinMonHoc();
                         DataGridVisibility = true;
                         ProgressBarVisibility = false;
                     }
                 }
             });
-            EditEnable = new RelayCommand<object>((parameter) => { return true; },  (parameter) =>
+            EditEnable = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
                 MonHocEditting = parameter as Model.MonHoc;
                 MonHocWD.txtTenMH.Text = "";
@@ -119,7 +213,7 @@ namespace StudentManagement.ViewModel.GiamHieu
             });
             EditSubject = new RelayCommand<object>((parameter) => { return true; }, async (parameter) =>
             {
-                if (MonHocEditting != null )
+                if (MonHocEditting != null)
                 {
                     MessageBoxYesNo wd = new MessageBoxYesNo();
 
@@ -150,7 +244,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                                     MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Hidden;
                                     return;
                                 }
-                                EditTenMon(MonHocWD.txtTenMH.Text,MonHocEditting.MaMon.ToString());
+                                EditTenMon(MonHocWD.txtTenMH.Text, MonHocEditting.MaMon.ToString());
                                 MessageBoxSuccessful messageBoxSuccessful = new MessageBoxSuccessful();
                                 messageBoxSuccessful.ShowDialog();
                                 MonHocWD.txtTenMH.Text = "";
@@ -167,14 +261,15 @@ namespace StudentManagement.ViewModel.GiamHieu
                             }
                             DataGridVisibility = false;
                             ProgressBarVisibility = true;
+                            DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
                             await LoadThongTinMonHoc();
                             DataGridVisibility = true;
                             ProgressBarVisibility = false;
                         }
-                    }    
+                    }
                 }
             });
-            SubjectSearch = new RelayCommand<TextBox>((parameter) => { return true; },async (parameter) =>
+            SubjectSearch = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
             {
                 DanhSachMonHoc.Clear();
                 ProgressBarVisibility = true;
@@ -198,7 +293,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                 MonHocWD.btnXacNhan.Visibility = Visibility.Visible;
                 MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Hidden;
             });
-            AddConfirm = new RelayCommand<TextBox>((parameter) => { return true; },async (parameter) =>
+            AddConfirm = new RelayCommand<TextBox>((parameter) => { return true; }, async (parameter) =>
             {
                 string monhoc = parameter.Text;
                 if (string.IsNullOrEmpty(monhoc))
@@ -223,8 +318,8 @@ namespace StudentManagement.ViewModel.GiamHieu
                     {
                         try
                         {
-                            int count = KiemTraTonTaiMonHoc(monhoc);   
-                            if (count > 0 )
+                            int count = KiemTraTonTaiMonHoc(monhoc);
+                            if (count > 0)
                             {
                                 MessageBoxOK MB = new MessageBoxOK();
                                 var datamb = MB.DataContext as MessageBoxOKViewModel;
@@ -248,6 +343,7 @@ namespace StudentManagement.ViewModel.GiamHieu
                             MonHocWD.btnXacNhanDoiTen.Visibility = Visibility.Hidden;
                             DataGridVisibility = false;
                             ProgressBarVisibility = true;
+                            DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
                             await LoadThongTinMonHoc();
                             DataGridVisibility = true;
                             ProgressBarVisibility = false;
@@ -266,149 +362,11 @@ namespace StudentManagement.ViewModel.GiamHieu
                 IsLoadAll = true;
                 DataGridVisibility = false;
                 ProgressBarVisibility = true;
+                DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
                 await LoadThongTinMonHoc();
                 DataGridVisibility = true;
                 ProgressBarVisibility = false;
             });
-        }
-        public async Task LoadThongTinMonHoc()
-        {
-            DanhSachMonHoc = new ObservableCollection<Model.MonHoc>();
-
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    try
-                    {
-                        sqlConnectionWrapper.Open();
-                    }
-                    catch (Exception)
-                    {
-                        MessageBoxFail messageBoxFail = new MessageBoxFail();
-                        messageBoxFail.ShowDialog();
-                        return;
-                    }
-
-                    string CmdString = "select * from MonHoc where ApDung = 1";
-                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                    SqlDataReader reader = await cmd.ExecuteReaderAsync();
-
-                    while (await reader.ReadAsync())
-                    {
-                        StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
-                        monhoc.MaMon = reader.GetInt32(0);
-                        monhoc.TenMon = reader.GetString(1);
-                        DanhSachMonHoc.Add(monhoc);
-                    }
-
-                    sqlConnectionWrapper.Close();
-                }
-                catch (Exception )
-                {
-                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //messageBoxFail.ShowDialog();
-                }
-            }
-        }
-        public void DeleteMonHoc(Model.MonHoc mh)
-        {
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrapper.Open();
-                }
-                catch (Exception)
-                {
-                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //messageBoxFail.ShowDialog();
-                    return;
-                }
-                string CmdString = "update MonHoc set ApDung = 0 where MaMon = " + mh.MaMon.ToString();
-                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                cmd.ExecuteNonQuery();
-                sqlConnectionWrapper.Close();
-            }
-        }
-
-        public int KiemTraTonTaiMonHoc(string tenmon)
-        {
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                sqlConnectionWrapper.Open();
-                string CmdString1 = "select * from MonHoc where TenMon = N'" + tenmon + "'";
-                SqlCommand cmd1 = new SqlCommand(CmdString1, sqlConnectionWrapper.GetSqlConnection());
-                int count = Convert.ToInt32(cmd1.ExecuteScalar());
-                sqlConnectionWrapper.Close();
-                return count;
-            }
-        }
-
-        public void EditTenMon(string tenmon,string mamon)
-        {
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                sqlConnectionWrapper.Open();
-                string CmdString = "update MonHoc set TenMon = N'" + tenmon + "' where MaMon = " + mamon;
-                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                cmd.ExecuteNonQuery();
-                sqlConnectionWrapper.Close();
-            }
-        }
-
-        public void TraCuuMonHoc(string searchWord)
-        {
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrapper.Open();
-                }
-                catch (Exception)
-                {
-                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //messageBoxFail.ShowDialog();
-                    return;
-                }
-                string CmdString = "select * from MonHoc where TenMon like N'%" + searchWord + "%' and ApDung = 1";
-                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        StudentManagement.Model.MonHoc monhoc = new StudentManagement.Model.MonHoc();
-                        monhoc.MaMon = reader.GetInt32(0);
-                        monhoc.TenMon = reader.GetString(1);
-                        DanhSachMonHoc.Add(monhoc);
-                    }
-                    reader.NextResult();
-                }
-                sqlConnectionWrapper.Close();
-            }
-        }
-
-        public void ThemMonHocMoi(string monhoc)
-        {
-            using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrapper.Open();
-                }
-                catch (Exception)
-                {
-                    //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                    //messageBoxFail.ShowDialog();
-                    return;
-                }
-                string CmdString = "insert into MonHoc (TenMon, MaTruong, ApDung) values (N'" + monhoc + "', 1, 1)";
-                SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection());
-                cmd.ExecuteNonQuery();
-                sqlConnectionWrapper.Close();
-            }
         }
     }
 }

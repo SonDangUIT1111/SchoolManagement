@@ -36,12 +36,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             Assert.AreEqual(true, viewModel.everLoaded);
             viewModel.DanhSachMonHoc = null;
             Assert.IsNull(viewModel.DanhSachMonHoc);
-            viewModel.MonHocEditting = null;
-            Assert.IsNull(viewModel.MonHocEditting);
-            viewModel.DataGridVisibility = false;
-            Assert.AreEqual(false, viewModel.DataGridVisibility);
-            viewModel.ProgressBarVisibility = false;
-            Assert.AreEqual(false, viewModel.ProgressBarVisibility);
+            StudentManagement.Model.MonHoc mh = new StudentManagement.Model.MonHoc() { MaMon = 1, TenMon = "a",ApDung = true };
+            viewModel.MonHocEditting = mh;
+            Assert.AreEqual(viewModel.MonHocEditting,mh);
+            viewModel.DataGridVisibility = true;
+            Assert.AreEqual(true, viewModel.DataGridVisibility);
+            viewModel.ProgressBarVisibility = true;
+            Assert.AreEqual(true, viewModel.ProgressBarVisibility);
+
         }
 
         [TestMethod]
@@ -55,17 +57,18 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new MonHocViewModel(fakeSqlConnection.Object);
+            var sut = new MonHocViewModel();
             try
             {
+                sut.DanhSachMonHoc = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.MonHoc>();
                 await sut.LoadThongTinMonHoc();
+                Assert.AreEqual(sut.DanhSachMonHoc[0].MaMon, 120);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
 
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -76,18 +79,18 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new MonHocViewModel(fakeSqlConnection.Object);
+            var sut = new MonHocViewModel();
 
             try
             {
-                sut.ThemMonHocMoi("Trà đạo");
+                var res = sut.ThemMonHocMoi("Trà đạo");
+                Assert.AreEqual(1, res);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
@@ -101,7 +104,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new MonHocViewModel(fakeSqlConnection.Object);
+            var sut = new MonHocViewModel();
 
             try
             {
@@ -109,14 +112,14 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 {
                     MaMon = 1,
                 };
-                sut.DeleteMonHoc(mh);
+                var res = sut.DeleteMonHoc(mh);
+                Assert.AreEqual(res, 0);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
@@ -130,12 +133,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new MonHocViewModel(fakeSqlConnection.Object);
+            var sut = new MonHocViewModel();
 
             try
             {
-                sut.DanhSachMonHoc = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.MonHoc> { new StudentManagement.Model.MonHoc() };
+                sut.DanhSachMonHoc = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.MonHoc> ();
                 sut.TraCuuMonHoc("Toán");
+                Assert.AreEqual(sut.DanhSachMonHoc[0].MaMon, 120);
             }
             catch (Exception ex)
             {
@@ -155,18 +159,18 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new MonHocViewModel(fakeSqlConnection.Object);
+            var sut = new MonHocViewModel();
 
             try
             {
-                sut.EditTenMon("Thanh lịch", "1");
+                var res = sut.EditTenMon("Thanh lịch", "1");
+                Assert.AreEqual(0, res);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
@@ -181,7 +185,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new MonHocViewModel(fakeSqlConnection.Object);
+            var sut = new MonHocViewModel();
 
             try
             {

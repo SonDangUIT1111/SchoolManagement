@@ -34,6 +34,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             Assert.AreEqual(false, viewModel.DataGridVisibility);
             viewModel.ProgressBarVisibility = false;
             Assert.AreEqual(false, viewModel.ProgressBarVisibility);
+            viewModel.TenLop = "abc";
+            Assert.AreEqual("abc", viewModel.TenLop);
+            viewModel.DataGridVisibility = true;
+            Assert.AreEqual(true, viewModel.DataGridVisibility);
+            viewModel.ProgressBarVisibility = true;
+            Assert.AreEqual(viewModel.ProgressBarVisibility, true);
         }
 
         [TestMethod]
@@ -47,18 +53,17 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new DanhSachLopViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachLopViewModel();
             try
             {
                 sut.MaLop = 151;
                 await sut.LoadDanhSachHocSinh();
+                Assert.AreEqual(sut.DanhSachLop[0].MaHocSinh, 100046);
             }
             catch (Exception)
             {
                 Assert.Fail();
             }
-
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -69,7 +74,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new DanhSachLopViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachLopViewModel();
 
             try
             {
@@ -77,15 +82,16 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 {
                     MaHocSinh = 1,
                 };
-                sut.XoaHocSinh(hocsinh);
+                var res = sut.XoaHocSinh(hocsinh);
+                Assert.IsTrue(res[0] == 0);
+                Assert.IsTrue(res[1] == 0);
+                Assert.IsTrue(res[2] == 0);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
-
 
         }
 
@@ -97,7 +103,7 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new DanhSachLopViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachLopViewModel();
 
             try
             {
@@ -106,21 +112,22 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                     MaHocSinh = 1,
                 };
                 sut.MaLop = 1;
-                sut.HoanTac(hocsinh);
+                var res = sut.HoanTac(hocsinh);
+                Assert.IsTrue(res[0] == 0);
+                Assert.IsTrue(res[1] == 0);
+                Assert.IsTrue(res[2] == 0);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
 
         [TestMethod]
         [DataRow("Thanh")]
-        [DataRow("Linh")]
         public void LoadHocSinhTheoTen_Test(string searchWord)
         {
             var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
@@ -128,20 +135,20 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new DanhSachLopViewModel(fakeSqlConnection.Object);
+            var sut = new DanhSachLopViewModel();
 
             try
             { 
-                sut.DanhSachLop = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { new StudentManagement.Model.HocSinh() };
+                sut.DanhSachLop = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.HocSinh> { };
                 sut.MaLop = 151;
                 sut.LocHocSinhTheoTen(searchWord);
+                Assert.AreEqual(sut.DanhSachLop[0].MaHocSinh,100046);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }

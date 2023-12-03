@@ -19,23 +19,103 @@ namespace StudentManagement.ViewModel.GiaoVien
 {
     public class SuaHocSinhViewModel : BaseViewModel
     {
+
+        const string ngaysinh = "', NgaySinh = '";
+        const string emailstring = "', Email = '";
         public SuaHocSinh SuaHocSinhWD { get; set; }
         public string ImagePath { get; set; }
 
         private StudentManagement.Model.HocSinh _hocsinhhientai;
-        public StudentManagement.Model.HocSinh HocSinhHienTai { get => _hocsinhhientai; set { _hocsinhhientai = value; OnPropertyChanged(); } }
+        public StudentManagement.Model.HocSinh HocSinhHienTai { get => _hocsinhhientai; set { _hocsinhhientai = value;  } }
         public ICommand CancelCommand { get; set; }
         public ICommand LoadWindow { get; set; }
         public ICommand ChangeImage { get; set; }
         public ICommand ChangeHocSinh { get; set; }
-        private readonly ISqlConnectionWrapper sqlConnection;
 
-        public SuaHocSinhViewModel(ISqlConnectionWrapper sqlConnection)
+        public bool IsValidEmail(string email)
         {
-            this.sqlConnection = sqlConnection;
+            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
+            {
+                return false;
+            }
+            return true;
         }
+        public int CapNhatHocSinh()
+        {
+            int count = 0;
+                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
+                {
+                        sqlConnectionWrapper.Open();
+
+                        List<int> quiDinh = new List<int>();
+                        string cmdTest = "select GiaTri from QuiDinh";
+                        using (var cmd1 = new SqlCommand(cmdTest, sqlConnectionWrapper.GetSqlConnection()))
+                        using (var readerTest = cmd1.ExecuteReader())
+                        {
+                            while (readerTest.HasRows)
+                            {
+                                while (readerTest.Read())
+                                {
+                                    quiDinh.Add(readerTest.GetInt32(0));
+                                }
+                                readerTest.NextResult();
+                            }
+                        }
+
+
+ 
+
+                        if (DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
+                        {
+                            return -1;
+                        }
+
+                        string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
+                            ngaysinh + ToShortDateTime(SuaHocSinhWD.NgaySinh) +
+                            "', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
+                            ", DiaChi = N'" + SuaHocSinhWD.DiaChi.Text +
+                            emailstring + SuaHocSinhWD.Email.Text +
+                            "' ,AnhThe = @imagebinary" +
+                            " where MaHocSinh = " + HocSinhHienTai.MaHocSinh;
+
+
+                        if (ImagePath != null)
+                        {
+                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
+                            byte[] buffer = converter.ImageToBinary(ImagePath);
+
+                            using (var cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection()))
+                            {
+                                cmd.Parameters.AddWithValue("@imagebinary", buffer);
+                                count = cmd.ExecuteNonQuery();
+                            }
+
+                            // Display a success message here or return true
+                        }
+                return count;
+                        //SuaHocSinhWD.Close();
+
+                }
+            
+        }
+
+
+        public string ToShortDateTime(DatePicker st)
+        {
+            if (st.SelectedDate.HasValue)
+            {
+                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
+                return date;
+            }else
+            {
+                return string.Empty;
+
+            }
+        }
+
         public SuaHocSinhViewModel()
         {
+            // Stryker disable all
             HocSinhHienTai = new StudentManagement.Model.HocSinh();
             LoadWindow = new RelayCommand<SuaHocSinh>((parameter) => { return true; }, (parameter) =>
             {
@@ -78,116 +158,25 @@ namespace StudentManagement.ViewModel.GiaoVien
             });
             ChangeHocSinh = new RelayCommand<object>((parameter) => { return true; }, (parameter) =>
             {
-                CapNhatHocSinh();
-            });
-        }
-        public bool IsValidEmail(string email)
-        {
-            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-            {
-                return false;
-            }
-            return true;
-        }
-        public void CapNhatHocSinh()
-        {
-            if (SuaHocSinhWD.TenHS.Text == "" ||
+
+                if (SuaHocSinhWD.TenHS.Text == "" ||
                 SuaHocSinhWD.NgaySinh.Text == "" ||
                 SuaHocSinhWD.DiaChi.Text == "" ||
                 SuaHocSinhWD.Email.Text == "")
-            {
-                // Display an error message here or return false
-                return;
-            }
-            else if (!IsValidEmail(SuaHocSinhWD.Email.Text))
-            {
-                // Display an error message here or return false
-                return;
-            }
-            else
-            {
-                using (var sqlConnectionWrapper = new SqlConnectionWrapper(ConnectionString.connectionString))
                 {
-                    try
-                    {
-                        Console.WriteLine("Before opening the connection");
-                        sqlConnectionWrapper.Open();
-                        Console.WriteLine("After opening the connection");
-
-                        List<int> quiDinh = new List<int>();
-                        string cmdTest = "select GiaTri from QuiDinh";
-                        using (var cmd1 = new SqlCommand(cmdTest, sqlConnectionWrapper.GetSqlConnection()))
-                        using (var readerTest = cmd1.ExecuteReader())
-                        {
-                            while (readerTest.HasRows)
-                            {
-                                while (readerTest.Read())
-                                {
-                                    Console.WriteLine(readerTest.GetInt32(0));
-                                    quiDinh.Add(readerTest.GetInt32(0));
-                                }
-                                readerTest.NextResult();
-                            }
-                        }
-
-                        Console.WriteLine(SuaHocSinhWD.TenHS.Text);
-                        Console.WriteLine(SuaHocSinhWD.NgaySinh.SelectedDate);
- 
-
-                        if (DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year > quiDinh[2] || DateTime.Now.Year - SuaHocSinhWD.NgaySinh.SelectedDate.Value.Year < quiDinh[1])
-                        {
-                            Console.WriteLine("error");
-                            // Display an error message here or return false
-                            return;
-                        }
-
-                        string CmdString = "Update HocSinh set TenHocSinh = N'" + SuaHocSinhWD.TenHS.Text +
-                            "', NgaySinh = '" + ToShortDateTime(SuaHocSinhWD.NgaySinh) +
-                            "', GioiTinh = " + SuaHocSinhWD.GioiTinh.SelectedIndex.ToString() +
-                            ", DiaChi = N'" + SuaHocSinhWD.DiaChi.Text +
-                            "', Email = '" + SuaHocSinhWD.Email.Text +
-                            "' ,AnhThe = @image" +
-                            " where MaHocSinh = " + "10046";
-
-
-                        if (ImagePath != null)
-                        {
-                            ByteArrayToBitmapImageConverter converter = new ByteArrayToBitmapImageConverter();
-                            byte[] buffer = converter.ImageToBinary(ImagePath);
-
-                            using (var cmd = new SqlCommand(CmdString, sqlConnectionWrapper.GetSqlConnection()))
-                            {
-                                cmd.Parameters.AddWithValue("@imagebinary", buffer);
-                                cmd.ExecuteScalar();
-                            }
-
-                            // Display a success message here or return true
-                        }
-
-                        SuaHocSinhWD.Close();
-                        return;
-                    }
-                    catch (Exception e)
-                    {
-                        // Handle exceptions here and display an error message or return false
-                        return;
-                    }
+                    // Display an error message here or return false
+                    return;
                 }
-            }
-        }
-
-
-        public string ToShortDateTime(DatePicker st)
-        {
-            if (st.SelectedDate.HasValue)
-            {
-                string date = st.SelectedDate.Value.Year.ToString() + "-" + st.SelectedDate.Value.Month.ToString() + "-" + st.SelectedDate.Value.Day.ToString();
-                return date;
-            }else
-            {
-                return string.Empty;
-
-            }
+                else if (!IsValidEmail(SuaHocSinhWD.Email.Text))
+                {
+                    // Display an error message here or return false
+                    return;
+                }
+                else
+                {
+                    CapNhatHocSinh();
+                }
+            });
         }
     }
 }

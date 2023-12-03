@@ -24,7 +24,9 @@ namespace StudentManagement.ViewModel.Login.Tests
         public void TestInitialize()
         {
             viewModel = new LoginViewModel();
+            Assert.AreEqual(viewModel.IndexRole, -1);
         }
+
 
         [TestMethod()]
         public void PropertiesTest()
@@ -38,6 +40,7 @@ namespace StudentManagement.ViewModel.Login.Tests
             viewModel.LoginWindow = null;
             Assert.IsNull(viewModel.LoginWindow);
         }
+
 
 
 
@@ -63,6 +66,7 @@ namespace StudentManagement.ViewModel.Login.Tests
         [DataRow(-1)]
         [DataRow(-2)]
         [DataRow(4)]
+        [DataRow(2)]
         public void CheckInvalidRoleTest(int a)
         {
             if (a >= 0 && a <= 2)
@@ -73,7 +77,7 @@ namespace StudentManagement.ViewModel.Login.Tests
         }
 
         [TestMethod]
-        public void GeThongTin()
+        public void GetThongTin()
         {
             var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
 
@@ -83,7 +87,9 @@ namespace StudentManagement.ViewModel.Login.Tests
                 // You can add code here for your test scenario
             });
 
-            var sut = new LoginViewModel(fakeSqlConnection.Object);
+
+            var sut = new LoginViewModel();
+            Assert.IsNotNull(sut);
 
             try
             {
@@ -91,9 +97,22 @@ namespace StudentManagement.ViewModel.Login.Tests
                 sut.IndexRole = 2;
                 var result = sut.GetThongTin(CreateMD5(Base64Encode("123456")));
                 Assert.AreEqual(result, 100046);
+                sut.Username = "gv100031";
+                sut.IndexRole = 1;
+                var result2 = sut.GetThongTin(CreateMD5(Base64Encode("123456")));
+                Assert.AreEqual(result2, 100031);
+                sut.Username = "admin";
+                sut.IndexRole = 0;
+                var result3 = sut.GetThongTin(CreateMD5(Base64Encode("123456")));
+                Assert.AreEqual(result3, 1);
+                sut.Username = "aaaaa";
+                sut.IndexRole = 0;
+                var result4 = sut.GetThongTin(CreateMD5(Base64Encode("9")));
+                Assert.AreEqual(result4, -1);
             }
-            catch (Exception)
-            {
+            catch (Exception ex)
+            { 
+                Console.WriteLine(ex.Message);
                 Assert.Fail();
             }
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using StudentManagement.Model;
 using StudentManagement.ViewModel.GiamHieu;
 using StudentManagement.ViewModel.Services;
 using System;
@@ -20,6 +21,9 @@ namespace StudentManagementTests.ViewModel.GiamHieu
         public void TestInitialize()
         {
             viewModel = new SuaPhanCongViewModel();
+            PhanCongGiangDay pc = new StudentManagement.Model.PhanCongGiangDay() { MaPhanCong = 1 };
+            viewModel.PhanCongHienTai = pc;
+            Assert.AreEqual(viewModel.PhanCongHienTai, pc);
         }
         [TestMethod]
         public void LoadThongTinCmb_GetValue()
@@ -35,13 +39,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
                 // You can add code here for your test scenario
             });
 
-            var sut = new SuaPhanCongViewModel(fakeSqlConnection.Object);
+            var sut = new SuaPhanCongViewModel();
 
             try
             {
                 sut.GiaoVienCmb = _testGiaoVienCmb;
                 sut.LoadThongTinCmb();
-                Assert.IsTrue(true);
+                Assert.AreEqual(sut.GiaoVienCmb[0].MaGiaoVien,100031);
             } catch (Exception)
             {
                 Assert.Fail();

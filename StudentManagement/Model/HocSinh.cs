@@ -18,8 +18,7 @@ namespace StudentManagement.Model
         public string Email { get { return _email; } set { _email = value; } }
         private byte[] _avatar;
         public byte[] Avatar { get { return _avatar; } set { _avatar = value; } }
-        private int _maLop;
-        public int MaLop { get { return _maLop; } set { _maLop = value; } }
+
         private string _diemTB1;
         public string DiemTB1 { get { return _diemTB1; } set { _diemTB1 = value; } }
         private string _diemTB2;

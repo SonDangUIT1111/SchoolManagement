@@ -72,6 +72,7 @@
     <Reference Include="Moq, Version=4.20.69.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.20.69\lib\net462\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -94,40 +95,41 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\GiamHieu\BaoCaoHocKyViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\BaoCaoMonHocVIewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\DanhSachGiaoVienViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\DanhSachLopViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\LopHocViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\MonHocViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\PhanCongGiangDayViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\QuanLiDiemSoViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaGiaoVienViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\SuaLopHocViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\SuaPhanCongViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\SuaThongTinHocSinhViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThayDoiQuyDinhViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemGiaoVienViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThemHocSinhMoiViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\ThemLopHocViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\ThemPhanCongViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\ThongTinHocSinhViewModelTests.cs" />
     <Compile Include="ViewModel\GiamHieu\ThongTinTrongViewModelTests.cs" />
+    <Compile Include="ViewModel\GiamHieu\TrangChuViewModelTest.cs" />
     <Compile Include="ViewModel\GiamHieu\XepLopViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\HeThongBangDiemViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\LopHocViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\SuaHocSinhViewModelTests.cs" />
     <Compile Include="ViewModel\GiaoVien\ThanhTichHocSinhViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\BaoCaoHocKyViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\BaoCaoMonHocVIewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\DanhSachGiaoVienViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\LopHocViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\PhanCongGiangDayViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\QuanLiDiemSoViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\SuaGiaoVienViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\SuaPhanCongViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\ThayDoiQuyDinhViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\ThemHocSinhMoiViewModelTests.cs" />
-    <Compile Include="ViewModel\GiamHieu\ThemPhanCongViewModelTests.cs" />
-    <Compile Include="ViewModel\GiaoVien\BaoCaoHocKyViewModelTests.cs" />
-    <Compile Include="ViewModel\GiaoVien\BaoCaoMonHocVIewModelTests.cs" />
+    <Compile Include="ViewModel\GiaoVien\TranChuViewModelTest.cs" />
     <Compile Include="ViewModel\HocSinh\BaoCaoHocKyViewModelTests.cs" />
     <Compile Include="ViewModel\HocSinh\BaoCaoMonHocVIewModelTests.cs" />
+    <Compile Include="ViewModel\GiaoVien\BaoCaoHocKyViewModelTests.cs" />
+    <Compile Include="ViewModel\GiaoVien\BaoCaoMonHocVIewModelTests.cs" />
     <Compile Include="ViewModel\HocSinh\DiemSoViewModelTests.cs" />
     <Compile Include="ViewModel\HocSinh\TrangChuViewModelTests.cs" />
-    <Compile Include="ViewModel\Login\ChangePasswordViewModelTests.cs" />
+    <Compile Include="ViewModel\Login\ChangePasswordViewModelTest.cs" />
+    <Compile Include="ViewModel\Login\ForgotPasswordViewModelTest.cs" />
     <Compile Include="ViewModel\Login\LoginViewModelTests.cs" />
-    <Compile Include="ViewModel\Login\ForgotPasswordViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

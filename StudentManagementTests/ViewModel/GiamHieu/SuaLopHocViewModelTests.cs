@@ -38,8 +38,9 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             Assert.AreEqual(1, viewModel.Khoi);
             viewModel.SuaLopWD = null;
             Assert.IsNull(viewModel.SuaLopWD);
-            viewModel.LopHocHienTai = null;
-            Assert.IsNull(viewModel.LopHocHienTai);
+            Lop l = new Lop() { MaLop = 1 };
+            viewModel.LopHocHienTai = l;
+            Assert.AreEqual(viewModel.LopHocHienTai,l);
             viewModel.GiaoVienComboBox = null;
             Assert.IsNull(viewModel.GiaoVienComboBox);
             viewModel.NienKhoaComboBox = null;
@@ -54,19 +55,19 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaLopHocViewModel(fakeSqlConnection.Object);
+            var sut = new SuaLopHocViewModel();
 
             try
             {
                 sut.GiaoVienComboBox = new System.Collections.ObjectModel.ObservableCollection<StudentManagement.Model.GiaoVien> { };
                 sut.LoadGVCNCombobox();
+                Assert.AreEqual(sut.GiaoVienComboBox[0].MaGiaoVien, 100033);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 Assert.IsFalse(true);
             }
-            Assert.IsTrue(true);
 
 
         }
@@ -79,11 +80,13 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaLopHocViewModel(fakeSqlConnection.Object);
+            var sut = new SuaLopHocViewModel();
 
             try
             {
                 var result = sut.TienHanhSuaLopHoc("10A1","2023-2024","152","");
+                Assert.AreEqual(result, 0);
+                result = sut.TienHanhSuaLopHoc("10A1", "2023-2024", "1", "");
                 Assert.AreEqual(result, 0);
             }
             catch (Exception ex)
@@ -101,13 +104,12 @@ namespace StudentManagementTests.ViewModel.GiamHieu
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaLopHocViewModel(fakeSqlConnection.Object);
+            var sut = new SuaLopHocViewModel();
 
             try
             {
                 var result = sut.TienHanhSuaLopHoc("10AOther", "2022-2023", "164", "100040");
-                Console.WriteLine(result);
-                Assert.IsNotNull(result);
+                Assert.AreEqual(result,1);
             }
             catch (Exception ex)
             {

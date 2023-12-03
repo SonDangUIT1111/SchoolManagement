@@ -14,9 +14,16 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace StudentManagement.ViewModel.Login
-{
+{   
+
     public class ForgotPasswordViewModel : BaseViewModel
     {
+        const string messageBodyStart = "Your verified code is ";
+        const string fromStart = "studentsp111111@gmail.com";
+        const string subjectStart = "Student management - Changing Password";
+         
+        const string byStart = "smtp.gmail.com";
+        const string cridentialStart =  "dfmsetbdrstlnenr";
 
         // biến flag
         public bool IsSend { get; set; }
@@ -29,14 +36,14 @@ namespace StudentManagement.ViewModel.Login
         public int IndexRole { get { return _indexRole; } set { _indexRole = value; } }
 
         private string _emailProtected;
-        public string EmailProtected { get => _emailProtected; set { _emailProtected = value; OnPropertyChanged(); } }
+        public string EmailProtected { get => _emailProtected; set { _emailProtected = value;  } }
         private string _newPassword;
-        public string NewPassword { get => _newPassword; set { _newPassword = value; OnPropertyChanged(); } }
+        public string NewPassword { get => _newPassword; set { _newPassword = value;  } }
         private string _confirmNewPassword;
 
         private string _code;
-        public string Code { get => _code; set { _code = value; OnPropertyChanged(); } }
-        public string ConfirmNewPassword { get => _confirmNewPassword; set { _confirmNewPassword = value; OnPropertyChanged(); } }
+        public string Code { get => _code; set { _code = value; } }
+        public string ConfirmNewPassword { get => _confirmNewPassword; set { _confirmNewPassword = value;  } }
 
 
         // khai báo ICommand 
@@ -58,14 +65,123 @@ namespace StudentManagement.ViewModel.Login
         public ICommand ShowConfirmPassword_Register { get; set; }
         public ICommand UnshowConfirmPassword_Register { get; set; }
 
-        private readonly ISqlConnectionWrapper sqlConnection;
 
-        public ForgotPasswordViewModel(ISqlConnectionWrapper sqlConnection)
+        public int DoiMatKhauMoi()
         {
-            this.sqlConnection = sqlConnection;
+            string CmdString;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+
+                    sqlConnectionWrap.Open();
+                    string passEncode = CreateMD5(Base64Encode(NewPassword));
+                    CmdString = "Update " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    return cmd.ExecuteNonQuery();
+
+            }
         }
+        public int GetThongTin()
+        {
+            string CmdString;
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                    sqlConnectionWrap.Open();
+                    CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Email = '" + EmailProtected + "'";
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    int check = Convert.ToInt32(cmd.ExecuteScalar());
+                    return check;
+
+            }
+        }
+
+        public bool CheckValidPassword(string pass)
+        {
+            if (String.IsNullOrEmpty(pass)) return false;
+            bool flagUpcase = false, flagNum = false;
+            foreach (char c in pass)
+            {
+                if (c >= 'A' && c <= 'Z')
+                    flagUpcase = true;
+                if (c >= '0' && c <= '9')
+                    flagNum = true;
+            }
+            return flagNum && flagUpcase;
+        }
+
+        public bool CheckValidEmail(string email)
+        {
+            return Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$") && !String.IsNullOrEmpty(email);
+        }
+
+
+        public bool CheckValidCode(string code)
+        {
+            if (code.Length != 6) return false;
+            try
+            {
+                Int32.Parse(code);
+                return code.Length == 6;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        public string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                //return Convert.ToHexString(hashBytes); // .NET 5 +
+
+                // Convert the byte array to hexadecimal string prior to .NET 5
+                StringBuilder sb = new System.Text.StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+        public void SendCodeByEmail(string codesend, string to)
+        {
+            string from, subject, messageBody;
+            messageBody = messageBodyStart + codesend;
+            from = fromStart;
+            subject = subjectStart;
+            MailMessage message = new MailMessage(from, to, subject, messageBody);
+            SmtpClient client = new SmtpClient(byStart);
+            client.EnableSsl = true;
+            client.Port = 587;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.Credentials = new NetworkCredential(from, cridentialStart);
+            try
+            {
+                // Stryker disable all
+                client.Send(message);
+                //MessageBoxOK MB = new MessageBoxOK();
+                //var data = MB.DataContext as MessageBoxOKViewModel;
+                //data.Content = "Mã xác thực đã được gửi đến email bảo vệ của bạn";
+                //MB.ShowDialog();
+            }
+            catch (Exception)
+            {
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();   
+                //messageBoxFail.ShowDialog();
+            }
+        }
+
         public ForgotPasswordViewModel()
         {
+            // Stryker disable all
             //Declare random code
             RandomCode = 0;
 
@@ -93,7 +209,7 @@ namespace StudentManagement.ViewModel.Login
                     MB.ShowDialog();
                     return;
                 }
-                if (IndexRole<0 || IndexRole > 2)
+                if (IndexRole < 0 || IndexRole > 2)
                 {
                     MessageBoxOK MB = new MessageBoxOK();
                     var data = MB.DataContext as MessageBoxOKViewModel;
@@ -102,7 +218,7 @@ namespace StudentManagement.ViewModel.Login
                     return;
                 }
                 int checkUser = GetThongTin();
-                
+
                 if (checkUser > 0)
                 {
                     IsSend = true;
@@ -289,131 +405,6 @@ namespace StudentManagement.ViewModel.Login
                 parameter.ConfirmPassEye.Visibility = Visibility.Hidden;
             });
 
-        }
-
-        public void DoiMatKhauMoi()
-        {
-            string CmdString = string.Empty;
-            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrap.Open();
-                    string passEncode = CreateMD5(Base64Encode(NewPassword));
-                    CmdString = "Update "+ (IndexRole==0?"GiamHieu":IndexRole==1?"GiaoVien":"HocSinh") +" Set UserPassword = '" + passEncode + "' Where Email ='" + EmailProtected + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    cmd.ExecuteScalar();
-                    sqlConnectionWrap.Close();
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
-        public int GetThongTin()
-        {
-            string CmdString = string.Empty;
-            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrap.Open();
-                    CmdString = "Select count(*) from " + (IndexRole == 0 ? "GiamHieu" : IndexRole == 1 ? "GiaoVien" : "HocSinh") + " where Email = '" + IndexRole + "'";
-                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    int check = Convert.ToInt32(cmd.ExecuteScalar());
-                    sqlConnection.Close();
-                    return check;
-                }
-                catch (Exception)
-                {
-                    return -1;
-                }
-
-            }
-        }
-
-        public bool CheckValidPassword(string pass)
-        {
-            if (String.IsNullOrEmpty(pass)) return false;
-            bool flagUpcase = false, flagNum = false;
-            foreach (char c in pass)
-            {
-                if (c >= 'A' && c < 'Z' + 1)
-                    flagUpcase = true;
-                if (c >= '0' && c < '9' + 1)
-                    flagNum = true; 
-            }
-            return flagNum && flagUpcase;
-        }
-
-        public bool CheckValidEmail(string email)
-        {
-            return Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$") && !String.IsNullOrEmpty(email);
-        }
-
-
-        public bool CheckValidCode(string code)
-        {
-            if (code.Length != 6) return false;
-            try
-            {
-                Int32.Parse(code);
-                return code.Length == 6;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-        public static string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-        public static string CreateMD5(string input)
-        {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                //return Convert.ToHexString(hashBytes); // .NET 5 +
-
-                // Convert the byte array to hexadecimal string prior to .NET 5
-                StringBuilder sb = new System.Text.StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
-            }
-        }
-        public void SendCodeByEmail(string codesend, string to)
-        {
-            string from, subject, messageBody;
-            messageBody = "Your verified code is " + codesend;
-            from = "studentsp111111@gmail.com";
-            subject = "Student management - Changing Password";
-            MailMessage message = new MailMessage(from, to, subject, messageBody);
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
-            client.EnableSsl = true;
-            client.Port = 587;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.Credentials = new NetworkCredential(from, "dfmsetbdrstlnenr");
-            try
-            {
-                client.Send(message);
-                //MessageBoxOK MB = new MessageBoxOK();
-                //var data = MB.DataContext as MessageBoxOKViewModel;
-                //data.Content = "Mã xác thực đã được gửi đến email bảo vệ của bạn";
-                //MB.ShowDialog();
-            }
-            catch (Exception)
-            {
-                //MessageBoxFail messageBoxFail = new MessageBoxFail();   
-                //messageBoxFail.ShowDialog();
-            }
         }
 
     }

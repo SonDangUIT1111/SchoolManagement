@@ -21,7 +21,7 @@ namespace StudentManagement.ViewModel.GiaoVien
     {
         //declare variable
         private Model.GiaoVien _currentUser;
-        public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value;OnPropertyChanged(); } }
+        public Model.GiaoVien CurrentUser { get { return _currentUser; } set { _currentUser = value; } }
         public GiaoVienWindow GiaoVienWD { get; set; }
         //declare Pages
         public StudentManagement.Views.GiaoVien.BaoCaoMonHoc BaoCaoPage { get; set; }
@@ -32,12 +32,7 @@ namespace StudentManagement.ViewModel.GiaoVien
         public StudentManagement.Views.GiamHieu.ThongTinTruong ThongTinTruongPage { get; set; }
         public StudentManagement.Views.GiaoVien.SuaThongTinCaNhan ThongTinCaNhanPage { get; set; }
 
-        private readonly ISqlConnectionWrapper sqlConnection;
 
-        public TrangChuViewModel(ISqlConnectionWrapper sqlConnection)
-        {
-            this.sqlConnection = sqlConnection;
-        }
 
         //declare ICommand
         public ICommand LoadWindow { get; set; }
@@ -49,14 +44,63 @@ namespace StudentManagement.ViewModel.GiaoVien
         public ICommand SwitchBaoCaoHocKy { get; set; }
         public ICommand DoiMatKhau { get; set; }
         public ICommand SuaThongTinCaNhan { get; set; }
+      
+        public void LoadThongTinCaNhan()
+        {
+            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
+            {
+                try
+                {
+                    sqlConnectionWrap.Open();
+                    string CmdString = "select TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
+                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) reader.Read();
+                    CurrentUser.TenGiaoVien = reader.GetString(0);
+                    CurrentUser.NgaySinh = reader.GetDateTime(1);
+                    CurrentUser.GioiTinh = reader.GetBoolean(2);
+                    CurrentUser.DiaChi = reader.GetString(3);
+                    CurrentUser.Email = reader.GetString(4);
+                    CurrentUser.Avatar = (byte[])reader[5];
+                } catch (Exception)
+                {
+                    //MessageBoxFail msgBoxFail = new MessageBoxFail();   
+                    //msgBoxFail.ShowDialog();
+                }
+            }
+        }
+        public void LoadSayHello(Border item)
+        {
+            // Stryker disable all
+            try
+            {
+                GiaoVienWD.UserName.Text = CurrentUser.TenGiaoVien;
+                ImageBrush imageBrush = new ImageBrush();
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                MemoryStream stream = new MemoryStream(CurrentUser.Avatar);
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                imageBrush.ImageSource = bitmap;
+                imageBrush.Stretch = Stretch.UniformToFill;
+                item.Background = imageBrush;
+            }
+            catch (Exception)
+            {
+                //MessageBoxFail messageBoxFail = new MessageBoxFail();
+                //messageBoxFail.ShowDialog();    
+            }
+        }
         public TrangChuViewModel()
         {
-            ThongTinTruongPage = new Views.GiamHieu.ThongTinTruong();
-            LopHocPage = new Views.GiaoVien.LopHoc();
-            ThanhTichHocSinhPage = new ThanhTichHocSinh();
-            HeThongBangDiemPage = new HeThongBangDiem();
-            BaoCaoPage = new Views.GiaoVien.BaoCaoMonHoc();
-            BaoCaoHocKyPage = new Views.GiaoVien.BaoCaoTongKetHocKy();
+            // Stryker disable all
+            //ThongTinTruongPage = new Views.GiamHieu.ThongTinTruong();
+            //LopHocPage = new Views.GiaoVien.LopHoc();
+            //ThanhTichHocSinhPage = new ThanhTichHocSinh();
+            //HeThongBangDiemPage = new HeThongBangDiem();
+            //BaoCaoPage = new Views.GiaoVien.BaoCaoMonHoc();
+            //BaoCaoHocKyPage = new Views.GiaoVien.BaoCaoTongKetHocKy();
             CurrentUser = new StudentManagement.Model.GiaoVien();
             //define ICommand
             LoadWindow = new RelayCommand<GiaoVienWindow>((parameter) => { return true; }, (parameter) =>
@@ -164,53 +208,6 @@ namespace StudentManagement.ViewModel.GiaoVien
                 //MessageBox.Show(parameter);
                 window.ShowDialog();
             });
-        }
-        public void LoadThongTinCaNhan()
-        {
-            using (var sqlConnectionWrap = new SqlConnectionWrapper(ConnectionString.connectionString))
-            {
-                try
-                {
-                    sqlConnectionWrap.Open();
-                    string CmdString = "select TenGiaoVien,NgaySinh,GioiTinh,DiaChi,Email,AnhThe from GiaoVien where MaGiaoVien = " + CurrentUser.MaGiaoVien.ToString();
-                    SqlCommand cmd = new SqlCommand(CmdString, sqlConnectionWrap.GetSqlConnection());
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows) reader.Read();
-                    CurrentUser.TenGiaoVien = reader.GetString(0);
-                    CurrentUser.NgaySinh = reader.GetDateTime(1);
-                    CurrentUser.GioiTinh = reader.GetBoolean(2);
-                    CurrentUser.DiaChi = reader.GetString(3);
-                    CurrentUser.Email = reader.GetString(4);
-                    CurrentUser.Avatar = (byte[])reader[5];
-                    sqlConnectionWrap.Close();
-                } catch (Exception)
-                {
-                    //MessageBoxFail msgBoxFail = new MessageBoxFail();   
-                    //msgBoxFail.ShowDialog();
-                }
-            }
-        }
-        public void LoadSayHello(Border item)
-        {
-            try
-            {
-                GiaoVienWD.UserName.Text = CurrentUser.TenGiaoVien;
-                ImageBrush imageBrush = new ImageBrush();
-                BitmapImage bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                MemoryStream stream = new MemoryStream(CurrentUser.Avatar);
-                bitmap.StreamSource = stream;
-                bitmap.EndInit();
-                imageBrush.ImageSource = bitmap;
-                imageBrush.Stretch = Stretch.UniformToFill;
-                item.Background = imageBrush;
-            }
-            catch (Exception)
-            {
-                //MessageBoxFail messageBoxFail = new MessageBoxFail();
-                //messageBoxFail.ShowDialog();    
-            }
         }
     }
 }

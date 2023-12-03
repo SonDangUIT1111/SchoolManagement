@@ -23,6 +23,8 @@ namespace StudentManagementTests.ViewModel.GiaoVien
         public void TestInitialize()
         {
             viewModel = new SuaHocSinhViewModel();
+            viewModel.HocSinhHienTai = null;
+            Assert.IsNull(viewModel.HocSinhHienTai);
         }
         
         [TestMethod()]
@@ -88,69 +90,35 @@ namespace StudentManagementTests.ViewModel.GiaoVien
             fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
             });
 
-            var sut = new SuaHocSinhViewModel(fakeSqlConnection.Object);
+            var sut = new SuaHocSinhViewModel();
 
             sut.SuaHocSinhWD = new SuaHocSinh();
             sut.SuaHocSinhWD.TenHS.Text = "John Doe";
-            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2007, 11, 13); 
+            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2002, 11, 13);
+            var res = sut.CapNhatHocSinh();
+            Assert.AreEqual(res, -1);
+            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2009, 11, 13);
+            res = sut.CapNhatHocSinh();
+            Assert.AreEqual(res, -1);
+            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2003, 11, 13);
             sut.SuaHocSinhWD.GioiTinh.SelectedIndex = 0;  
             sut.SuaHocSinhWD.DiaChi.Text = "123 Main St";  
             sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";
             var projectPath = Path.GetDirectoryName(Path.GetDirectoryName(System.IO.Directory.GetCurrentDirectory()));
             string filePath = System.IO.Path.Combine(projectPath, "Resources", "Images", "elaina-and-saya-flight-training.jpg");
             sut.ImagePath = filePath;
+            sut.HocSinhHienTai.MaHocSinh = 100096;
+            res = sut.CapNhatHocSinh();
+            Assert.AreEqual(res, 1);
+            sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2008, 11, 13);
+            sut.HocSinhHienTai.MaHocSinh = 100096;
+            res = sut.CapNhatHocSinh();
+            Assert.AreEqual(res, 1);
             // Act
 
-            try
-            {
-                sut.CapNhatHocSinh();
-            } catch (Exception)
-            {
-                Assert.Fail();
-            }
-            // Assert
-            // Verify that the expected methods are called on the SqlConnectionWrapper
-            //fakeSqlConnection.Verify(wrapper => wrapper.Open(), Times.Once);
-            //fakeSqlConnection.Verify(wrapper => wrapper.Close(), Times.Once);
-            Assert.IsTrue(true);
-
-        }
-
-        [TestMethod]
-        public void CapNhatHocSinh_InvalidInput_ShouldNotUpdateHocSinh()
-        {
-            var fakeSqlConnection = new Mock<ISqlConnectionWrapper>();
-
-            fakeSqlConnection.Setup(wrapper => wrapper.Open()).Callback(() => {
-            });
-
-            var sut = new SuaHocSinhViewModel(fakeSqlConnection.Object);
-
-            sut.SuaHocSinhWD = new SuaHocSinh();
-            sut.SuaHocSinhWD.TenHS.Text = "";
-            //sut.SuaHocSinhWD.NgaySinh.SelectedDate = new DateTime(2007, 11, 13);
-            //sut.SuaHocSinhWD.GioiTinh.SelectedIndex = 0;
-            //sut.SuaHocSinhWD.DiaChi.Text = "123 Main St";
-            //sut.SuaHocSinhWD.Email.Text = "john.doe@example.com";
-
-            // Act
-            try
-            {
-                sut.CapNhatHocSinh();
-            } catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Assert.IsFalse(true);
-            }
-            // Assert
-            // Verify that the expected methods are called on the SqlConnectionWrapper
-            //fakeSqlConnection.Verify(wrapper => wrapper.Open(), Times.Once);
-            //fakeSqlConnection.Verify(wrapper => wrapper.Close(), Times.Once);
-            Assert.IsTrue(true);
 
 
         }
-
 
 
     }
