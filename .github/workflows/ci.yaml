@@ -10,11 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        dotnet-version: ['5.0']
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -23,13 +19,14 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: '5.0'
 
     - name: Restore NuGet Packages
       run: |
         cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
-        dotnet add package MaterialDesignThemes --version 4.8.0
-        dotnet add package MSTest.TestAdapter --version 3.1.1
+        nuget restore StudentManagement.sln
+        nuget add package MaterialDesignThemes -Version 4.8.0
+        nuget add package MSTest.TestAdapter -Version 3.1.1
 
     - name: Build
       run: |
