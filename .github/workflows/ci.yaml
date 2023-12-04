@@ -1,0 +1,47 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - orgin/UnitTest
+  pull_request:
+    branches:
+      - orgin/UnitTest
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        python-version: ['3.8', '3.9', '3.10']
+        dotnet-version: ['5.0']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Install dependencies
+      run: |
+        # Additional dependencies installation for your WPF project
+
+    - name: Build
+      run: |
+        dotnet build StudentManagement.sln
+
+    - name: Run Tests
+      run: |
+        dotnet test StudentManagementTests/StudentManagementTests.csproj
+
+    - name: Install Stryker.NET
+      run: |
+        dotnet tool install -g dotnet-stryker
+
+    - name: Mutation Testing
+      run: |
+        dotnet-stryker
