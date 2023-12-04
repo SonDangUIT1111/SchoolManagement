@@ -24,9 +24,9 @@ jobs:
     - name: Restore NuGet Packages
       run: |
         cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
+        # Edit the .csproj file to add the PackageReference manually
+        echo '<ItemGroup><PackageReference Include="MaterialDesignThemes" Version="4.8.0" /><PackageReference Include="MSTest.TestAdapter" Version="3.1.1" /></ItemGroup>' >> StudentManagement.csproj
         nuget restore StudentManagement.sln
-        nuget add package MaterialDesignThemes
-        nuget add package MSTest.TestAdapter
 
     - name: Build
       run: |
