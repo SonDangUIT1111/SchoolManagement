@@ -25,8 +25,8 @@ jobs:
       run: |
         cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
         nuget restore StudentManagement.sln
-        nuget add package MaterialDesignThemes -Version 4.8.0
-        nuget add package MSTest.TestAdapter -Version 3.1.1
+        nuget add package MaterialDesignThemes
+        nuget add package MSTest.TestAdapter
 
     - name: Build
       run: |
