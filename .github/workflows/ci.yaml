@@ -25,9 +25,9 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
 
-    - name: Install dependencies
+    - name: Restore NuGet Packages
       run: |
-        # Additional dependencies installation for your WPF project
+        dotnet restore StudentManagement.sln
 
     - name: Build
       run: |
