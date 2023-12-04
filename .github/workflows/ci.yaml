@@ -10,11 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        dotnet-version: ['5.0']
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -23,7 +19,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet-version }}
+        dotnet-version: '5.0'
 
     - name: Restore NuGet Packages
       run: |
