@@ -28,6 +28,7 @@ jobs:
     - name: Restore NuGet Packages
       run: |
         dotnet restore StudentManagement.sln
+        nuget restore StudentManagement.sln
 
     - name: Build
       run: |
