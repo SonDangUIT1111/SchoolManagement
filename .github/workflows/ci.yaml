@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
         python-version: ['3.8', '3.9', '3.10']
-        dotnet-version: ['5.0']
+        dotnet-version: ['4.7.2']
 
     steps:
     - name: Checkout code
