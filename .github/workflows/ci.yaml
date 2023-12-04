@@ -10,7 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        dotnet-version: ['5.0']
 
     steps:
     - name: Checkout code
@@ -19,14 +23,11 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0'
+        dotnet-version: ${{ matrix.dotnet-version }}
 
     - name: Restore NuGet Packages
       run: |
-        cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
-        # Edit the .csproj file to add the PackageReference manually
-        echo '<ItemGroup><PackageReference Include="MaterialDesignThemes" Version="4.8.0" /><PackageReference Include="MSTest.TestAdapter" Version="3.1.1" /></ItemGroup>' >> StudentManagement.csproj
-        nuget restore StudentManagement.sln
+        dotnet restore StudentManagement.sln
 
     - name: Build
       run: |
