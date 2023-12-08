@@ -27,8 +27,6 @@ jobs:
 
     - name: Restore NuGet Packages
       run: |
-        cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
-        dotnet add package Microsoft.Office.Interop.Excel
         dotnet restore StudentManagement.sln
         nuget restore StudentManagement.sln
 
