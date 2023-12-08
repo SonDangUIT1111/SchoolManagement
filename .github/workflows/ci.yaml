@@ -1,12 +1,12 @@
-name: Continuous Integration
+name: GithubActions
 
 on:
   push:
     branches:
-      - orgin/UnitTest
+      - GithubActions
   pull_request:
     branches:
-      - orgin/UnitTest
+      - GithubActions
 
 jobs:
   build:
