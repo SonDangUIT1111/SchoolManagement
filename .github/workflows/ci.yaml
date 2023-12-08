@@ -45,4 +45,4 @@ jobs:
     - name: Mutation Testing
       run: |
         cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
-        dotnet-stryker
+        otnet stryker --solution D:\a\SchoolManagement\SchoolManagement\StudentManagement\StudentManagement.sln
