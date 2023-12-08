@@ -45,4 +45,5 @@ jobs:
     - name: Mutation Testing
       run: |
         cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
+        dotnet tool restore
         dotnet stryker --solution D:\a\SchoolManagement\SchoolManagement\StudentManagement\StudentManagement.sln
