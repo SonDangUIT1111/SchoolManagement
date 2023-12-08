@@ -40,7 +40,7 @@ jobs:
 
     - name: Install Stryker.NET
       run: |
-        dotnet tool install --global dotnet-stryker --version 1.0.0
+        dotnet tool install --global dotnet-stryker --version 3.12.0
 
     - name: Mutation Testing
       run: |
