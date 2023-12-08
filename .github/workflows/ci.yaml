@@ -44,4 +44,5 @@ jobs:
 
     - name: Mutation Testing
       run: |
+        cd D:\a\SchoolManagement\SchoolManagement\StuentManagement
         dotnet-stryker
