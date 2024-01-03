@@ -46,4 +46,5 @@ jobs:
       run: |
         cd D:\a\SchoolManagement\SchoolManagement\StudentManagement
         dotnet tool restore
-        dotnet stryker --solution D:\a\SchoolManagement\SchoolManagement\StudentManagement.sln
+        cd D:\a\SchoolManagement\SchoolManagement
+        dotnet stryker
