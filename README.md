@@ -7,8 +7,6 @@
 ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 ![alt text](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
 
-![alt text](https://camo.githubusercontent.com/28fcd4c311e67d9050d4bedc471c99af93ac05759bfbd1c72bca3626e83cbf10/68747470733a2f2f666f7274686562616467652e636f6d2f696d616765732f6261646765732f6d6164652d776974682d632d73686172702e737667)
-![alt text](https://camo.githubusercontent.com/74c68997445423bb43aecd572d760067203b0a53e29f548413a2c4b495cde7b0/68747470733a2f2f666f7274686562616467652e636f6d2f696d616765732f6261646765732f6275696c742d62792d646576656c6f706572732e737667)
 
 School Management là ứng dụng quản lý thông tin nhà trường đáp ứng các quy trình nghiệp vụ trong nền giáo dục hiện nay.
 ## 📚 Giới thiệu
